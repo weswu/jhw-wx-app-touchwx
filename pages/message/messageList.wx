@@ -1,0 +1,55 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            {{title}}
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <ui-popup cropout show="{{show1 }}" position="top" top="{{ popup_NAV_HEIGHT +46 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +46+'px' } }}" bindhide="popHide" bindshow="popShow">
+      <view class="top_pop">
+        <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
+          <ui-check-list max="1" label-position="left" options="{{ foodList }}" type="plain" value="{{ checklist1 }}" bindchange="change" color="#3AC3B0"></ui-check-list>
+        </scroll-view>
+      </view>
+    </ui-popup>
+  </view>
+</template>
+
+<script>
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    title: '消息',
+    select: [
+      { text: '全部消息', value: '' },
+      { text: '未读消息', value: '00' },
+      { text: '已读消息', value: '01' }
+    ],
+    active: '',
+    show1: false,
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  onLoad (e) {
+    this.setData({
+      title: e.title
+    })
+  }
+}
+</script>
+
+<style lang="less">
+</style>

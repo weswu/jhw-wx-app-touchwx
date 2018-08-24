@@ -1,0 +1,12 @@
+{
+    "touchuiwx.enable": true,
+    "vetur.extensions": [
+        ".wxa",
+        ".wx"
+    ],
+    "files.associations": {
+        "*.wxa": "vue",
+        "*.wx": "vue"
+    },
+    "git.ignoreLimitWarning": true
+}

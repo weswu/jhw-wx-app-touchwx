@@ -1,0 +1,103 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            安全设置
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="50" url="/pages/account/password">
+          <ui-col vertical-align="middle">
+              登录密码
+          </ui-col>
+          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+              重新设置
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50">
+          <ui-col vertical-align="middle">
+              备用邮箱
+          </ui-col>
+          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+              {{user.email}}
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+      
+      <view wx:for="{{oauth}}" wx:key="*this">
+        <ui-row height="50" wx:if="{{item.type === 'weixin'}}">
+          <ui-col vertical-align="middle">
+              微信
+          </ui-col>
+          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+              {{item.nickname}}
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+        </ui-row>
+        <ui-row height="50" wx:if="{{item.type === 'cellphone'}}">
+          <ui-col vertical-align="middle">
+              手机
+          </ui-col>
+          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+              {{item.nickname}}
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+        </ui-row>
+      </view>
+    </ui-row-list>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    user: {},
+    oauth: [
+      {nickname: '未绑定', type: 'weixin'},
+      {nickname: '未绑定', type: 'qq'},
+      {nickname: '未绑定', type: 'cellphone'}
+    ]
+  },
+  onLoad () {
+    this.user = getApp().globalData.user
+    this.get()
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  get () {
+    api.accountOauth().then(res => {
+      if (res.success) {
+        this.oauth = res.attributes.data
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

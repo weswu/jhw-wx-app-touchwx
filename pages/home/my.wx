@@ -1,0 +1,230 @@
+<template>
+  <view class="j_my">
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" ></ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <view class="position: relative;">
+      <view class="weui-media-box">
+        <navigator url="/pages/user/account" class="headimg-box">
+          <i class="iconfont icon-huiyuan1 weui-media-box__thumb" wx:if="{{!accountInfo.headimg}}"></i>
+            <image class="weui-media-box__thumb" src="http://img.jihui88.com/{{accountInfo.headimg}}" binderror="error" wx:if="{{accountInfo.headimg}}"/>
+          </navigator>
+          <view class="weui-media-box__bd">
+            <view class="weui-media-box__title">{{accountInfo.nickName || user.username || 'Hi，您未登录'}}
+              <navigator url="/pages/user/login?back=1" class="login-btn" wx:if="{{!user.username}}">
+                <button type="primary" plain="true" size="mini">登录\n/\n注册</button>
+              </navigator>
+            </view>
+            <view class="weui-media-box__desc">{{user.username}}</view>
+          </view>
+        </view>
+      <navigator url="/pages/message/messageList?title=未读消息" style='position: absolute;top: 170rpx;right: 30px;color:#fff'>
+        <i class="iconfont icon-mail" style="color:#fff;font-size:20px"></i>
+        <ui-badge text="{{userInfo.noReaderMsg}}" custom-style="{{ {position: 'absolute', top: '0rpx', right: '-30rpx'} }}" wx:if="{{userInfo.noReaderMsg > 0}}"></ui-badge>
+      </navigator>
+    </view>
+    <ui-row-list border-left-indent>
+      <ui-row height="50" url="/pages/cost/cost">
+          <ui-col width="40" vertical-align="middle" align="center">
+            <i class="iconfont icon-price" style="color:#f67d73"></i>
+          </ui-col>
+          <ui-col class="text" vertical-align="middle">
+              费用中心
+          </ui-col>
+          <ui-col width="40" vertical-align="middle">
+              <ui-icon type="arrow-right"></ui-icon>
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="50" border-bottom url="/pages/cost/point">
+          <ui-col width="40" vertical-align="middle" align="center">
+            <i class="iconfont icon-qiandao"></i>
+          </ui-col>
+          <ui-col class="text" vertical-align="middle">
+              每日签到
+          </ui-col>
+          <ui-col width="40" vertical-align="middle">
+              <ui-icon type="arrow-right"></ui-icon>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50" url="/pages/cost/point">
+          <ui-col width="40" vertical-align="middle" align="center">
+          <i class="iconfont icon-jifen"></i>
+          </ui-col>
+          <ui-col class="text" vertical-align="middle">
+              积分管理
+          </ui-col>
+          <ui-col width="40" vertical-align="middle">
+              <ui-icon type="arrow-right"></ui-icon>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50">
+          <ui-col width="40" vertical-align="middle" align="center">
+          <i class="iconfont icon-web-icon-"></i>
+          </ui-col>
+          <ui-col class="text" vertical-align="middle">
+              推荐奖励
+          </ui-col>
+          <ui-col width="40" vertical-align="middle">
+              <ui-icon type="arrow-right"></ui-icon>
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="50" url="/pages/user/account">
+          <ui-col width="40" vertical-align="middle" align="center">
+          <i class="iconfont icon-account-only"></i>
+          </ui-col>
+          <ui-col class="text" vertical-align="middle">
+              账号信息
+          </ui-col>
+          <ui-col width="40" vertical-align="middle">
+              <ui-icon type="arrow-right"></ui-icon>
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="50" url="/pages/setting/setting">
+          <ui-col width="40" vertical-align="middle" align="center">
+          <i class="iconfont icon-shezhi"></i>
+          </ui-col>
+          <ui-col class="text" vertical-align="middle">
+              设置
+          </ui-col>
+          <ui-col width="40" vertical-align="middle">
+              <ui-icon type="arrow-right"></ui-icon>
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="crpt">技术支持：机汇网</view>
+  </view>
+</template>
+
+<script>
+export default{
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    user: {
+      username: ''
+    },
+    userInfo: {},
+    accountInfo: {}
+  },
+  onLoad () {
+    let that = this
+    getApp().getUser(res => {
+      that.setData({
+        user: res.user
+      })
+      getApp().getAccountInfo(res => {
+        that.setData({
+          accountInfo: res
+        })
+      })
+    })
+    getApp().getUserInfo(res => {
+      that.setData({
+        userInfo: res
+      })
+    })  
+  },
+  error () {
+    that.setData({
+      'accountInfo.headimg': 'upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
+    })
+  },
+  onShow () {
+    this.setData({
+      accountInfo: getApp().globalData.accountInfo,
+      userInfo: getApp().globalData.userInfo
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1;
+}
+.hr{
+  background: #f1f1f1;
+  height: 32rpx;
+}
+.ui-row-list{
+  .iconfont{
+    color: #12bedb;
+    font-size:20px;
+  }
+  .ui-row{
+    &:before{
+      left: 55px;
+      border-bottom: 1px solid #000
+    }
+  }
+}
+  .j_my{
+    .weui-media-box{
+      display:-webkit-box;
+      display:-webkit-flex;
+      display:flex;
+      -webkit-box-align:center;
+      -webkit-align-items:center;
+      align-items:center;
+      background:#373d40;color:#fff;
+      padding: 35px 22px 25px 22px;
+      .headimg-box{
+        margin-right:30rpx;
+        width:60px;
+        height:60px;
+        line-height:60px;
+        text-align:center;
+      }
+      .weui-media-box__title{
+        font-size:15px;
+        line-height:2;
+        font-weight:400;
+        width:auto;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        word-wrap:normal;
+        word-wrap:break-word;
+        word-break:break-all;
+        .login-btn{
+          margin-left: 16rpx;
+          display: inline-block;
+        }
+      }
+      .weui-media-box__desc {
+        color:#999;
+        font-size:13px;
+        line-height:1.4;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+      }
+      .icon-huiyuan1{
+        background: #ff6700;color: #fff;font-size:32px;padding:15px;border-radius:50%;
+      }
+      .weui-media-box__thumb{
+        border-radius:30px;
+      }
+    }
+    .crpt{
+      margin:0 auto;
+      padding: 20px 0;
+      text-align:center;
+      color:#c6c6cd;
+      font-size:12px;background-color:#f1f1f1;
+    }
+  }
+</style>

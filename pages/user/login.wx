@@ -1,0 +1,224 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff" wx:if="{{back}}"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            机汇网会员登录
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <view class="logo"><image src="http://www.jihui88.com/member/static/images/f-logo.png" alt=""></view>
+    <view class="login">
+      <view class="form">
+        <input class="username" placeholder="手机号/帐号" bindinput="input" id="username" value="{{detail.username}}"/>
+        <input class="password" placeholder="请输入密码" bindinput="input" id="password" value="{{detail.password}}" type="password"/>
+      </view>
+      <button class="weui-btn submit" type="primary" bindtap="submit" style="background:#ff6700">登录</button>
+    </view>
+    <view class="other">
+      <view class="other-text"><text>其他登录方式</text></view>
+      <view class="other-icon">
+        <view bindtap="weixin"><i class="iconfont icon-weixin"></i></view>
+        <view bindtap="weixin" class="text">微信</view>
+      </view>
+    </view>
+  </view>
+ </template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    detail:{},
+    back: false
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  onLoad (e) {
+    if (e.back === '1') {
+      this.setData({
+        back: true
+      })
+    }
+    this.setData({
+      'detail.username': wx.getStorageSync('username'),
+      'detail.password': wx.getStorageSync('password')
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.username,
+        method: 'required',
+        message: '用户名不能为空'
+      },
+      {
+        value: this.data.detail.password,
+        method: 'required',
+        message: '密码不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    wx.setStorageSync('username', this.data.detail.username)
+    wx.setStorageSync('password', this.data.detail.password)
+    let that = this
+    wx.login({
+      success: function(login) {
+        that.setData({
+          'detail.code': login.code,
+          'detail.skey': wx.getStorageSync('skey'),
+          'detail.appid': getApp().globalData.appid,
+          'detail.appsecret': getApp().globalData.appsecret
+        })
+        Tips.loading()
+        api.login({
+          data: that.data.detail,
+          method: 'POST'
+        }).then(res => {
+          Tips.loaded()
+          if (res.success) {
+            wx.switchTab({
+              url: '/pages/home/my'
+            })
+          } else {
+            Tips.error(res.msg)
+          }
+        })
+      }
+    })
+  },
+  weixin () {
+    wx.switchTab({
+      url: '/pages/home/index'
+    })  
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+.logo{
+  text-align:center;
+  image{
+    margin: 60px auto 28px;
+    width: 80px;
+    height: 80px;
+  }
+  .weui-cell_inpu{
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+  }
+}
+.login{
+  width: 630rpx;
+  margin: 0 auto;
+  position: relative;
+  .form{
+    width: 630rpx;
+    box-sizing: border-box;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    position: relative;
+    overflow:hidden;
+    .veriImg{
+      position: absolute;
+      right: 10px;
+      margin-top: -31px;
+      width: 66px;
+      height: 27px;
+      z-index: 999;
+    }
+  }
+  input {
+    border: none;
+    width: 630rpx;
+    height: 22px;
+    padding: 10px 15px;
+    outline: 0 none;
+    min-height: auto;
+    font-size: 14px;
+  }
+  button{
+    font-size: 16px;
+  }
+  .password{
+    border-top: 1px solid #d9d9d9;
+  }
+}
+.other {
+  padding-top: 50px;
+  text-align: center;
+  .other-text {
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    clear: both;
+    position: relative;
+  }
+  .other-icon {
+    padding-top: 5px;
+  }
+  .iconfont {
+    width: 39px;
+    height: 39px;
+    line-height: 39px;
+    display: inline-block;
+    margin: 0 8px;
+    border: 1px solid #eee;
+    color: #787878;
+    font-size: 24px;
+    border-radius: 100%;
+  }
+}
+.other .other-text:after {
+  content: "";
+  background: url(http://www.jihui88.com/member/static/images/f-border.png) no-repeat;
+  width: 85px;
+  height: 3px;
+  margin: 14px 0 0 -175px;
+  display: inline-block;
+  position: absolute;
+}
+.other .other-text:before {
+  content: "";
+  background: url(http://www.jihui88.com/member/static/images/f-border.png) no-repeat 0 -3px;
+  width: 85px;
+  height: 3px;
+  margin: 14px 0 0 90px;
+  display: inline-block;
+  position: absolute;
+}
+.other .other-text text {
+  width: 90px;
+  display: inline-block;
+  background: #fff;
+  color: #5b5b5b;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+.other .other-icon .text {
+  display: inline-block;
+  width: 50px;
+  color: #9b9b9b;
+  font-size: 12px;
+  margin: 0 5px;
+}
+</style>
+

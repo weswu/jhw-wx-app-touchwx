@@ -1,0 +1,359 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {backgroundColor:'#22252a',color:'#fff'} }}">
+      <ui-row height="80" style="background: #22252a;padding-bottom:10px">
+          <ui-col width="40" vertical-align="bottom" align="center">
+            <i class="iconfont icon-saoyisao" bindtap="saoyisao"></i>
+          </ui-col>
+          <ui-col class="text" vertical-align="bottom">
+              <navigator url="/pages/product/product" class="search-btn" style="background: #fff;">
+                <view style="background: rgba(34,37,42,0.8);width:100%;height:100%">
+                  <i class="iconfont icon-sousuo" style="margin-left:18rpx;padding-top:2px;"></i>
+                </view>
+              </navigator>
+          </ui-col>
+          <ui-col width="40" vertical-align="bottom" align="center">
+              <navigator url="/pages/message/message" class="email" style="position: relative;">
+                <i class="iconfont icon-mail"></i>
+                <view class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;" wx:if="{{userInfo.noReaderMsg > 0}}">{{userInfo.noReaderMsg}}</view>
+              </navigator>
+          </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}};"></view>
+    <!-- 轮播 -->
+    <view class="swiper-container">
+      <swiper class="swiper_box" bindchange="swiperChange" style="{{swiperHeight}}"
+        autoplay="{{swiperTrue}}" circular="{{swiperTrue}}" interval="3000" duration="500">
+          <block wx:for="{{images}}" wx:key="item.attId" wx:for-index="index">
+              <swiper-item>
+                  <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}" bindload="imageLoad"/>
+              </swiper-item>
+          </block>
+      </swiper>
+      <view class="dots" wx:if="{{images.length > 1}}">
+        <block wx:for="{{images}}" wx:key="item.attId" wx:for-index="idx">
+          <view class="dot{{idx == swiperCurrent ? ' active' : ''}}"></view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 签到 -->
+    <view class="signIn" bindtap="signIn">
+      <i class="iconfont icon-qiandao"></i>
+      <button type="primary" plain="true" size="mini"><text wx:if="{{integralCount.dailyPoint === 0}}">已</text>签到</button>
+    </view>
+
+    <ui-row border-top border-bottom class="grids1" height="105">
+      <ui-col border-right align="center" vertical-align="middle">
+        <view class="image"><image mode="widthFix" src="../../images/index/logo.png"/></view>
+        <view class="label">认识机汇网</view>
+      </ui-col>
+      <ui-col border-right align="center" vertical-align="middle">
+        <view class="image images"><i class="iconfont icon-chanpin" style="color:{{item.color}}"></i></view>
+        <view class="label">机汇网所有产品</view>
+      </ui-col>
+    </ui-row>
+    <view class="hr"></view>
+
+    <!-- 头条 -->
+          <ui-row height="130">
+            <ui-col class="j_banner" span="11" vertical-align="middle">
+               <view class="name">机汇头条</view> 
+                <view class="banner">
+                  <view class="title">10分钟入门</view>
+                  <view class="content">
+                    快速了解机汇网产品
+                  </view>
+                </view>
+            </ui-col>
+          </ui-row>
+    <view class="hr"></view>
+    <view class="sample_content">
+     <ui-row height="40">
+        <ui-col span="0"></ui-col>
+        <ui-col span="2" vertical-align="middle">
+            <image style="width:40px;height:35.5px;" src="../../images/index/gonggao.png" mode="aspectFill"/>
+        </ui-col>
+        <ui-col span="9">
+            <ui-roller autoplay="5000" height=60>
+                <ui-roller-item>
+                    <view class="item">
+                        <ui-row>
+                            <ui-col>
+                                <text block class="roller-text">机汇网后台界面全新改版上线，敬请期待！</text>
+                            </ui-col>
+                        </ui-row>
+                    </view>
+                    <view class="item">
+                        <ui-row>
+                            <ui-col>
+                                <text block class="roller-text">机汇网小程序后台界面全新改版上线，敬请期待！</text>
+                            </ui-col>
+                        </ui-row>
+                    </view>
+                </ui-roller-item>
+            </ui-roller>
+        </ui-col>
+      </ui-row>
+    </view>
+    <view class="hr"></view>
+
+
+    <!-- 服务市场 -->
+          <ui-row height="40">
+            <ui-col width="20" vertical-align="middle" align="center">
+            </ui-col>
+            <ui-col class="text" vertical-align="middle">
+               <view class="title">服务市场</view> 
+            </ui-col>
+            <ui-col width="40" vertical-align="middle">
+                <ui-icon type="arrow-right"></ui-icon>
+            </ui-col>
+          </ui-row>
+    <ui-row border-top border-bottom class="grids2 grids-service">
+      <ui-col span="6" border-right align="center" vertical-align="middle" wx:for="{{market}}" wx:key="*this">
+          <ui-row>
+            <ui-col width="10"></ui-col>
+            <ui-col span="4" vertical-align="middle">
+              <i class="iconfont {{item.icon}}"></i>
+            </ui-col>
+            <ui-col class="label" vertical-align="middle" align="left">
+              {{item.name}}
+              <view class="content">
+                {{item.content}}
+              </view>
+            </ui-col>
+          </ui-row>
+      </ui-col>
+    </ui-row>
+    <view class="hr"></view>
+    <!-- 玩转机汇网 -->
+          <ui-row height="40">
+            <ui-col width="20" vertical-align="middle" align="center">
+            </ui-col>
+            <ui-col class="text" vertical-align="middle">
+               <view class="title">玩转机汇网</view> 
+            </ui-col>
+            <ui-col width="40" vertical-align="middle">
+                <ui-icon type="arrow-right"></ui-icon>
+            </ui-col>
+          </ui-row>
+    <ui-row border-top class="grids2">
+      <ui-col span="6" align="center" vertical-align="middle" wx:for="{{grids}}" wx:key="*this">
+          <ui-row>
+            <ui-col width="10"></ui-col>
+            <ui-col span="4" vertical-align="middle">
+              <i class="iconfont {{item.icon}}"></i>
+            </ui-col>
+            <ui-col class="label" vertical-align="middle" align="left">
+              {{item.name}}
+              <view class="content">
+                {{item.content}}
+              </view>
+            </ui-col>
+          </ui-row>
+      </ui-col>
+    </ui-row>
+           <ui-row height="70">
+            <ui-col class="j_banner" span="11" vertical-align="middle">
+                <view class="banner">
+                  <view class="title">建站教程</view>
+                  <view class="content">
+                    轻松搭建网站
+                  </view>
+                </view>
+            </ui-col>
+          </ui-row>
+    
+    <!-- 精选 -->
+    <view class="sample_content">
+      <ui-row height="40">
+        <ui-col span="11">
+            <ui-roller autoplay="5000" height=60>
+                <ui-roller-item>
+                    <view class="item">
+                        <ui-row>
+                            <ui-col span="2"><text style="color:#F00;">精选</text></ui-col>
+                            <ui-col span="10">
+                                <text block class="roller-text">机汇网后台界面全新改版上线，敬请期待！</text>
+                            </ui-col>
+                        </ui-row>
+                    </view>
+                    <view class="item">
+                        <ui-row>
+                            <ui-col span="2"><text style="color:#F00;">精选</text></ui-col>
+                            <ui-col span="10">
+                                <text block class="roller-text">机汇网小程序后台界面全新改版上线，敬请期待！</text>
+                            </ui-col>
+                        </ui-row>
+                    </view>
+                </ui-roller-item>
+            </ui-roller>
+        </ui-col>
+      </ui-row>
+    </view>
+    <view class="crpt">技术支持：机汇网</view>
+  </view>
+</template>
+
+<script>
+export default {
+  config: {
+    enablePullDownRefresh: false,
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    // 轮播
+    images: [
+      {}, {}, {}, {}
+    ],
+    market: [
+      {url: '', name: '全民建站', icon: 'icon-wangzhan', content: '海量模板供应'},
+      {url: '', name: '企业应用', icon: 'icon-qiye', content: '助力企业成长'},
+      {url: '', name: '微信端', icon: 'icon-weixin', content: '小程序海量模板'},
+      {url: '', name: '企业大脑', icon: 'icon-danao', content: '让企业智能办公'}
+    ],
+    grids: [
+      {url: '', name: '建站快速入门', icon: 'icon-beginnerguide', content: '按步骤指导操作'},
+      {url: '', name: '常见问题', icon: 'icon-kuaisurumen', content: '自助排除故障'}
+    ]
+  }
+}
+</script>
+
+<style lang="less">
+  .hr{
+    background: #f1f1f1;
+    height: 32rpx;
+  }
+/* 轮播 */
+.swiper_box{background: #22252a}
+swiper-item image{width:750rpx;}
+/* 自定义轮播小圆点 */
+.swiper-container{position:relative}
+.swiper-container .dots{position:absolute;left:0;right:0;bottom:20rpx;display:flex;justify-content:center}
+.swiper-container .dots .dot{margin:0 5rpx;width:24rpx;height:4rpx;background: rgba(255, 255, 255, .3);transition:all .6s}
+.swiper-container .dots .dot.active{background:#fff;}
+/* 签到 */
+.signIn{
+  position:absolute;
+  right:32rpx;
+  margin-top:-80px;
+  text-align: center;
+  .iconfont{
+    color: #12bedb;
+    font-size: 28px;
+    display: block;
+  }
+  button{
+    background: #2f333b;
+    font-size: 12px;
+    padding:0 10rpx;
+    line-height:36rpx;
+    border-radius:18rpx;
+  }
+}
+
+.grids1{
+  image,.image{
+    width: 94rpx;
+    height: 94rpx;
+    margin: 0 auto;
+    margin-bottom: 5px;
+  }
+  .images{
+    background: #00c1de;
+    line-height: 94rpx;
+    border-radius: 94rpx;
+    .iconfont{
+      font-size: 50rpx;
+      color: #fff;
+    }
+  }
+}
+/* 头条 */
+.sample_content{
+  padding: 10px 0;
+  .roller-text{
+    font-size: 12px;
+    color:#4e4e4e;
+  }
+}
+.j_banner{
+  .banner{
+    height: 166rpx;
+    background: #5d5d5d;
+    text-align: center;
+  }
+  .name{
+    padding-bottom: 8px;
+  }
+  .title{
+    color: #fff;
+    padding-top: 40rpx;
+  }
+  .content{
+    color: #b6b6b6;
+  }
+}
+// 服务市场
+.grids-service{
+  .ui-col-6{
+    &:nth-child(1){
+      .ui-row{
+        &:before{
+          border-bottom: 1px solid #e4e4e4;
+          position: absolute;
+          width: 100%;
+          bottom: 0;
+          left: 10%;
+          content: '';
+        }
+      }
+    }
+    &:nth-child(2){
+      &:before{
+          border-bottom: 1px solid #e4e4e4;
+          position: absolute;
+          width: 100%;
+          bottom: 0;
+          right: 10%;
+          content: '';
+      }
+    }
+  }
+}
+.grids2{
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .ui-col-6{
+    height: 92px;
+  }
+  .ui-row{
+    width: 100%;
+  }
+  .iconfont{
+    color:#02c1e0;
+    font-size:28px;
+  }
+  .label {
+    display:inline-block;
+    color:#565656;
+    text-align:left;
+    font-size: 12px;
+    .content{
+      color:#9999a4;
+      font-size: 11px;
+    }
+  }
+}
+    .crpt{
+      margin:0 auto;
+      padding: 20px 0 50px 0;
+      text-align:center;
+      color:#c6c6cd;
+      font-size:12px;background-color:#f1f1f1;
+    }
+</style>

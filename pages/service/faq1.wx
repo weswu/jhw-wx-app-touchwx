@@ -1,0 +1,42 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            7步启动全网营销系统
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="50"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <view style="padding: 15px;color:#999;">
+        <view>第1步：第1时间提交域名、备案信息（负责人：机汇网客服）</view>
+        <view>第2步：网站界面平面稿设计阶段</view>
+        <view>第3步：分割写代码阶段</view>
+        <view>第4步：产品、新闻上传和优化阶段</view>
+        <view>第5步：导航优化、兼容性检查</view>
+        <view>第6步：网站开通</view>
+        <view>第7步：搜索引擎批量提交并做好站点统计</view>
+    </view>       
+  </view>
+</template>
+
+<script>
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px'
+  },
+  navigateBack () {
+    wx.navigateBack()
+  }
+}
+</script>
+
+<style lang="less">
+</style>

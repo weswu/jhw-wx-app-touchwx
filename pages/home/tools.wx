@@ -1,0 +1,240 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{back}}">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col space-left="8" vertical-align="middle" align="center" width="40" bindtap="submit" wx:if="{{!back}}">
+          完成
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            所有工具
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+
+    <checkbox-group bindchange="checkboxChange">
+      <ui-row-list>
+      <view wx:for="{{list}}" wx:key="*this" wx:for-item="row">
+          <ui-row height="40">
+            <ui-col width="20" vertical-align="middle"></ui-col>
+            <ui-col class="text" vertical-align="middle">
+               <view class="title">{{row.title}}</view> 
+            </ui-col>
+          </ui-row>
+        <ui-row border-top border-bottom class="row-border">
+          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{row.children}}" wx:key="item.value">
+            <label>
+              <checkbox class="weui-check" value="{{item.text}}" checked="{{item.checked}}"></checkbox>
+              <view class="weui-grid {{!item.url ? 'opacity' : ''}}">
+                <icon class="weui-icon-checkbox_circle" type="circle" size="20" wx:if="{{!item.checked}}"></icon>
+                <icon class="weui-icon-checkbox_success" type="success" size="20" wx:if="{{item.checked}}"></icon>
+                <i class="iconfont {{item.icon}}"></i>
+                <view>{{item.text}}</view>
+              </view>
+            </label>
+          </ui-col>
+        </ui-row>
+      </view>
+      </ui-row-list>
+    </checkbox-group>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    back: true,
+    list: [
+      {
+        title: '站点管理',
+        children: [
+          { url: '/pages/user/static', text: '站点数据管理', icon: 'icon-shuju' },
+          { url: '/pages/user/seo', text: 'SEO管理', icon: 'icon-SEO' },
+          { url: '/pages/user/beian', text: '域名备案', icon: 'icon-yuming' },
+          { url: '/pages/user/sitemap', text: 'Sitemap生成', icon: 'icon-sitemap' },
+          { url: '/pages/user/seo_batch', text: '批量提交', icon: 'icon-tijiao' },
+          { url: '/pages/user/third_party_statistics', text: '第三方统计', icon: 'icon-tongji' },
+          { url: '/pages/user/convenient', text: '便捷登录配置', icon: 'icon-denglu' },
+          { url: '', text: 'text', icon: 'icon-jia' }
+        ]
+      },
+      {
+        title: '公司信息',
+        children: [
+          { url: '/pages/user/enterprise', text: '基本资料', icon: 'icon-ziliao' },
+          { url: '/pages/user/company', text: '公司简介', icon: 'icon-gongsi1' },
+          { url: '/pages/user/recruit', text: '招聘管理', icon: 'icon-zhaopin' },
+          { url: '/pages/user/link', text: '友情链接', icon: 'icon-ziyuan' }
+        ]
+      },
+      {
+        title: '产品管理',
+        children: [
+          { url: '/pages/user/product', text: '产品列表', icon: 'icon-liebiao1' },
+          { url: '/pages/user/category/product', text: '产品分类', icon: 'icon-classifi' },
+          { url: '/pages/user/product_import', text: '导入', icon: 'icon-daoru' },
+          { url: '/pages/user/product_download', text: '下载', icon: 'icon-xiazai' }
+        ]
+      },
+      {
+        title: '新闻管理',
+        children: [
+          { url: '/pages/user/news', text: '新闻列表', icon: 'icon-liebiao' },
+          { url: '/pages/user/category/news', text: '新闻分类', icon: 'icon-classifi' },
+          { url: '', text: 'text', icon: 'icon-jia' },
+          { url: '', text: 'text', icon: 'icon-jia' }
+        ]
+      },
+      {
+        title: '相册管理',
+        children: [
+          { url: '/pages/user/album', text: '图片目录', icon: 'icon-mulu' },
+          { url: '/pages/user/addAlbum', text: '新建相册', icon: 'icon-xinjian' },
+          { url: '/pages/user/shangchuanPic', text: '上传图片', icon: 'icon-shangchuan' },
+          { url: '/pages/user/recycle', text: '回收站', icon: 'icon-huishouzhan' }
+        ]
+      },
+      {
+        title: '客户管理',
+        children: [
+          { url: '/pages/user/member', text: '会员管理', icon: 'icon-Group' },
+          { url: '/pages/user/member_rank', text: '会员等级配置', icon: 'icon-huiyuandengjidengjizuanshi' },
+          { url: '/pages/user/member_attr', text: '会员属性配置', icon: 'icon-huiyuanshuxing' },
+          { url: '/pages/user/member_register', text: '网站会员注册', icon: 'icon-huiyuanzhuce' }
+        ]
+      },
+      {
+        title: '商城管理',
+        children: [
+          { url: '/pages/shop/shop', text: '订单管理', icon: 'icon-dingdandaifukuan' },
+          { url: '/pages/shop/config', text: '商品相关配置', icon: 'icon-shangpin' },
+          { url: '/pages/shop/pay', text: '支付方式管理', icon: 'icon-zhifu' },
+          { url: '/pages/shop/delivery', text: '物流公司管理', icon: 'icon-gongsi1' },
+          { url: '/pages/shop/bill', text: '物流单据设置', icon: 'icon-wuliu' },
+          { url: '/pages/shop/refund', text: '商品退换货管理', icon: 'icon-tuihuanhuo' },
+          { url: '/pages/shop/coupon', text: '营销管理', icon: 'icon-yingxiao' },
+          { url: '', text: 'text', icon: 'icon-jia' }
+        ]
+      }
+    ]
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  onLoad () {
+    let list = this.data.list
+    list.forEach(row => {
+      row.children.forEach(item => {
+        item.checked = false
+        getApp().globalData.customData.mobileLink.forEach(row => {
+          if (item.icon === row.icon) {
+            item.checked = true
+          }
+        })
+      })
+    })
+    this.setData({
+      list: list
+    })
+  },
+  checkboxChange (e) {
+    let values = e.detail.value
+    let list = this.data.list
+    list.forEach(row => {
+      row.children.forEach(item => {
+        item.checked = false
+        values.forEach(value => {
+          if (item.text === value) {
+            item.checked = true
+          }
+        })
+      })
+    })
+    this.setData({
+      list:list,
+      back: false
+    })
+  },
+  submit () {
+    let customData = getApp().globalData.customData
+    let tools = []
+    this.data.list.forEach(row => {
+      row.children.forEach(item => {
+        if (item.checked) {
+          tools.push({url: item.url, text: item.text, icon: item.icon})
+        }
+      })
+    })
+    customData.mobileLink = tools
+    api.customUpdate({
+      data: {
+        content: JSON.stringify(customData)
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        getApp().globalData.customData = customData
+        Tips.success("保存成功")
+        this.setData({
+          back: true
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+.weui-check {
+  position:absolute;
+  left:-9999px;
+}
+  .weui-grid{
+    text-align:center;
+    i{
+      color: #12bedb;
+      font-size: 18px;
+    }
+    .icon-jia{
+      color: #b1b2b7;
+    }
+    icon{
+      position:absolute;
+      right:5px;
+      top:5px;
+    }
+    &.opacity{
+      i,view, icon{
+        opacity: 0;
+      }
+    }
+    view{
+      font-size: 12px
+    }
+  }
+    .ui-row{
+      justify-content: space-around;
+      flex-wrap: wrap;
+      .ui-col-3{
+        height: 85px;
+        border-bottom: 1px solid #e4e4e4;
+      }
+      &.row-border{
+        &::after{
+          border-bottom:none
+        }
+      }
+    }
+</style>

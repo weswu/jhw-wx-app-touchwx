@@ -1,0 +1,173 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            费用中心
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}px"></view>
+    <view class="sticky-in-relative-container">
+      <ui-sticky scroll-top="{{ scrollTop }}" top="{{NAV_HEIGHT}}" custom-style="{{ {backgroundColor:'#FFF'} }}">
+        <view>
+          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
+            <ui-tab>待缴费<text style="font-size:12px" wx:if="{{count0 !== 0}}">({{count0}})</text></ui-tab>
+            <ui-tab>消费记录<text style="font-size:12px" wx:if="{{count1 !== 0}}">({{count1}})</text></ui-tab>
+            <ui-tab>已购产品<text style="font-size:12px" wx:if="{{count2 !== 0}}">({{count2}})</text></ui-tab>
+          </ui-tabs>
+        </view>
+        <view slot="sticky">
+          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
+            <ui-tab>待缴费<text style="font-size:12px" wx:if="{{count0 !== 0}}">({{count0}})</text></ui-tab>
+            <ui-tab>消费记录<text style="font-size:12px" wx:if="{{count1 !== 0}}">({{count1}})</text></ui-tab>
+            <ui-tab>已购产品<text style="font-size:12px" wx:if="{{count2 !== 0}}">({{count2}})</text></ui-tab>
+          </ui-tabs>
+        </view>
+    </ui-sticky>
+    </view>
+    <view class="content_list">
+      <view wx:for="{{list}}" wx:key="*this">
+        <ui-row height="80" border-bottom>
+          <ui-col vertical-align="middle" space-left="15">
+              <view style="width: 100%;">
+                <ui-row height="30">
+                  <ui-col align="left" vertical-align="middle">
+                      <text>订单编号：{{item.outTradeNo}}</text>
+                  </ui-col>
+                  <ui-col align="right" width="100" vertical-align="middle" space-right="15">
+                      <text class="price">￥{{item.paidPrice | '-'}}</text>
+                  </ui-col>
+                </ui-row>
+              </view>
+              <view class="content">{{item.name}}</view>
+              <view class="time">{{item.addTime}}</view>
+          </ui-col>
+        </ui-row>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  data: {
+    current1:0,
+    scrollTop:0,
+    width:wx.WIN_WIDTH,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    list: [],
+    params: {
+      size: 6,
+      page: 0,
+      sort: 'addTime,desc'
+    },
+    count0: 0,
+    count1: 0,
+    count2: 0,
+    more: { loading: true }
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  onPageScroll (e) {
+    console.log(e)
+    this.setData({
+      scrollTop: e.scrollTop
+    })
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    if (this.data.current1 === 0) {
+      this.get1()
+    }
+    if (this.data.current1 === 1) {
+      this.get2()
+    }
+    if (this.data.current1 === 2) {
+      this.get3()
+    }
+  },
+  init (res) {
+    if (res.code === 0) {
+      res.data.content.forEach(item => {
+        item.addTime = Utils.formatTime(item.addTime)
+        this.data.list.push(item)
+      })
+    }
+    if (this.data.params.page === 0) {
+      this.data.current1 === 0 && this.setData({
+        'count0': res.data.totalElements
+      })
+      this.data.current1 === 1 && this.setData({
+        'count1': res.data.totalElements
+      })
+      this.data.current1 === 2 && this.setData({
+        'count2': res.data.totalElements
+      })
+    }
+    this.setData({
+      list: this.data.list
+    })
+  },
+  get1 () {
+    api.costUnPaid({
+      data: this.data.params
+    }).then(res => {
+      this.init(res)
+    })
+  },
+  get2 () {
+    api.costOrder({
+      data: this.data.params
+    }).then(res => {
+      this.init(res)
+    })
+  },
+  get3 () {
+    api.costPaid({
+      data: this.data.params
+    }).then(res => {
+      this.init(res)
+    })
+  },
+  //横屏竖屏切换
+  handleChange (e) {
+    this.setData({
+      current1: e.detail.index,
+      'params.page': 0,
+      list: []
+    })
+    this.get()
+  },
+  // 加载更多
+  onReachBottom () {
+    this.setData({
+      'params.page': this.data.params.page+= 1
+    })
+    this.get()
+  }
+}
+</script>
+
+<style lang="less">
+@import './static/styles/mixins';
+.content,.time{
+  color: #9C9FA4;
+  font-size: 12px;
+  .mix-text-overflow();
+}
+.price { color: #ff7e3e;font-size: 13px;}
+</style>

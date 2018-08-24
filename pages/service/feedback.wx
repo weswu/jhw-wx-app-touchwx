@@ -1,0 +1,113 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            服务反馈
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="50">
+          <ui-col width="50" vertical-align="middle">
+              主题：
+          </ui-col>
+          <ui-col vertical-align="middle">
+              <input placeholder="请输入主题" bindinput="input" id="fdbk_subject64" value="{{detail.fdbk_subject64}}"/>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50">
+          <ui-col width="70" vertical-align="middle">
+              反馈类型：
+          </ui-col>
+          <ui-col vertical-align="middle">
+              <picker bindchange="categoryPicker" id="fdbk_type" value="{{fdbk_typeIndex}}" range-key="text" range="{{category}}">
+                <view class="weui-select weui-select_in-select-after">{{category[fdbk_typeIndex].text}}</view>
+              </picker>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50">
+          <ui-col width="70" vertical-align="middle">
+              反馈内容：
+          </ui-col>
+          <ui-col vertical-align="middle" space-right="20">
+              <textarea class="weui-textarea" placeholder="请描述您的反馈内容，并附带上您的手机号码，我们好及时对接您提的反馈内容。"
+      bindinput="input" id="fdbk_intro1k" value="{{detail.fdbk_intro1k}}" style="width:100%;height: 80px;margin-top:10px;"/>
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <button type="primary" bindtap="submit" style="margin: 35px 15px 15px 15px">提交</button>
+  </view>
+</template>
+
+<script>
+import regeneratorRuntime from 'regenerator-runtime'
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    detail: {
+      fdbk_type: '5'
+    },
+    fdbk_typeIndex: 1,
+    category: [
+      { text: '表扬', value: '4' },
+      { text: '建议', value: '5' },
+      { text: '【页面修改】', value: '1506' },
+      { text: '【资料修改】', value: '1507' },
+      { text: '【页面与资料修改】', value: '1508' }
+    ]
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.fdbk_subject64,
+        method: 'required',
+        message: '主题不能为空'
+      },
+      {
+        value: this.data.detail.fdbk_intro1k,
+        method: 'required',
+        message: '反馈内容不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {return}
+    let data = {
+      card_no: getApp().globalData.user.username,
+      fdbk_subject64: this.data.detail.fdbk_subject64 + '[小程序]',
+      fdbk_intro1k: this.data.detail.fdbk_intro1k,
+      fdbk_type: this.data.detail.fdbk_type
+    }
+    api.feedback({
+      data: data,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success("反馈成功")
+      } else {
+        Tips.error('未关联到机汇云')
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+</style>

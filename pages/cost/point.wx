@@ -1,0 +1,250 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            积分管理
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}px"></view>
+    <view class="header">
+      <view class="point">
+        <text class="number">{{point}}</text>积分
+      </view>
+      <!-- 签到 -->
+      <view class="signIn" bindtap="signIn">
+        <i class="iconfont icon-qiandao"></i>
+        <button type="primary" plain="true" size="mini">
+            <text wx:if="{{integralCount.dailyPoint === 0}}">已签到</text>
+            <text wx:else>每日签到领积分</text>
+        </button>
+      </view>
+    </view>
+    <view class="sticky-in-relative-container">
+      <ui-sticky scroll-top="{{ scrollTop }}" top="{{NAV_HEIGHT}}" custom-style="{{ {backgroundColor:'#fff'} }}">
+        <view>
+          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important', color: '#ccb27b', borderBottom: '2px solid #ccb27b'} }}" bindchange="handleChange">
+            <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
+            <ui-tab>积分兑换</ui-tab>
+            <ui-tab>积分规则</ui-tab>
+          </ui-tabs>
+        </view>
+        <view slot="sticky">
+          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important', color: '#ccb27b', borderBottom: '2px solid #ccb27b'} }}" bindchange="handleChange">
+            <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
+            <ui-tab>积分兑换</ui-tab>
+            <ui-tab>积分规则</ui-tab>
+          </ui-tabs>
+        </view>
+      </ui-sticky>
+    </view>
+    
+    <!-- 内容 -->
+    <view class="content_list">
+      <view wx:for="{{ list }}" wx:key="*this" wx:if="{{current1 === 0}}">
+        <ui-row height="50" border-bottom>
+            <ui-col vertical-align="middle" space-left="15">
+                <text class="title">{{item.desc}}</text>
+                <text class="time">{{item.addTime}}</text>
+            </ui-col>
+            <ui-col align="right" width="80" vertical-align="middle" space-right="15">
+                <text class="plus" wx:if="{{item.income>0}}">+{{item.income}}</text>
+                <text class="minus" wx:if="{{item.out>0}}">-{{item.out}}</text>
+            </ui-col>
+        </ui-row>
+      </view>
+      <view wx:if="{{current1 === 1}}">
+        <view style="padding: 15px;">暂无兑换商品</view>
+      </view>
+      <view class="rule" wx:if="{{current1 === 2}}">
+        <view>1、积分专属机汇网，仅限机汇网内使用；</view>
+        <view>2、在机汇网后台、微信公众号【机汇网络】和APP进行以下操作时，均可获得积分；</view>
+        <view class="table">
+          <ui-row border-bottom  border-top height="32">
+            <ui-col border-right vertical-align="middle" align="center">
+                操作行为
+            </ui-col>
+            <ui-col vertical-align="middle" align="center">
+                获得数量
+            </ui-col>
+          </ui-row>
+          <ui-row border-bottom height="32" wx:for="{{rule}}" wx:key="*this">
+            <ui-col border-right vertical-align="middle" align="center">
+                {{item.name}}
+            </ui-col>
+            <ui-col vertical-align="middle" align="center">
+                {{item.point}}积分
+            </ui-col>
+          </ui-row>
+        </view>
+        <view>3、积分不能兑现，不可转让。</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  data: {
+    current1:0,
+    scrollTop:0,
+    width:wx.WIN_WIDTH,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    // 数据
+    list: [],
+    params: {
+      page: 1
+    },
+    count: 0,
+    more: { loading: true },
+    point: 18,
+    // 积分产品
+    // 积分规则
+    rule: [],
+    integralCount: {}
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  onLoad () {
+    this.setData({
+      integralCount: getApp().globalData.integralCount
+    })
+    this.get()
+  },
+  onPageScroll (e) {
+    console.log(e)
+    this.setData({
+      scrollTop: e.scrollTop
+    })
+  },
+  get () {
+    api.point({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
+        })
+        Utils.scrollList(this, res)
+        if (this.data.params.page === 1) {
+          this.setData({
+            point: res.attributes.data[0].useable
+          })
+        }
+      }
+    })
+  },
+  getRule () {
+    api.pointRule().then(res => {
+      this.setData({
+        rule: res.attributes.data
+      })
+    })
+  },
+  signIn () {
+    if (this.data.integralCount.dailyPoint === 1) {
+      api.signIn().then(res => {
+        if (res.success) {
+          getApp().globalData.integralCount.dailyPoint = 0
+          this.setData({
+            'integralCount.dailyPoint': 0
+          })
+          Tips.success('签到成功')
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
+  },
+  //横屏竖屏切换
+  handleChange (e) {
+    let index = e.detail.index
+    this.setData({
+      current1: index
+    })
+    if (index === 2) {
+      this.getRule()
+    }
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.LoadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+.header{
+  background: #2f333b;
+  height: 300rpx;
+  width: 750rpx;
+  .point{
+    color: #ccb27b;
+    width:375rpx;
+    float:left;
+    text-align:center;line-height:300rpx;
+    font-size: 12px;
+    .number{
+      font-size: 42px;
+      padding-right: 5rpx;
+    }
+  }
+  .signIn{
+    width:375rpx;
+    float:right;
+    text-align:center;padding-top:60rpx;
+    .iconfont{
+      color: #12bedb;
+      font-size: 28px;
+      display: block;
+    }
+    button{
+      background: #2f333b;
+      font-size: 12px;
+      padding:0 10rpx;
+      line-height:36rpx;
+      border-radius:18rpx;
+    }
+  }
+}
+
+.plus{color:#ff8500;font-size: 12px;}
+.minus{color:#30992e;font-size: 12px;}
+.title{
+  color: #293033;
+}
+.time{
+  color: #a4a6a7;
+  font-size: 12px;
+}
+// 积分规则
+.rule{
+  padding: 10px;
+  line-height: 2;
+  .table{
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+  }
+  navigator{
+    display:inline
+  }
+  .btn {
+    margin-top: 10px;
+    navigator{
+      margin-right: 20px
+    }
+  }
+}
+</style>

@@ -1,0 +1,84 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            设置
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="50" url="/pages/service/feedback">
+          <ui-col vertical-align="middle">
+              服务反馈
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50" url="/pages/service/service">
+          <ui-col vertical-align="middle">
+              咨询与建议
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50" url="sale">
+          <ui-col vertical-align="middle">
+              安全设置
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <button type="primary" bindtap="logout">退出账号</button>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px'
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  logout () {
+    api.logout({
+      data: {
+        skey: wx.getStorageSync('skey')
+      },
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        wx.navigateTo({
+          url: '/pages/user/login?back=1'
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1;
+}
+button{
+  margin: 15px;
+}
+</style>

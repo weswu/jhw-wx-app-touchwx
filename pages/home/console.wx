@@ -1,0 +1,316 @@
+<template>
+  <view class="j_console">
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            控制台
+          </view>
+        </ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <view class="header">
+      <navigator url="/pages/home/module">
+        <button class="weui-btn" type="primary" plain="true" size="mini">模块编辑</button>
+      </navigator>
+    </view>
+    
+    <view class="hr" style="heigh:16rpx;"></view>
+    <view wx:for="{{mobileSort}}" wx:key="row.value" wx:for-item="row">
+      <view wx:if="{{row.value === 'product' && row.checked}}">
+        <ui-row-list>
+          <ui-row height="40">
+            <ui-col width="20" vertical-align="middle"></ui-col>
+            <ui-col class="text" vertical-align="middle">
+               <view class="title">我的产品</view> 
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+        <ui-row border-top border-bottom height="85">
+          <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this">
+            <navigator url="{{item.url}}" class="content">
+                <i class="iconfont {{item.icon}}"></i>
+               <view class="p">{{item.text}}</view> 
+            </navigator>
+          </ui-col>
+        </ui-row>
+        <view class="hr"></view>
+      </view>
+
+      <view wx:if="{{row.value === 'order' && row.checked}}">
+        <ui-row-list>
+          <ui-row height="40">
+            <ui-col width="20" vertical-align="middle"></ui-col>
+            <ui-col class="text" vertical-align="middle">
+               <view class="title">订单管理</view> 
+            </ui-col>
+            <ui-col width="70" vertical-align="middle">
+              <navigator url="/pages/shop/shop?active=0" class="weui-cell__ft"><text class="info">我的订单</text></navigator>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+        <ui-row border-top border-bottom height="85">
+          <ui-col border-right align="center" vertical-align="middle" wx:for="{{orders}}" wx:key="*this">
+            <navigator url="{{item.url}}" class="content">
+                <i class="iconfont {{item.icon}}"></i>
+               <view class="p">{{item.text}}</view> 
+            </navigator>
+          </ui-col>
+        </ui-row>
+        <view class="hr"></view>
+      </view>
+
+      <view wx:if="{{row.value === 'tool' && row.checked}}">
+        <ui-row-list>
+          <ui-row height="40">
+            <ui-col width="20" vertical-align="middle"></ui-col>
+            <ui-col class="text" vertical-align="middle">
+               <view class="title">常用工具</view> 
+            </ui-col>
+            <ui-col width="40" vertical-align="middle">
+              <text class="info" bindtap="editTool" wx:if="{{!toggleTools}}">编辑</text>
+              <text class="info" bindtap="save" wx:if="{{toggleTools}}">完成</text>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+        <ui-row border-top border-bottom class="row-border">
+          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{tools}}" wx:key="*this">
+            <navigator url="{{item.url}}" class="content" wx:if="{{!item.editting || item.icon === 'icon-jia'}}">
+                <i class="iconfont {{item.icon}}"></i>
+               <view class="p">{{item.text}}</view> 
+            </navigator>
+            <view class="weui-grid {{!item.url ? 'opacity' : ''}}" wx:if="{{item.editting && item.icon !== 'icon-jia'}}">
+              <i class="iconfont icon-jianhao" bindtap="jian" data-idx="{{index}}"></i>
+              <i class="iconfont {{item.icon}}"></i>
+              <view>{{item.text}}</view>
+            </view>
+          </ui-col>
+        </ui-row>
+        <view class="hr"></view>
+      </view>
+
+      <view wx:if="{{row.value === 'data' && row.checked}}">
+        <ui-row-list>
+          <ui-row height="40">
+            <ui-col width="20" vertical-align="middle"></ui-col>
+            <ui-col class="text" vertical-align="middle">
+               <view class="title">数据管理中心</view> 
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+        <ui-row border-top border-bottom class="row-border">
+          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{dataManageCenter}}" wx:key="*this">
+            <navigator url="{{item.url}}" class="content">
+              <i class="iconfont {{item.icon}}"></i>
+              <view class="p">{{item.text}}</view> 
+            </navigator>
+          </ui-col>
+        </ui-row>
+        <view class="hr"></view>
+      </view>
+
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    mobileSort: [
+      {text: '我的产品', value:'product', checked: true},
+      {text: '订单管理', value:'order', checked: true},
+      {text: '常用工具', value:'tool', checked: true},
+      {text: '数据管理中心', value:'data', checked: true}
+    ],
+    product: [
+      {url: '/pages/pc/website', text: '我的网站', icon: 'icon-diannao', editting: false},
+      {url: '/pages/pc/miniProgram', text: '我的小程序', icon: 'icon-xiaochengxu', editting: false},
+      {},
+      {}
+    ],
+    orders: [
+      {url: '/pages/shop/shop?active=1', text: '待付款', icon: 'icon-fukuan'},
+      {url: '/pages/shop/shop?active=2', text: '待发货', icon: 'icon-fahuo1'},
+      {url: '/pages/shop/review', text: '待评价', icon: 'icon-ic-comment'},
+      {url: '/pages/shop/refund', text: '退换/售后', icon: 'icon-shouhou1'}
+    ],
+    tools: [],
+    toggleTools: false,
+    dataManageCenter: [
+      {url: '/pages/pc/website', text: '站点管理', icon: 'icon-qiu'},
+      {url: '/pages/user/enterprise', text: '公司信息', icon: 'icon-kujialeqiyezhan_gongsishili'},
+      {url: '/pages/product/product', text: '产品管理', icon: 'icon-product'},
+      {url: '/pages/news/news', text: '新闻管理', icon: 'icon-xinwenzixun'},
+      {url: '/pages/album/album', text: '相册管理', icon: 'icon-xiangce'},
+      {url: '/pages/member/member', text: '客户管理', icon: 'icon-kehuguanli'},
+      {url: '/pages/shop/shop', text: '商城管理', icon: 'icon-jiankangshangcheng'},
+      {}
+    ]
+  },
+  onShow () {
+    this.get()
+  },
+  get () {
+    let that = this
+    getApp().getCustomDate(function(res){
+      //更新数据
+      let tools = []
+      res.mobileLink.forEach((item, index) => {
+        item.editting = false
+        tools.push(item)
+      })
+      tools.push({url: '/pages/home/tools', text: '添加', icon: 'icon-jia'})
+      let len = 4 - tools.length%4
+      if (len !== 4) {
+        for (var i = 0; i < len; i++) {
+          tools.push({})
+        }
+      }
+      that.setData({
+        mobileSort: res.mobileSort,
+        tools: tools
+      })
+    })
+  },
+  jian (e) {
+    let idx = e.currentTarget.dataset.idx
+    let tools = this.data.tools
+    tools.splice(idx, 1)
+    tools.push({})
+    let index = 0
+    tools.forEach(item => {
+      if (item.text === 'text') {
+        index += 1
+      }
+    })
+    if (index === 4) {
+      tools.splice(tools.length - 1, 1)
+      tools.splice(tools.length - 1, 1)
+      tools.splice(tools.length - 1, 1)
+      tools.splice(tools.length - 1, 1)
+    }  
+    this.setData({
+      tools: tools
+    })
+  },
+  editTool () {
+    let tools = this.data.tools
+    let bol = !this.data.toggleTools
+    tools.forEach(item => {
+      item.editting = bol
+    })
+    this.setData({
+      toggleTools: bol,
+      tools: tools
+    })
+  },
+  save () {
+    this.editTool()
+    let customData = getApp().globalData.customData
+    let tools = []
+    this.data.tools.forEach(item => {
+      if (item.icon && item.icon !== 'icon-jia') {
+        tools.push({url: item.url, text: item.text, icon: item.icon})
+      }
+    })
+    customData.tools = tools
+    api.customUpdate({
+      data: {
+        content: JSON.stringify(customData)
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        getApp().globalData.customData = customData
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+  .hr{
+    background: #f1f1f1;
+    height: 32rpx;
+  }
+ .j_console{
+    .header{
+      background: #373d40;
+      text-align: center;
+      button{
+        margin: 45rpx auto 112rpx auto;
+      }
+    }
+    .info{
+        color:#12bedb;
+        font-size: 13px;
+    }
+    .ui-row{
+      justify-content: space-around;
+      flex-wrap: wrap;
+      .ui-col-3{
+        height: 85px;
+        border-bottom: 1px solid #e4e4e4;
+      }
+      &.row-border{
+        &::after{
+          border-bottom:none
+        }
+      }
+    }
+    
+      .weui-grid{
+        text-align:center;
+        i{
+          color: #12bedb;
+          font-size: 18px;
+        }
+        .icon-jia{
+          color: #b1b2b7;
+        }
+        .icon-jianhao{
+          position:absolute;
+          right:9px;
+          top:4px;
+          color:#ddd;
+          font-size:20px;
+        }
+        &.opacity{
+          i,view{
+            opacity: 0;
+          }
+        }
+        view{
+          font-size: 12px
+        }
+      }
+    .content{
+      flex-direction:column;
+      display:flex;
+      text-align: center;
+      justify-content: center;
+      overflow: hidden;
+      width:100%;
+      height:100%;
+      .iconfont{
+        color:#12bedb;
+        font-size:18px;
+      }
+      .p{
+          font-size: 12px;
+          color: black;
+          white-space:nowrap;
+          text-overflow:ellipsis;
+          overflow:hidden;
+      }
+    }
+  }
+</style>

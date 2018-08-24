@@ -1,0 +1,76 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46" >
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            咨询与建议
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="50" url="faq">
+          <ui-col vertical-align="middle">
+              常见问题
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50" bindtap="tel">
+          <ui-col vertical-align="middle">
+              我的客服
+          </ui-col>
+          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+              400-7111-011
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+      <ui-row height="50">
+          <ui-col vertical-align="middle">
+              咨询QQ
+          </ui-col>
+          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+              2594969476
+          </ui-col>
+          <ui-col width="40" vertical-align="middle" align="center">
+              <ui-icon type="arrow-right" size="14"></ui-icon>
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
+  </view>
+</template>
+
+<script>
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px'
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  tel () {
+    wx.makePhoneCall({
+      phoneNumber: '400-7111-011'
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1;
+}
+.text-right{
+  color: #999
+}
+</style>

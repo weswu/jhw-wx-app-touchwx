@@ -1,0 +1,238 @@
+<template>
+  <page></page>
+</template>
+
+<script>
+import system from './static/utils/system'
+import api from './static/utils/api'
+export default {
+  config: {
+    usingComponents: {},
+    pages: [
+      'pages/user/login',
+      'pages/cost/point',
+      'pages/cost/cost',
+      'pages/home/my',
+      'pages/message/messageList',
+      'pages/message/message',
+      'pages/user/enterprise',
+      'pages/user/account',
+      'pages/user/password',
+      'pages/home/console',
+      'pages/home/tools',
+      'pages/home/module',
+      'pages/home/index',
+      'pages/pc/miniProgram',
+      'pages/setting/setting',
+      'pages/setting/sale',
+      'pages/service/faq',
+      'pages/service/faq1',
+      'pages/service/feedback',
+      'pages/service/service',
+      'pages/shop/shop',
+      'pages/test'
+    ],
+    window: {
+      backgroundColor: '#fff',
+      backgroundTextStyle: 'dark',
+      navigationBarBackgroundColor: '#373d40',
+      navigationBarTitleText: '全网营销云',
+      navigationBarTextStyle: 'white',
+      enablePullDownRefresh: false,
+      navigationStyle: 'custom'
+    },
+    tabBar: {
+      color: '#9f9f9f',
+      selectedColor: '#00c0e4',
+      backgroundColor: '#fff',
+      borderStyle: 'black',
+      list: [{
+          iconPath: 'images/tabBar/home.png',
+          selectedIconPath: 'images/tabBar/home_active.png',
+          pagePath: 'pages/home/index',
+          text: '机汇网'
+        },
+        {
+          iconPath: 'images/tabBar/console.png',
+          selectedIconPath: 'images/tabBar/console_active.png',
+          pagePath: 'pages/home/console',
+          text: '控制台'
+        },
+        {
+          iconPath: 'images/tabBar/message.png',
+          selectedIconPath: 'images/tabBar/message_active.png',
+          pagePath: 'pages/message/message',
+          text: '消息'
+        },
+        {
+          iconPath: 'images/tabBar/my.png',
+          selectedIconPath: 'images/tabBar/my_active.png',
+          pagePath: 'pages/home/my',
+          text: '我的'
+        }
+      ]
+    },
+    networkTimeout: {
+      request: 10000
+    },
+    theme: {
+      'theme-color': '#00c0e4'
+    }
+  },
+  globalData: {
+    user: {},
+    userInfo: {},
+    enterprise: {},
+    integralCount: {},
+    accountInfo: {},
+    customData: {
+      mobileLink: [
+        {url: '/pages/shop/shop', text: '订单管理', icon: 'icon-dingdandaifukuan'},
+        {url: '/pages/member/member', text: '会员管理', icon: 'icon-Group'}
+      ],
+      mobileSort: [
+        {text: '我的产品', value:'product', checked: true},
+        {text: '订单管理', value:'order', checked: false},
+        {text: '常用工具', value:'tool', checked: true},
+        {text: '数据管理中心', value:'data', checked: true}
+      ]
+    },
+    // 站点
+    staticList: [],
+    // 其它
+    appid: 'wx2aba9d238ba02a76',
+    appsecret: 'c7131553b820b07e778d763bac18e259'
+  },
+  onLaunch() {
+    system.attachInfo()
+    //微信登录
+    let that = this
+    let code = ''
+    wx.login({
+      success: function(res) {
+        if (res.code) {
+          code = res.code
+          //发起网络请求
+          wx.getUserInfo({
+            success: function(u) {
+              api.wxapplogin({
+                data: {
+                  code: code,
+                  encryptedData: u.encryptedData,
+                  iv: u.iv,
+                  nickName: u.userInfo.nickName,
+                  headimgurl: u.userInfo.avatarUrl,
+                  appid: that.globalData.appid,
+                  appsecret: that.globalData.appsecret
+                },
+                method: 'POST'
+              }).then(resp => {
+                if (resp.success) {
+                  var data = resp.attributes.data
+                  wx.setStorageSync('skey', data.skey)
+                } else {
+                  console.log(resp.msg || 'skey获取失败')
+                }
+              })
+            }
+          })
+        } else {
+          console.log('登录失败！' + res.errMsg)
+        }
+      }
+    })
+  },
+  getUser (cb) {
+    //用户信息
+    api.user().then(res => {
+      if (res.success) {
+        this.globalData.user = res.attributes.data
+        this.globalData.integralCount = res.attributes.integralCount
+      }
+      typeof cb == 'function' && cb(this.globalData)
+    })
+    this.getStaticList()
+  },
+  getUserInfo (cb) {
+    //用户其他信息
+    api.userInfo().then(res => {
+      if (res.success) {
+        res.attributes.data.noReaderMsg = 5
+        this.globalData.userInfo = res.attributes.data
+      }
+      typeof cb == 'function' && cb(this.globalData.userInfo)
+    })
+  },
+  // 头像
+  getAccountInfo (cb) {
+    api.accountInfo({
+      id: this.globalData.user.userId
+    }).then(res => {
+      if (res.success) {
+        this.globalData.accountInfo = res.attributes.data
+      }
+      typeof cb == 'function' && cb(this.globalData.accountInfo)
+    })
+  },
+  // 站点列表
+  getStaticList (cb) {
+    api.staticList({
+      data: {
+        page: 1,
+        pageSize: 100,
+        sortType: 'desc'
+      }
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        this.globalData.staticList = data
+        if (data.length > 0) {
+          let layoutId = wx.getStorageSync('layoutId')
+          if (!layoutId) {
+            layoutId = data[0].layoutId
+          }
+          wx.setStorageSync('layoutId', parseInt(layoutId))
+        }
+      }
+    })
+  },
+  // 自定义参数
+  getCustomDate (cb) {
+    api.customData().then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        if (data.content) {
+          let content = JSON.parse(data.content)
+          if (!content.mobileLink) {
+            content.mobileLink = [
+              {url: '/pages/shop/shop', text: '订单管理', icon: 'icon-dingdandaifukuan'},
+              {url: '/pages/member/member', text: '会员管理', icon: 'icon-Group'}
+            ]
+          }
+          if (!content.mobileSort) {
+            content.mobileSort = [
+              {text: '我的产品', value:'product', checked: true},
+              {text: '订单管理', value:'order', checked: false},
+              {text: '常用工具', value:'tool', checked: true},
+              {text: '数据管理中心', value:'data', checked: true}
+            ]
+          }
+          this.globalData.customData = content
+        }
+      }
+      typeof cb == 'function' && cb(this.globalData.customData)
+    })
+  }
+}
+</script>
+
+<style lang="less">
+@import './static/styles/index.less';
+
+.ui-row-list{
+  background: #fff;
+  .icon-arrow-right{
+    color: #999
+  }
+}
+</style>
