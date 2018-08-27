@@ -2,7 +2,7 @@
   <view class="j_console">
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46" >
+      <ui-row height="46">
         <ui-col vertical-align="middle" align="center">
           <view>
             控制台

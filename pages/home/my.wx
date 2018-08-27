@@ -2,7 +2,7 @@
   <view class="j_my">
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46" ></ui-row>
+      <ui-row height="46"></ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
     <view class="position: relative;">
@@ -162,12 +162,9 @@ page{
     color: #12bedb;
     font-size:20px;
   }
-  .ui-row{
-    &:before{
-      left: 55px;
-      border-bottom: 1px solid #000
-    }
-  }
+}
+.ui-row-list > .ui-row:not(:last-child):after {
+  left: 35px;
 }
   .j_my{
     .weui-media-box{

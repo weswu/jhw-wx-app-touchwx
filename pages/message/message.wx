@@ -2,7 +2,7 @@
   <view>
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}">
-      <ui-row height="46" >
+      <ui-row height="46">
         <ui-col vertical-align="middle" align="center">
           <view>
             消息
@@ -81,27 +81,27 @@ export default {
       left: 65px;
     }
   }
-    .left_icon{
-        width:76rpx;
-        height:76rpx;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 50px;
+  .left_icon{
+      width:76rpx;
+      height:76rpx;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 50px;
+  }
+  .text{
+    text{
+        font-size: 16px;
+        color: #4e4e4e;
     }
-    .text{
-        text{
-            font-size: 16px;
-            color: #4e4e4e;
-        }
-        .time{
-            font-size: 14px;
-            color: #9b9ca5;
-        }
-        view{
-            color: #9b9ca5;
-            font-size: 12px;
-            .mix-text-overflow();
-        }
+    .time{
+        font-size: 14px;
+        color: #9b9ca5;
     }
+    view{
+        color: #9b9ca5;
+        font-size: 12px;
+        .mix-text-overflow();
+    }
+  }
 }
 </style>

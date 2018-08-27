@@ -2,11 +2,11 @@
   <view>
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46" >
+      <ui-row height="46">
         <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{back}}">
-          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+          <i class="iconfont icon-xiangzuo"></i>
         </ui-col>
-        <ui-col space-left="8" vertical-align="middle" align="center" width="40" bindtap="submit" wx:if="{{!back}}">
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="submit" wx:if="{{!back}}" space-left="8">
           完成
         </ui-col>
         <ui-col vertical-align="middle" align="center">

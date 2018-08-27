@@ -1,0 +1,188 @@
+<template>
+  <view>
+    <!-- 自定义导航 -->
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{!selected}}">
+          <i class="iconfont icon-xiangzuo"></i>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="toggleAll" wx:if="{{selected}}" space-left="8">
+          全选
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">
+          <view>
+            新闻管理<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text>
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+      </ui-row>
+    </ui-nav-bar>
+    <view style="height:{{NAV_HEIGHT}}"></view>
+    <ui-fixed-view top="{{ fixedTop }}" left="0" right="0">
+      <ui-row height="46" border-bottom>
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+          <i class="iconfont icon-fenlei"></i>
+        </ui-col>
+        <ui-col vertical-align="middle">
+          <view style="width:100%;">
+            <ui-row height="23" style="background: #f6f6f6;border-radius:3px;">
+              <ui-col vertical-align="middle" align="center" width="30">
+                  <i class="iconfont icon-sousuo" style="color:#afadb1;"></i>
+              </ui-col>
+              <ui-col vertical-align="middle">
+                <input type="text" class="weui-search-bar__input" value="{{name}}" bindinput="input"/>
+              </ui-col>
+            </ui-row>
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40">
+          <i class="iconfont icon-upload"></i>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:46px"></view>
+    <ui-row url="newsDetail?id={{item.newsId}}" height="54" border-bottom wx:for="{{list}}" wx:key="*this" class="list-content">
+      <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
+        <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
+        <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
+      </ui-col>
+      <ui-col class="text" vertical-align="middle" catchtap="cancel">
+        {{item.title}}
+        <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
+      </ui-col>
+    </ui-row>
+    <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
+      <ui-row height="70" border-top class="fixed_btn">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="copy">
+          <i class="iconfont icon-fuzhi"></i>
+          <view class="desc">复制</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center">
+          <i class="iconfont icon-folder-add-fill2"></i>
+          <view class="desc">移动</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center">
+          <i class="iconfont icon-delete-fill"></i>
+          <view class="desc">删除</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center">
+          <i class="iconfont icon-gengduo"></i>
+          <view class="desc">更多</view>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    // 数据
+    list: [],
+    params: {
+      page: 1
+    },
+    count: 0,
+    more: { loading: true },
+    selected: false,
+    ids: '',
+    toggle: false
+  },
+  navigateBack () {
+    wx.navigateBack()
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.news({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
+          item._checked = false
+        })
+        Utils.scrollList(this, res)
+      }
+    })
+  },
+  // 全选
+  toggleAll () {
+    let list = this.data.list
+    let toggle = !this.data.toggle
+    list.forEach(item => {
+      item._checked = toggle
+    })
+    this.setData({
+      list: list,
+      toggle: toggle
+    })
+    this.initSelcted()
+  },
+  toggle (e) {
+    let list = this.data.list
+    list[e.currentTarget.dataset.index]._checked = !list[e.currentTarget.dataset.index]._checked
+    this.setData({
+      list: list,
+      selected: true
+    })
+    this.initSelcted ()
+  },
+  initSelcted () {
+    let list = this.data.list
+    let ids = ''
+    list.forEach(item => {
+      if (item._checked) {
+        ids = ids ? (',' + item.newsId) : item.newsId
+      }
+    })
+    this.setData({
+      ids: ids
+    })
+  },
+  cancel (e) {
+    this.setData({
+      selected: false
+    })
+  },
+  // 批量
+  copy () {
+
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.LoadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+.list-content{
+  .text{
+    color: #4e4e4e;
+    .desc{
+      color: #9f9f9f;
+      font-size: 12px;
+      text{
+        padding: 0 5px
+      }
+    }
+  }
+  &.ui-row-border-bottom:after {
+    left: 40px;
+  }
+}
+.fixed_btn{
+  color: #a8a9ae;
+  background: #fafafa;
+  .iconfont{
+    color: #9f9f9f;
+    font-size: 20px;
+  }
+}
+</style>

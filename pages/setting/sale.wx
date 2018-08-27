@@ -2,9 +2,9 @@
   <view>
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46" >
+      <ui-row height="46">
         <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+          <i class="iconfont icon-xiangzuo"></i>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
           <view>
@@ -16,7 +16,7 @@
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="/pages/account/password">
+      <ui-row height="50" url="/pages/user/password">
           <ui-col vertical-align="middle">
               登录密码
           </ui-col>

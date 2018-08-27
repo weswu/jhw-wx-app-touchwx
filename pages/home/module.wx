@@ -2,16 +2,19 @@
   <view>
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46" >
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
+      <ui-row height="46">
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{isBack}}">
+          <i class="iconfont icon-xiangzuo"></i>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="save" wx:if="{{!isBack}}" space-left="8">
+          完成
         </ui-col>
         <ui-col vertical-align="middle" align="center">
           <view>
             所有模块
           </view>
         </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
+        <ui-col vertical-align="middle" width="40"></ui-col>
       </ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
@@ -23,42 +26,42 @@
             catchtouchmove="scrollTouchMove" catchtouchend="scrollTouchEnd">
         </view>
         <movable-area class="moveable_row {{movableViewPosition.className}}" style="height: {{scrollPosition.scrollViewHeight}}px;">
-            <movable-view style="height: {{scrollPosition.everyOptionCell}}px; width: 100%; background-color: #fff;"
+          <movable-view style="height: {{scrollPosition.everyOptionCell}}px; width: 100%; background-color: #fff;"
             direction="vertical" x="{{movableViewPosition.x}}" y="{{movableViewPosition.y}}"
             damping="9999" friction="9999">
             <ui-row height="50">
-              <ui-col width="40" vertical-align="middle" align="center">
-                    <icon type="circle" size="16" wx:if="{{!movableViewPosition.data.checked}}"></icon>
-                    <icon type="success" size="16" wx:if="{{movableViewPosition.data.checked}}"></icon>
+              <ui-col width="45" vertical-align="middle" align="center">
+                <icon type="circle" size="16" wx:if="{{!movableViewPosition.data.checked}}"></icon>
+                <icon type="success" size="16" wx:if="{{movableViewPosition.data.checked}}"></icon>
               </ui-col>
               <ui-col vertical-align="middle">
-                    <label>
-                        <checkbox class="weui-check" value="{{movableViewPosition.data.value}}" checked="{{movableViewPosition.data.checked}}"></checkbox>
-                        {{movableViewPosition.data.text}}
-                    </label>
+                <label>
+                    <checkbox class="weui-check" value="{{movableViewPosition.data.value}}" checked="{{movableViewPosition.data.checked}}"></checkbox>
+                    {{movableViewPosition.data.text}}
+                </label>
               </ui-col>
-              <ui-col width="40" vertical-align="middle">
+              <ui-col width="40" vertical-align="middle" align="center">
                  <i class="iconfont icon-tuozhuaicaidandaohang"></i>
               </ui-col>
             </ui-row>
-            </movable-view>
+          </movable-view>
         </movable-area>
         <scroll-view class="edit_row_holder" scroll-y="{{scrollPosition.scrollY}}" style="height: {{scrollPosition.scrollViewHeight}}px;" bindscroll="bindscroll">
         <ui-row-list>
           <checkbox-group bindchange="checkboxChange">
-            <ui-row height="50" wx:for="{{optionsListData}}" wx:key="*this" class="{{item.selectClass}}">
-              <ui-col width="40" vertical-align="middle" align="center">
-                    <icon type="circle" size="16" wx:if="{{!item.checked}}"></icon>
-                    <icon type="success" size="16" wx:if="{{item.checked}}"></icon>
+            <ui-row height="50" border-bottom wx:for="{{optionsListData}}" wx:key="*this" class="{{item.selectClass}}">
+              <ui-col width="45" vertical-align="middle" align="center">
+                <icon type="circle" size="16" wx:if="{{!item.checked}}"></icon>
+                <icon type="success" size="16" wx:if="{{item.checked}}"></icon>
               </ui-col>
               <ui-col vertical-align="middle">
-                    <label>
-                        <checkbox class="weui-check" value="{{item.value}}" checked="{{item.checked}}"></checkbox>
-                        {{item.text}}
-                    </label>
+                <label>
+                  <checkbox class="weui-check" value="{{item.value}}" checked="{{item.checked}}"></checkbox>
+                  {{item.text}}
+                </label>
               </ui-col>
-              <ui-col width="40" vertical-align="middle">
-                 <i class="iconfont icon-tuozhuaicaidandaohang"></i>
+              <ui-col width="40" vertical-align="middle" align="center">
+                  <i class="iconfont icon-tuozhuaicaidandaohang"></i>
               </ui-col>
             </ui-row>
            </checkbox-group>
@@ -69,14 +72,15 @@
 </template>
 
 <script>
+import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 export default {
   data: {        
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     isBack: true,
     scrollPosition:{
-      everyOptionCell:43,
-      top:33,
+      everyOptionCell:50,
+      top:wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT + 38,
       scrollTop:0,
       scrollY:true,
       scrollViewHeight:1000,
@@ -102,20 +106,18 @@ export default {
   onLoad () {
     // 开始加载页面
     var systemInfo= wx.getSystemInfoSync();
-        var optionsList = this.optionsDataTranlate(getApp().globalData.customData.mobileSort,"");
-        // 开始加载页面
-        var scrollViewHeight = systemInfo.windowHeight-33;
-        var scrollViewWidth = systemInfo.windowWidth;
-        this.setData({
-            optionsListData:optionsList,
-            'scrollPosition.scrollViewWidth':scrollViewWidth,
-            'scrollPosition.scrollViewHeight':scrollViewHeight,
-            'scrollPosition.windowViewHeight':systemInfo.windowHeight,
-        });
+    var optionsList = this.optionsDataTranlate(getApp().globalData.customData.mobileSort,"");
+    // 开始加载页面
+    var scrollViewHeight = systemInfo.windowHeight-33;
+    var scrollViewWidth = systemInfo.windowWidth;
+    this.setData({
+      optionsListData:optionsList,
+      'scrollPosition.scrollViewWidth':scrollViewWidth,
+      'scrollPosition.scrollViewHeight':scrollViewHeight,
+      'scrollPosition.windowViewHeight':systemInfo.windowHeight
+    });
   },
-  back () {
-    wx.navigateBack()
-  },save () {
+  save () {
     let data = []
     this.data.optionsListData.forEach(item => {
       data.push({text: item.text, value: item.value, checked: item.checked})
@@ -130,10 +132,11 @@ export default {
       if (res.success) {
         getApp().globalData.customData = data
         Tips.success("保存成功")
-        wx.navigateBack()
+        this.setData({
+          isBack: true
+        })
       }
     })
-    
   },
   optionsDataTranlate (optionsList,selectClass) {
     for(var i=0,j=optionsList.length;i<j;i++){
@@ -141,12 +144,12 @@ export default {
     }
     return optionsList
   },
-    bindscroll:function (event) {
-        var scrollTop = event.detail.scrollTop;
-        this.setData({
-            'scrollPosition.scrollTop':scrollTop
-        })
-    },
+  bindscroll:function (event) {
+    var scrollTop = event.detail.scrollTop;
+    this.setData({
+      'scrollPosition.scrollTop':scrollTop
+    })
+  },
   getOptionInfo (code) {
     for(var i=0,j=this.data.optionsListData.length;i<j;i++){
       var optionData= this.data.optionsListData[i];
@@ -169,108 +172,107 @@ export default {
     return optionsListData[0]
   },
   scrollTouchStart (event) {
-      var firstTouchPosition = {
-          x:event.changedTouches[0].pageX,
-          y:event.changedTouches[0].pageY,
+    var firstTouchPosition = {
+      x:event.changedTouches[0].pageX,
+      y:event.changedTouches[0].pageY
+    }
+    var domData = this.getPositionDomByXY(firstTouchPosition);
+    console.log("domData:",domData);
+    //movable-area滑块位置处理
+    var movableX = 0;
+    var movableY = firstTouchPosition.y-this.data.scrollPosition.top-this.data.scrollPosition.everyOptionCell/2;
+
+    this.setData({
+      movableViewPosition:{
+        x:movableX,
+        y:movableY,
+        className:"",
+        data:domData
       }
-      var domData = this.getPositionDomByXY(firstTouchPosition);
-      console.log("domData:",domData);
+    })
+    var secCode = domData.value;
+    var secInfo = this.getOptionInfo(secCode);
+    secInfo.selectPosition =  event.changedTouches[0].clientY;
+    secInfo.selectClass = "dragSelected";
 
-      //movable-area滑块位置处理
-      var movableX = 0;
-      var movableY = firstTouchPosition.y-this.data.scrollPosition.top-this.data.scrollPosition.everyOptionCell/2;
+    this.data.optionsListData[secInfo.selectIndex].selectClass = "dragSelected";
+    var optionsListData = this.data.optionsListData;
 
-        this.setData({
-            movableViewPosition:{
-                x:movableX,
-                y:movableY,
-                className:"",
-                data:domData
-            }
-        })
-      var secCode = domData.value;
-      var secInfo = this.getOptionInfo(secCode);
-      secInfo.selectPosition =  event.changedTouches[0].clientY;
-      secInfo.selectClass = "dragSelected";
-
-      this.data.optionsListData[secInfo.selectIndex].selectClass = "dragSelected";
-        var optionsListData = this.data.optionsListData;
-
-        this.setData({
-            'scrollPosition.scrollY':false,
-            selectItemInfo:secInfo,
-            optionsListData:optionsListData,
-            'scrollPosition.selectIndex':secInfo.selectIndex
-        })
+    this.setData({
+      'scrollPosition.scrollY':false,
+      selectItemInfo:secInfo,
+      optionsListData:optionsListData,
+      'scrollPosition.selectIndex':secInfo.selectIndex
+    })
   },
   scrollTouchMove (event) {
-      var selectItemInfo = this.data.selectItemInfo;
-      var selectPosition = selectItemInfo.selectPosition;
-      var moveDistance   = event.changedTouches[0].clientY;
-      var everyOptionCell = this.data.scrollPosition.everyOptionCell;
-      var optionsListData = this.data.optionsListData;
-      var selectIndex = selectItemInfo.selectIndex;
+    var selectItemInfo = this.data.selectItemInfo;
+    var selectPosition = selectItemInfo.selectPosition;
+    var moveDistance   = event.changedTouches[0].clientY;
+    var everyOptionCell = this.data.scrollPosition.everyOptionCell;
+    var optionsListData = this.data.optionsListData;
+    var selectIndex = selectItemInfo.selectIndex;
 
-      console.log("event.changedTouches:",event.changedTouches);
-      //movable-area滑块位置处理
-      var movableX = 0;
-      var movableY = event.changedTouches[0].pageY-this.data.scrollPosition.top-this.data.scrollPosition.everyOptionCell/2;
+    console.log("event.changedTouches:",event.changedTouches);
+    //movable-area滑块位置处理
+    var movableX = 0;
+    var movableY = event.changedTouches[0].pageY-this.data.scrollPosition.top-this.data.scrollPosition.everyOptionCell/2;
 
-        this.setData({
-            movableViewPosition:{
-                x:movableX,
-                y:movableY,
-                className:"",
-                data:this.data.movableViewPosition.data
-            }
-        })
-      if(moveDistance - selectPosition > 0 && selectIndex < optionsListData.length - 1){
-          if (optionsListData[selectIndex].value == selectItemInfo.value) {
-              optionsListData.splice(selectIndex, 1);
-              optionsListData.splice(++selectIndex, 0, selectItemInfo);
-              selectPosition += everyOptionCell;
-          }
+    this.setData({
+      movableViewPosition:{
+        x:movableX,
+        y:movableY,
+        className:"",
+        data:this.data.movableViewPosition.data
       }
-
-      if (moveDistance - selectPosition < 0 && selectIndex > 0) {
-          if (optionsListData[selectIndex].value == selectItemInfo.value) {
-              optionsListData.splice(selectIndex, 1);
-              optionsListData.splice(--selectIndex, 0, selectItemInfo);
-              selectPosition -= everyOptionCell;
-          }
+    })
+    if(moveDistance - selectPosition > 0 && selectIndex < optionsListData.length - 1){
+      if (optionsListData[selectIndex].value == selectItemInfo.value) {
+        optionsListData.splice(selectIndex, 1);
+        optionsListData.splice(++selectIndex, 0, selectItemInfo);
+        selectPosition += everyOptionCell;
       }
+    }
+
+    if (moveDistance - selectPosition < 0 && selectIndex > 0) {
+      if (optionsListData[selectIndex].value == selectItemInfo.value) {
+        optionsListData.splice(selectIndex, 1);
+        optionsListData.splice(--selectIndex, 0, selectItemInfo);
+        selectPosition -= everyOptionCell;
+      }
+    }
       
-        this.setData({
-            'selectItemInfo.selectPosition': selectPosition,
-            'selectItemInfo.selectIndex': selectIndex,
-            optionsListData: optionsListData,
-        });
+    this.setData({
+      'selectItemInfo.selectPosition': selectPosition,
+      'selectItemInfo.selectIndex': selectIndex,
+      optionsListData: optionsListData
+    });
   },
   scrollTouchEnd (event) {
     console.log(event);
     var optionsListData = this.optionsDataTranlate(this.data.optionsListData,"")
     this.setData({
-            optionsListData:optionsListData,
-            'scrollPosition.scrollY':true,
-            'movableViewPosition.className':"none",
-            isBack: false
-        })
+      optionsListData:optionsListData,
+      'scrollPosition.scrollY':true,
+      'movableViewPosition.className':"none",
+      isBack: false
+    })
   },
   checkboxChange (e) {
     var checkboxItems = this.data.optionsListData, values = e.detail.value
     for (var i = 0, lenI = checkboxItems.length; i < lenI; ++i) {
-        checkboxItems[i].checked = false
-        for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
-            if(checkboxItems[i].value == values[j]){
-                checkboxItems[i].checked = true
-                break
-            }
+      checkboxItems[i].checked = false
+      for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
+        if(checkboxItems[i].value == values[j]){
+          checkboxItems[i].checked = true
+          break
         }
+      }
     }
     this.setData({
-            optionsListData:checkboxItems,
-            isBack: false
-        })
+      optionsListData:checkboxItems,
+      isBack: false
+    })
   }
 }
 </script>
@@ -282,18 +284,25 @@ background-color:#f1f1f1;
 .j_save {
 background-color:#f1f1f1;
 text-align:right;
-padding:7px 15px;
+padding:0 15px;
 color:#999;
 font-size:12px;
+height: 38px;
+line-height: 38px;
 }
 .weui-check {
 position:absolute;
 left:-9999px;
 }
+.icon-tuozhuaicaidandaohang{
+  color: #999
+}
+.ui-row-border-bottom:after {
+  left: 40px;
+}
 
-
+// 排序css
 .touchView{z-index: 200; width: 100px;position: absolute;top: 0;left:275px; top: 0;}
-
 .moveable_row{
   height: 0px;
   width: 100%; position: absolute;top: 0;left: 0; z-index: 100;
@@ -305,6 +314,5 @@ left:-9999px;
     box-shadow: 0 0 12px rgba(0,0,0,.2)
   }
 }
-
 .dragSelected{  background-color: #ccc;}
 </style>

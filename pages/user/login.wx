@@ -2,7 +2,7 @@
   <view>
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}">
-      <ui-row height="46" >
+      <ui-row height="46">
         <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
           <ui-icon type="arrow-left" size="16" color="#fff" wx:if="{{back}}"></ui-icon>
         </ui-col>

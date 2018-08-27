@@ -7,24 +7,13 @@
           <i class="iconfont icon-xiangzuo"></i>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <view>
-            基本资料
-          </view>
+          新闻详细
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="40"></ui-col>
       </ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
-    <ui-row-list>
-      <ui-row height="50">
-          <ui-col width="100" vertical-align="middle" space-left="15">
-              手机
-          </ui-col>
-          <ui-col vertical-align="middle" align="right" space-right="15">
-              15168352892
-          </ui-col>
-      </ui-row>
-    </ui-row-list>
+
   </view>
 </template>
 

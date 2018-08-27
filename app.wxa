@@ -10,18 +10,20 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/news/news',
+      'pages/news/newsDetail',
+      'pages/home/index',
+      'pages/home/console',
+      'pages/home/module',
+      'pages/home/tools',
+      'pages/home/my',
       'pages/cost/point',
       'pages/cost/cost',
-      'pages/home/my',
       'pages/message/messageList',
       'pages/message/message',
       'pages/user/enterprise',
       'pages/user/account',
       'pages/user/password',
-      'pages/home/console',
-      'pages/home/tools',
-      'pages/home/module',
-      'pages/home/index',
       'pages/pc/miniProgram',
       'pages/setting/setting',
       'pages/setting/sale',
@@ -157,7 +159,6 @@ export default {
     //用户其他信息
     api.userInfo().then(res => {
       if (res.success) {
-        res.attributes.data.noReaderMsg = 5
         this.globalData.userInfo = res.attributes.data
       }
       typeof cb == 'function' && cb(this.globalData.userInfo)
@@ -234,5 +235,8 @@ export default {
   .icon-arrow-right{
     color: #999
   }
+}
+.ui-row .icon-xiangzuo{
+    font-size: 20px;
 }
 </style>
