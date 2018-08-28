@@ -153,10 +153,6 @@ export default{
 page{
   background: #f1f1f1;
 }
-.hr{
-  background: #f1f1f1;
-  height: 32rpx;
-}
 .ui-row-list{
   .iconfont{
     color: #12bedb;
@@ -166,62 +162,62 @@ page{
 .ui-row-list > .ui-row:not(:last-child):after {
   left: 35px;
 }
-  .j_my{
-    .weui-media-box{
-      display:-webkit-box;
-      display:-webkit-flex;
-      display:flex;
-      -webkit-box-align:center;
-      -webkit-align-items:center;
-      align-items:center;
-      background:#373d40;color:#fff;
-      padding: 35px 22px 25px 22px;
-      .headimg-box{
-        margin-right:30rpx;
-        width:60px;
-        height:60px;
-        line-height:60px;
-        text-align:center;
-      }
-      .weui-media-box__title{
-        font-size:15px;
-        line-height:2;
-        font-weight:400;
-        width:auto;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-        word-wrap:normal;
-        word-wrap:break-word;
-        word-break:break-all;
-        .login-btn{
-          margin-left: 16rpx;
-          display: inline-block;
-        }
-      }
-      .weui-media-box__desc {
-        color:#999;
-        font-size:13px;
-        line-height:1.4;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        display:-webkit-box;
-        -webkit-box-orient:vertical;
-        -webkit-line-clamp:2;
-      }
-      .icon-huiyuan1{
-        background: #ff6700;color: #fff;font-size:32px;padding:15px;border-radius:50%;
-      }
-      .weui-media-box__thumb{
-        border-radius:30px;
+.j_my{
+  .weui-media-box{
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:flex;
+    -webkit-box-align:center;
+    -webkit-align-items:center;
+    align-items:center;
+    background:#373d40;color:#fff;
+    padding: 35px 22px 25px 22px;
+    .headimg-box{
+      margin-right:30rpx;
+      width:60px;
+      height:60px;
+      line-height:60px;
+      text-align:center;
+    }
+    .weui-media-box__title{
+      font-size:15px;
+      line-height:2;
+      font-weight:400;
+      width:auto;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      word-wrap:normal;
+      word-wrap:break-word;
+      word-break:break-all;
+      .login-btn{
+        margin-left: 16rpx;
+        display: inline-block;
       }
     }
-    .crpt{
-      margin:0 auto;
-      padding: 20px 0;
-      text-align:center;
-      color:#c6c6cd;
-      font-size:12px;background-color:#f1f1f1;
+    .weui-media-box__desc {
+      color:#999;
+      font-size:13px;
+      line-height:1.4;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:2;
+    }
+    .icon-huiyuan1{
+      background: #ff6700;color: #fff;font-size:32px;padding:15px;border-radius:50%;
+    }
+    .weui-media-box__thumb{
+      border-radius:30px;
     }
   }
+  .crpt{
+    margin:0 auto;
+    padding: 20px 0;
+    text-align:center;
+    color:#c6c6cd;
+    font-size:12px;background-color:#f1f1f1;
+  }
+}
 </style>

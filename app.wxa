@@ -10,8 +10,9 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
-      'pages/news/news',
+      'pages/pc/website',
       'pages/news/newsDetail',
+      'pages/news/news',
       'pages/home/index',
       'pages/home/console',
       'pages/home/module',
@@ -31,7 +32,10 @@ export default {
       'pages/service/faq1',
       'pages/service/feedback',
       'pages/service/service',
+      'pages/setting/webView',
       'pages/shop/shop',
+      'pages/category/category',
+      'pages/components/j-date',
       'pages/test'
     ],
     window: {
@@ -107,6 +111,7 @@ export default {
   },
   onLaunch() {
     system.attachInfo()
+    wx.setStorageSync('lanId', '1')
     //微信登录
     let that = this
     let code = ''
@@ -230,13 +235,42 @@ export default {
 <style lang="less">
 @import './static/styles/index.less';
 
+.hr{
+  background: #f1f1f1;
+  height: 32rpx;
+}
 .ui-row-list{
   background: #fff;
+}
+.ui-row{
+ .icon-xiangzuo{
+    font-size: 20px;
+  }
   .icon-arrow-right{
     color: #999
   }
+  .desc{
+    color: #999;
+    font-size: 12px;
+  }
 }
-.ui-row .icon-xiangzuo{
-    font-size: 20px;
+
+.radio-group{
+  label{
+    padding-bottom: 5px;
+  }
+}
+radio {
+  transform:scale(.7);
+}
+// 详情表单
+.j_detail {
+  .ui-row-list .ui-row{
+    color: #4e4e4e;
+    .form_content{
+      color: #b1b1b1;
+      font-size:13px;
+    }
+  }
 }
 </style>

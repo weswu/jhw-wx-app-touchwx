@@ -17,60 +17,81 @@
         <ui-col vertical-align="middle" align="center" width="40"></ui-col>
       </ui-row>
     </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
-    <ui-fixed-view top="{{ fixedTop }}" left="0" right="0">
-      <ui-row height="46" border-bottom>
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-fenlei"></i>
+    <view style="height:{{NAV_HEIGHT}}px"></view>
+    
+    <view style="height:46px"></view>
+    <ui-row-list>
+      <ui-row url="newsDetail?id={{item.newsId}}" height="54" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
+          <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle" catchtap="cancel" wx:if="{{selected}}">
+          {{item.title}}
+          <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle" wx:if="{{!selected}}">
+          {{item.title}}
+          <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
+      <ui-row height="46" border-bottom style="background:#fff">
+        <ui-col vertical-align="middle" align="center" width="40">
+          <navigator url="/pages/category/category?type=news" class="iconfont icon-fenlei" style="color:#4e4e4e"></navigator>
         </ui-col>
         <ui-col vertical-align="middle">
           <view style="width:100%;">
             <ui-row height="23" style="background: #f6f6f6;border-radius:3px;">
               <ui-col vertical-align="middle" align="center" width="30">
-                  <i class="iconfont icon-sousuo" style="color:#afadb1;"></i>
+                  <i class="iconfont icon-sousuo"></i>
               </ui-col>
               <ui-col vertical-align="middle">
-                <input type="text" class="weui-search-bar__input" value="{{name}}" bindinput="input"/>
+                <input type="text" value="{{params.title}}" bindinput="search"/>
               </ui-col>
             </ui-row>
           </view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="40">
-          <i class="iconfont icon-upload"></i>
+          <navigator url="newsDetail" class="iconfont icon-jia1" style="color:#4e4e4e"></navigator>
         </ui-col>
       </ui-row>
     </ui-fixed-view>
-    <view style="height:46px"></view>
-    <ui-row url="newsDetail?id={{item.newsId}}" height="54" border-bottom wx:for="{{list}}" wx:key="*this" class="list-content">
-      <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
-        <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
-        <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
-      </ui-col>
-      <ui-col class="text" vertical-align="middle" catchtap="cancel">
-        {{item.title}}
-        <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
-      </ui-col>
-    </ui-row>
     <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
-      <ui-row height="70" border-top class="fixed_btn">
+      <ui-row height="60" border-top class="fixed_btn">
         <ui-col span="3" vertical-align="middle" align="center" bindtap="copy">
           <i class="iconfont icon-fuzhi"></i>
           <view class="desc">复制</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="move">
           <i class="iconfont icon-folder-add-fill2"></i>
           <view class="desc">移动</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="del">
           <i class="iconfont icon-delete-fill"></i>
           <view class="desc">删除</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="more">
           <i class="iconfont icon-gengduo"></i>
           <view class="desc">更多</view>
         </ui-col>
       </ui-row>
     </ui-fixed-view>
+    
+    <view style="height:70px" wx:if="{{selected}}"></view>
+    <ui-mask show="{{showMask}}" hide-delay="500" custom-style="{{ {background:'rgba(0, 0, 0, 0)'} }}">
+      <view class="content">
+        <ui-fixed-view bottom="60" right="0">
+          <view class="more-list">
+            <view data-show="{{'01'}}" bindtap="display">显示</view>
+            <view data-show="{{'00'}}" bindtap="display">隐藏</view>
+          </view>
+        </ui-fixed-view>
+      </view>
+    </ui-mask>
+    
   </view>
 </template>
 
@@ -80,17 +101,18 @@ import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
 export default {
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
-    // 数据
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    // 数据  没有更多新闻
     list: [],
     params: {
       page: 1
     },
     count: 0,
     more: { loading: true },
-    selected: false,
-    ids: '',
-    toggle: false
+    selected: false, //选中状态
+    ids: '', // 选中项
+    toggle: false, // 全选切换状态 
+    showMask: false // 更多
   },
   navigateBack () {
     wx.navigateBack()
@@ -99,6 +121,9 @@ export default {
     this.get()
   },
   get () {
+    this.setData({
+      ids: ''
+    })
     api.news({
       data: this.data.params
     }).then(res => {
@@ -110,6 +135,17 @@ export default {
         Utils.scrollList(this, res)
       }
     })
+  },
+  // 搜索
+  search (e) {
+    this.setData({
+      list: [],
+      params: {
+        page: 1,
+        title: e.detail.value
+      }
+    })
+    this.get()
   },
   // 全选
   toggleAll () {
@@ -138,7 +174,7 @@ export default {
     let ids = ''
     list.forEach(item => {
       if (item._checked) {
-        ids = ids ? (',' + item.newsId) : item.newsId
+        ids = ids ? (ids + ',' + item.newsId) : item.newsId
       }
     })
     this.setData({
@@ -152,7 +188,68 @@ export default {
   },
   // 批量
   copy () {
-
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    api.newsCopy({
+      data: {newsIds: this.data.ids},
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('复制成功')
+        this.setData({
+          list: [],
+          'params.page': 1
+        })
+        this.get()
+      }
+    })
+  },
+  move () {},
+  del () {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    api.newsDel({
+      data: {ids: this.data.ids},
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('删除成功')
+        this.setData({
+          list: [],
+          'params.page': 1
+        })
+        this.get()
+      }
+    })
+  },
+  display (e) {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    let display = e.currentTarget.dataset.show
+    api.newsDisplay({
+      data: {
+        newsIds: this.data.ids,
+        display: display
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success(display === '01' ? '已显示' : '已隐藏')
+        this.setData({
+          list: [],
+          'params.page': 1
+        })
+        this.get()
+      }
+    })
+  },
+  more () {
+    this.setData({
+      showMask: true
+    })
   },
   // 加载更多
   onReachBottom () {
@@ -162,7 +259,10 @@ export default {
 </script>
 
 <style lang="less">
-.list-content{
+page{
+  background: #f1f1f1
+}
+.ui-row-list{
   .text{
     color: #4e4e4e;
     .desc{
@@ -183,6 +283,21 @@ export default {
   .iconfont{
     color: #9f9f9f;
     font-size: 20px;
+  }
+}
+.more-list{
+  background:rgba(0, 0, 0, 0.7);
+  width:80px;
+  line-height:2;
+  color: #fff;
+  padding: 5px 0;
+  view{
+    padding: 5px 0 5px 15px;
+    font-size: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    &:last-child{
+      border-bottom: none
+    }
   }
 }
 </style>

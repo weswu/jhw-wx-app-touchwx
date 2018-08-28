@@ -56,8 +56,10 @@ const product = (params) => http(params, host + 'product/list')
 const productDetail = (params) => http(params, host + 'product/detail/' + params.id)
 // 新闻
 const news = (params) => http(params, host + 'news/list')
+const newsCopy = (params) => http(params, host + 'news/copy')
+const newsDel = (params) => http(params, host + 'news/batch/del')
+const newsDisplay = (params) => http(params, host + 'news/display')
 const newsDetail = (params) => http(params, host + 'news/detail/' + params.id)
-const newsUpdate = (params) => http(params, host + 'news/update')
 // 证书
 const cert = (params) => http(params, host + 'cert/list')
 const certDetail = (params) => http(params, host + 'cert/detail' + (params.id ? '/' + params.id : ''))
@@ -110,6 +112,8 @@ module.exports = {
   accountInfo, accountOauth,
   costUnPaid, costOrder, costPaid, costDetail,
   point, pointProduct, pointRule, signIn,
+  // 新闻
+  news, newsCopy, newsDel, newsDisplay, newsDetail,
 
   login, logout,
   // 站点
@@ -123,8 +127,6 @@ module.exports = {
   album, albumCategory,
   // 产品
   product, productDetail,
-  // 新闻
-  news, newsDetail, newsUpdate,
   // 分类
   category, categoryUpdate, categoryDetail,
   // 证书

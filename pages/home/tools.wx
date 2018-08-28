@@ -201,40 +201,40 @@ export default {
   position:absolute;
   left:-9999px;
 }
-  .weui-grid{
-    text-align:center;
-    i{
-      color: #12bedb;
-      font-size: 18px;
-    }
-    .icon-jia{
-      color: #b1b2b7;
-    }
-    icon{
-      position:absolute;
-      right:5px;
-      top:5px;
-    }
-    &.opacity{
-      i,view, icon{
-        opacity: 0;
-      }
-    }
-    view{
-      font-size: 12px
+.weui-grid{
+  text-align:center;
+  i{
+    color: #12bedb;
+    font-size: 18px;
+  }
+  .icon-jia{
+    color: #b1b2b7;
+  }
+  icon{
+    position:absolute;
+    right:5px;
+    top:5px;
+  }
+  &.opacity{
+    i,view, icon{
+      opacity: 0;
     }
   }
-    .ui-row{
-      justify-content: space-around;
-      flex-wrap: wrap;
-      .ui-col-3{
-        height: 85px;
-        border-bottom: 1px solid #e4e4e4;
-      }
-      &.row-border{
-        &::after{
-          border-bottom:none
-        }
-      }
+  view{
+    font-size: 12px
+  }
+}
+.ui-row{
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .ui-col-3{
+    height: 85px;
+    border-bottom: 1px solid #e4e4e4;
+  }
+  &.row-border{
+    &::after{
+      border-bottom:none
     }
+  }
+}
 </style>

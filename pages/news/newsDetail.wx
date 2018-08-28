@@ -1,33 +1,208 @@
 <template>
-  <view>
+  <view class="j_detail">
     <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
+    <ui-nav-bar slot="nav-bar" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}">
       <ui-row height="46">
         <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
+          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
         </ui-col>
         <ui-col vertical-align="middle" align="center">
-          新闻详细
+          <view>
+            新闻详情
+          </view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="40"></ui-col>
       </ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
 
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            新闻名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+            新闻名称1
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+            <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            新闻分类
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+            请选择
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+            <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="48" url="/pages/components/j-date?time={{detail.addTime}}">
+        <ui-col width="60" vertical-align="middle">
+            延时发布
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            {{detail.addTimeVal}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            来源
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            请填写
+        </ui-col>
+      </ui-row>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            作者
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            请填写
+        </ui-col>
+      </ui-row>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            是否置顶
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+            <radio-group bindchange="radio2">
+              <label>
+                <radio value="00" checked="{{state === '00'}}" style="color:#000"></radio>
+                是
+              </label>
+              <label>
+                <radio value="01" checked="{{state === '01'}}"></radio>
+                否
+              </label>
+            </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            新闻图片
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+            <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            SEO设置
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+            <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="48">
+        <ui-col width="60" vertical-align="middle">
+            新闻标签
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+            <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
   </view>
-</template>
+ </template>
 
 <script>
-export default {
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
-
+    detail:{}
   },
   navigateBack () {
     wx.navigateBack()
+  },
+  onLoad (e) {
+    if (e.id) {
+      this.get(id)
+    } else {
+      this.setData({
+        detail: {
+          addTimeVal: Utils.formatTime(new Date())
+        }
+      })
+    }
+  },
+  get (id) {
+    api.newsDetail({
+      id: id
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      }
+    })
+  },
+  dateChange (e) {
+    this.setData({
+      'detail.addTimeVal': Utils.formatTime(new Date(e)),
+      'detail.addTime': e
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.username,
+        method: 'required',
+        message: '用户名不能为空'
+      },
+      {
+        value: this.data.detail.password,
+        method: 'required',
+        message: '密码不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let that = this
+    wx.login({
+      success: function(login) {
+        that.setData({
+          'detail.code': login.code,
+          'detail.skey': wx.getStorageSync('skey'),
+          'detail.appid': getApp().globalData.appid,
+          'detail.appsecret': getApp().globalData.appsecret
+        })
+        Tips.loading()
+        api.login({
+          data: that.data.detail,
+          method: 'POST'
+        }).then(res => {
+          Tips.loaded()
+          if (res.success) {
+            
+          } else {
+            Tips.error(res.msg)
+          }
+        })
+      }
+    })
   }
 }
+export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 </style>
+
