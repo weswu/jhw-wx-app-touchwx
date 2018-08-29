@@ -10,9 +10,9 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
-      'pages/pc/website',
       'pages/news/newsDetail',
       'pages/news/news',
+      'pages/pc/website',
       'pages/home/index',
       'pages/home/console',
       'pages/home/module',
@@ -35,7 +35,11 @@ export default {
       'pages/setting/webView',
       'pages/shop/shop',
       'pages/category/category',
+      'pages/static/seo/seoDetail',
       'pages/components/j-date',
+      'pages/components/j-tag',
+      'pages/components/cc-loadmore',
+      'pages/components/cc-image',
       'pages/test'
     ],
     window: {
@@ -260,16 +264,34 @@ export default {
     padding-bottom: 5px;
   }
 }
+
+/*  重写 radio 样式  */
 radio {
   transform:scale(.7);
+  .wx-radio-input{
+    margin:0;
+  }
+  .wx-radio-input.wx-radio-input-checked{
+    border-color: #34b34a !important;
+    background: #34b34a !important;
+  }
 }
+
 // 详情表单
 .j_detail {
   .ui-row-list .ui-row{
     color: #4e4e4e;
     .form_content{
-      color: #b1b1b1;
       font-size:13px;
+    }
+    input::-webkit-input-placeholder {
+      color: #b1b1b1;
+      font-size: 12px;
+    }
+    radio-group {
+      label{
+        padding-left: 10px;
+      }
     }
   }
 }

@@ -5,16 +5,11 @@ import Tips from './tips'
  * @date: 2018-1-17
  * @desc: 删除单个数组
 */
-const del = (ctx, id) => {
-  let list = ctx.data.list
-  list.forEach((item, index) => {
-    if (item.id === id) {
-      list.splice(index, 1)
-    }
-  })
-  ctx.setData({
-    list: list,
-    count: ctx.data.count - 1
+const del = (that, index) => {
+  that.data.list.splice(index, 1);
+  that.setData({
+    list: that.data.list,
+    count: that.data.count - 1
   })
   Tips.success('删除成功')
 };
@@ -36,29 +31,22 @@ const addAll = (a, b) => {
  * @date: 2018-1-17
  * @desc: 滚动加载数据
 */
-const scrollList = (that, res) => {
+const scrollList = (that, res, text) => {
   let ctx = that.data
   if (res.success) {
     addAll(ctx.list, res.attributes.data)
-    ctx.params.pageSize = ctx.params.pageSize || 16
-    let isOnePage = false //
+
     if(ctx.params.page === 1){
-      isOnePage = true
-    }
-    if (isOnePage) {
       ctx.count = res.attributes.count
-      if (res.attributes.data.length === 0) {
-        ctx.more.empty = true
-      } else {
-        ctx.more.empty = false
-      }
     }
-    let pageSize = ctx.params.pageSize
-    if (res.attributes.data.length < pageSize) { ctx.more.reachBottom = true } else { ctx.more.reachBottom = false }
-  } else {
-    ctx.more.refresh = false
+
+    let pageSize = ctx.params.pageSize || 16
+    if (res.attributes.data.length < pageSize) {
+      ctx.more.tip = text || '加载完毕'
+    }
   }
   ctx.more.loading = false
+  
   that.setData({
     list: ctx.list,
     params: ctx.params,

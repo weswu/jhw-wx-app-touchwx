@@ -58,13 +58,13 @@ export default {
       {
         title: '站点管理',
         children: [
-          { url: '/pages/user/static', text: '站点数据管理', icon: 'icon-shuju' },
-          { url: '/pages/user/seo', text: 'SEO管理', icon: 'icon-SEO' },
-          { url: '/pages/user/beian', text: '域名备案', icon: 'icon-yuming' },
-          { url: '/pages/user/sitemap', text: 'Sitemap生成', icon: 'icon-sitemap' },
-          { url: '/pages/user/seo_batch', text: '批量提交', icon: 'icon-tijiao' },
-          { url: '/pages/user/third_party_statistics', text: '第三方统计', icon: 'icon-tongji' },
-          { url: '/pages/user/convenient', text: '便捷登录配置', icon: 'icon-denglu' },
+          { url: '/pages/static/static', text: '站点数据管理', icon: 'icon-shuju' },
+          { url: '/pages/static/seo', text: 'SEO管理', icon: 'icon-SEO' },
+          { url: '/pages/static/beian', text: '域名备案', icon: 'icon-yuming' },
+          { url: '/pages/static/sitemap', text: 'Sitemap生成', icon: 'icon-sitemap' },
+          { url: '/pages/static/seo_batch', text: '批量提交', icon: 'icon-tijiao' },
+          { url: '/pages/static/third_party_statistics', text: '第三方统计', icon: 'icon-tongji' },
+          { url: '/pages/static/convenient', text: '便捷登录配置', icon: 'icon-denglu' },
           { url: '', text: 'text', icon: 'icon-jia' }
         ]
       },
@@ -80,17 +80,17 @@ export default {
       {
         title: '产品管理',
         children: [
-          { url: '/pages/user/product', text: '产品列表', icon: 'icon-liebiao1' },
-          { url: '/pages/user/category/product', text: '产品分类', icon: 'icon-classifi' },
-          { url: '/pages/user/product_import', text: '导入', icon: 'icon-daoru' },
-          { url: '/pages/user/product_download', text: '下载', icon: 'icon-xiazai' }
+          { url: '/pages/product/product', text: '产品列表', icon: 'icon-liebiao1' },
+          { url: '/pages/category/product', text: '产品分类', icon: 'icon-classifi' },
+          { url: '/pages/product/product_import', text: '导入', icon: 'icon-daoru' },
+          { url: '/pages/product/product_download', text: '下载', icon: 'icon-xiazai' }
         ]
       },
       {
         title: '新闻管理',
         children: [
-          { url: '/pages/user/news', text: '新闻列表', icon: 'icon-liebiao' },
-          { url: '/pages/user/category/news', text: '新闻分类', icon: 'icon-classifi' },
+          { url: '/pages/news/news', text: '新闻列表', icon: 'icon-liebiao' },
+          { url: '/pages/category/news', text: '新闻分类', icon: 'icon-classifi' },
           { url: '', text: 'text', icon: 'icon-jia' },
           { url: '', text: 'text', icon: 'icon-jia' }
         ]
@@ -98,19 +98,19 @@ export default {
       {
         title: '相册管理',
         children: [
-          { url: '/pages/user/album', text: '图片目录', icon: 'icon-mulu' },
-          { url: '/pages/user/addAlbum', text: '新建相册', icon: 'icon-xinjian' },
-          { url: '/pages/user/shangchuanPic', text: '上传图片', icon: 'icon-shangchuan' },
-          { url: '/pages/user/recycle', text: '回收站', icon: 'icon-huishouzhan' }
+          { url: '/pages/album/album', text: '图片目录', icon: 'icon-mulu' },
+          { url: '/pages/album/addAlbum', text: '新建相册', icon: 'icon-xinjian' },
+          { url: '/pages/album/shangchuanPic', text: '上传图片', icon: 'icon-shangchuan' },
+          { url: '/pages/album/recycle', text: '回收站', icon: 'icon-huishouzhan' }
         ]
       },
       {
         title: '客户管理',
         children: [
-          { url: '/pages/user/member', text: '会员管理', icon: 'icon-Group' },
-          { url: '/pages/user/member_rank', text: '会员等级配置', icon: 'icon-huiyuandengjidengjizuanshi' },
-          { url: '/pages/user/member_attr', text: '会员属性配置', icon: 'icon-huiyuanshuxing' },
-          { url: '/pages/user/member_register', text: '网站会员注册', icon: 'icon-huiyuanzhuce' }
+          { url: '/pages/member/member', text: '会员管理', icon: 'icon-Group' },
+          { url: '/pages/member/member_rank', text: '会员等级配置', icon: 'icon-huiyuandengjidengjizuanshi' },
+          { url: '/pages/member/member_attr', text: '会员属性配置', icon: 'icon-huiyuanshuxing' },
+          { url: '/pages/member/member_register', text: '网站会员注册', icon: 'icon-huiyuanzhuce' }
         ]
       },
       {

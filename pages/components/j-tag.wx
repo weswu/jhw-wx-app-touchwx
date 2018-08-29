@@ -8,14 +8,14 @@
         </ui-col>
         <ui-col vertical-align="middle" align="center">
           <view>
-            
+            标签设置
           </view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="40"></ui-col>
       </ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
-    <web-view src="{{src}}"></web-view>
+
   </view>
 </template>
 
@@ -23,15 +23,7 @@
 export default {
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
-    src: ''
-  },
-  onLoad (option){
-    if (option.src.indexOf('pc.jihui88.com') > -1){
-      option.src = option.src + '?isMobile=true'
-    }
-    this.setData({
-      src: 'https://www.jihui88.com/webview.html?src=' + option.src
-    })
+
   },
   navigateBack () {
     wx.navigateBack()

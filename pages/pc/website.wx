@@ -15,7 +15,7 @@
       </ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
-    <ui-swipe-out operate-width="80" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
+    <ui-swipe-out operate-width="120" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
     bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="80">
         <view slot="content">
             <ui-row height="80" class="top_tip" border-bottom>
@@ -23,10 +23,10 @@
                     <view style="width: 100%;">
                         <ui-row height="30">
                             <ui-col align="left" vertical-align="middle">
-                                <text>{{item.seoTitle}}</text>
+                                <text class="ui-text">{{item.seoTitle}}</text>
                             </ui-col>
                             <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                                <text>编号：{{item.id}}</text>
+                                <text class="desc">编号：{{item.id}}</text>
                             </ui-col>
                         </ui-row>
                         <view class="desc">
@@ -44,124 +44,169 @@
             </ui-row>
         </view>
         <view slot="operate">
-            <view class="delete" data-idx='{{index}}' bindtap="del">删除</view>
+           <ui-row class="dome_operate" height="80">
+              <ui-col vertical-align="middle" align="center">
+                  <view class="delete" data-item='{{item}}' data-index='{{index}}' bindtap="copy">复制</view>
+              </ui-col>
+              <ui-col vertical-align="middle" align="center">
+                  <view class="delete" data-item='{{item}}' data-index='{{index}}' bindtap="del">删除</view>
+              </ui-col>
+            </ui-row>
         </view>
     </ui-swipe-out>
   </view>
 </template>
 
 <script>
-import api from '../../static/utils/api'
-import Tips from '../../static/utils/tips'
-import Utils from '../../static/utils/utils'
+import api from "../../static/utils/api";
+import Tips from "../../static/utils/tips";
+import Utils from "../../static/utils/utils";
+import regeneratorRuntime from 'regenerator-runtime'
 export default {
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    NAV_HEIGHT: wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT + "px",
     list: [],
     params: {
       page: 1,
       pageSize: 8,
-      sortType: 'desc'
+      sortType: "desc"
     },
     count: 0,
     more: { loading: true },
-    el: 'undefined'
+    el: "undefined"
   },
-  navigateBack () {
-    wx.navigateBack()
+  navigateBack() {
+    wx.navigateBack();
   },
-  onLoad () {
-    this.get()
+  onLoad() {
+    this.get();
   },
-  get () {
+  get() {
     api.staticList({
       data: this.data.params
     }).then(res => {
       if (res.success) {
         res.attributes.data.forEach(item => {
-            item.switcher = 'off'
-            if (item.language === '1') {
-                item.lan = '中文'
-            }
-            if (item.language === '2') {
-                item.lan = '英文'
-            }
-            if (item.bind.address) {
-                let src = item.bind.address
-                item.url = src.indexOf('http') > -1 ? src : ('http://' + src)
-            } else {
-                item.url = 'http://pc.jihui88.com/rest/site/' + item.id + '/index'
-            }
-            item.endTime = Utils.formatTime(item.endTime)
-        })
-        Utils.scrollList(this, res)
+          item.switcher = "off";
+          if (item.language === "1") {
+            item.lan = "中文";
+          }
+          if (item.language === "2") {
+            item.lan = "英文";
+          }
+          if (item.bind.address) {
+            let src = item.bind.address;
+            item.url = src.indexOf("http") > -1 ? src : "http://" + src;
+          } else {
+            item.url =
+              "http://pc.jihui88.com/rest/site/" + item.id + "/index";
+          }
+          item.endTime = Utils.formatTime(item.endTime);
+        });
+        Utils.scrollList(this, res);
+      }
+    });
+  },
+  async del(e) {
+    await Tips.confirm('确认删除吗？')
+    var item = e.target.dataset.item;
+    var index = e.target.dataset.index;
+    Tips.loading()
+    api.staticDetail({
+      method: 'DELETE',
+      id: e.target.dataset.item.id
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Utils.del(this, index)
+        this.setData({
+          el: "undefined"
+        });
+      } else {
+        Tips.error(res.msg)
       }
     })
   },
-    del (index) {
-        var index = index.target.dataset.idx
-        console.log(index)
-        this.data.list.splice(index,1)
-        console.log(this.data.list)
+  copy (e) {
+    let item = e.target.dataset.item
+    var index = e.target.dataset.index;
+    let data = {
+      model: JSON.stringify({
+        title: item.title,
+        seoTitle: item.seoTitle,
+        language: item.language,
+        grade: item.grade,
+        name: item.name,
+        cellphone: item.cellphone,
+        categoryId: item.categoryId,
+        entName: item.entName,
+        areaPath: item.areaPath,
+        copyId: item.id
+      })
+    }
+    this.data.list[index].switcher = "off";
+    Tips.loading()
+    api.staticDetail({
+      data: data,
+      method: 'post'
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('复制成功')
+        this.data.list.splice(0, 0, res.attributes.data)
         this.setData({
-            list:this.data.list
-        })
-        console.log(this.data.list)
-        this.setData({
-            el:'undefined'
-        })
-
-    },
-    changeHandler1 (res) {
-        console.log(this.data.el)
-        let index = res.currentTarget.dataset.index
-        if(this.data.el !== index){
-            if (this.data.el !== 'undefined') {
-                this.data.list[this.data.el].switcher = 'off'
-            }
-            this.data.list[index].switcher = 'on'
-            this.setData({
-                list:this.data.list
-            })
-            this.data.el = index  
-        }
-    },
+          list: this.data.list,
+          el: "undefined"
+        });
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  changeHandler1(res) {
+    console.log(this.data.el);
+    let index = res.currentTarget.dataset.index;
+    if (this.data.el !== index) {
+      if (this.data.el !== "undefined") {
+        this.data.list[this.data.el].switcher = "off";
+      }
+      this.data.list[index].switcher = "on";
+      this.setData({
+        list: this.data.list
+      });
+      this.data.el = index;
+    }
+  },
   // 加载更多
-  onReachBottom () {
-    Utils.LoadMore(this)
+  onReachBottom() {
+    Utils.LoadMore(this);
   }
-}
+};
 </script>
 
 <style lang="less">
-.delete{
-    width: 80px;
-    text-align: center;
-    line-height: 80px;
-    font-size: 14px;
-    color: #fff;
-    background: #f22;
+@import "./static/styles/mixins";
+
+.dome_operate{
+  background: #eee;
+  color:#545454
 }
-.top_tip{
-    background-color: #fff;
-    .left_icon{
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background-color:#FCB300; 
-        text-align: center;
-        line-height: 50px;
+.top_tip {
+  background-color: #fff;
+  .text {
+    .ui-text {
+      width:100%;
+      color: #313338;
+      .mix-text-overflow();
     }
-    .text{
-        .ui-text{
-            font-size: 16px;
-            color: #313338;
-        }
-        .ui-view{
-            color: #9C9FA4;
-            font-size: 12px;
-            .mix-text-overflow();
-        }
+    .ui-view {
+      color: #9c9fa4;
+      font-size: 12px;
+      .mix-text-overflow();
     }
+    .type{
+      padding-left: 10px;
+    }
+  }
 }
 </style>

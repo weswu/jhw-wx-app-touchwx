@@ -36,6 +36,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
     
     <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
       <ui-row height="46" border-bottom style="background:#fff">
@@ -73,7 +74,7 @@
           <i class="iconfont icon-delete-fill"></i>
           <view class="desc">删除</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="more">
+        <ui-col span="3" vertical-align="middle" align="center" data-show="{{ true }}" bindtap="more">
           <i class="iconfont icon-gengduo"></i>
           <view class="desc">更多</view>
         </ui-col>
@@ -81,17 +82,15 @@
     </ui-fixed-view>
     
     <view style="height:70px" wx:if="{{selected}}"></view>
-    <ui-mask show="{{showMask}}" hide-delay="500" custom-style="{{ {background:'rgba(0, 0, 0, 0)'} }}">
-      <view class="content">
-        <ui-fixed-view bottom="60" right="0">
-          <view class="more-list">
-            <view data-show="{{'01'}}" bindtap="display">显示</view>
-            <view data-show="{{'00'}}" bindtap="display">隐藏</view>
-          </view>
-        </ui-fixed-view>
+    <ui-mask show="{{showMask}}" hide-delay="500">
+      <view class="mask_btn">
+        <view>
+          <button data-show="{{'01'}}" bindtap="display">显示</button>
+          <button data-show="{{'00'}}" bindtap="display">隐藏</button>
+        </view>
+        <button data-show="{{ false }}" bindtap="more">取消</button>
       </view>
     </ui-mask>
-    
   </view>
 </template>
 
@@ -100,15 +99,21 @@ import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
 export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../pages/components/cc-loadmore'
+    }
+  },
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
-    // 数据  没有更多新闻
+    // 数据
     list: [],
     params: {
-      page: 1
+      page: 1,
+      pageSize: 16
     },
     count: 0,
-    more: { loading: true },
+    more: {},
     selected: false, //选中状态
     ids: '', // 选中项
     toggle: false, // 全选切换状态 
@@ -122,7 +127,9 @@ export default {
   },
   get () {
     this.setData({
-      ids: ''
+      ids: '',
+      'more.tip': '',
+      'more.loading': true
     })
     api.news({
       data: this.data.params
@@ -132,18 +139,17 @@ export default {
           item.addTime = Utils.formatTime(item.addTime)
           item._checked = false
         })
-        Utils.scrollList(this, res)
+        Utils.scrollList(this, res, '没有更多新闻')
       }
     })
   },
   // 搜索
   search (e) {
+    this.data.params.page = 1
+    this.data.params.title = e.detail.value
     this.setData({
       list: [],
-      params: {
-        page: 1,
-        title: e.detail.value
-      }
+      params: this.data.params
     })
     this.get()
   },
@@ -199,7 +205,8 @@ export default {
         Tips.success('复制成功')
         this.setData({
           list: [],
-          'params.page': 1
+          'params.page': 1,
+          selected: false
         })
         this.get()
       }
@@ -218,7 +225,8 @@ export default {
         Tips.success('删除成功')
         this.setData({
           list: [],
-          'params.page': 1
+          'params.page': 1,
+          selected: false
         })
         this.get()
       }
@@ -240,15 +248,17 @@ export default {
         Tips.success(display === '01' ? '已显示' : '已隐藏')
         this.setData({
           list: [],
-          'params.page': 1
+          'params.page': 1,
+          selected: false
         })
         this.get()
       }
     })
   },
-  more () {
+  more (e) {
+    let show = e.currentTarget.dataset.show
     this.setData({
-      showMask: true
+      showMask: show
     })
   },
   // 加载更多
@@ -285,18 +295,40 @@ page{
     font-size: 20px;
   }
 }
-.more-list{
-  background:rgba(0, 0, 0, 0.7);
-  width:80px;
-  line-height:2;
-  color: #fff;
-  padding: 5px 0;
+.mask_btn{
+  padding:0 15px;
+  position:fixed;
+  width:100%;
+  bottom:20px;
+  button{
+    height: 50px;
+    line-height: 50px;
+    color: #4e4e4e;
+    font-weight:700;
+    background-color:#fff;
+  }
   view{
-    padding: 5px 0 5px 15px;
-    font-size: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    &:last-child{
-      border-bottom: none
+    border-radius: 6px;
+    padding-bottom: 5px;
+    button{
+      height: 55px;
+      line-height: 55px;
+      border-radius: 0;
+      margin: 0;
+      color: #4e4e4e;
+      font-weight:normal;
+      &::after{
+        border-radius: 0;
+        border-bottom: none;
+      }
+      &:first-child{
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+      &:last-child{
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
     }
   }
 }

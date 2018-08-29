@@ -1,0 +1,73 @@
+<template>
+  <view class="cc-image" style="width:{{width}}px;height:{{width}}px" bindtap="chooseImage">
+    <image mode="aspectFit" src="http://img.jihui88.com/{{src}}" binderror="error"/>
+  </view>
+</template>
+<script>
+Component({
+  properties: {
+    src: {
+      type: String,
+      value: ""
+    },
+    width: {
+      type: String,
+      value: "40"
+    },
+    id: {
+      type: String,
+      value: 'all'
+    },
+    attId: {
+      type: String,
+      value: ''
+    },
+    replace: {
+      type: String,
+      value: '00'
+    }
+  },
+  methods: {
+    chooseImage () {
+      var that = this;
+      wx.chooseImage({
+        count: 1, // 默认1
+        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success: function (res) {
+          // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+          wx.showLoading({ title: '正在上传', mask: true})
+          wx.uploadFile({
+            url: 'https://www.jihui88.com/commonutil/uploadUtil2?username=' + getApp().globalData.user.username + '&replace=' + that.data.replace + '&attId=' + that.data.attId + '&id=' + that.data.id,
+            filePath: res.tempFilePaths[0],//临时路径
+            name: 'Filedata',
+            formData: {
+              fileLen: res.tempFiles[0].size,
+              skey: wx.getStorageSync('skey')
+            },
+            success: function (res) {
+              wx.hideLoading()
+              if (res.statusCode === 200) {
+                that.setData({
+                  src: res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
+                });
+              }
+            }
+          })
+        }
+      })
+    },
+    error(e) {
+      this.data.src = "upload/j/j2/jihui88/picture/2018/08/29/92f8cf7a-cf99-4308-9630-5ca0bceac29f.png";
+      this.setData({
+        src: this.data.src
+      });
+    }
+  }
+});
+</script>
+<style lang="less">
+.cc-image {
+  border:1px solid #d5d5d5;
+}
+</style>

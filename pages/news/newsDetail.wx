@@ -23,7 +23,7 @@
             新闻名称
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right">
-            新闻名称1
+            <input placeholder="新闻名称" bindinput="input" id="title" value="{{detail.title}}"/>
         </ui-col>
         <ui-col width="35" vertical-align="middle" align="right" space-right="15">
             <ui-icon type="arrow-right"></ui-icon>
@@ -53,7 +53,7 @@
             来源
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            请填写
+            <input placeholder="请填写" bindinput="input" id="origin" value="{{detail.origin}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="48">
@@ -61,7 +61,7 @@
             作者
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            请填写
+            <input placeholder="请填写" bindinput="input" id="author" value="{{detail.author}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="48">
@@ -69,30 +69,36 @@
             是否置顶
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-            <radio-group bindchange="radio2">
-              <label>
-                <radio value="00" checked="{{state === '00'}}" style="color:#000"></radio>
-                是
-              </label>
-              <label>
-                <radio value="01" checked="{{state === '01'}}"></radio>
-                否
-              </label>
-            </radio-group>
+          <radio-group bindchange="radio" id="topnews">
+            <label>
+              <radio value="01" checked="{{detail.topnews === '01'}}"></radio>
+              是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.topnews === '00'}}"></radio>
+              否
+            </label>
+          </radio-group>
         </ui-col>
       </ui-row>
-      <ui-row height="48">
-        <ui-col width="60" vertical-align="middle">
+      <ui-row height="120">
+        <ui-col width="70" vertical-align="middle">
             新闻图片
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-            <ui-icon type="arrow-right"></ui-icon>
+        <ui-col width="80" vertical-align="middle">
+          <cc-image  id="image" src="{{detail.picPath}}" width="74"></cc-image>
+        </ui-col>
+        <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" bindtap="updatePic">
+          <view class="btn_gray">重新上传</view>
+        </ui-col>
+        <ui-col width="50" vertical-align="middle" bindtap="clearPic">
+          <view class="btn_gray">清除</view>
         </ui-col>
       </ui-row>
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="48">
+      <ui-row height="48" url="/pages/static/seo/seoDetail">
         <ui-col width="60" vertical-align="middle">
             SEO设置
         </ui-col>
@@ -100,7 +106,7 @@
             <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="48">
+      <ui-row height="48" url="/pages/components/j-tag">
         <ui-col width="60" vertical-align="middle">
             新闻标签
         </ui-col>
@@ -109,6 +115,18 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
+
+    <ui-fixed-view bottom="0" left="0" right="0">
+      <ui-row height="40" border-top style="background: #fff">
+        <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
+          保存
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" bindtap="view" style="background: #d8d8d8;color:#fff">
+          预览
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:80px"></view>
   </view>
  </template>
 
@@ -118,6 +136,11 @@ import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
 let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-image': '../../pages/components/cc-image'
+    }
+  },
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     detail:{}
@@ -127,18 +150,24 @@ let pageConf = {
   },
   onLoad (e) {
     if (e.id) {
-      this.get(id)
+      this.setData({
+        detail: {
+          newsId: e.id
+        }
+      })
+      this.get()
     } else {
       this.setData({
         detail: {
-          addTimeVal: Utils.formatTime(new Date())
+          addTimeVal: Utils.formatTime(new Date()),
+          topnews: '00'
         }
       })
     }
   },
-  get (id) {
+  get () {
     api.newsDetail({
-      id: id
+      id: this.data.detail.newsId
     }).then(res => {
       if (res.success) {
         this.setData({
@@ -153,17 +182,29 @@ let pageConf = {
       'detail.addTime': e
     })
   },
+  updatePic () {
+    this.selectComponent("#image").chooseImage();
+    this.setData({
+      'detail.imagenews': '01'
+    })
+  },
+  clearPic () {
+    this.setData({
+      'detail.picPath': '',
+      'detail.imagenews': '00'
+    })
+  },
   validate() {
     const rules = [
       {
-        value: this.data.detail.username,
+        value: this.data.detail.title,
         method: 'required',
-        message: '用户名不能为空'
+        message: '新闻名称不能为空'
       },
       {
-        value: this.data.detail.password,
+        value: this.data.detail.category,
         method: 'required',
-        message: '密码不能为空'
+        message: '新闻分类不能为空'
       }
     ];
     return this.check(rules);
@@ -172,30 +213,21 @@ let pageConf = {
     if (!this.validate()) {
       return;
     }
-    let that = this
-    wx.login({
-      success: function(login) {
-        that.setData({
-          'detail.code': login.code,
-          'detail.skey': wx.getStorageSync('skey'),
-          'detail.appid': getApp().globalData.appid,
-          'detail.appsecret': getApp().globalData.appsecret
-        })
-        Tips.loading()
-        api.login({
-          data: that.data.detail,
-          method: 'POST'
-        }).then(res => {
-          Tips.loaded()
-          if (res.success) {
-            
-          } else {
-            Tips.error(res.msg)
-          }
-        })
+    Tips.loading()
+    api.newsDetail({
+      data: that.data.detail,
+      method: this.data.detail.newsId ? 'PUT' : 'POST',
+      id: this.data.detail.newsId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+      } else {
+        Tips.error(res.msg)
       }
     })
-  }
+  },
+  view () {}
 }
 export default Page(Object.assign(pageConf, Input))
 </script>
@@ -203,6 +235,17 @@ export default Page(Object.assign(pageConf, Input))
 <style lang="less">
 page{
   background: #f1f1f1
+}
+.btn_gray{
+  background: #d8d8d8;
+  color: #fff;
+  display: inline-block;
+  height: 25px;
+  line-height: 25px;
+  font-size: 12px;
+  text-align: center;
+  padding: 0 5px;
+  border-radius: 25px;
 }
 </style>
 

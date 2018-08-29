@@ -1,0 +1,23 @@
+<template>
+  <view class="i-class i-load-more">
+    <view class="i-load-more-loading" wx:if="{{ more.loading }}"></view>
+    <view class="i-load-more-tip">
+      <view wx:if="{{ more.tip !== '' }}">{{ more.tip }}</view>
+      <view wx:elif="{{ more.tip === '' && more.loading }}">正在加载</view>
+      <view class="i-load-more-empty" wx:else></view>
+    </view>
+  </view>
+</template>
+<script>
+Component({
+  properties: {
+    more: {
+      type: Object,
+      value: ''
+    }
+  }
+});
+</script>
+<style lang="less">
+.i-load-more{width:65%;margin:1.5em auto;line-height:1.6em;font-size:14px;text-align:center}.i-load-more-loading{display:inline-block;margin-right:12px;vertical-align:middle;width:14px;height:14px;background:0 0;border-radius:50%;border:2px solid #e9eaec;border-color:#e9eaec #e9eaec #e9eaec #2d8cf0;animation:btn-spin .6s linear;animation-iteration-count:infinite}.i-load-more-tip{display:inline-block;vertical-align:middle;color:#9f9f9f}.i-load-more-empty{width:4px;height:4px;border-radius:50%;background-color:#e5e5e5;display:inline-block;position:relative;vertical-align:0;top:-.16em}@keyframes btn-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+</style>
