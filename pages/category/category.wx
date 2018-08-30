@@ -3,33 +3,300 @@
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
       <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{!selected}}">
           <i class="iconfont icon-xiangzuo"></i>
         </ui-col>
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="toggleAll" wx:if="{{selected}}" space-left="8">
+          全选
+        </ui-col>
         <ui-col vertical-align="middle" align="center">
-          <view>
-            分类
-          </view>
+          <view wx:if="{{type === 'product'}}">产品分类</view>
+          <view wx:if="{{type === 'news'}}">新闻分类</view>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="40"></ui-col>
       </ui-row>
     </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <view style="height:{{NAV_HEIGHT}}px"></view>
+    <view style="height:30px"></view>
 
+    <ui-row-list>
+    <ui-swipe-out operate-width="120" height="54"
+      wx:for="{{list}}" wx:key="*this" value="{{item.switcher}}">
+      <view slot="content">
+        <ui-row height="54" class="j_swipe_list" border-bottom>
+          <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
+            <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
+            <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
+          </ui-col>
+          <ui-col class="text" vertical-align="middle" data-index="{{index}}" bindtap="swipeChange"
+          space-left="{{item.grade === '2' ? '40' : item.grade === '3' ? '60' : '20'}}">
+            {{item.name}}
+            <view class="desc"> {{item.isdisplay === '0' ? '隐藏' : '显示'}} 
+          </ui-col>
+        </ui-row>
+      </view>
+      <view slot="operate">
+        <ui-row class="j_swipe_operate" height="54">
+          <ui-col vertical-align="middle" align="center">
+            <navigator url="" style="width:100%;height:100%;line-height:54px;">修改</navigator>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center">
+            <navigator url="/pages/static/seo/seoDetail" style="width:100%;height:100%;line-height:54px;">SEO</navigator>
+          </ui-col>
+        </ui-row>
+      </view>
+    </ui-swipe-out>
+    </ui-row-list>
+    <!-- 头 -->
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="{{'0;z-index:9;'}}" right="0">
+      <ui-row height="30" border-bottom style="background:#fff">
+        <ui-col vertical-align="middle" border-right space-left="15">
+          <i class="iconfont icon-jia1" style="color:#4e4e4e"></i>
+        </ui-col>
+        <ui-col width="100" vertical-align="middle" align="right" space-right="5" bindtap="openPopup" class="{{show ? 'active' : ''}}">
+          <view style="width:100%">
+            <ui-row height="30">
+              <ui-col vertical-align="middle" align="right" space-right="5">
+                <view style="color:#686868;font-size:12px;">
+                  {{name}}
+                </view>
+              </ui-col>
+              <ui-col width="30" vertical-align="middle" align="center">
+                <ui-icon type="slide_down" size="8" color="#878787;" class="{{show ? 'active' : ''}}"></ui-icon>
+              </ui-col>
+            </ui-row>
+          </view>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT + 30 }}" height="{{popupHeight}}" mask-style="{{ { top: popup_NAV_HEIGHT +30+'px' } }}" bindhide="popHide2" bindshow="popShow2">
+      <view class="top_pop">
+        <ui-check-list max="1" label-position="left" options="{{ sortList }}" type="plain" value="{{ checklist }}" bindchange="change2" color="#3AC3B0"></ui-check-list>
+      </view>
+    </ui-popup>
+    <!-- 尾 -->
+    <ui-fixed-view bottom="0" left="{{'0;z-index:9;'}}" right="0" wx:if="{{selected}}">
+      <ui-row height="60" border-top class="j_fixed_btn">
+        <ui-col span="3" vertical-align="middle" align="center" data-show="{{'1'}}" bindtap="display">
+          <i class="iconfont icon-xianshi"></i>
+          <view class="desc">显示</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" data-show="{{'0'}}" bindtap="display">
+          <i class="iconfont icon-yincang"></i>
+          <view class="desc">隐藏</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="del">
+          <i class="iconfont icon-delete-fill"></i>
+          <view class="desc">删除</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="more">
+          <i class="iconfont icon-folder-add-fill2"></i>
+          <view class="desc">移动</view>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:70px" wx:if="{{selected}}"></view>
   </view>
 </template>
 
 <script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
 export default {
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
-
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    show: false,
+    sortList: [
+      '中文', '英文'
+    ],
+    checklist: [],
+    name: '中文',
+    // 数据
+    list: [],
+    el: "undefined",
+    type: 'product',
+    ids: '', // 选中项
+    selected: false, //选中状态
+    toggle: false // 全选切换状态 
   },
   navigateBack () {
     wx.navigateBack()
-  }
+  },
+  onLoad (e) {
+    if (e.type) {
+      this.setData({
+        type: e.type
+      })
+    }
+    this.get()
+  },
+  get () {
+    let that = this
+    this.setData({
+      ids: ''
+    })
+    if (this.data.type === 'product') {
+      getApp().getProductCategory(res => {
+        that.setData({
+          list: res
+        })
+      }) 
+    } else {
+      getApp().getNewsCategory(res => {
+        that.setData({
+          list: res
+        })
+      })
+    }
+  },
+  openPopup (e) {
+    this.setData({
+      show: !this.data.show
+    })
+  },
+  popHide2 () {
+    this.setData({
+      show:false
+    })
+  },
+  popShow2 () {
+    this.setData({
+      show:true
+    })
+  },
+  change2 (e) {
+    let val = e.detail.value
+    this.data.name = val.join('-')
+    this.setData({
+      name:this.data.name,
+      show:false
+    })
+  },
+  // 全选
+  toggleAll () {
+    let list = this.data.list
+    let toggle = !this.data.toggle
+    list.forEach(item => {
+      item._checked = toggle
+    })
+    this.setData({
+      list: list,
+      toggle: toggle
+    })
+    this.initSelcted()
+  },
+  // 单选
+  toggle (e) {
+    let list = this.data.list
+    list[e.currentTarget.dataset.index]._checked = !list[e.currentTarget.dataset.index]._checked
+    this.setData({
+      list: list,
+      selected: true
+    })
+    this.initSelcted ()
+  },
+  initSelcted () {
+    let list = this.data.list
+    let ids = ''
+    list.forEach(item => {
+      if (item._checked) {
+        ids = ids ? (ids + ',' + item.categoryId) : item.categoryId
+      }
+    })
+    this.setData({
+      ids: ids
+    })
+  },
+  // 事件
+  swipeChange(e) {
+    let index = e.currentTarget.dataset.index;
+    if (this.data.el !== index) {
+      if (this.data.el !== "undefined") {
+        this.data.list[this.data.el].switcher = "off";
+      }
+      this.data.list[index].switcher = "on";
+      this.setData({
+        list: this.data.list
+      });
+      this.data.el = index;
+    }
+    this.setData({
+      selected: false
+    })
+  },
+  // 批量
+  del () {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    api.categoryDel({
+      data: {categoryIds: this.data.ids},
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('删除成功')
+        this.setData({
+          selected: false
+        })
+        this.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  display (e) {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    let display = e.currentTarget.dataset.show
+    api.categoryDisplay({
+      data: {
+        categoryIds: this.data.ids,
+        isdisplay: display
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success(display === '1' ? '显示成功' : '隐藏成功')
+        this.setData({
+          selected: false
+        })
+        this.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  move () {}
 }
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
+.j_fixed_btn{
+  color: #a8a9ae;
+  background: #fafafa;
+  .iconfont{
+    color: #9f9f9f;
+    font-size: 20px;
+  }
+}
+
+.ui-col.active{
+  color: #09C2B1;
+}
+.ui-icon{
+  display: inline-block;
+  transform:rotate(0deg);
+  transition: all .3s ease-in;
+  &.active{
+    transform:rotate(180deg);
+    color:#09C2B1!important;
+  }
+}
 </style>

@@ -18,30 +18,30 @@
     <ui-swipe-out operate-width="120" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
     bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="80">
         <view slot="content">
-            <ui-row height="80" class="top_tip" border-bottom>
-                <ui-col class="text" vertical-align="middle" space="20">
-                    <view style="width: 100%;">
-                        <ui-row height="30">
-                            <ui-col align="left" vertical-align="middle">
-                                <text class="ui-text">{{item.seoTitle}}</text>
-                            </ui-col>
-                            <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                                <text class="desc">编号：{{item.id}}</text>
-                            </ui-col>
-                        </ui-row>
-                        <view class="desc">
-                            <navigator url="/pages/setting/webView?src={{item.url}}">
-                                {{item.url}}
-                            </navigator>
-                            {{ item.endTime }}
-                            <!-- 状态 -->
-                            <text class="type" wx:if="{{item.state === '0'}}">审核中</text>
-                            <text class="type" wx:elif="{{item.state === '3'}}" style="background: #d0021b;">审核未通过</text>
-                            <text class="type" wx:else="{{!item.bind.address}}">未上线</text>
-                        </view>
-                    </view>
-                </ui-col>
-            </ui-row>
+          <ui-row height="80" class="top_tip" border-bottom>
+            <ui-col class="text" vertical-align="middle" space="20">
+              <view style="width: 100%;">
+                  <ui-row height="30">
+                    <ui-col align="left" vertical-align="middle">
+                        <text class="ui-text">{{item.seoTitle}}</text>
+                    </ui-col>
+                    <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                        <text class="desc">编号：{{item.id}}</text>
+                    </ui-col>
+                  </ui-row>
+                  <view class="desc">
+                    <navigator url="/pages/setting/webView?src={{item.url}}">
+                      {{item.url}}
+                    </navigator>
+                    {{ item.endTime }}
+                    <!-- 状态 -->
+                    <text class="type" wx:if="{{item.state === '0'}}">审核中</text>
+                    <text class="type" wx:elif="{{item.state === '3'}}" style="background: #d0021b;">审核未通过</text>
+                    <text class="type" wx:else="{{!item.bind.address}}">未上线</text>
+                  </view>
+              </view>
+            </ui-col>
+          </ui-row>
         </view>
         <view slot="operate">
            <ui-row class="dome_operate" height="80">

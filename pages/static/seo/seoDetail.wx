@@ -17,27 +17,28 @@
     <view style="height:{{NAV_HEIGHT}}"></view>
     <ui-row-list border-left-indent>
       <ui-row height="50">
-          <ui-col width="70" vertical-align="middle">
+          <ui-col width="85" vertical-align="middle">
               SEO标题：
           </ui-col>
           <ui-col vertical-align="middle">
-              <input placeholder="请输入SEO标题" bindinput="input" id="seoTitle" value="{{detail.seoTitle}}"/>
+              <input placeholder="请输入SEO标题" bindinput="input" id="title" value="{{detail.title}}"/>
           </ui-col>
       </ui-row>
       <ui-row height="50">
-          <ui-col width="70" vertical-align="middle">
+          <ui-col width="85" vertical-align="middle">
               SEO关键字：
           </ui-col>
           <ui-col vertical-align="middle">
-              <input placeholder="请输入SEO关键字" bindinput="input" id="newPs" value="{{detail.newPs}}"/>
+              <input placeholder="请输入SEO关键字" bindinput="input" id="keywords" value="{{detail.keywords}}"/>
           </ui-col>
       </ui-row>
       <ui-row height="50">
-          <ui-col width="70" vertical-align="middle">
+          <ui-col width="85" vertical-align="middle">
               SEO描述：
           </ui-col>
           <ui-col vertical-align="middle" space-right="20">
-              <input placeholder="请输入SEO描述" bindinput="input" id="seoDescription" value="{{detail.seoDescription}}"/>
+              <textarea class="weui-textarea" placeholder="限250字符内，加联系电话或邮件"
+      bindinput="input" id="description" value="{{detail.description}}" style="width:100%;height: 80px;margin-top:10px;"/>
           </ui-col>
       </ui-row>
     </ui-row-list>
@@ -52,12 +53,27 @@ import Tips from '../../../static/utils/tips'
 let pageConf = {
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
-    detail: {}
+    detail: {},
+    edit: false
   },
   navigateBack () {
     wx.navigateBack()
   },
+  onLoad (e) {
+    if (e.edit === 'true') {
+      this.setData({
+        detail: e,
+        edit: true
+      })
+    }
+  },
   submit () {
+    if (this.data.edit) {
+      var pages = getCurrentPages();
+      var prevPage = pages[pages.length - 2];
+      prevPage.seoChange(this.data.detail);
+      return wx.navigateBack();
+    }
     api.seoDetail({
       data: {
         oldPs: this.data.detail.oldPs,
@@ -77,4 +93,7 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 </style>

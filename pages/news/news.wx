@@ -18,8 +18,8 @@
       </ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}px"></view>
-    
     <view style="height:46px"></view>
+    
     <ui-row-list>
       <ui-row url="newsDetail?id={{item.newsId}}" height="54" border-bottom wx:for="{{list}}" wx:key="*this">
         <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">

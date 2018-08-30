@@ -98,7 +98,7 @@
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="48" url="/pages/static/seo/seoDetail">
+      <ui-row height="48" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.nkey}}&description={{detail.seoDescription}}">
         <ui-col width="60" vertical-align="middle">
             SEO设置
         </ui-col>
@@ -106,7 +106,7 @@
             <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="48" url="/pages/components/j-tag">
+      <ui-row height="48" url="/pages/components/j-tag?type=news&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.newsId}}">
         <ui-col width="60" vertical-align="middle">
             新闻标签
         </ui-col>
@@ -149,6 +149,7 @@ let pageConf = {
     wx.navigateBack()
   },
   onLoad (e) {
+    // e.id = 'News_000000000000000000000181172'
     if (e.id) {
       this.setData({
         detail: {
@@ -170,18 +171,23 @@ let pageConf = {
       id: this.data.detail.newsId
     }).then(res => {
       if (res.success) {
+        if (res.attributes.data.tagMapStore.length > 0) {
+          res.attributes.data.tagMap = JSON.stringify(res.attributes.data.tagMapStore)
+        }
         this.setData({
           detail: res.attributes.data
         })
       }
     })
   },
+  // 时间
   dateChange (e) {
     this.setData({
       'detail.addTimeVal': Utils.formatTime(new Date(e)),
       'detail.addTime': e
     })
   },
+  // 图片
   updatePic () {
     this.selectComponent("#image").chooseImage();
     this.setData({
@@ -192,6 +198,14 @@ let pageConf = {
     this.setData({
       'detail.picPath': '',
       'detail.imagenews': '00'
+    })
+  },
+  // seo
+  seoChange (e) {
+    this.setData({
+      'detail.seoTitle': e.title,
+      'detail.nkey': e.keywords,
+      'detail.seoDescription': e.description
     })
   },
   validate() {
@@ -213,10 +227,14 @@ let pageConf = {
     if (!this.validate()) {
       return;
     }
+    let data = {
+      model: JSON.stringify(this.data.detail),
+      _method: this.data.detail.newsId ? 'put' : 'post',
+    }
     Tips.loading()
     api.newsDetail({
-      data: that.data.detail,
-      method: this.data.detail.newsId ? 'PUT' : 'POST',
+      data: data,
+      method: 'post',
       id: this.data.detail.newsId
     }).then(res => {
       Tips.loaded()

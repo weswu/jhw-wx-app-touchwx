@@ -15,44 +15,34 @@
       </ui-row>
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}px"></view>
-    <view class="sticky-in-relative-container">
-      <ui-sticky scroll-top="{{ scrollTop }}" top="{{NAV_HEIGHT}}" custom-style="{{ {backgroundColor:'#FFF'} }}">
-        <view>
-          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
-            <ui-tab>待缴费<text style="font-size:12px" wx:if="{{count0 !== 0}}">({{count0}})</text></ui-tab>
-            <ui-tab>消费记录<text style="font-size:12px" wx:if="{{count1 !== 0}}">({{count1}})</text></ui-tab>
-            <ui-tab>已购产品<text style="font-size:12px" wx:if="{{count2 !== 0}}">({{count2}})</text></ui-tab>
-          </ui-tabs>
-        </view>
-        <view slot="sticky">
-          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
-            <ui-tab>待缴费<text style="font-size:12px" wx:if="{{count0 !== 0}}">({{count0}})</text></ui-tab>
-            <ui-tab>消费记录<text style="font-size:12px" wx:if="{{count1 !== 0}}">({{count1}})</text></ui-tab>
-            <ui-tab>已购产品<text style="font-size:12px" wx:if="{{count2 !== 0}}">({{count2}})</text></ui-tab>
-          </ui-tabs>
-        </view>
-    </ui-sticky>
-    </view>
-    <view class="content_list">
-      <view wx:for="{{list}}" wx:key="*this">
-        <ui-row height="80" border-bottom>
-          <ui-col vertical-align="middle" space-left="15">
-              <view style="width: 100%;">
-                <ui-row height="30">
-                  <ui-col align="left" vertical-align="middle">
-                      <text>订单编号：{{item.outTradeNo}}</text>
-                  </ui-col>
-                  <ui-col align="right" width="100" vertical-align="middle" space-right="15">
-                      <text class="price">￥{{item.paidPrice | '-'}}</text>
-                  </ui-col>
-                </ui-row>
-              </view>
-              <view class="content">{{item.name}}</view>
-              <view class="time">{{item.addTime}}</view>
-          </ui-col>
-        </ui-row>
-      </view>
-    </view>
+    <view style="height:50px"></view>
+
+    <ui-row-list>
+      <ui-row height="80" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle" space-left="15">
+            <view style="width: 100%;">
+              <ui-row height="30">
+                <ui-col align="left" vertical-align="middle">
+                    <text>订单编号：{{item.outTradeNo}}</text>
+                </ui-col>
+                <ui-col align="right" width="100" vertical-align="middle" space-right="15">
+                    <text class="price">￥{{item.paidPrice | '-'}}</text>
+                </ui-col>
+              </ui-row>
+            </view>
+            <view class="desc">{{item.name}}</view>
+            <view class="desc">{{item.addTime}}</view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
+      <ui-tabs tab-style="{{ {width:width/3+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
+        <ui-tab>待缴费<text style="font-size:12px" wx:if="{{count0 !== 0}}">({{count0}})</text></ui-tab>
+        <ui-tab>消费记录<text style="font-size:12px" wx:if="{{count1 !== 0}}">({{count1}})</text></ui-tab>
+        <ui-tab>已购产品<text style="font-size:12px" wx:if="{{count2 !== 0}}">({{count2}})</text></ui-tab>
+      </ui-tabs>
+    </ui-fixed-view>
   </view>
 </template>
 
@@ -163,11 +153,5 @@ export default {
 </script>
 
 <style lang="less">
-@import './static/styles/mixins';
-.content,.time{
-  color: #9C9FA4;
-  font-size: 12px;
-  .mix-text-overflow();
-}
 .price { color: #ff7e3e;font-size: 13px;}
 </style>

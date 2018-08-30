@@ -81,7 +81,7 @@ export default {
         title: '产品管理',
         children: [
           { url: '/pages/product/product', text: '产品列表', icon: 'icon-liebiao1' },
-          { url: '/pages/category/product', text: '产品分类', icon: 'icon-classifi' },
+          { url: '/pages/category/category?type=product', text: '产品分类', icon: 'icon-classifi' },
           { url: '/pages/product/product_import', text: '导入', icon: 'icon-daoru' },
           { url: '/pages/product/product_download', text: '下载', icon: 'icon-xiazai' }
         ]
@@ -90,7 +90,7 @@ export default {
         title: '新闻管理',
         children: [
           { url: '/pages/news/news', text: '新闻列表', icon: 'icon-liebiao' },
-          { url: '/pages/category/news', text: '新闻分类', icon: 'icon-classifi' },
+          { url: '/pages/category/category?type=news', text: '新闻分类', icon: 'icon-classifi' },
           { url: '', text: 'text', icon: 'icon-jia' },
           { url: '', text: 'text', icon: 'icon-jia' }
         ]

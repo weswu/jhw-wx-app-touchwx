@@ -14,22 +14,224 @@
         <ui-col vertical-align="middle" align="center" width="40"></ui-col>
       </ui-row>
     </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <view style="height:{{NAV_HEIGHT}}px"></view>
+    <view style="height:46px"></view>
 
+    <view style="padding-left:15px;">
+      <view class="j_tag_item" wx:for="{{list}}" wx:key="*this" wx:if="{{item._checked}}" data-id="{{item.tagId}}" bindtap="del">{{item.name}}</view>
+    </view>
+
+    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT + 46 }}" height="{{popupHeight}}" mask-style="{{ { top: popup_NAV_HEIGHT +46+'px' } }}" bindhide="popHide" bindshow="popShow">
+      <view class="top_pop">
+        <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
+          <ui-check-list max="1" label-position="left" options="{{list}}" value="{{checkList}}" type="plain" bindchange="change" color="#3AC3B0"></ui-check-list>
+        </scroll-view>
+      </view>
+    </ui-popup>
+
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
+      <ui-row height="46" border-bottom style="background:#fff">
+        <ui-col vertical-align="middle" align="center" width="40" bindtap="openPopup">
+          <i class="iconfont icon-fenlei" style="color:#4e4e4e"></i>
+        </ui-col>
+        <ui-col vertical-align="middle">
+          <view style="width:100%;background: #f6f6f6;border-radius:3px;padding:0 15px;">
+            <input type="text" value="{{name}}" bindinput="input"/>
+          </view>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="60" bindtap="add">
+          添加
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
   </view>
 </template>
 
 <script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
 export default {
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
-
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    scroHeight: parseInt(wx.DEFAULT_CONTENT_HEIGHT * 0.8),
+    list: [],
+    checkList: [],
+    tagMapStore: [],
+    name: '',
+    show: false
   },
   navigateBack () {
     wx.navigateBack()
+  },
+  onLoad (e) {
+    e.id && this.setData({
+      id: e.id,
+      type: e.type,
+      tagMapStore: JSON.parse(e.tagMapStore)
+    })
+    this.get()
+  },
+  get () {
+    let that = this
+    getApp().getTag(res => {
+      let list = []
+      res.forEach(item => {
+        if (item.type === that.data.type) {
+          item._checked = false
+          item.key = item.tagId
+          item.value = item.name
+          that.data.tagMapStore && that.data.tagMapStore.forEach(row => {
+            if (item.tagId === row.tagId) {
+              item._checked = true
+              that.data.checkList.push(item.tagId)
+            }
+          })
+          list.push(item)
+        }
+      })
+      that.setData({
+        list: list,
+        checkList: that.data.checkList
+      })
+    }) 
+  },
+  // 点击添加
+  openPopup (e) {
+    this.setData({
+      show: !this.data.show
+    })
+  },
+  popHide () {
+    this.setData({
+      show:false
+    })
+  },
+  popShow () {
+    this.setData({
+      show:true
+    })
+  },
+  change (e) {
+    let val = e.detail.value.join('-')
+    this.data.list.forEach(item => {
+      if (item.tagId === val) {
+        this.add(item)
+        item._checked = true
+      }
+    })
+    // this.data.checkList.push(val)
+    this.setData({
+      list: this.data.list,
+      checkList: that.data.checkList,
+      show:false
+    })
+  },
+  // 添加
+  input (e) {
+    this.setData({
+      name: e.detail.value
+    })
+  },
+  add (item) {
+    let data = {
+      model: JSON.stringify({
+        tagId: item.tagId,
+        name: item.name || this.data.name,
+        type: this.data.type
+      })
+    }
+    api.tagDetail({
+      data: data,
+      method: 'POST',
+      id: this.data.id
+    }).then(res => {
+      if (res.success) {
+        Tips.success("添加成功")
+        if (!item.tagId) {
+          let data = res.attributes.data
+          data._checked = true
+          this.data.list.push(data)
+          this.setData({
+            list: this.data.list
+          })
+        }
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  del (e) {
+    let tagId = e.currentTarget.dataset.id
+    let data = {
+      _method: 'DELETE'
+    }
+    api.tagDetail({
+      data: data,
+      method: 'post',
+      id: this.data.id + '/' + tagId
+    }).then(res => {
+      if (res.success) {
+        Tips.success("删除成功")
+        this.data.list.forEach(item => {
+          if (item.tagId === tagId) {
+            item._checked = false
+          }
+        })
+        this.data.checkList.forEach((item, index) => {
+          if (item.tagId === tagId) {
+            // that.data.checkList.splice(index, 1)
+          }
+        })
+        this.setData({
+          list: this.data.list,
+          checkList: that.data.checkList
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
   }
 }
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1;
+}
+.j_tag_item{
+  font-size: 12px;
+  margin-top: 10px;
+  color: #666;
+  background-color:#fff;
+  border:1px solid #f1f1f1;
+  padding: 0 30px 0 10px;
+  height:30px;
+  line-height:30px;
+  text-align:center;
+  position: relative;
+  display:inline-block;
+  margin-right: 10px;
+  &::after{
+    content: "";
+    position: absolute;
+    background: #ccc;
+    height: 1px;
+    width: 15px;
+    right: 8px;
+    top: 14px;
+    transform: rotate(45deg);
+  }
+  &::before{
+    content: "";
+    position: absolute;
+    background: #ccc;
+    height: 1px;
+    width: 15px;
+    right: 8px;
+    top: 14px;
+    transform: rotate(-45deg);
+  }
+}
 </style>

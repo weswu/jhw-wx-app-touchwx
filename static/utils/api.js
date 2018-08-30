@@ -48,8 +48,9 @@ const feedback = (params) => http(params, 'https://api.jihui88.net/crm_api/index
 const album = (params) => http(params, host + 'album/attr/list/' + params.id)
 const albumCategory = (params) => http(params, host + 'album/list?pageSize=100')
 // 分类
-const category = (params) => http(params, host + '' + params.type + '/categoryManage')
-const categoryUpdate = (params) => http(params, host + 'category/update')
+const category = (params) => http(params, host + 'category/' + params.type + '?pageSize=1000')
+const categoryDisplay = (params) => http(params, host + 'category/display')
+const categoryDel = (params) => http(params, host + 'category/batchDel')
 const categoryDetail = (params) => http(params, host + 'category/detail' + (params.id ? '/' + params.id : ''))
 // 产品
 const product = (params) => http(params, host + 'product/list')
@@ -60,6 +61,8 @@ const newsCopy = (params) => http(params, host + 'news/copy')
 const newsDel = (params) => http(params, host + 'news/batch/del')
 const newsDisplay = (params) => http(params, host + 'news/display')
 const newsDetail = (params) => http(params, host + 'news/detail/' + params.id)
+const tag = (params) => http(params, host + 'tag/list?pageSize=1000')
+const tagDetail = (params) => http(params, host + 'tag/detail/' + params.id)
 // 证书
 const cert = (params) => http(params, host + 'cert/list')
 const certDetail = (params) => http(params, host + 'cert/detail' + (params.id ? '/' + params.id : ''))
@@ -113,7 +116,9 @@ module.exports = {
   costUnPaid, costOrder, costPaid, costDetail,
   point, pointProduct, pointRule, signIn,
   // 新闻
-  news, newsCopy, newsDel, newsDisplay, newsDetail,
+  news, newsCopy, newsDel, newsDisplay, newsDetail, tag, tagDetail,
+  // 分类
+  category, categoryDisplay, categoryDel, categoryDetail,
 
   login, logout,
   // 站点
@@ -127,8 +132,6 @@ module.exports = {
   album, albumCategory,
   // 产品
   product, productDetail,
-  // 分类
-  category, categoryUpdate, categoryDetail,
   // 证书
   cert, certDetail,
   // 友情链接

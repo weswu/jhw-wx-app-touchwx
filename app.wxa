@@ -11,15 +11,18 @@ export default {
     pages: [
       'pages/user/login',
       'pages/news/newsDetail',
-      'pages/news/news',
+      'pages/components/j-tag',
       'pages/pc/website',
+      'pages/category/category',
+      'pages/test',
+      'pages/cost/cost',
+      'pages/news/news',
       'pages/home/index',
       'pages/home/console',
       'pages/home/module',
       'pages/home/tools',
       'pages/home/my',
       'pages/cost/point',
-      'pages/cost/cost',
       'pages/message/messageList',
       'pages/message/message',
       'pages/user/enterprise',
@@ -34,13 +37,10 @@ export default {
       'pages/service/service',
       'pages/setting/webView',
       'pages/shop/shop',
-      'pages/category/category',
       'pages/static/seo/seoDetail',
       'pages/components/j-date',
-      'pages/components/j-tag',
       'pages/components/cc-loadmore',
-      'pages/components/cc-image',
-      'pages/test'
+      'pages/components/cc-image'
     ],
     window: {
       backgroundColor: '#fff',
@@ -109,6 +109,9 @@ export default {
     },
     // 站点
     staticList: [],
+    productCategory: [],
+    newsCategory: [],
+    tagList: [],
     // 其它
     appid: 'wx2aba9d238ba02a76',
     appsecret: 'c7131553b820b07e778d763bac18e259'
@@ -232,6 +235,81 @@ export default {
       }
       typeof cb == 'function' && cb(this.globalData.customData)
     })
+  },
+  // 分类
+  getProductCategory (cb) {
+    this.getCategory(cb, 'product')
+  },
+  getNewsCategory (cb) {
+    this.getCategory(cb, 'news')
+  },
+  getCategory (cb, type) {
+    api.category({
+      type: type
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item._checked = false
+          item.switcher = 'off'
+        })
+        let data = res.attributes.data
+        let list = []
+        // 1级
+        data.forEach(item => {
+          if (!item.belongId) {
+            item.isroot = false // 根目录和三角
+            item._checked = false
+            item.expand = false // 三角图标展开-关闭
+            item.bg = false // 层级背景颜色
+            item.grade = '1'
+            list.push(item)
+          }
+        })
+        // 2级
+        data.forEach(row => {
+          list.forEach((item, index) => {
+            if (item.grade === '1' && (row.belongId === item.categoryId)) {
+              item.isroot = true
+              row.isroot = false
+              row._checked = false
+              row.hidden = true // 显示隐藏
+              row.expand = false
+              row.bg = false
+              row.grade = '2'
+              list.splice(index + 1, 0, row)
+            }
+          })
+        })
+        // 3级
+        data.forEach(row => {
+          list.forEach((item, index) => {
+            if (item.grade === '2' && (row.belongId === item.categoryId)) {
+              item.isroot = true
+              row.isroot = false
+              row._checked = false
+              row.hidden = true
+              row.bg = false
+              row.grade = '3'
+              list.splice(index + 1, 0, row)
+            }
+          })
+        })
+        if (list.length > 0) {
+          if (list[0].type === '10') this.globalData.productCategory = list
+          if (list[0].type === '11') this.globalData.newsCategory = list
+        }
+        typeof cb == 'function' && cb(list)
+      }
+    })
+  },
+  getTag (cb) {
+    //标签
+    api.tag().then(res => {
+      if (res.success) {
+        this.globalData.tagList = res.attributes.data
+      }
+      typeof cb == 'function' && cb(this.globalData.tagList)
+    })
   }
 }
 </script>
@@ -243,27 +321,6 @@ export default {
   background: #f1f1f1;
   height: 32rpx;
 }
-.ui-row-list{
-  background: #fff;
-}
-.ui-row{
- .icon-xiangzuo{
-    font-size: 20px;
-  }
-  .icon-arrow-right{
-    color: #999
-  }
-  .desc{
-    color: #999;
-    font-size: 12px;
-  }
-}
-
-.radio-group{
-  label{
-    padding-bottom: 5px;
-  }
-}
 
 /*  重写 radio 样式  */
 radio {
@@ -274,6 +331,75 @@ radio {
   .wx-radio-input.wx-radio-input-checked{
     border-color: #34b34a !important;
     background: #34b34a !important;
+  }
+}
+
+// 列表
+.ui-row-list{
+  background: #fff;
+  .text{
+    color: #4e4e4e;
+  }
+}
+.ui-row{
+ .icon-xiangzuo{
+    font-size: 20px;
+  }
+  .icon-arrow-right{
+    color: #999
+  }
+  .desc{
+    color: #9f9f9f;
+    font-size: 12px;
+    .mix-text-overflow();
+  }
+}
+
+// 列表左移css
+.j_swipe_list {
+  background-color: #fff;
+}
+.j_swipe_operate{
+  background: #eee;
+  color:#545454
+}
+
+// 更多操作
+.j_mask_btn{
+  padding:0 15px;
+  position:fixed;
+  width:100%;
+  bottom:20px;
+  button{
+    height: 50px;
+    line-height: 50px;
+    color: #4e4e4e;
+    font-weight:700;
+    background-color:#fff;
+  }
+  view{
+    border-radius: 6px;
+    padding-bottom: 5px;
+    button{
+      height: 55px;
+      line-height: 55px;
+      border-radius: 0;
+      margin: 0;
+      color: #4e4e4e;
+      font-weight:normal;
+      &::after{
+        border-radius: 0;
+        border-bottom: none;
+      }
+      &:first-child{
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+      &:last-child{
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
   }
 }
 
