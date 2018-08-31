@@ -1,16 +1,8 @@
 <template>
   <view class="j_console">
     <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            控制台
-          </view>
-        </ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="控制台" back="{{false}}"></cc-header>
+
     <view class="header">
       <navigator url="/pages/home/module">
         <button class="weui-btn" type="primary" plain="true" size="mini">模块编辑</button>
@@ -119,6 +111,11 @@
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     mobileSort: [

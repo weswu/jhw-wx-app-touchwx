@@ -1,42 +1,29 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            设置
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="设置"></cc-header>
+
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="/pages/service/feedback">
+      <ui-row height="50" url="/pages/service/feedback" hover-class="none">
           <ui-col vertical-align="middle">
               服务反馈
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
-      <ui-row height="50" url="/pages/service/service">
+      <ui-row height="50" url="/pages/service/service" hover-class="none">
           <ui-col vertical-align="middle">
               咨询与建议
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
-      <ui-row height="50" url="sale">
+      <ui-row height="50" url="sale" hover-class="none">
           <ui-col vertical-align="middle">
               安全设置
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
@@ -49,11 +36,10 @@
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 export default {
-  data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px'
-  },
-  navigateBack () {
-    wx.navigateBack()
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
   },
   logout () {
     api.logout({
@@ -67,7 +53,9 @@ export default {
           url: '/pages/user/login?back=1'
         })
       } else {
-        Tips.error(res.msg)
+        wx.navigateTo({
+          url: '/pages/user/login?back=1'
+        })
       }
     })
   }

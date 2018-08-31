@@ -1,5 +1,7 @@
 <template>
   <view>
+    <cc-header title="服务反馈"></cc-header>
+
     <!-- 自定义导航 -->
     <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
       <ui-row height="46">
@@ -54,8 +56,12 @@ import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     detail: {
       fdbk_type: '5'
     },
@@ -67,9 +73,6 @@ let pageConf = {
       { text: '【资料修改】', value: '1507' },
       { text: '【页面与资料修改】', value: '1508' }
     ]
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   validate() {
     const rules = [

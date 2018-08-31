@@ -1,20 +1,7 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            FAQ
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="FAQ"></cc-header>
+
     <ui-row-list border-left-indent>
         <ui-row height="50" url="faq1">
           <ui-col vertical-align="middle">
@@ -30,12 +17,10 @@
 
 <script>
 export default {
-  data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
-
-  },
-  navigateBack () {
-    wx.navigateBack()
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
   }
 }
 </script>

@@ -1,20 +1,6 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            标签设置
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}px"></view>
+    <cc-header title="标签设置"></cc-header>
     <view style="height:46px"></view>
 
     <view style="padding-left:15px;">
@@ -51,6 +37,11 @@
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
@@ -61,9 +52,6 @@ export default {
     tagMapStore: [],
     name: '',
     show: false
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad (e) {
     e.id && this.setData({

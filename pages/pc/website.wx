@@ -1,20 +1,7 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            我的网站<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text>
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="我的网站" count="{{count}}"></cc-header>
+
     <ui-swipe-out operate-width="120" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
     bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="80">
         <view slot="content">
@@ -63,20 +50,21 @@ import Tips from "../../static/utils/tips";
 import Utils from "../../static/utils/utils";
 import regeneratorRuntime from 'regenerator-runtime'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT: wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT + "px",
     list: [],
     params: {
       page: 1,
-      pageSize: 8,
+      pageSize: 10,
       sortType: "desc"
     },
     count: 0,
     more: { loading: true },
     el: "undefined"
-  },
-  navigateBack() {
-    wx.navigateBack();
   },
   onLoad() {
     this.get();

@@ -1,29 +1,16 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            安全设置
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="安全设置"></cc-header>
+
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="/pages/user/password">
+      <ui-row height="50" url="/pages/user/password" hover-class="none">
           <ui-col vertical-align="middle">
               登录密码
           </ui-col>
-          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+          <ui-col class="desc" width="100" vertical-align="middle" align="right">
               重新设置
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
@@ -31,23 +18,23 @@
           <ui-col vertical-align="middle">
               备用邮箱
           </ui-col>
-          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+          <ui-col class="desc" width="100" vertical-align="middle" align="right">
               {{user.email}}
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
       
       <view wx:for="{{oauth}}" wx:key="*this">
-        <ui-row height="50" wx:if="{{item.type === 'weixin'}}">
+        <ui-row height="50" border-bottom wx:if="{{item.type === 'weixin'}}">
           <ui-col vertical-align="middle">
               微信
           </ui-col>
-          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+          <ui-col class="desc" width="100" vertical-align="middle" align="right">
               {{item.nickname}}
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
         </ui-row>
@@ -55,10 +42,10 @@
           <ui-col vertical-align="middle">
               手机
           </ui-col>
-          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+          <ui-col class="desc" width="100" vertical-align="middle" align="right">
               {{item.nickname}}
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
         </ui-row>
@@ -70,8 +57,12 @@
 <script>
 import api from '../../static/utils/api'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     user: {},
     oauth: [
       {nickname: '未绑定', type: 'weixin'},
@@ -82,9 +73,6 @@ export default {
   onLoad () {
     this.user = getApp().globalData.user
     this.get()
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   get () {
     api.accountOauth().then(res => {

@@ -1,0 +1,129 @@
+<template>
+  <view class="cc-header">
+    <view class="ui-nav-bar" style="{{ selfCustomStyle }}">
+      <view class="ui-nav-bar-content">
+        <ui-row height="46" class="text">
+          <ui-col vertical-align="middle" align="left" width="{{width}}" space-left="10">
+            <view style="width:100%;display:flex;line-height:46px;">
+              <i class="iconfont icon-xiangzuo" bindtap="navigateBack" wx:if="{{back}}"></i>
+              <slot></slot>
+            </view>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center">
+            <view c>
+              {{title}}<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text>
+            </view>
+          </ui-col>
+          <ui-col vertical-align="middle" width="{{width}}"></ui-col>
+        </ui-row>
+      </view>
+    </view>
+    <view style="height:{{NAV_HEIGHT}}px"></view>
+  </view>
+</template>
+
+<script>
+import StyleHelper from 'touchui-wx-components/libs/StyleHelper'
+export default {
+  config: {
+    usingComponents: { }
+  },
+  behaviors: [ ],
+  properties: { 
+    customStyle: {
+      type: Object,
+      value: {
+        backgroundColor:'#373d40',
+        color:'#fff'
+      }
+    },
+    title: {
+      type: String
+    },
+    count: {
+      type: Number,
+      value: 0
+    },
+    back: {
+      type: Boolean,
+      value: true
+    },
+    width: {
+      type: String,
+      value: 40
+    }
+  },
+  options: {
+    multipleSlots: true
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT
+  },
+  // externalClasses: ['custom-nav-bar'],
+  ready () {
+    let height = wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT
+    let style = this.data.customStyle || {}
+    style.height = height
+    style.paddingTop = wx.STATUS_BAR_HEIGHT
+    this.setData({
+      statusBarHeight: wx.STATUS_BAR_HEIGHT,
+      selfCustomStyle: StyleHelper.getPlainStyle(style)
+    })
+  },
+  methods: {
+    navigateBack () {
+      wx.navigateBack()
+    }
+  }
+}
+</script>
+
+<style lang="less">
+@import '../static/styles/row';
+@import '../static/styles/col';
+@import '../static/styles/iconfont';
+.ui-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 14px;
+  z-index: 490;
+  user-select: none;
+  box-sizing: border-box;
+}
+.ui-nav-bar-content {
+  display: flex;
+  .nav-bar-left {
+    position: relative;
+    padding: 0 30px;
+  }
+  .nav-bar-center {
+    position: relative;
+    flex: 1;
+    text-align: center;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+  .nav-bar-right {
+    text-align: right;
+  }
+}
+.ui-nav-bar-more:after {
+  content: "\2022\0020\2022\0020\2022\0020";
+  font-size: 16px;
+}
+// other
+.cc-header{
+  .text{
+    font-size: 34rpx;
+  }
+  .icon-xiangzuo{
+    font-size: 20px;
+    padding: 0 3px;
+  }
+}
+
+</style>

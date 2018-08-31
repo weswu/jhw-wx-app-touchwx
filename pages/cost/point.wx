@@ -1,20 +1,7 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            积分管理
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}px"></view>
+    <cc-header title="积分管理"></cc-header>
+
     <view class="header">
       <view class="point">
         <text class="number">{{point}}</text>积分
@@ -31,14 +18,14 @@
     <view class="sticky-in-relative-container">
       <ui-sticky scroll-top="{{ scrollTop }}" top="{{NAV_HEIGHT}}" custom-style="{{ {backgroundColor:'#fff'} }}">
         <view>
-          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important', color: '#ccb27b', borderBottom: '2px solid #ccb27b'} }}" bindchange="handleChange">
+          <ui-tabs index="{{current}}" tab-style="{{tabStyle}}" active-tab-style="{{activeTabStyle}}" bindchange="handleChange">
             <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
             <ui-tab>积分兑换</ui-tab>
             <ui-tab>积分规则</ui-tab>
           </ui-tabs>
         </view>
         <view slot="sticky">
-          <ui-tabs tab-style="{{ {width:width/3+'px !important'} }}" active-tab-style="{{ {width:width/3+'px !important', color: '#ccb27b', borderBottom: '2px solid #ccb27b'} }}" bindchange="handleChange">
+          <ui-tabs index="{{current}}" tab-style="{{tabStyle}}" active-tab-style="{{activeTabStyle}}" bindchange="handleChange">
             <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
             <ui-tab>积分兑换</ui-tab>
             <ui-tab>积分规则</ui-tab>
@@ -49,22 +36,22 @@
     
     <!-- 内容 -->
     <view class="content_list">
-      <view wx:for="{{ list }}" wx:key="*this" wx:if="{{current1 === 0}}">
-        <ui-row height="50" border-bottom>
-            <ui-col vertical-align="middle" space-left="15">
-                <text class="title">{{item.desc}}</text>
-                <text class="time">{{item.addTime}}</text>
-            </ui-col>
-            <ui-col align="right" width="80" vertical-align="middle" space-right="15">
-                <text class="plus" wx:if="{{item.income>0}}">+{{item.income}}</text>
-                <text class="minus" wx:if="{{item.out>0}}">-{{item.out}}</text>
-            </ui-col>
+      <view wx:for="{{ list }}" wx:key="*this" wx:if="{{current === 0}}">
+        <ui-row height="60" border-bottom>
+          <ui-col vertical-align="middle" space-left="15">
+            <text class="title">{{item.desc}}</text>
+            <text class="time">{{item.addTime}}</text>
+          </ui-col>
+          <ui-col align="right" width="80" vertical-align="middle" space-right="15">
+            <text class="plus" wx:if="{{item.income>0}}">+{{item.income}}</text>
+            <text class="minus" wx:if="{{item.out>0}}">-{{item.out}}</text>
+          </ui-col>
         </ui-row>
       </view>
-      <view wx:if="{{current1 === 1}}">
+      <view wx:if="{{current === 1}}">
         <view style="padding: 15px;">暂无兑换商品</view>
       </view>
-      <view class="rule" wx:if="{{current1 === 2}}">
+      <view class="rule" wx:if="{{current === 2}}">
         <view>1、积分专属机汇网，仅限机汇网内使用；</view>
         <view>2、在机汇网后台、微信公众号【机汇网络】和APP进行以下操作时，均可获得积分；</view>
         <view class="table">
@@ -96,11 +83,23 @@ import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    current1:0,
-    scrollTop:0,
-    width:wx.WIN_WIDTH,
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    scrollTop:0,
+    current:0,
+    tabStyle:{
+      'width': wx.WIN_WIDTH/3 +'px !important'
+    },
+    activeTabStyle:{
+      'color': '#ccb27b',
+      'width': wx.WIN_WIDTH/3 +'px !important',
+      'border-bottom': '1px solid #ccb27b'
+    },
     // 数据
     list: [],
     params: {
@@ -114,9 +113,6 @@ export default {
     rule: [],
     integralCount: {}
   },
-  navigateBack () {
-    wx.navigateBack()
-  },
   onLoad () {
     this.setData({
       integralCount: getApp().globalData.integralCount
@@ -124,7 +120,6 @@ export default {
     this.get()
   },
   onPageScroll (e) {
-    console.log(e)
     this.setData({
       scrollTop: e.scrollTop
     })
@@ -172,7 +167,7 @@ export default {
   handleChange (e) {
     let index = e.detail.index
     this.setData({
-      current1: index
+      current: index
     })
     if (index === 2) {
       this.getRule()

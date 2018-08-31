@@ -1,10 +1,8 @@
 <template>
   <view class="j_my">
     <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46"></ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header back="{{false}}"></cc-header>
+
     <view class="position: relative;">
       <view class="weui-media-box">
         <navigator url="/pages/user/account" class="headimg-box">
@@ -26,14 +24,14 @@
       </navigator>
     </view>
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="/pages/cost/cost">
-          <ui-col width="40" vertical-align="middle" align="center">
+      <ui-row height="50" url="/pages/cost/cost" hover-class="none">
+          <ui-col width="40" vertical-align="middle" align="center" space-right="6">
             <i class="iconfont icon-price" style="color:#f67d73"></i>
           </ui-col>
           <ui-col class="text" vertical-align="middle">
               费用中心
           </ui-col>
-          <ui-col width="40" vertical-align="middle">
+          <ui-col width="30" vertical-align="middle">
               <ui-icon type="arrow-right"></ui-icon>
           </ui-col>
       </ui-row>
@@ -41,66 +39,66 @@
     <view class="hr"></view>
 
     <ui-row-list border-left-indent>
-      <ui-row height="50" border-bottom url="/pages/cost/point">
-          <ui-col width="40" vertical-align="middle" align="center">
-            <i class="iconfont icon-qiandao"></i>
-          </ui-col>
-          <ui-col class="text" vertical-align="middle">
-              每日签到
-          </ui-col>
-          <ui-col width="40" vertical-align="middle">
-              <ui-icon type="arrow-right"></ui-icon>
-          </ui-col>
+      <ui-row height="50" border-bottom url="/pages/cost/point" hover-class="none">
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
+          <i class="iconfont icon-qiandao"></i>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          每日签到
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
       </ui-row>
-      <ui-row height="50" url="/pages/cost/point">
-          <ui-col width="40" vertical-align="middle" align="center">
+      <ui-row height="50" url="/pages/cost/point" hover-class="none">
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-jifen"></i>
-          </ui-col>
-          <ui-col class="text" vertical-align="middle">
-              积分管理
-          </ui-col>
-          <ui-col width="40" vertical-align="middle">
-              <ui-icon type="arrow-right"></ui-icon>
-          </ui-col>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          积分管理
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
       </ui-row>
-      <ui-row height="50">
-          <ui-col width="40" vertical-align="middle" align="center">
+      <ui-row height="50" hover-class="none">
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-web-icon-"></i>
-          </ui-col>
-          <ui-col class="text" vertical-align="middle">
-              推荐奖励
-          </ui-col>
-          <ui-col width="40" vertical-align="middle">
-              <ui-icon type="arrow-right"></ui-icon>
-          </ui-col>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          推荐奖励
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
       </ui-row>
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="/pages/user/account">
-          <ui-col width="40" vertical-align="middle" align="center">
+      <ui-row height="50" url="/pages/user/account" hover-class="none">
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-account-only"></i>
-          </ui-col>
-          <ui-col class="text" vertical-align="middle">
-              账号信息
-          </ui-col>
-          <ui-col width="40" vertical-align="middle">
-              <ui-icon type="arrow-right"></ui-icon>
-          </ui-col>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          账号信息
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
       </ui-row>
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="/pages/setting/setting">
-          <ui-col width="40" vertical-align="middle" align="center">
+      <ui-row height="50" url="/pages/setting/setting" hover-class="none">
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-shezhi"></i>
-          </ui-col>
-          <ui-col class="text" vertical-align="middle">
-              设置
-          </ui-col>
-          <ui-col width="40" vertical-align="middle">
-              <ui-icon type="arrow-right"></ui-icon>
-          </ui-col>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          设置
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
       </ui-row>
     </ui-row-list>
     <view class="crpt">技术支持：机汇网</view>
@@ -109,8 +107,12 @@
 
 <script>
 export default{
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     user: {
       username: ''
     },
@@ -136,7 +138,7 @@ export default{
     })  
   },
   error () {
-    that.setData({
+    this.setData({
       'accountInfo.headimg': 'upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
     })
   },

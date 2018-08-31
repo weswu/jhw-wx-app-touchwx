@@ -1,20 +1,8 @@
 <template>
-    <view>
-      <ui-nav-bar slot="nav-bar" custom-style="{{ {backgroundColor:'#fff'} }}">
-        <ui-row height="46">
-          <ui-col vertical-align="middle" align="center" width="60" bindtap="navigateBack">
-              <ui-icon type="close" size="16" color="#333"></ui-icon>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center">
-            <view>选择日期</view>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center" width="60">
-            
-          </ui-col>
-        </ui-row>
-      </ui-nav-bar>
-      <view style="margin-top:{{NAV_HEIGHT}}"></view>
-      <ui-v-calendar
+  <view>
+    <cc-header title="选择日期" custom-style="{{ {backgroundColor:'#fff'} }}"></cc-header>
+      
+    <ui-v-calendar
       select-range-mode="{{false}}"
       header-height="30"
       height="319"
@@ -25,17 +13,18 @@
       theme-color="red"
     ></ui-v-calendar>
   
-    </view>
+  </view>
 </template>
   
   
 <script>
 export default {
   config: {
-    navigationBarTitleText: "纵向日历"
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
   },
   data: {
-    NAV_HEIGHT: wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT + "px",
     radioDate: "",
     radioMonth: "",
     radioDay: "",
@@ -105,9 +94,6 @@ export default {
       date = new Date(e.time);
     }
     this.radioinit(this.format(date));
-  },
-  navigateBack() {
-    wx.navigateBack();
   }
 };
 </script>

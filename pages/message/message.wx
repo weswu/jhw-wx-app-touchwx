@@ -1,48 +1,46 @@
 <template>
   <view>
     <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            消息
+    <cc-header title="消息" back="{{false}}" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}"></cc-header>
+
+    <view class="top_tip">
+      <ui-row url="messageList?type={{item.type}}&title={{item.name}}" height="144r" border-bottom hover-class="touchui-hover" wx:for="{{list}}" wx:key="index">
+        <ui-col width="60" align="center" vertical-align="middle">
+          <view class="left_icon left_icon">
+            <view class="maoyan" style="background: #{{item.color}}">
+              <i class="iconfont {{item.icon}}"></i>
+              <ui-badge custom-style="{{customStyle3}}" text="{{item.count}}" wx:if="{{item.count !== 0}}"></ui-badge>
+            </view>
           </view>
         </ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
-    <view class="top_tip">
-      <ui-row height="70" border-bottom hover-class="touchui-hover" wx:for="{{list}}" wx:key="index">
-          <ui-col width="60" align="center" vertical-align="middle">
-              <view class="left_icon left_icon">
-                <view class="maoyan" style="background: #{{item.color}}">
-                  <i class="iconfont {{item.icon}}"></i>
-                  <ui-badge custom-style="{{customStyle3}}" text="{{item.count}}" wx:if="{{item.count !== 0}}"></ui-badge>
-                </view>
-              </view>
-          </ui-col>
-          <ui-col class="text" align="left" vertical-align="middle" space="20">
-              <view style="width: 100%;">
-                  <ui-row height="30" url="messageList?type={{item.type}}&title={{item.name}}">
-                      <ui-col align="left" vertical-align="middle">
-                          <text>{{item.name}}</text>
-                      </ui-col>
-                      <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                          <text class="time">08-28</text>
-                      </ui-col>
-                  </ui-row>
-                  <view>总票房9.60亿较上周 下降30.64%，《战狼2》突破票房10亿</view>
-              </view>
-          </ui-col>
+        <ui-col class="text" align="left" vertical-align="middle" space="20">
+          <view style="width: 100%;">
+            <ui-row height="30">
+              <ui-col align="left" vertical-align="middle">
+                <text>{{item.name}}</text>
+              </ui-col>
+              <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                <text class="time">{{item.time}}</text>
+              </ui-col>
+            </ui-row>
+            <view>{{item.content}}</view>
+          </view>
+        </ui-col>
       </ui-row>
     </view>
   </view>
 </template>
 
 <script>
+import api from '../../static/utils/api'
+import Utils from '../../static/utils/utils'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     list: [
       { name: '客户消息', count: 0, icon: 'icon-kehu', color: '59b5f9', content: '', time: '', type: '03' },
       { name: '产品消息', count: 0, icon: 'icon-product', color: 'a3d253', content: '', time: '', type: '10' },
@@ -56,6 +54,40 @@ export default {
       'top': '-5px',
       'right': '-15px'
     }
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    // recvState 00未读  01已读
+    api.message({
+      data: {
+        pageSize: 1
+      }
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes
+        let list = this.data.list
+        list[0].count = data.count03
+        list[1].count = data.count10
+        list[2].count = data.count11
+        list[3].count = data.count12
+        list[4].count = data.count13
+        list[0].content = data.detail03.title || '暂无消息'
+        list[0].time = Utils.formatTime(data.detail03.addTime, 'yyyy-MM-dd', true)
+        list[1].content = data.detail10.title || '暂无消息'
+        list[1].time = Utils.formatTime(data.detail10.addTime, 'yyyy-MM-dd', true)
+        list[2].content = data.detail11.title || '暂无消息'
+        list[2].time = Utils.formatTime(data.detail11.addTime, 'yyyy-MM-dd', true)
+        list[3].content = data.detail12.title || '暂无消息'
+        list[3].time = Utils.formatTime(data.detail12.addTime, 'yyyy-MM-dd', true)
+        list[4].content = data.detail13.title || '暂无消息'
+        list[4].time = Utils.formatTime(data.detail13.addTime, 'yyyy-MM-dd', true)
+        this.setData({
+          list: list
+        })
+      }
+    })
   }
 }
 </script>

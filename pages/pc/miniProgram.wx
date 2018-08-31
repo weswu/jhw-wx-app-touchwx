@@ -1,21 +1,8 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            小程序界面管理
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="小程序界面管理"></cc-header>
     <view style="height:50px"></view>
+
     <swiper class="content" current="{{ current1 }}" bindchange="handleContentChange1">
       <swiper-item>
         <view class="j_tip">
@@ -92,6 +79,7 @@
         </view>
       </swiper-item>
     </swiper>
+    
     <ui-fixed-view top="{{NAV_HEIGHT}}" left="0" right="0">
       <ui-tabs index="{{ current1 }}" bindchange="handleChange1" tab-style="{{ {background: '#f1f1f1'} }}" ink-bar ink-bar-style="{{ {width: '60%'} }}">
         <ui-tab>基础版</ui-tab>
@@ -103,14 +91,15 @@
 
 <script>
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     current1: 0,
     state: '00',
     state2: '00'
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   radio (e) {
     this.setData({

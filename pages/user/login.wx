@@ -1,20 +1,7 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="16" color="#fff" wx:if="{{back}}"></ui-icon>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            机汇网会员登录
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="机汇网会员登录" back="{{back}}"></cc-header>
+   
     <view class="logo"><image src="http://www.jihui88.com/member/static/images/f-logo.png" alt=""></view>
     <view class="login">
       <view class="form">
@@ -38,13 +25,14 @@ import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     detail:{},
     back: false
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad (e) {
     if (e.back === '1') {

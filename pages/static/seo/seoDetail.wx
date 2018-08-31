@@ -1,20 +1,7 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            SEO设置
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="SEO设置"></cc-header>
+    
     <ui-row-list border-left-indent>
       <ui-row height="50">
           <ui-col width="85" vertical-align="middle">
@@ -51,13 +38,14 @@ import Input from '../../../static/input/input'
 import api from '../../../static/utils/api'
 import Tips from '../../../static/utils/tips'
 let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     detail: {},
     edit: false
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad (e) {
     if (e.edit === 'true') {

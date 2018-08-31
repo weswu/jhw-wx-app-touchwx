@@ -9,26 +9,25 @@ export default {
   config: {
     usingComponents: {},
     pages: [
-      'pages/user/login',
-      'pages/news/newsDetail',
-      'pages/components/j-tag',
-      'pages/pc/website',
-      'pages/category/category',
-      'pages/test',
-      'pages/cost/cost',
-      'pages/news/news',
+      'pages/home/my',
+      'pages/message/message',
+      'pages/message/messageList',
       'pages/home/index',
       'pages/home/console',
       'pages/home/module',
       'pages/home/tools',
-      'pages/home/my',
+      'pages/user/login',
+      'pages/news/newsDetail',
+      'pages/components/j-tag',
+      'pages/pc/miniProgram',
+      'pages/pc/website',
       'pages/cost/point',
-      'pages/message/messageList',
-      'pages/message/message',
+      'pages/cost/cost',
+      'pages/category/category',
+      'pages/news/news',
       'pages/user/enterprise',
       'pages/user/account',
       'pages/user/password',
-      'pages/pc/miniProgram',
       'pages/setting/setting',
       'pages/setting/sale',
       'pages/service/faq',
@@ -38,9 +37,8 @@ export default {
       'pages/setting/webView',
       'pages/shop/shop',
       'pages/static/seo/seoDetail',
-      'pages/components/j-date',
-      'pages/components/cc-loadmore',
-      'pages/components/cc-image'
+      // 组件
+      'pages/components/j-date'
     ],
     window: {
       backgroundColor: '#fff',
@@ -122,7 +120,7 @@ export default {
     //微信登录
     let that = this
     let code = ''
-    wx.login({
+    false && wx.login({
       success: function(res) {
         if (res.code) {
           code = res.code
@@ -342,9 +340,6 @@ radio {
   }
 }
 .ui-row{
- .icon-xiangzuo{
-    font-size: 20px;
-  }
   .icon-arrow-right{
     color: #999
   }

@@ -1,23 +1,8 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{back}}">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="submit" wx:if="{{!back}}" space-left="8">
-          完成
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            所有工具
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="所有工具" back="{{back}}">
+      <text bindtap="submit" wx:if="{{!back}}">完成</text>
+    </cc-header>
 
     <checkbox-group bindchange="checkboxChange">
       <ui-row-list>
@@ -51,8 +36,12 @@
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     back: true,
     list: [
       {
@@ -127,9 +116,6 @@ export default {
         ]
       }
     ]
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad () {
     let list = this.data.list

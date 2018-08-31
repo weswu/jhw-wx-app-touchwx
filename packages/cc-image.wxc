@@ -3,8 +3,9 @@
     <image mode="aspectFit" src="http://img.jihui88.com/{{src}}" binderror="error"/>
   </view>
 </template>
+
 <script>
-Component({
+export default {
   properties: {
     src: {
       type: String,
@@ -64,8 +65,9 @@ Component({
       });
     }
   }
-});
+}
 </script>
+
 <style lang="less">
 .cc-image {
   border:1px solid #d5d5d5;

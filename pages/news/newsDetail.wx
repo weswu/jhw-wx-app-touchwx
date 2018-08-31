@@ -1,24 +1,10 @@
 <template>
   <view class="j_detail">
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {boxShadow: '0 0px 16px 0 #ccc',backgroundColor:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <ui-icon type="arrow-left" size="16" color="#fff"></ui-icon>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            新闻详情
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="新闻详情"></cc-header>
 
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="48">
+      <ui-row height="50">
         <ui-col width="60" vertical-align="middle">
             新闻名称
         </ui-col>
@@ -29,7 +15,7 @@
             <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="48">
+      <ui-row height="50">
         <ui-col width="60" vertical-align="middle">
             新闻分类
         </ui-col>
@@ -40,7 +26,7 @@
             <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="48" url="/pages/components/j-date?time={{detail.addTime}}">
+      <ui-row height="50" url="/pages/components/j-date?time={{detail.addTime}}">
         <ui-col width="60" vertical-align="middle">
             延时发布
         </ui-col>
@@ -48,7 +34,7 @@
             {{detail.addTimeVal}}
         </ui-col>
       </ui-row>
-      <ui-row height="48">
+      <ui-row height="50">
         <ui-col width="60" vertical-align="middle">
             来源
         </ui-col>
@@ -56,7 +42,7 @@
             <input placeholder="请填写" bindinput="input" id="origin" value="{{detail.origin}}"/>
         </ui-col>
       </ui-row>
-      <ui-row height="48">
+      <ui-row height="50">
         <ui-col width="60" vertical-align="middle">
             作者
         </ui-col>
@@ -64,7 +50,7 @@
             <input placeholder="请填写" bindinput="input" id="author" value="{{detail.author}}"/>
         </ui-col>
       </ui-row>
-      <ui-row height="48">
+      <ui-row height="50">
         <ui-col width="60" vertical-align="middle">
             是否置顶
         </ui-col>
@@ -98,7 +84,7 @@
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="48" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.nkey}}&description={{detail.seoDescription}}">
+      <ui-row height="50" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.nkey}}&description={{detail.seoDescription}}">
         <ui-col width="60" vertical-align="middle">
             SEO设置
         </ui-col>
@@ -106,7 +92,7 @@
             <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="48" url="/pages/components/j-tag?type=news&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.newsId}}">
+      <ui-row height="50" url="/pages/components/j-tag?type=news&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.newsId}}">
         <ui-col width="60" vertical-align="middle">
             新闻标签
         </ui-col>
@@ -117,7 +103,7 @@
     </ui-row-list>
 
     <ui-fixed-view bottom="0" left="0" right="0">
-      <ui-row height="40" border-top style="background: #fff">
+      <ui-row height="41" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
           保存
         </ui-col>
@@ -138,15 +124,12 @@ import Utils from '../../static/utils/utils'
 let pageConf = {
   config: {
     usingComponents: {
-      'cc-image': '../../pages/components/cc-image'
+      'cc-image': '../../packages/cc-image',
+      'cc-header': '../../packages/cc-header'
     }
   },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     detail:{}
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad (e) {
     // e.id = 'News_000000000000000000000181172'

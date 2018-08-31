@@ -1,26 +1,12 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{isBack}}">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="save" wx:if="{{!isBack}}" space-left="8">
-          完成
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            所有模块
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="所有模块" back="{{isBack}}">
+      <text bindtap="save" wx:if="{{!isBack}}">完成</text>
+    </cc-header>
     <view class="j_save">
         按住拖动排序
     </view>
+    
     <view style="position: relative; z-index: 199;">
         <view class="touchView" style="height:{{scrollPosition.scrollViewHeight}}px;" catchtouchstart="scrollTouchStart"
             catchtouchmove="scrollTouchMove" catchtouchend="scrollTouchEnd">
@@ -75,8 +61,12 @@
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 export default {
-  data: {        
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
     isBack: true,
     scrollPosition:{
       everyOptionCell:50,
@@ -99,9 +89,6 @@ export default {
       selectPosition:0,
     },
     optionsListData: []
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad () {
     // 开始加载页面

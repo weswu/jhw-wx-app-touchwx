@@ -1,20 +1,7 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            账号信息
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <cc-header title="账号信息"></cc-header>
+   
     <view class="header">
         <view class="logo">
             <image slot="content" src="http://img.jihui88.com/{{accountInfo.headimg}}" binderror="error"/>
@@ -26,10 +13,10 @@
           <ui-col vertical-align="middle">
               账号昵称
           </ui-col>
-          <ui-col class="text-right" width="100" vertical-align="middle" align="right">
+          <ui-col class="desc" width="100" vertical-align="middle" align="right">
             <input style="height:10px;line-height:10px;" placeholder="请输入昵称" bindblur="input" value="{{accountInfo.nickName}}"/>
           </ui-col>
-          <ui-col width="40" vertical-align="middle" align="center">
+          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
               <ui-icon type="arrow-right" size="14" color="#999"></ui-icon>
           </ui-col>
       </ui-row>
@@ -37,7 +24,7 @@
           <ui-col vertical-align="middle">
               会员账号ID
           </ui-col>
-          <ui-col class="text-right" width="200" vertical-align="middle" align="right" space-right="20">
+          <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
               {{user.username}}
           </ui-col>
       </ui-row>
@@ -45,7 +32,7 @@
           <ui-col vertical-align="middle">
               注册时间
           </ui-col>
-          <ui-col class="text-right" width="200" vertical-align="middle" align="right" space-right="20">
+          <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
               {{user.addTime}}
           </ui-col>
       </ui-row>
@@ -58,13 +45,14 @@ import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     user: {},
     accountInfo: {}
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad () {
     let user = getApp().globalData.user
@@ -116,9 +104,5 @@ export default {
       vertical-align:middle;
       border-radius: 75rpx;
     }
-  }
-  .text-right{
-    font-size: 12px;
-    color: #999;
   }
 </style>

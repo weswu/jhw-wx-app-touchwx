@@ -1,23 +1,8 @@
 <template>
   <view>
-    <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {background:'#373d40',color:'#fff'} }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="navigateBack" wx:if="{{!selected}}">
-          <i class="iconfont icon-xiangzuo"></i>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40" bindtap="toggleAll" wx:if="{{selected}}" space-left="8">
-          全选
-        </ui-col>
-        <ui-col vertical-align="middle" align="center">
-          <view>
-            新闻管理<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text>
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40"></ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}px"></view>
+    <cc-header title="新闻管理" count="{{count}}" back="{{!selected}}">
+      <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
+    </cc-header>
     <view style="height:46px"></view>
     
     <ui-row-list>
@@ -39,7 +24,7 @@
     <cc-loadmore more="{{more}}"></cc-loadmore>
     
     <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
-      <ui-row height="46" border-bottom style="background:#fff">
+      <ui-row height="98r" border-bottom style="background:#fff">
         <ui-col vertical-align="middle" align="center" width="40">
           <navigator url="/pages/category/category?type=news" class="iconfont icon-fenlei" style="color:#4e4e4e"></navigator>
         </ui-col>
@@ -101,7 +86,8 @@ import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-loadmore': '../../pages/components/cc-loadmore'
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
     }
   },
   data: {
@@ -118,9 +104,6 @@ export default {
     ids: '', // 选中项
     toggle: false, // 全选切换状态 
     showMask: false // 更多
-  },
-  navigateBack () {
-    wx.navigateBack()
   },
   onLoad () {
     this.get()
