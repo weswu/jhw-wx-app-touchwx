@@ -1,0 +1,101 @@
+<template>
+  <view>
+    <cc-header title="消息详情"></cc-header>
+
+    <view class="article">
+      <view class="title">{{detail.title}}</view>
+      <view class="time">{{detail.addTime}}</view>
+      <rich-text nodes="{{detail.content}}"/>
+    </view>
+    <view style="height:82rpx" wx:if="{{detail.type === '03'}}"></view>
+    <button class="btn-defalut fixed" bindtap="reply" wx:if="{{detail.type === '03'}}">回复</button>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    id:'',
+    detail: {}
+  },
+  onLoad (e) {
+    this.setData({
+      id: e.id
+    })
+    this.get()
+  },
+  get () {
+    api.messageDetail({
+      id: this.data.id
+    }).then(res => {
+      if (res.success) {
+        var data = res.attributes.data
+        if (data.content && data.content.indexOf('[{"value":"') > -1) {
+          var cList = JSON.parse(data.content)
+          data.content = ''
+          for (var item of cList) {
+            if (cList.length === 1 && item.type === 'textarea') { // 单一选项
+              data.content = item.value
+            } else {
+              if (item.label === '姓名') {
+                data.fromName = item.wxNick || item.value
+              } else {
+                if (data.content === '') {
+                  data.content = item.label + ':' + item.value
+                } else {
+                  data.content = data.content + '\n' + item.label + ':' + item.value
+                }
+              }
+            }
+          }
+        }
+        data.addTime = Utils.formatTime(data.addTime)
+        this.setData({
+          detail: data
+        })
+      }
+    })
+  },
+  reply () {
+    if (!this.data.detail.addUser) {
+      Tips.modal('收信人不存在')
+    } else {
+      wx.navigateTo({
+        url: 'messageReply?addUser=' + this.data.detail.addUser + '?addEnt=' + this.data.detail.addEnt
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.article{
+  padding: 15px 15px;
+  margin-bottom:30px;
+  .title{
+    font-size: 38rpx;
+  }
+  .time{
+    font-size: 12px;
+    color: #a9aab2;
+    padding: 7px 0;
+  }
+  rich-text{
+    font-size: 13px;
+    color: #585858;
+  }
+}
+.btn-defalut{
+  background:#f5f4f4;color:#02c1df;
+  height: 82rpx;
+  line-height: 82rpx;
+}
+</style>

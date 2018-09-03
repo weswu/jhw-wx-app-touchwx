@@ -1,0 +1,173 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="消息回复"></cc-header>
+   
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            发送给：
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle" align="right">
+          <picker bindchange="picker" id="type" value="{{picker.type}}" data-list="category" range-key="text" range="{{category}}">
+            <view>{{category[picker.type].text}}</view>
+          </picker>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.type !== 'admin'}}">
+        <ui-col width="70" vertical-align="middle">
+            收信人：
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="username" value="{{detail.username}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            反馈类型：
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle" align="right">
+          <picker bindchange="picker" id="fdbkType" value="{{picker.fdbkType}}" data-list="fdbkList" range-key="text" range="{{fdbkList}}">
+            <view>{{fdbkList[picker.fdbkType].text}}</view>
+          </picker>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            标题：
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="title" value="{{detail.title}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            内容：
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea class="desc" placeholder="请填写" bindinput="input" id="content" value="{{detail.content}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            验证码：
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="5">
+          <input class="desc" placeholder="请填写" bindinput="input" id="randCode" value="{{detail.randCode}}"/>
+        </ui-col>
+        <ui-col width="90" vertical-align="middle" align="right" space-right="15">
+          <image class="vcode-img" src="https://www.jihui88.com/veriImg{{time}}" bindtap="refreshCode" style="width: 70px;height:30px;"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <button type="primary" bindtap="submit" style="margin: 25px 15px 15px 15px">回复</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      sendState: '01',
+      recvState: '00',
+      crm: '01',
+      type: 'user',
+      fdbkType: '0'
+    },
+    time: '',
+    picker: {
+      type: 0,
+      fdbkType: 0
+    },
+    category: [
+      { text: '同级会员', value: 'user' },
+      { text: '子会员', value: 'member' },
+      { text: '系统管理员', value: 'admin' }
+    ],
+    fdbkList: [
+      {value: '0', text: '其它'},
+      {value: '1', text: '购买'},
+      {value: '2', text: '服务'},
+      {value: '3', text: '投诉'},
+      {value: '4', text: '表扬'},
+      {value: '5', text: '建议'}
+    ]
+  },
+  onLoad ({addUser, addEnt}) {
+    this.setData({
+      'detail.recvUser': addUser || '', // 接收人用户ID
+      'detail.recvEnt': addEnt || ''
+    })
+  },
+  refreshCode () {
+    this.setData({
+      time: '?time=' + new Date().getTime()
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.title,
+        method: 'required',
+        message: '标题不能为空'
+      },
+      {
+        value: this.data.detail.content,
+        method: 'required',
+        message: '内容不能为空'
+      },
+      {
+        value: this.data.detail.randCode,
+        method: 'required',
+        message: '验证码不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let detail = this.data.detail
+    if (detail.type === 'admin') {
+      detail.username = 'jihui88'
+    }
+    detail.fromName = getApp().globalData.user.nickName
+    detail.fromEmail = getApp().globalData.user.email
+    detail.fromPhone = getApp().globalData.user.cellphone
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    api.messageDetail({
+      data: data,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('回复成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1;
+}
+</style>

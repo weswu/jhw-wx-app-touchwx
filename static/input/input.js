@@ -45,28 +45,31 @@ export default{
     }
     return true;
   },
-  onInput(e) {
+  // 处理输入事件
+  input(e) {
     const fieldName = e.currentTarget.id;
     this.data.detail[fieldName] = e.detail.value;
     this.setData({
       detail: this.data.detail
     })
   },
-  // 处理输入事件
-  input(e) {
-    const fieldName = e.currentTarget.id;
-    this.data.detail[fieldName] = e.detail.value;
-  },
   // 处理单选事件
   radio(e) {
     const fieldName = e.currentTarget.id;
     this.data.detail[fieldName] = e.detail.value;
+    this.setData({
+      detail: this.data.detail
+    })
   },
   picker(e) {
     const index = e.detail.value
     const fieldName = e.currentTarget.id
     const list = e.currentTarget.dataset.list
-    this.picker[fieldName] = index
-    this.data.detail[fieldName] = this[list][index].value
+    this.data.picker[fieldName] = index
+    this.data.detail[fieldName] = this.data[list][index].value
+    this.setData({
+      detail: this.data.detail,
+      picker: this.data.picker
+    })
   }
 }

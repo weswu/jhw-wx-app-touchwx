@@ -24,8 +24,13 @@ button {
   font-size: 14px;
   overflow: inherit;
   color: #1f2d3d;
-  margin: 6px 0;
+  border-radius:0;
+  &::after{
+    border-radius: 0;
+  }
 }
+button.fixed{position:fixed;bottom:0;left:0;width:100%;z-index: 99;}
+button:after {border: 0;}
 
 button[type="primary"] {
   background-color: @theme-color;
@@ -40,7 +45,6 @@ button[type="primary"] {
   &[plain] {
     border-color: @theme-color;
     color: @theme-color;
-
     &.button-hover {
       color: @theme-color;
       border-color: @theme-color;
@@ -48,6 +52,8 @@ button[type="primary"] {
     }
   }
   &[size="mini"] {
+    font-size: 12px;
+    border-radius:5px;
     &.button-hover {
       border-color: @theme-color !important;
     }

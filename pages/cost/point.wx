@@ -36,9 +36,9 @@
     
     <!-- 内容 -->
     <view class="content_list">
-      <view wx:for="{{ list }}" wx:key="*this" wx:if="{{current === 0}}">
-        <ui-row height="60" border-bottom>
-          <ui-col vertical-align="middle" space-left="15">
+      <ui-row-list wx:for="{{ list }}" wx:key="*this" wx:if="{{current === 0}}" border-left-indent>
+        <ui-row height="120r" border-bottom>
+          <ui-col vertical-align="middle">
             <text class="title">{{item.desc}}</text>
             <text class="time">{{item.addTime}}</text>
           </ui-col>
@@ -47,7 +47,7 @@
             <text class="minus" wx:if="{{item.out>0}}">-{{item.out}}</text>
           </ui-col>
         </ui-row>
-      </view>
+      </ui-row-list>
       <view wx:if="{{current === 1}}">
         <view style="padding: 15px;">暂无兑换商品</view>
       </view>

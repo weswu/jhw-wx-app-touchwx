@@ -9,23 +9,24 @@ export default {
   config: {
     usingComponents: {},
     pages: [
+      'pages/user/login',
       'pages/home/my',
-      'pages/message/message',
+      'pages/user/enterprise',
+      'pages/news/news',
+      'pages/message/messageReply',
       'pages/message/messageList',
+      'pages/message/messageDetail',
+      'pages/message/message',
       'pages/home/index',
       'pages/home/console',
       'pages/home/module',
       'pages/home/tools',
-      'pages/user/login',
       'pages/news/newsDetail',
-      'pages/components/j-tag',
       'pages/pc/miniProgram',
       'pages/pc/website',
       'pages/cost/point',
       'pages/cost/cost',
       'pages/category/category',
-      'pages/news/news',
-      'pages/user/enterprise',
       'pages/user/account',
       'pages/user/password',
       'pages/setting/setting',
@@ -38,6 +39,7 @@ export default {
       'pages/shop/shop',
       'pages/static/seo/seoDetail',
       // 组件
+      'pages/components/j-tag',
       'pages/components/j-date'
     ],
     window: {
@@ -120,7 +122,7 @@ export default {
     //微信登录
     let that = this
     let code = ''
-    false && wx.login({
+    wx.login({
       success: function(res) {
         if (res.code) {
           code = res.code
@@ -414,6 +416,20 @@ radio {
         padding-left: 10px;
       }
     }
+    .desc{
+      font-size:13px;
+    }
   }
+}
+.btn_gray{
+  background: #d8d8d8;
+  color: #fff;
+  display: inline-block;
+  height: 25px;
+  line-height: 25px;
+  font-size: 12px;
+  text-align: center;
+  padding: 0 5px;
+  border-radius: 25px;
 }
 </style>

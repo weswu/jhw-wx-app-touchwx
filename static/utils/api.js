@@ -36,6 +36,8 @@ const costDetail = (params) => http(params, buyHost + 'order/detail/user')
 const staticList = (params) => http(params, pcHost + 'baseLayout/list')
 const staticDetail = (params) => http(params, pcHost + 'baseLayout/detail' + (params.id ? '/' + params.id : ''))
 const staticAdd = (params) => http(params, 'http://www.jihui88.com/rest/pc/index/list')
+// seo
+const seoDetail = (params) => http(params, pcHost + 'baseLayout/detail' + (params.id ? '/' + params.id : ''))
 
 // 留言
 const message = (params) => http(params, host + 'message/list')
@@ -123,6 +125,7 @@ module.exports = {
   login, logout,
   // 站点
   staticList, staticDetail, staticAdd,
+  seoDetail,
   // 留言
   message, messageDetail, messageBind,
   // 设置

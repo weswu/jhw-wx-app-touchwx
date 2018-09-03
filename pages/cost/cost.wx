@@ -3,11 +3,11 @@
     <cc-header title="费用中心"></cc-header>
     <view style="height:50px"></view>
 
-    <ui-row-list>
-      <ui-row height="80" border-bottom wx:for="{{list}}" wx:key="*this">
-        <ui-col vertical-align="middle" space-left="15">
+    <ui-row-list border-left-indent>
+      <ui-row height="160r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle">
             <view style="width: 100%;">
-              <ui-row height="30">
+              <ui-row height="60r">
                 <ui-col align="left" vertical-align="middle">
                     <text>订单编号：{{item.outTradeNo}}</text>
                 </ui-col>

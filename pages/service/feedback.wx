@@ -18,7 +18,7 @@
     </ui-nav-bar>
     <view style="height:{{NAV_HEIGHT}}"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="50">
+      <ui-row height="102r">
           <ui-col width="50" vertical-align="middle">
               主题：
           </ui-col>
@@ -26,7 +26,7 @@
               <input placeholder="请输入主题" bindinput="input" id="fdbk_subject64" value="{{detail.fdbk_subject64}}"/>
           </ui-col>
       </ui-row>
-      <ui-row height="50">
+      <ui-row height="102r">
           <ui-col width="70" vertical-align="middle">
               反馈类型：
           </ui-col>
@@ -36,7 +36,7 @@
               </picker>
           </ui-col>
       </ui-row>
-      <ui-row height="50">
+      <ui-row height="102r">
           <ui-col width="70" vertical-align="middle">
               反馈内容：
           </ui-col>

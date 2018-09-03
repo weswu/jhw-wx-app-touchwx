@@ -3,7 +3,7 @@
     <cc-header title="设置"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="/pages/service/feedback" hover-class="none">
+      <ui-row height="102r" url="/pages/service/feedback" hover-class="none">
           <ui-col vertical-align="middle">
               服务反馈
           </ui-col>
@@ -11,7 +11,7 @@
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
-      <ui-row height="50" url="/pages/service/service" hover-class="none">
+      <ui-row height="102r" url="/pages/service/service" hover-class="none">
           <ui-col vertical-align="middle">
               咨询与建议
           </ui-col>
@@ -19,7 +19,7 @@
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
-      <ui-row height="50" url="sale" hover-class="none">
+      <ui-row height="102r" url="sale" hover-class="none">
           <ui-col vertical-align="middle">
               安全设置
           </ui-col>
@@ -28,7 +28,14 @@
           </ui-col>
       </ui-row>
     </ui-row-list>
-    <button type="primary" bindtap="logout">退出账号</button>
+    <view class="hr"></view>
+    <ui-row-list>
+      <ui-row height="55" hover-class="none" bindtap="logout">
+          <ui-col vertical-align="middle" align="center" style="font-size:16px;">
+              退出账号
+          </ui-col>
+      </ui-row>
+    </ui-row-list>
   </view>
 </template>
 
@@ -65,8 +72,5 @@ export default {
 <style lang="less">
 page{
   background: #f1f1f1;
-}
-button{
-  margin: 15px;
 }
 </style>

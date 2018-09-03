@@ -9,7 +9,7 @@
     </view>
 
     <ui-row-list border-left-indent>
-      <ui-row height="50">
+      <ui-row height="104r">
           <ui-col vertical-align="middle">
               账号昵称
           </ui-col>
@@ -20,7 +20,7 @@
               <ui-icon type="arrow-right" size="14" color="#999"></ui-icon>
           </ui-col>
       </ui-row>
-      <ui-row height="50">
+      <ui-row height="104r">
           <ui-col vertical-align="middle">
               会员账号ID
           </ui-col>
@@ -28,7 +28,7 @@
               {{user.username}}
           </ui-col>
       </ui-row>
-      <ui-row height="50">
+      <ui-row height="104r">
           <ui-col vertical-align="middle">
               注册时间
           </ui-col>

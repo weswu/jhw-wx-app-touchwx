@@ -1,0 +1,70 @@
+<template>
+  <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
+    <ui-row height="100r" border-bottom style="background:#fff">
+      <ui-col vertical-align="middle" align="center" width="40" space-left="15">
+        <navigator class="iconfont icon-fenlei" style="color:#4e4e4e"></navigator>
+      </ui-col>
+      <slot></slot>
+      <ui-col vertical-align="middle">
+        <view style="width:100%;">
+          <ui-row height="52r" style="background: #f6f6f6;border-radius:3px;">
+            <ui-col vertical-align="middle" align="center" width="30">
+              <i class="iconfont icon-sousuo"></i>
+            </ui-col>
+            <ui-col vertical-align="middle">
+              <input type="text" value="{{value}}" bindinput="search"/>
+            </ui-col>
+          </ui-row>
+        </view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="center" width="116r">
+        <navigator url="{{add}}" class="iconfont icon-jia1" style="color:#4e4e4e;width: 100%;" hover-class="none"></navigator>
+      </ui-col>
+    </ui-row>
+  </view>
+</template>
+
+<script>
+export default {
+  properties: {
+    value: {
+      type: String,
+      value: ""
+    },
+    typy: {
+      type: String,
+      value: ""
+    },
+    add: {
+      type: String,
+      value: ""
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT
+  },
+  onLoad () {
+    debugger
+  },
+  methods: {
+    search(e) {
+      debugger
+      this.setData({
+        src: 'aaa'
+      });
+    }
+  }
+}
+</script>
+
+<style lang="less">
+@import '../static/styles/row';
+@import '../static/styles/col';
+@import '../static/styles/iconfont';
+.ui-fixed-view {
+  position: fixed;
+}
+.icon-sousuo{
+  color:#afadb1;font-size:14px;
+}
+</style>

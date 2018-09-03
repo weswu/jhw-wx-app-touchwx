@@ -14,7 +14,7 @@
           </navigator>
         </ui-col>
         <ui-col width="55" vertical-align="bottom" align="center">
-          <navigator url="/pages/message/messageList?title=未读消息" style='position: relative;right: 5px;color:#fff'>
+          <navigator url="/pages/message/messageList?title=未读消息&recvState=00" style='position: relative;right: 5px;color:#fff'>
             <i class="iconfont icon-mail" style="color:#fff;font-size:20px"></i>
             <ui-badge text="{{userInfo.noReaderMsg}}" custom-style="{{ {position: 'absolute', top: '0rpx', right: '-30rpx'} }}" wx:if="{{userInfo.noReaderMsg > 0}}"></ui-badge>
           </navigator>
@@ -61,15 +61,19 @@
     <view class="hr"></view>
 
     <!-- 头条 -->
-    <ui-row height="130">
+    <ui-row height="35" style="margin-top:16rpx">
       <ui-col class="j_banner" span="11" vertical-align="middle">
           <view class="name">机汇头条</view> 
-          <view class="banner">
-            <view class="title">10分钟入门</view>
-            <view class="content">
-              快速了解机汇网产品
-            </view>
+      </ui-col>
+    </ui-row>
+    <ui-row height="166r" style="margin-bottom:36rpx">
+      <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
+        <view class="banner">
+          <view class="title">10分钟入门</view>
+          <view class="content">
+            快速了解机汇网产品
           </view>
+        </view>
       </ui-col>
     </ui-row>
     <view class="hr"></view>
@@ -158,10 +162,10 @@
         </ui-row>
       </ui-col>
     </ui-row>
-    <ui-row height="70">
-      <ui-col class="j_banner" span="11" vertical-align="middle">
+    <ui-row height="138r">
+      <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
         <view class="banner">
-          <view class="title">建站教程</view>
+          <view class="title" style="padding-top:28rpx;">建站教程</view>
           <view class="content">
             轻松搭建网站
           </view>
@@ -353,12 +357,9 @@ swiper-item image{width:750rpx;}
 }
 .j_banner{
   .banner{
-    height: 166rpx;
+    width: 100%;
+    height:100%;
     background: #5d5d5d;
-    text-align: center;
-  }
-  .name{
-    padding-bottom: 8px;
   }
   .title{
     color: #fff;
@@ -366,6 +367,7 @@ swiper-item image{width:750rpx;}
   }
   .content{
     color: #b6b6b6;
+    font-size: 12px;
   }
 }
 // 服务市场

@@ -3,7 +3,7 @@
     <cc-header title="咨询与建议"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row height="50" url="faq" hover-class="none">
+      <ui-row height="102r" url="faq" hover-class="none">
           <ui-col vertical-align="middle">
               常见问题
           </ui-col>
@@ -11,7 +11,7 @@
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
-      <ui-row height="50" bindtap="tel">
+      <ui-row height="102r" bindtap="tel">
           <ui-col vertical-align="middle">
               我的客服
           </ui-col>
@@ -22,7 +22,7 @@
               <ui-icon type="arrow-right" size="14"></ui-icon>
           </ui-col>
       </ui-row>
-      <ui-row height="50">
+      <ui-row height="102r">
           <ui-col vertical-align="middle">
               咨询QQ
           </ui-col>

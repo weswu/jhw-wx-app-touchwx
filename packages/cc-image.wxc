@@ -49,9 +49,11 @@ export default {
             success: function (res) {
               wx.hideLoading()
               if (res.statusCode === 200) {
+                let src = res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
                 that.setData({
-                  src: res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
+                  src: src
                 });
+                that.triggerEvent('change', src)
               }
             }
           })

@@ -1,32 +1,254 @@
 <template>
-  <view>
+  <view class="j_detail">
     <cc-header title="基本资料"></cc-header>
-    
-    <ui-row-list>
-      <ui-row height="50">
-          <ui-col width="100" vertical-align="middle" space-left="15">
-              手机
-          </ui-col>
-          <ui-col vertical-align="middle" align="right" space-right="15">
-              15168352892
-          </ui-col>
+   
+    <ui-row-list border-left-indent>
+      <ui-row height="240r">
+        <ui-col width="80" vertical-align="middle">
+            公司LOGO
+        </ui-col>
+        <ui-col width="80" vertical-align="middle">
+          <cc-image id="image" src="{{detail.enterprise.logo}}" width="148r" bindchange="changePic"></cc-image>
+        </ui-col>
+        <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" bindtap="updatePic">
+          <view class="btn_gray">重新上传</view>
+        </ui-col>
+        <ui-col vertical-align="middle"></ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.type !== 'admin'}}">
+        <ui-col width="70" vertical-align="middle">
+            公司名称
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="enterprise.name" value="{{detail.enterprise.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            法人代表
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="enterprise.legalPre" value="{{detail.enterprise.legalPre}}"/>
+        </ui-col>
       </ui-row>
     </ui-row-list>
+    <view class="hr"></view>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            详细地址
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="address" value="{{detail.address}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            联系电话
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="phone" value="{{detail.phone}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            法人手机
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="enterprise.legalPersonCellphone" value="{{detail.enterprise.legalPersonCellphone}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            传真
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="fax" value="{{detail.fax}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+
+    <ui-row-list border-left-indent style="margin-bottom: 50px">
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            姓名
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            手机
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="cellphone" value="{{detail.cellphone}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            Email
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="email" value="{{detail.email}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            性别
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="sex">
+            <label>
+              <radio value="00" checked="{{detail.sex === '00'}}"></radio>
+              先生
+            </label>
+            <label>
+              <radio value="01" checked="{{detail.sex === '01'}}"></radio>
+              女士
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+            职务
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="position" value="{{detail.position}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <button type="primary" class="fixed" bindtap="submit">保存</button>
   </view>
 </template>
 
 <script>
-export default {
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
   config: {
     usingComponents: {
+      'cc-image': '../../packages/cc-image',
       'cc-header': '../../packages/cc-header'
     }
   },
   data: {
-    detail: {}
+    detail: {
+      sex: '00',
+      enterprise: {
+        logo: ''
+      }
+    }
+  },
+  onLoad () {
+    this.setData({
+      detail: getApp().globalData.user
+    })
+    if (!getApp().globalData.enterprise.enterpriseId) {
+      this.get()
+    } else {
+      this.setData({
+        'detail.enterprise': getApp().globalData.enterprise
+      })
+    }
+  },
+  get () {
+    api.enterprise().then(res => {
+      if (res.success) {
+        this.setData({
+          'detail.enterprise': res.attributes.data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  // 图片
+  updatePic () {
+    this.selectComponent("#image").chooseImage();
+  },
+  changePic (e) {
+    this.setData({
+      'detail.enterprise.logo': e.detail
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.enterprise.name,
+        method: 'required',
+        message: '公司全称不能为空'
+      },
+      {
+        value: this.data.detail.enterprise.legalPre,
+        method: 'required',
+        message: '法人不能为空'
+      },
+      {
+        value: this.data.detail.address,
+        method: 'required',
+        message: '详细地址不能为空'
+      },
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '姓名不能为空'
+      },
+      {
+        value: this.data.detail.cellphone,
+        method: 'required',
+        message: '手机不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    // user
+    api.user({
+      id: this.data.detail.userId,
+      data: {
+        model: JSON.stringify(this.data.detail),
+        _method: 'put'
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        getApp().globalData.user = this.data.detail
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+    // enterprise
+    api.enterprise({
+      id: this.data.detail.enterprise.enterpriseId,
+      data: {
+        model: JSON.stringify(this.data.detail.enterprise),
+        _method: 'put'
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        getApp().globalData.enterprise = this.data.detail.enterprise
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+    
   }
 }
+export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1;
+}
 </style>

@@ -3,10 +3,10 @@
     <cc-header title="新闻管理" count="{{count}}" back="{{!selected}}">
       <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
     </cc-header>
-    <view style="height:46px"></view>
+    <view style="height:100rpx"></view>
     
     <ui-row-list>
-      <ui-row url="newsDetail?id={{item.newsId}}" height="54" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row url="newsDetail?id={{item.newsId}}" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
         <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
           <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
@@ -22,29 +22,9 @@
       </ui-row>
     </ui-row-list>
     <cc-loadmore more="{{more}}"></cc-loadmore>
-    
-    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
-      <ui-row height="98r" border-bottom style="background:#fff">
-        <ui-col vertical-align="middle" align="center" width="40">
-          <navigator url="/pages/category/category?type=news" class="iconfont icon-fenlei" style="color:#4e4e4e"></navigator>
-        </ui-col>
-        <ui-col vertical-align="middle">
-          <view style="width:100%;">
-            <ui-row height="23" style="background: #f6f6f6;border-radius:3px;">
-              <ui-col vertical-align="middle" align="center" width="30">
-                  <i class="iconfont icon-sousuo"></i>
-              </ui-col>
-              <ui-col vertical-align="middle">
-                <input type="text" value="{{params.title}}" bindinput="search"/>
-              </ui-col>
-            </ui-row>
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="40">
-          <navigator url="newsDetail" class="iconfont icon-jia1" style="color:#4e4e4e"></navigator>
-        </ui-col>
-      </ui-row>
-    </ui-fixed-view>
+
+    <cc-search value="{{params.title}}" type="news" add="{{'newsDetail'}}"></cc-search>
+
     <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
         <ui-col span="3" vertical-align="middle" align="center" bindtap="copy">
@@ -87,12 +67,11 @@ export default {
   config: {
     usingComponents: {
       'cc-loadmore': '../../packages/cc-loadmore',
-      'cc-header': '../../packages/cc-header'
+      'cc-header': '../../packages/cc-header',
+      'cc-search': '../../packages/cc-search'
     }
   },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
-    // 数据
     list: [],
     params: {
       page: 1,
@@ -254,6 +233,9 @@ export default {
 <style lang="less">
 page{
   background: #f1f1f1
+}
+.ui-row-list > .ui-row:not(:last-child):after {
+  left: 35px;
 }
 .ui-row-list{
   .text{

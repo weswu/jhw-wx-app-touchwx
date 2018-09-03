@@ -3,7 +3,7 @@
     <cc-header title="FAQ"></cc-header>
 
     <ui-row-list border-left-indent>
-        <ui-row height="50" url="faq1">
+        <ui-row height="102r" url="faq1">
           <ui-col vertical-align="middle">
               如何启动全网营销系统
           </ui-col>

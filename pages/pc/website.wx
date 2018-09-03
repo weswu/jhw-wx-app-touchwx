@@ -2,11 +2,12 @@
   <view>
     <cc-header title="我的网站" count="{{count}}"></cc-header>
 
+    <ui-row-list border-left-indent>
     <ui-swipe-out operate-width="120" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
     bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="80">
         <view slot="content">
           <ui-row height="80" class="top_tip" border-bottom>
-            <ui-col class="text" vertical-align="middle" space="20">
+            <ui-col class="text" vertical-align="middle">
               <view style="width: 100%;">
                   <ui-row height="30">
                     <ui-col align="left" vertical-align="middle">
@@ -41,6 +42,7 @@
             </ui-row>
         </view>
     </ui-swipe-out>
+    </ui-row-list>
   </view>
 </template>
 
@@ -174,7 +176,6 @@ export default {
 
 <style lang="less">
 @import "./static/styles/mixins";
-
 .dome_operate{
   background: #eee;
   color:#545454
