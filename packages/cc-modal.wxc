@@ -1,0 +1,254 @@
+<template>
+  <view class="i-class i-load-more">
+    <view class="i-modal-mask i-class-mask {{ visible ? 'i-modal-mask-show' : '' }}"></view>
+    <view class="i-class i-modal {{ visible ? 'i-modal-show' : '' }}">
+      <view class="i-modal-main">
+        <view class="i-modal-content">
+            <view class="i-modal-title" wx:if="{{ title }}">{{ title }}</view>
+            <view class="i-modal-body"><slot></slot></view>
+            <view class="i-modal-actions" wx:if="{{ actions.length }}">
+              <block wx:if="{{ actionMode === 'horizontal' }}">
+                <i-grid i-class="i-modal-grid">
+                  <i-grid-item i-class="{{ actions.length === (index + 1) ? 'i-modal-grid-item-last' : 'i-modal-grid-item' }}" wx:for="{{ actions }}" wx:key="{{ item.name }}">
+                    <template is="button" data="{{ item, index }}"></template>
+                  </i-grid-item>
+                </i-grid>
+              </block>
+              <block wx:else>
+                <view class="i-modal-action-vertical" wx:for="{{ actions }}" wx:key="{{ item.name }}">
+                  <template is="button" data="{{ item, index }}"></template>
+                </view>
+              </block>
+            </view>
+            <view class="i-modal-actions" wx:else>
+              <ui-row height="83r" wx:if="{{ showOk || showCancel }}" border-top>
+                <ui-col vertical-align="middle" align="center" wx:if="{{ showCancel }}">
+                  <button class="i-modal-btn-cancel" type="ghost" bindtap="handleClickCancel">{{ cancelText }}</button>
+                </ui-col>
+                <ui-col vertical-align="middle" align="center" border-left wx:if="{{ showOk }}">
+                  <button class="i-modal-btn-ok" type="ghost" bindtap="handleClickOk">{{ okText }}</button>
+                </ui-col>
+              </ui-row>
+            </view>
+        </view>
+      </view>
+    </view>
+    <template name="button">
+      <i-button long type="ghost" data-index="{{ index }}" bind:click="handleClickItem">
+        <view class="i-modal-btn-loading" wx:if="{{ item.loading }}"></view>
+        <i-icon wx:if="{{ item.icon }}" type="{{ item.icon }}" i-class="i-modal-btn-icon"></i-icon>
+        <view class="i-modal-btn-text" style="{{ item.color ? 'color: ' + item.color : '' }}">{{ item.name }}</view>
+      </i-button>
+    </template>
+  </view>
+</template>
+
+<script>
+export default {
+  properties: {
+    visible: {
+        type: Boolean,
+        value: false
+    },
+    title: {
+        type: String,
+        value: ''
+    },
+    showOk: {
+        type: Boolean,
+        value: true
+    },
+    showCancel: {
+        type: Boolean,
+        value: true
+    },
+    okText: {
+        type: String,
+        value: '确定'
+    },
+    cancelText: {
+        type: String,
+        value: '取消'
+    },
+    // 按钮组，有此值时，不显示 ok 和 cancel 按钮
+    actions: {
+        type: Array,
+        value: []
+    },
+    // horizontal || vertical
+    actionMode: {
+        type: String,
+        value: 'horizontal'
+    }
+  },
+  methods: {
+    handleClickItem ({ currentTarget = {} }) {
+      const dataset = currentTarget.dataset || {};
+      const { index } = dataset;
+      this.triggerEvent('click', { index });
+    },
+    handleClickOk () {
+      this.triggerEvent('ok');
+    },
+    handleClickCancel () {
+      this.triggerEvent('cancel');
+    }
+  }
+}
+</script>
+
+<style lang="less">
+@import "../static/styles/_base.less";
+@import '../static/styles/row';
+@import '../static/styles/col';
+.i-modal{
+    position: fixed;
+    overflow: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    z-index: @zindex-modal;
+    display: flex;
+    outline: none;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    transform: translateZ(1px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    &-show{
+        visibility: visible;
+        opacity: 1;
+    }
+
+    &-mask{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: @zindex-modal;
+        transition: all @transition-time ease-in-out;
+        opacity: 0;
+        visibility: hidden;
+
+        &-show{
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    &-main{
+        width: 270px;
+        position: relative;
+    }
+
+    &-content{
+        border-radius: 7px;
+        padding-top: 15px;
+        position: relative;
+        background-color: #fff;
+        border: 0;
+        background-clip: padding-box;
+        text-align: center;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    &-body{
+        max-height: 100px;
+        margin-bottom: 15px;
+        font-size: @size-font-base;
+        color: @subsidiary-color;
+        height: 100%;
+        line-height: 1.5;
+        overflow: auto;
+    }
+
+    &-title{
+        padding: 6px 15px 15px;
+        margin: 0;
+        font-size: 18px;
+        line-height: 1;
+        color: @title-color;
+        text-align: center;
+    }
+
+    &-actions{
+        margin: 0 1px;
+    }
+    &-action{
+        &-vertical{
+            position: relative;
+            &:after{
+                .hairline();
+                border-top-width: 1px;
+            }
+        }
+    }
+
+    &-grid{
+        border-radius: 0 0 7px 7px;
+        border-left: none;
+        &-item, &-item-last{
+            padding: 0;
+            border-bottom: none;
+        }
+        &-item-last{
+            border-right: none;
+        }
+    }
+
+    &-btn{
+        &-ok{
+            color: @primary-color !important;
+        }
+
+        &-loading{
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            width: 12px;
+            height: 12px;
+            background: transparent;
+            border-radius: 50%;
+            border: 2px solid #e5e5e5;
+            border-color: #666 #e5e5e5 #e5e5e5 #e5e5e5;
+            animation: btn-spin 0.6s linear;
+            animation-iteration-count: infinite;
+        }
+
+        &-text{
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        &-icon{
+            font-size: @size-font-base !important;
+            margin-right: 4px;
+        }
+    }
+}
+
+@keyframes btn-spin {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+// other
+.ui-row{
+  button{
+    width: 100%;
+    background: none;
+  }
+}
+</style>

@@ -10,9 +10,10 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
-      'pages/home/my',
-      'pages/user/enterprise',
       'pages/news/news',
+      'pages/product/product',
+      'pages/album/album',
+      'pages/home/my',
       'pages/message/messageReply',
       'pages/message/messageList',
       'pages/message/messageDetail',
@@ -27,6 +28,7 @@ export default {
       'pages/cost/point',
       'pages/cost/cost',
       'pages/category/category',
+      'pages/user/enterprise',
       'pages/user/account',
       'pages/user/password',
       'pages/setting/setting',
@@ -165,7 +167,7 @@ export default {
       }
       typeof cb == 'function' && cb(this.globalData)
     })
-    this.getStaticList()
+    if (this.globalData.staticList.length === 0) this.getStaticList()
   },
   getUserInfo (cb) {
     //用户其他信息
@@ -335,15 +337,15 @@ radio {
 }
 
 // 列表
-.ui-row-list{
-  background: #fff;
-  .text{
-    color: #4e4e4e;
-  }
-}
 .ui-row{
   .icon-arrow-right{
     color: #999
+  }
+  .text{
+    color: #4e4e4e;
+  }
+  .title{
+    .mix-text-overflow();
   }
   .desc{
     color: #9f9f9f;

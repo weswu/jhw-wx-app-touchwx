@@ -64,6 +64,7 @@ export default {
           url: '/pages/user/login?back=1'
         })
       }
+      wx.setStorageSync('attId', '')
     })
   }
 }

@@ -1,6 +1,7 @@
 <template>
   <view class="j_detail">
     <cc-header title="基本资料"></cc-header>
+    <cc-lan bindchange="lanChange"></cc-lan>
    
     <ui-row-list border-left-indent>
       <ui-row height="240r">
@@ -133,7 +134,8 @@ let pageConf = {
   config: {
     usingComponents: {
       'cc-image': '../../packages/cc-image',
-      'cc-header': '../../packages/cc-header'
+      'cc-header': '../../packages/cc-header',
+      'cc-lan': '../../packages/cc-lan'
     }
   },
   data: {
@@ -165,6 +167,15 @@ let pageConf = {
       } else {
         Tips.error(res.msg)
       }
+    })
+  },
+  lanChange () {
+    var that = this
+    getApp().getUser(res => {
+      that.setData({
+        detail: res.user
+      })
+      that.get()
     })
   },
   // 图片

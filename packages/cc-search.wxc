@@ -1,10 +1,15 @@
 <template>
   <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
     <ui-row height="100r" border-bottom style="background:#fff">
-      <ui-col vertical-align="middle" align="center" width="40" space-left="15">
-        <navigator class="iconfont icon-fenlei" style="color:#4e4e4e"></navigator>
+      <!-- 左 -->
+      <ui-col vertical-align="middle" align="left" width="124r" space-left="15">
+        <navigator class="iconfont icon-fenlei" wx:if="{{type!=='album'}}"></navigator>
+        <slot name="add"></slot>
       </ui-col>
-      <slot></slot>
+      <ui-col vertical-align="middle" align="center" width="96r" space-right="15" wx:if="{{type==='album'}}">
+        <slot name="sort"></slot>
+      </ui-col>
+      <!-- 中 -->
       <ui-col vertical-align="middle">
         <view style="width:100%;">
           <ui-row height="52r" style="background: #f6f6f6;border-radius:3px;">
@@ -12,13 +17,16 @@
               <i class="iconfont icon-sousuo"></i>
             </ui-col>
             <ui-col vertical-align="middle">
+              <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{value}}"></i>
               <input type="text" value="{{value}}" bindinput="search"/>
             </ui-col>
           </ui-row>
         </view>
       </ui-col>
+      <!-- 右 -->
       <ui-col vertical-align="middle" align="center" width="116r">
-        <navigator url="{{add}}" class="iconfont icon-jia1" style="color:#4e4e4e;width: 100%;" hover-class="none"></navigator>
+        <navigator url="newsDetail" class="iconfont icon-jia1" hover-class="none" wx:if="{{type==='news'}}"></navigator>
+        <i class="iconfont icon-upload" bindtap="chooseImage" wx:if="{{type==='album'}}"></i>
       </ui-col>
     </ui-row>
   </view>
@@ -26,45 +34,97 @@
 
 <script>
 export default {
+  options: {
+    multipleSlots: true // 在组件定义时的选项中启用多slot支持
+  },
   properties: {
     value: {
       type: String,
       value: ""
     },
-    typy: {
+    type: {
       type: String,
       value: ""
     },
-    add: {
+    id: {
       type: String,
-      value: ""
+      value: "all"
     }
   },
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT
   },
-  onLoad () {
-    debugger
-  },
   methods: {
+    clearinput () {
+      this.triggerEvent('input', '')
+    },
     search(e) {
-      debugger
-      this.setData({
-        src: 'aaa'
-      });
+      this.triggerEvent('input', e.detail.value)
+    },
+    chooseImage () {
+      var that = this;
+      wx.chooseImage({
+        count: 1, // 默认1
+        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success: function (res) {
+          // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+          wx.showLoading({ title: '正在上传', mask: true})
+          wx.uploadFile({
+            url: 'https://www.jihui88.com/commonutil/uploadUtil2?username=' + getApp().globalData.user.username + '&replace=00&attId=&id=' + that.data.id,
+            filePath: res.tempFilePaths[0],//临时路径
+            name: 'Filedata',
+            formData: {
+              fileLen: res.tempFiles[0].size,
+              skey: wx.getStorageSync('skey')
+            },
+            success: function (res) {
+              wx.hideLoading()
+              if (res.statusCode === 200) {
+                let src = res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
+                that.setData({
+                  src: src
+                });
+                that.triggerEvent('change', src)
+              }
+            }
+          })
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="less">
+@import '../static/styles/row-list';
 @import '../static/styles/row';
 @import '../static/styles/col';
 @import '../static/styles/iconfont';
 .ui-fixed-view {
   position: fixed;
+  z-index: 99;
+}
+.iconfont{
+  color:#4e4e4e;
+  font-size: 44rpx;
 }
 .icon-sousuo{
   color:#afadb1;font-size:14px;
 }
+.icon-jia1,.icon-upload{
+  width: 100%;
+  font-size: 38rpx;
+}
+  .icon-close-circle-fill{
+    width: 64rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    font-size: 16px;
+    text-align: center;
+    color: #b5b3b6;
+    position: absolute;
+    right: 0;
+    z-index: 3;
+  }
 </style>

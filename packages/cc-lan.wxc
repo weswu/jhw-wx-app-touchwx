@@ -1,0 +1,264 @@
+<template>
+  <view>
+    <view style="height:60rpx"></view>
+    <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
+      <ui-row height="60r" border-bottom style="background:#fff">
+        <ui-col vertical-align="middle" border-right space-left="15">
+          <slot></slot>
+        </ui-col>
+        <ui-col width="100" vertical-align="middle" align="right" space-right="5" bindtap="openPopup" class="{{show ? 'active' : ''}}">
+          <view style="width:100%">
+            <ui-row height="60r">
+              <ui-col vertical-align="middle" align="right" space-right="5">
+                <view style="color:#686868;font-size:12px;">
+                  {{name}}
+                </view>
+              </ui-col>
+              <ui-col width="30" vertical-align="middle" align="center">
+                <i class="iconfont icon-xiangxiajiantoushixin {{show ? 'active' : ''}}" ></i>
+              </ui-col>
+            </ui-row>
+          </view>
+        </ui-col>
+      </ui-row>
+    </view>
+    <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show ? 'show' : '' }}">
+      <view class="ui-popup-content top {{ show ? 'show' : '' }}">
+        <ui-row-list border-left-indent>
+          <ui-row height="43" border-bottom wx:for="{{lanList}}" wx:key="*this" data-item="{{item}}" bindtap="lanChange">
+            <ui-col vertical-align="middle">
+              {{item.text}}
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{item.value === lanId}}">
+              <i class="iconfont icon-gou"/>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+      </view>
+      <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show ? 'show' : '' }}" bindtap="popHide"></view>
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '../static/utils/api'
+export default {
+  options: {
+    multipleSlots: true // 在组件定义时的选项中启用多slot支持
+  },
+  properties: {
+    value: {
+      type: String,
+      value: ""
+    },
+    type: {
+      type: String,
+      value: ""
+    },
+    top: {
+      type: Number,
+      value: 0
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    show: false,
+    lanList: [
+      { value: '1', text: '中文' },
+      { value: '2', text: '英文' }
+    ],
+    name: '中文',
+    lanId: '1'
+  },
+  ready () {
+    let height = this.data.top/750*wx.WIN_WIDTH
+    let height2 = 60/750*wx.WIN_WIDTH
+    this.setData({
+      NAV_HEIGHT: this.data.NAV_HEIGHT + height,
+      popup_NAV_HEIGHT: this.data.popup_NAV_HEIGHT + height + height2,
+      popupHeight: this.data.popupHeight + height + height2
+    })
+  },
+  methods: {
+    search(e) {
+      this.triggerEvent('input', e.detail.value)
+    },
+    openPopup (e) {
+      this.setData({
+        show: !this.data.show
+      })
+    },
+    popHide () {
+      this.setData({
+        show:false
+      })
+    },
+    popShow () {
+      this.setData({
+        show:true
+      })
+    },
+    lanChange (e) {
+      let item = e.currentTarget.dataset.item
+      this.setData({
+        name: item.text,
+        lanId: item.value
+      })
+      wx.setStorageSync('lanId', item.value)
+      this.popHide()
+      api.changeLan({
+        id: item.value
+      }).then(res => {
+        if (res.success) {
+          this.triggerEvent('change')
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+@import '../static/styles/row-list';
+@import '../static/styles/row';
+@import '../static/styles/col';
+@import '../static/styles/iconfont';
+.ui-fixed-view {
+  position: fixed;
+  z-index: 99;
+}
+.icon-xiangxiajiantoushixin{
+  font-size: 10px;
+  color: #686868;
+  display: inline-block;
+  transform:rotate(0deg);
+  transition: all .3s ease-in;
+  &.active{
+    transform:rotate(180deg);
+    color:#09C2B1!important;
+  }
+}
+.icon-gou{
+  color:#3AC3B0;
+  font-size:12px;
+}
+
+// mask
+.ui-popup {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 501;
+  transition-property: transform, visibility;
+  transition-duration: 300ms;
+  max-height: 100%;
+  overflow-y: scroll;
+  -webkit-backface-visibility: hidden;
+  visibility: hidden;
+}
+.ui-popup.show {
+  visibility: visible;
+}
+.ui-popup-content {
+  position: absolute;
+  background-color: #fff;
+}
+.ui-popup-content.bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 300ms;
+  transform: translate3d(0, 100%, 0);
+}
+.ui-popup-content.bottom.show {
+  transform: translate3d(0, 0, 0);
+}
+.ui-popup-content.top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation: slideOut both .3s;
+  transform-origin: 50% 0;
+}
+.ui-popup-content.top.show {
+  animation: slideIn both .3s;
+  transform-origin: 50% 0;
+}
+.ui-popup-content.left {
+  width: auto;
+  height: 100%;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  transition: transform 300ms;
+  transform: translate3d(-100%, 0, 0);
+}
+.ui-popup-content.left.show {
+  transform: translate3d(0, 0, 0);
+}
+.ui-popup-content.right {
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: auto;
+  transition: transform 300ms;
+  transform: translate3d(100%, 0, 0);
+}
+.ui-popup-content.right.show {
+  transform: translate3d(0, 0, 0);
+}
+.ui-popup-mask {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  z-index: -1;
+  transition: opacity 400ms;
+}
+.ui-popup-mask.show {
+  opacity: 1;
+}
+.ui-popup-animate-top-enter-active {
+  animation: slideIn both .3s;
+  transform-origin: 50% 0;
+}
+.ui-popup-animate-top-leave-active {
+  animation: slideOut both .3s;
+  transform-origin: 50% 0;
+}
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+  }
+}
+
+</style>

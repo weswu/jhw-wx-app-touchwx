@@ -17,6 +17,7 @@ const userInfo = (params) => http(params, host + 'user/index')
 const enterprise = (params) => http(params, host + 'enterprise/detail' + (params ? '/' + params.id : ''))
 const customData = (params) => http(params, host + 'custom/detail')
 const customUpdate = (params) => http(params, host + 'custom/update')
+const changeLan = (params) => http(params, host + 'user/changeLan?lanId=' + params.id)
 // 地区
 const area = (params) => http(params, host + 'area/list')
 // 配置
@@ -47,8 +48,9 @@ const messageBind = (params) => http(params, host + 'message/bind/detail' + (par
 const password = (params) => http(params, host + 'user/detail/password')
 const feedback = (params) => http(params, 'https://api.jihui88.net/crm_api/index.php/jihui/jihuifeedback')
 // 相册
-const album = (params) => http(params, host + 'album/attr/list/' + params.id)
-const albumCategory = (params) => http(params, host + 'album/list?pageSize=100')
+const album = (params) => http(params, host + 'album/list?pageSize=100')
+const albumDetail = (params) => http(params, host + 'album/detail')
+const albumAttr = (params) => http(params, host + 'album/attr/list/' + params.id)
 // 分类
 const category = (params) => http(params, host + 'category/' + params.type + '?pageSize=1000')
 const categoryDisplay = (params) => http(params, host + 'category/display')
@@ -111,7 +113,7 @@ const posters = (params) => http(params, 'https://api.jihui88.net/qrcode_poster/
 module.exports = {
   wxapplogin,
   // 基本数据
-  user, userInfo, enterprise, customData, customUpdate,
+  user, userInfo, enterprise, customData, customUpdate, changeLan,
   area, webinfo,
   // 账号信息  费用中心  积分
   accountInfo, accountOauth,
@@ -132,7 +134,7 @@ module.exports = {
   password,
   feedback,
   // 相册
-  album, albumCategory,
+  album, albumDetail, albumAttr,
   // 产品
   product, productDetail,
   // 证书

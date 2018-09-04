@@ -1,10 +1,12 @@
 <template>
   <view>
-    <cc-header title="新闻管理" count="{{count}}" back="{{!selected}}">
+    <cc-header title="产品管理" count="{{count}}" back="{{!selected}}">
       <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
     </cc-header>
     <view style="height:100rpx"></view>
-    <cc-lan top="99" bindchange="lanChange"></cc-lan>
+    <cc-lan top="99" bindchange="lanChange">
+      默认
+    </cc-lan>
     
     <ui-row-list>
       <ui-row url="newsDetail?id={{item.newsId}}" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
@@ -98,7 +100,7 @@ export default {
       'more.tip': '',
       'more.loading': true
     })
-    api.news({
+    api.product({
       data: this.data.params
     }).then(res => {
       if (res.success) {

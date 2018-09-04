@@ -1,0 +1,334 @@
+<template>
+  <view>
+    <cc-header title="{{title}}" width="100">
+      <text bindtap="back" wx:if="{{albumId !== 'all'}}">相册管理</text>
+    </cc-header>
+    <view style="height:100rpx"></view>
+
+    <ui-row-list class="list-content">
+      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this">
+        <ui-col vertical-align="middle" width="123r" space-left="15">
+          <i class="iconfont icon-file"></i>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          {{item.name}}
+        </ui-col>
+        <ui-col width="40" vertical-align="middle" align="right" space-right="15"
+          wx:if="{{item.name !== '[系统]微信小程序Banner相册' && item.name !== '首页大广告图' && item.name !== '产品图片' && item.name !== '新闻图片' && item.name !== '默认相册'}}">
+          <icon type="circle" size="8" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="8" wx:if="{{item._checked}}"></icon>
+        </ui-col>
+      </ui-row>
+      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle" width="123r" space-left="15">
+          <image mode="aspectFit" src="http://img.jihui88.com/{{item.serverPath}}"/>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle" catchtap="cancel">
+          <view>
+            <view class="title">{{item.filename}}</view>
+            <view class="desc">{{item.uploadTime}}</view>
+          </view>
+        </ui-col>
+        <ui-col width="40" vertical-align="middle" align="right" space-right="15">
+          <icon type="circle" size="8" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="8" wx:if="{{item._checked}}"></icon>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <cc-search type="album" 
+      value="{{params.filename}}"
+      id="{{albumId}}"
+      bindinput="input"
+      bindchange="get">
+        <i slot="add" class="iconfont icon-folder-add" bindtap="add"></i>
+        <i slot="sort" class="iconfont icon-paixu {{show ? 'active' : ''}}" bindtap="openPopup"></i>
+      </cc-search>
+
+    <cc-modal title="新建文件夹" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
+        <input type="text" value="{{name}}" bindinput="nameInput"/>
+      </view>
+    </cc-modal>
+
+    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
+      <ui-row-list border-left-indent class="sort-list">
+        <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="*this" data-item="{{item}}" bindtap="sortChange">
+          <ui-col vertical-align="middle" class="{{params.sortField === item.value ? 'active' : ''}}">
+            {{item.text}}
+          </ui-col>
+          <ui-col vertical-align="middle" align="center" width="40">
+            <i class="iconfont icon-vertical-align-botto {{params.sortType === 'asc' && params.sortField === item.value ? 'active' : ''}}"/>
+          </ui-col>
+          <ui-col vertical-align="middle" align="center" width="40" space-right="15">
+            <i class="iconfont icon-vertical-align-top {{params.sortType === 'desc' && params.sortField === item.value ? 'active' : ''}}"/>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+    </ui-popup>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header',
+      'cc-search': '../../packages/cc-search',
+      'cc-modal': '../../packages/cc-modal'
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    // 下拉
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    show: false,
+    sortList: [
+      { value: 'sort', text: '默认' },
+      { value: 'uploadTime', text: '时间' },
+      { value: 'filename', text: '名称' }
+    ],
+    title: '相册管理',
+    // add
+    visible1: false,
+    name: '',
+    // 文件
+    filelist: [],
+    // 图片
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 16,
+      filename: '',
+      sortField: 'sort',
+      searchType: '1',
+      sortType: 'desc'
+    },
+    more: {},
+    albumId: 'all'
+  },
+  onLoad () {
+    this.getAlbum()
+    // this.get()
+  },
+  getAlbum () {
+    let that = this
+    this.setData({
+      ids: ''
+    })
+    api.album().then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item._checked = false
+          if (item.name === '默认相册') {
+            wx.setStorageSync('albumId', item.albumId)
+          }
+        })
+        this.setData({
+          filelist: res.attributes.data
+        })
+      }
+    })
+  },
+  // 图片
+  get () {
+    api.albumAttr({
+      data: this.data.params,
+      id: this.data.albumId
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.uploadTime = Utils.formatTime(item.uploadTime)
+          item._checked = false
+        })
+        this.setData({
+          list: res.attributes.data
+        })
+      }
+    })
+  },
+  item (e) {
+    let item = e.currentTarget.dataset.item
+    this.setData({
+      albumId: item.albumId,
+      title: item.name
+    })
+    this.get()
+  },
+  input (e) {
+    this.setData({
+      'params.filename': e.detail
+    })
+    this.get()
+  },
+  sort () {
+    this.setData({
+      params: this.data.params
+    })
+    this.get()
+  },
+  back () {
+    this.setData({
+      albumId: 'all',
+      title: '相册管理'
+    })
+    this.getAlbum()
+  },
+  // add 
+  add () {
+    this.setData({
+      visible1: true
+    })
+  },
+  nameInput (e) {
+    this.setData({
+      name: e.detail.value
+    })
+  },
+  clearinput () {
+    this.setData({
+      name: ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible1: false
+    })
+  },
+  ok () {
+    api.albumDetail({
+      data: {
+        model: JSON.stringify({
+          name: this.data.name,
+          parentId: this.data.albumId,
+          blongType: 'AP',
+          state: '01'
+        })
+      },
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('添加成功')
+        this.cancel()
+        this.getAlbum()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  // 下拉
+  openPopup () {
+    this.setData({
+      show: !this.data.show
+    })
+  },
+  popHide () {
+    this.setData({
+      show:false
+    })
+  },
+  popShow () {
+    this.setData({
+      show:true
+    })
+  },
+  sortChange (e) {
+    let item = e.currentTarget.dataset.item
+    let params = this.data.params
+    if (params.sortField === item.value) {
+      params.sortType = params.sortType === 'desc' ? 'asc' : 'desc'
+    } else {
+      params.sortField = item.value
+    }
+    params.page = 1
+    this.setData({
+      params: params,
+      list: [],
+      show:false
+    })
+    this.get()
+  },
+  // 批量
+  del () {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    api.categoryDel({
+      data: {categoryIds: this.data.ids},
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('删除成功')
+        this.setData({
+          selected: false
+        })
+        this.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.LoadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+.list-content > .ui-row:not(:last-child):after {
+  left: 120rpx;
+}
+.icon-file{
+  color: #79d3fb;
+  font-size: 60rpx;
+}
+image{
+  width:80%;
+}
+.icon-paixu,.icon-folder-add{
+  color:#4e4e4e;
+  font-size: 44rpx;
+  &.active{
+    color:#00c0e4;
+  }
+}
+.sort-list{
+  .iconfont{
+    color:#cfcdd1;font-size:42rpx;
+  }
+  .active{
+    color:#00c0e4;
+  }
+}
+.add-content{
+  text-align:left;margin:5px 15px;background:#f6f6f6;
+  height: 64rpx;
+  line-height: 64rpx;    
+  position: relative;
+  .icon-close-circle-fill{
+    width: 64rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    font-size: 16px;
+    text-align: center;
+    color: #b5b3b6;
+    position: absolute;
+    right: 0;
+    z-index: 3;
+  }
+  input{
+    height: 64rpx;
+    line-height: 64rpx;
+    padding:0 15px;
+    color:#060407
+  }
+}
+</style>
