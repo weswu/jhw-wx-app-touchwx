@@ -16,16 +16,16 @@
       </view>
     </view>
     <view class="sticky-in-relative-container">
-      <ui-sticky scroll-top="{{ scrollTop }}" top="{{NAV_HEIGHT}}" custom-style="{{ {backgroundColor:'#fff'} }}">
+      <ui-sticky scroll-top="{{ scrollTop }}" top="{{NAV_HEIGHT}}" custom-style="{{ {backgroundColor:'#FFF'} }}" stick-on-tap>
         <view>
-          <ui-tabs index="{{current}}" tab-style="{{tabStyle}}" active-tab-style="{{activeTabStyle}}" bindchange="handleChange">
+          <ui-tabs tab-style="{{ {width:width/3+'px !important',color: '#4e4e4e',borderBottom: '2px solid #fff'} }}" active-tab-style="{{ {width:width/3+'px !important',color: '#ccb27b !important',borderBottom: '2px solid #ccb27b'} }}" index="{{index}}" bindchange="handleChange">
             <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
             <ui-tab>积分兑换</ui-tab>
             <ui-tab>积分规则</ui-tab>
           </ui-tabs>
         </view>
         <view slot="sticky">
-          <ui-tabs index="{{current}}" tab-style="{{tabStyle}}" active-tab-style="{{activeTabStyle}}" bindchange="handleChange">
+          <ui-tabs tab-style="{{ {width:width/3+'px !important',color: '#4e4e4e',borderBottom: '2px solid #fff'} }}" active-tab-style="{{ {width:width/3+'px !important',color: '#ccb27b !important',borderBottom: '2px solid #ccb27b'} }}" index="{{index}}" bindchange="handleChange">
             <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
             <ui-tab>积分兑换</ui-tab>
             <ui-tab>积分规则</ui-tab>
@@ -34,10 +34,11 @@
       </ui-sticky>
     </view>
     
+    
     <!-- 内容 -->
     <view class="content_list">
-      <ui-row-list wx:for="{{ list }}" wx:key="*this" wx:if="{{current === 0}}" border-left-indent>
-        <ui-row height="120r" border-bottom>
+      <ui-row-list wx:if="{{index === 0}}" border-left-indent>
+        <ui-row height="120r" border-bottom wx:for="{{ list }}" wx:key="*this">
           <ui-col vertical-align="middle">
             <text class="title">{{item.desc}}</text>
             <text class="time">{{item.addTime}}</text>
@@ -48,10 +49,12 @@
           </ui-col>
         </ui-row>
       </ui-row-list>
-      <view wx:if="{{current === 1}}">
+
+      <view wx:if="{{index === 1}}">
         <view style="padding: 15px;">暂无兑换商品</view>
       </view>
-      <view class="rule" wx:if="{{current === 2}}">
+
+      <view class="rule" wx:if="{{index === 2}}">
         <view>1、积分专属机汇网，仅限机汇网内使用；</view>
         <view>2、在机汇网后台、微信公众号【机汇网络】和APP进行以下操作时，均可获得积分；</view>
         <view class="table">
@@ -89,17 +92,10 @@ export default {
     }
   },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    index:0,
     scrollTop:0,
-    current:0,
-    tabStyle:{
-      'width': wx.WIN_WIDTH/3 +'px !important'
-    },
-    activeTabStyle:{
-      'color': '#ccb27b',
-      'width': wx.WIN_WIDTH/3 +'px !important',
-      'border-bottom': '1px solid #ccb27b'
-    },
+    width:wx.WIN_WIDTH,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     // 数据
     list: [],
     params: {
@@ -108,7 +104,6 @@ export default {
     count: 0,
     more: { loading: true },
     point: 18,
-    // 积分产品
     // 积分规则
     rule: [],
     integralCount: {}
@@ -167,7 +162,7 @@ export default {
   handleChange (e) {
     let index = e.detail.index
     this.setData({
-      current: index
+      index: index
     })
     if (index === 2) {
       this.getRule()

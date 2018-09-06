@@ -1,50 +1,53 @@
 <template>
   <view>
-    <cc-header title="{{title}}" width="100">
-      <text bindtap="back" wx:if="{{albumId !== 'all'}}">相册管理</text>
+    <cc-header title="{{title}}" width="{{width}}" back="{{!selected}}">
+      <text bindtap="back" wx:if="{{!selected}}">{{currentCatelog}}</text>
+      <text bindtap="toggleAll" wx:if="{{selected && !toggle}}">全选</text>
+      <text bindtap="toggleAll" wx:if="{{selected && toggle}}">全不选</text>
     </cc-header>
-    <view style="height:100rpx"></view>
+    <cc-search type="album" 
+      value="{{params.filename}}"
+      id="{{currentItem.albumId}}"
+      bindinput="input"
+      bindchange="get">
+        <i slot="add" class="iconfont icon-folder-add" bindtap="add"></i>
+        <i slot="sort" class="iconfont icon-paixu {{show ? 'active' : ''}}" bindtap="openPopup"></i>
+      </cc-search>
 
     <ui-row-list class="list-content">
-      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this">
+      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this" wx:if="{{item.parentId === currentItem.albumId}}">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <i class="iconfont icon-file"></i>
         </ui-col>
         <ui-col class="text" vertical-align="middle">
           {{item.name}}
         </ui-col>
-        <ui-col width="40" vertical-align="middle" align="right" space-right="15"
+        <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked"
           wx:if="{{item.name !== '[系统]微信小程序Banner相册' && item.name !== '首页大广告图' && item.name !== '产品图片' && item.name !== '新闻图片' && item.name !== '默认相册'}}">
-          <icon type="circle" size="8" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="8" wx:if="{{item._checked}}"></icon>
+          <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="10" wx:if="{{item._checked}}"></icon>
         </ui-col>
       </ui-row>
-      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row data-item="{{item}}" data-index="{{index}}" bindtap="item" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <image mode="aspectFit" src="http://img.jihui88.com/{{item.serverPath}}"/>
         </ui-col>
-        <ui-col class="text" vertical-align="middle" catchtap="cancel">
+        <ui-col class="text" vertical-align="middle">
           <view>
             <view class="title">{{item.filename}}</view>
             <view class="desc">{{item.uploadTime}}</view>
           </view>
         </ui-col>
-        <ui-col width="40" vertical-align="middle" align="right" space-right="15">
-          <icon type="circle" size="8" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="8" wx:if="{{item._checked}}"></icon>
+        <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked">
+          <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="10" wx:if="{{item._checked}}"></icon>
         </ui-col>
       </ui-row>
     </ui-row-list>
+    <view class="emtpy" wx:if="{{!more.loading && list.length === 0 && currentItem.children.length === 0}}">
+      哎呦，文件夹是空的~
+    </view>
     <cc-loadmore more="{{more}}"></cc-loadmore>
-
-    <cc-search type="album" 
-      value="{{params.filename}}"
-      id="{{albumId}}"
-      bindinput="input"
-      bindchange="get">
-        <i slot="add" class="iconfont icon-folder-add" bindtap="add"></i>
-        <i slot="sort" class="iconfont icon-paixu {{show ? 'active' : ''}}" bindtap="openPopup"></i>
-      </cc-search>
 
     <cc-modal title="新建文件夹" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
       <view class="add-content">
@@ -52,7 +55,7 @@
         <input type="text" value="{{name}}" bindinput="nameInput"/>
       </view>
     </cc-modal>
-
+    <!-- 排序 -->
     <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
       <ui-row-list border-left-indent class="sort-list">
         <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="*this" data-item="{{item}}" bindtap="sortChange">
@@ -68,6 +71,86 @@
         </ui-row>
       </ui-row-list>
     </ui-popup>
+    
+    <!-- 批量操作 -->
+    <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
+      <ui-row height="60" border-top class="fixed_btn">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchCopy">
+          <i class="iconfont icon-fuzhi"></i>
+          <view>复制</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchMove">
+          <i class="iconfont icon-folder-add-fill2"></i>
+          <view>移动</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchName">
+          <i class="iconfont icon-edit-fill"></i>
+          <view>重命名</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchDel">
+          <i class="iconfont icon-delete-fill"></i>
+          <view>删除</view>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+
+    <!-- 图片展示 -->
+    <ui-mask show="{{picMask}}" top="{{NAV_HEIGHT}}" custom-style="{{ {background:'#000',zIndex:'699'} }}" bindtap="hidePicMask">
+      <view class="content">
+        <swiper bindchange="swiperChange" current="{{swiperCurrent}}"
+        autoplay="{{false}}" circular interval="3000" duration="500">
+          <block wx:for="{{list}}" wx:key="*this">
+            <swiper-item>
+              <view class="item" style="height:{{popupHeight-80}}px">
+                <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}"/>
+              </view>
+            </swiper-item>
+          </block>
+        </swiper>
+      </view>
+    </ui-mask>
+    <!-- 图片操作 -->
+    <ui-fixed-view bottom="0px;z-index:700;background:#fff;" left="0" right="0" wx:if="{{picMask}}">
+      <ui-row height="60" border-top class="fixed_btn">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="downloadPic">
+          <i class="iconfont icon-fuzhi"></i>
+          <view class="desc">下载</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="picDetail">
+          <i class="iconfont icon-folder-add-fill2"></i>
+          <view class="desc">详情</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="delPic">
+          <i class="iconfont icon-delete-fill"></i>
+          <view class="desc">删除</view>
+        </ui-col>
+        <ui-col span="3" vertical-align="middle" align="center" data-show="{{ true }}" bindtap="more">
+          <i class="iconfont icon-gengduo"></i>
+          <view class="desc">更多</view>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <ui-mask show="{{showMask}}" hide-delay="500">
+      <view class="mask_btn">
+        <view class="btn">
+          <view>替换图片</view>
+          <view>编辑</view>
+          <view>复制图片的代码</view>
+          <view>复制链接的代码</view>
+        </view>
+        <button data-show="{{ false }}" bindtap="more">取消</button>
+      </view>
+    </ui-mask>
+    <!-- 图片详情 -->
+    <ui-mask show="{{picDetailMask}}" hide-delay="500">
+      <view class="mask_pic_detail">
+        {{item.uploadTime}}
+        <view>/相册管理/{{item.filename}}</view>
+        <view class="border"></view>
+        <view>大小：5.28M</view>
+        尺寸：1200*1200
+      </view>
+    </ui-mask>
   </view>
 </template>
 
@@ -96,11 +179,15 @@ export default {
       { value: 'filename', text: '名称' }
     ],
     title: '相册管理',
-    // add
+    // 新增文件夹
     visible1: false,
     name: '',
     // 文件
     filelist: [],
+    catelog: [
+      {name: '相册管理', albumId: 'all'}
+    ],
+    currentCatelog: '',
     // 图片
     list: [],
     params: {
@@ -111,8 +198,19 @@ export default {
       searchType: '1',
       sortType: 'desc'
     },
-    more: {},
-    albumId: 'all'
+    more: {loading: true},
+    // 图片展示
+    picMask: false,
+    swiperCurrent: 0,
+    showMask: false,
+    picDetailMask: false,
+    width: '200r',
+    // 选中
+    toggle: false,
+    ids: '',
+    fileids: '',
+    currentItem: {name: '相册管理', albumId: 'all'},
+    picItem: {}
   },
   onLoad () {
     this.getAlbum()
@@ -121,65 +219,67 @@ export default {
   getAlbum () {
     let that = this
     this.setData({
-      ids: ''
+      ids: '',
+      fileids: ''
     })
     api.album().then(res => {
       if (res.success) {
-        res.attributes.data.forEach(item => {
+        let data = res.attributes.data
+        data.forEach(item => {
           item._checked = false
-          if (item.name === '默认相册') {
-            wx.setStorageSync('albumId', item.albumId)
+          if (!item.parentId) {
+            item.parentId = 'all'
           }
         })
         this.setData({
-          filelist: res.attributes.data
+          filelist: data
         })
       }
     })
   },
   // 图片
   get () {
+    this.setData({
+      ids: '',
+      fileids: '',
+      'more.tip': '',
+      'more.loading': true
+    })
     api.albumAttr({
       data: this.data.params,
-      id: this.data.albumId
+      id: this.data.currentItem.albumId
     }).then(res => {
       if (res.success) {
         res.attributes.data.forEach(item => {
           item.uploadTime = Utils.formatTime(item.uploadTime)
+          item.name = item.filename.split('.')[0]
           item._checked = false
         })
-        this.setData({
-          list: res.attributes.data
-        })
+        Utils.scrollList(this, res, ' ')
       }
     })
   },
-  item (e) {
-    let item = e.currentTarget.dataset.item
-    this.setData({
-      albumId: item.albumId,
-      title: item.name
-    })
-    this.get()
-  },
-  input (e) {
-    this.setData({
-      'params.filename': e.detail
-    })
-    this.get()
-  },
-  sort () {
-    this.setData({
-      params: this.data.params
-    })
-    this.get()
-  },
   back () {
-    this.setData({
-      albumId: 'all',
-      title: '相册管理'
-    })
-    this.getAlbum()
+    if (this.data.picMask) {
+      this.hidePicMask()
+    } else {
+      let file =this.data.catelog
+      file.splice(file.length-1,1)
+      let item = file[file.length-1]
+      let name = ''
+      if (file.length > 1) {
+        name = file[file.length-2].name
+      }
+      this.setData({
+        list: [],
+        'params.page': 1,
+        title: item.name,
+        currentItem: item,
+        catelog: file,
+        currentCatelog: name
+      })
+      this.get()
+    }
   },
   // add 
   add () {
@@ -207,7 +307,7 @@ export default {
       data: {
         model: JSON.stringify({
           name: this.data.name,
-          parentId: this.data.albumId,
+          parentId: this.data.currentItem.albumId,
           blongType: 'AP',
           state: '01'
         })
@@ -223,7 +323,7 @@ export default {
       }
     })
   },
-  // 下拉
+  // 排序下拉
   openPopup () {
     this.setData({
       show: !this.data.show
@@ -255,7 +355,231 @@ export default {
     })
     this.get()
   },
+  // 搜索
+  input (e) {
+    this.setData({
+      'params.filename': e.detail
+    })
+    this.get()
+  },
+  // 全选
+  toggleAll () {
+    let toggle = !this.data.toggle
+    this.data.list.forEach(item => {
+      item._checked = toggle
+    })
+    this.data.filelist.forEach(item => {
+      item._checked = toggle
+    })
+    this.setData({
+      list: this.data.list,
+      filelist: this.data.filelist,
+      toggle: toggle
+    })
+    this.initSelcted()
+  },
+  checked (e) {
+    let row = e.currentTarget.dataset.item
+    if (row.albumId) {
+      this.data.filelist.forEach(item => {
+        if (item.albumId === row.albumId) {
+          item._checked = !item._checked
+        }
+      })
+    } else {
+      this.data.list.forEach(item => {
+        if (item.attId === row.attId) {
+          item._checked = !item._checked
+        }
+      })
+    }
+    this.setData({
+      filelist: this.data.filelist,
+      list: this.data.list,
+      selected: true
+    })
+    this.initSelcted ()
+  },
+  initSelcted () {
+    let ids = ''
+    let fileids = ''
+    this.data.list.forEach(item => {
+      if (item._checked) {
+        ids = ids ? (ids + ',' + item.attId) : item.attId
+      }
+    })
+    this.data.filelist.forEach(item => {
+      if (item._checked && item.name !== '[系统]微信小程序Banner相册' && item.name !== '首页大广告图' && item.name !== '产品图片' && item.name !== '新闻图片' && item.name !== '默认相册') {
+        fileids = fileids ? (fileids + ',' + item.albumId) : item.albumId
+      }
+    })
+    this.setData({
+      ids: ids,
+      fileids: fileids
+    })
+    let number = (ids ? ids.split(',').length : 0) + (fileids ? fileids.split(',').length : 0)
+    if (this.data.selected) {
+      this.setData({
+        title: '已选择' + number + '个文件'
+      })
+    }
+  },
+  item (e) {
+    let item = e.currentTarget.dataset.item
+    let index = e.currentTarget.dataset.index
+    if (this.data.selected) {
+      // 取消选中文件
+      let title = '相册管理'
+      this.data.filelist.forEach(item => {
+        if (item.albumId === this.data.currentItem.albumId) {
+          title = item.name
+        }
+      })
+      this.setData({
+        selected: false,
+        title: title
+      })
+    } else if (item.attId) {
+      /* 预览图片 */
+      this.setData({
+        picMask: true,
+        title: (index + 1) + '/' + this.data.list.length,
+        picItem: item,
+        swiperCurrent: index,
+        currentCatelog: this.data.catelog[this.data.catelog.length-1].name,
+        width: '350r'
+      })
+    } else {
+      this.data.filelist.forEach(item => {
+        item._checked = false
+      })
+      // 选中文件
+      let file = this.data.catelog
+      let name = file[file.length-1].name
+      file.push(item)
+      this.setData({
+        title: item.name,
+        list: [],
+        currentItem: item,
+        currentCatelog: name,
+        catelog: file
+      })
+      this.get()
+    }
+  },
+  // 预览图片左右移动
+  swiperChange (e){
+    let index = e.detail.current
+    this.setData({
+      swiperCurrent: index,
+      title: (index + 1) + '/' + this.data.list.length,
+      item: this.data.list[index]
+    })
+  },
+  // 单张图片操作
+  downloadPic () {
+    // 下载图片
+    wx.downloadFile({
+      url: 'http://img.jihui88.com/' + this.data.item.serverPath, //仅为示例，并非真实的资源
+      success: function(res) {
+        // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
+        if (res.statusCode === 200) {
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success(res) {
+              Tips.success('下载成功')
+            }
+          })
+        }
+      }
+    })
+  },
+  delPic () {
+    api.picDel({
+      data: {
+        attIds: this.data.item.attId
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        this.data.list.splice(this.data.swiperCurrent, 1)
+        this.setData({
+          list: this.data.list
+        })
+        Tips.success('删除成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  picDetail () {
+    this.setData({
+      picDetailMask: true
+    })
+  },
+  more (e) {
+    let show = e.currentTarget.dataset.show
+    this.setData({
+      showMask: show
+    })
+  },
+  hidePicMask () {
+    let file = this.data.catelog
+    let name = ''
+    if (file.length > 1) {
+      name = file[file.length-2].name
+    }
+    this.setData({
+      picMask: false,
+      title: this.data.currentItem.name,
+      currentCatelog: name,
+      width: '200r'
+    })
+  },
   // 批量
+  batchCopy () {
+    if (!this.data.ids && !this.data.fileids) {
+      return Tips.toast('未选择')
+    }
+    this.setData({
+      selected: false
+    })
+    if (this.data.ids) {
+      api.imgCopy({
+        data: {attIds: this.data.ids},
+        method: 'post'
+      }).then(res => {
+        if (res.success) {
+          Tips.success('复制成功')
+          this.setData({
+            list: [],
+            'params.page': 1
+          })
+          this.get()
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
+    if (this.data.fileids) {
+      let ids = this.data.fileids.split(',')
+      ids.forEach((id, index) => {
+        api.albumCopy({
+          data: {albumId: id},
+          method: 'post'
+        }).then(res => {
+          if (res.success) {
+            Tips.success('复制成功')
+            if (ids.length === index + 1) {
+              this.getAlbum()
+            }
+          } else {
+            Tips.error(res.msg)
+          }
+        })
+      })
+    }
+  },
   del () {
     if (!this.data.ids) {
       return Tips.toast('未选择')
@@ -283,21 +607,25 @@ export default {
 </script>
 
 <style lang="less">
-.list-content > .ui-row:not(:last-child):after {
-  left: 120rpx;
+.list-content {
+  .ui-row:not(:last-child):after {
+    left: 120rpx;
+  }
+  .icon-file{
+    color: #79d3fb;
+    font-size: 60rpx;
+  }
+  image{
+    width:80%;
+  }
 }
-.icon-file{
-  color: #79d3fb;
-  font-size: 60rpx;
-}
-image{
-  width:80%;
-}
+// 搜索
 .icon-paixu,.icon-folder-add{
   color:#4e4e4e;
   font-size: 44rpx;
+  width:100%;
   &.active{
-    color:#00c0e4;
+    color:#12bedb;
   }
 }
 .sort-list{
@@ -305,7 +633,7 @@ image{
     color:#cfcdd1;font-size:42rpx;
   }
   .active{
-    color:#00c0e4;
+    color:#12bedb;
   }
 }
 .add-content{
@@ -329,6 +657,35 @@ image{
     line-height: 64rpx;
     padding:0 15px;
     color:#060407
+  }
+}
+.emtpy{
+  margin-top:50%;
+  text-align:center;
+  color:#b3b3b3
+}
+
+swiper{
+  height: 100vh;
+  .item{
+    justify-content:center;
+    height:100%;
+    min-width:0;
+    flex-direction:column;
+    width:100%;
+    display:flex;
+  }
+}
+.mask_pic_detail{
+  padding:0 15px;
+  position:fixed;
+  width:100%;
+  bottom:20px;
+  z-index: 999;
+  color: #e4e4e4;
+  .border{
+    border-bottom: 1px solid #2a2a2a;
+    padding: 5px 0;
   }
 }
 </style>

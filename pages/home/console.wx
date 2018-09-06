@@ -5,7 +5,7 @@
 
     <view class="header">
       <navigator url="/pages/home/module">
-        <button class="weui-btn" type="primary" plain="true" size="mini">模块编辑</button>
+        <button type="primary" plain="true" size="mini">模块编辑</button>
       </navigator>
     </view>
     
@@ -19,15 +19,15 @@
                <view class="title">我的产品</view> 
             </ui-col>
           </ui-row>
+          <ui-row border-bottom height="85">
+            <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this">
+              <navigator url="{{item.url}}" class="content">
+                  <i class="iconfont {{item.icon}}"></i>
+                <view class="p">{{item.text}}</view> 
+              </navigator>
+            </ui-col>
+          </ui-row>
         </ui-row-list>
-        <ui-row border-top border-bottom height="85">
-          <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this">
-            <navigator url="{{item.url}}" class="content">
-                <i class="iconfont {{item.icon}}"></i>
-               <view class="p">{{item.text}}</view> 
-            </navigator>
-          </ui-col>
-        </ui-row>
         <view class="hr"></view>
       </view>
 
@@ -42,15 +42,15 @@
               <navigator url="/pages/shop/shop?active=0" class="weui-cell__ft"><text class="info">我的订单</text></navigator>
             </ui-col>
           </ui-row>
+          <ui-row border-bottom height="85">
+            <ui-col border-right align="center" vertical-align="middle" wx:for="{{orders}}" wx:key="*this">
+              <navigator url="{{item.url}}" class="content">
+                  <i class="iconfont {{item.icon}}"></i>
+                <view class="p">{{item.text}}</view> 
+              </navigator>
+            </ui-col>
+          </ui-row>
         </ui-row-list>
-        <ui-row border-top border-bottom height="85">
-          <ui-col border-right align="center" vertical-align="middle" wx:for="{{orders}}" wx:key="*this">
-            <navigator url="{{item.url}}" class="content">
-                <i class="iconfont {{item.icon}}"></i>
-               <view class="p">{{item.text}}</view> 
-            </navigator>
-          </ui-col>
-        </ui-row>
         <view class="hr"></view>
       </view>
 
@@ -66,20 +66,20 @@
               <text class="info" bindtap="save" wx:if="{{toggleTools}}">完成</text>
             </ui-col>
           </ui-row>
-        </ui-row-list>
-        <ui-row border-top border-bottom class="row-border">
-          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{tools}}" wx:key="*this">
-            <navigator url="{{item.url}}" class="content" wx:if="{{!item.editting || item.icon === 'icon-jia'}}">
+          <ui-row border-bottom class="row-border">
+            <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{tools}}" wx:key="*this">
+              <navigator url="{{item.url}}" class="content" wx:if="{{!item.editting || item.icon === 'icon-jia'}}">
+                  <i class="iconfont {{item.icon}}"></i>
+                <view class="p">{{item.text}}</view> 
+              </navigator>
+              <view class="weui-grid {{!item.url ? 'opacity' : ''}}" wx:if="{{item.editting && item.icon !== 'icon-jia'}}">
+                <i class="iconfont icon-jianhao" bindtap="jian" data-idx="{{index}}"></i>
                 <i class="iconfont {{item.icon}}"></i>
-               <view class="p">{{item.text}}</view> 
-            </navigator>
-            <view class="weui-grid {{!item.url ? 'opacity' : ''}}" wx:if="{{item.editting && item.icon !== 'icon-jia'}}">
-              <i class="iconfont icon-jianhao" bindtap="jian" data-idx="{{index}}"></i>
-              <i class="iconfont {{item.icon}}"></i>
-              <view>{{item.text}}</view>
-            </view>
-          </ui-col>
-        </ui-row>
+                <view>{{item.text}}</view>
+              </view>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
         <view class="hr"></view>
       </view>
 
@@ -91,15 +91,15 @@
                <view class="title">数据管理中心</view> 
             </ui-col>
           </ui-row>
+          <ui-row border-bottom class="row-border">
+            <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{dataManageCenter}}" wx:key="*this">
+              <navigator url="{{item.url}}" class="content">
+                <i class="iconfont {{item.icon}}"></i>
+                <view class="p">{{item.text}}</view> 
+              </navigator>
+            </ui-col>
+          </ui-row>
         </ui-row-list>
-        <ui-row border-top border-bottom class="row-border">
-          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{dataManageCenter}}" wx:key="*this">
-            <navigator url="{{item.url}}" class="content">
-              <i class="iconfont {{item.icon}}"></i>
-              <view class="p">{{item.text}}</view> 
-            </navigator>
-          </ui-col>
-        </ui-row>
         <view class="hr"></view>
       </view>
 
@@ -234,9 +234,8 @@ export default {
 </script>
 
 <style lang="less">
-.hr{
+page{
   background: #f1f1f1;
-  height: 32rpx;
 }
 .j_console{
   .header{

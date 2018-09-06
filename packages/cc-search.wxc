@@ -1,34 +1,62 @@
 <template>
-  <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
-    <ui-row height="100r" border-bottom style="background:#fff">
-      <!-- 左 -->
-      <ui-col vertical-align="middle" align="left" width="124r" space-left="15">
-        <navigator class="iconfont icon-fenlei" wx:if="{{type!=='album'}}"></navigator>
-        <slot name="add"></slot>
-      </ui-col>
-      <ui-col vertical-align="middle" align="center" width="96r" space-right="15" wx:if="{{type==='album'}}">
-        <slot name="sort"></slot>
-      </ui-col>
-      <!-- 中 -->
-      <ui-col vertical-align="middle">
-        <view style="width:100%;">
-          <ui-row height="52r" style="background: #f6f6f6;border-radius:3px;">
-            <ui-col vertical-align="middle" align="center" width="30">
-              <i class="iconfont icon-sousuo"></i>
-            </ui-col>
-            <ui-col vertical-align="middle">
-              <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{value}}"></i>
-              <input type="text" value="{{value}}" bindinput="search"/>
-            </ui-col>
-          </ui-row>
-        </view>
-      </ui-col>
-      <!-- 右 -->
-      <ui-col vertical-align="middle" align="center" width="116r">
-        <navigator url="newsDetail" class="iconfont icon-jia1" hover-class="none" wx:if="{{type==='news'}}"></navigator>
-        <i class="iconfont icon-upload" bindtap="chooseImage" wx:if="{{type==='album'}}"></i>
-      </ui-col>
-    </ui-row>
+  <view>
+    <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
+      <ui-row height="100r" border-bottom style="background:#fff">
+        <!-- 左 -->
+        <ui-col vertical-align="middle" align="left" width="124r" space-left="15">
+          <i class="iconfont icon-fenlei {{show ? 'active' : ''}}" wx:if="{{type!=='album'}}" bindtap="openPopup"></i>
+          <slot name="add"></slot>
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" width="96r" space-right="15" wx:if="{{type==='album'}}">
+          <slot name="sort"></slot>
+        </ui-col>
+        <!-- 中 -->
+        <ui-col vertical-align="middle">
+          <view style="width:100%;">
+            <ui-row height="52r" style="background: #f6f6f6;border-radius:3px;">
+              <ui-col vertical-align="middle" align="center" width="30">
+                <i class="iconfont icon-sousuo"></i>
+              </ui-col>
+              <ui-col vertical-align="middle">
+                <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{value}}"></i>
+                <input type="text" value="{{value}}" bindinput="search"/>
+              </ui-col>
+            </ui-row>
+          </view>
+        </ui-col>
+        <!-- 右 -->
+        <ui-col vertical-align="middle" align="center" width="116r">
+          <navigator url="newsDetail" class="iconfont icon-jia1" hover-class="none" wx:if="{{type==='news'}}"></navigator>
+          <navigator url="productDetail" class="iconfont icon-jia1" hover-class="none" wx:if="{{type==='product'}}"></navigator>
+          <i class="iconfont icon-upload" bindtap="chooseImage" wx:if="{{type==='album'}}"></i>
+        </ui-col>
+      </ui-row>
+    </view>
+    <view style="height:100rpx"></view>
+    
+    <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show ? 'show' : '' }}">
+      <view class="ui-popup-content top {{ show ? 'show' : '' }}">
+        <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
+          <ui-row-list border-left-indent class="category-list">
+            <ui-row height="102r" border-bottom>
+              <ui-col class="text {{categoryId === '' ? 'active' : ''}}" vertical-align="middle" bindtap="cateChange">
+                请选择
+              </ui-col>
+            </ui-row>
+            <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="*this" wx:if="{{!item.hidden}}">
+              <ui-col class="text {{item.categoryId === categoryId ? 'active' : ''}}" vertical-align="middle" space-left="{{item.grade === '2' ? '20' : item.grade === '3' ? '40' : ''}}" data-item="{{item}}" bindtap="cateChange">
+                {{item.name}}
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" width="40" space-right="15">
+                <i class="iconfont icon-jianquminus25" wx:if="{{item.isroot && item.expand}}" data-item="{{item}}" bindtap="changeCateList"></i>
+                <i class="iconfont icon-jia1" wx:if="{{item.isroot && !item.expand}}" data-item="{{item}}" bindtap="changeCateList"></i>
+              </ui-col>
+            </ui-row>
+          </ui-row-list>
+        </scroll-view>
+      </view>
+      <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show ? 'show' : '' }}" bindtap="popHide"></view>
+    </view>
   </view>
 </template>
 
@@ -49,10 +77,27 @@ export default {
     id: {
       type: String,
       value: "all"
+    },
+    list: {
+      type: Array,
+      value: ""
     }
   },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    show: false,
+    scroHeight: parseInt(wx.DEFAULT_CONTENT_HEIGHT * 0.8),
+    categoryId: ''
+  },
+  ready () {
+    let height = (98+60)/750*wx.WIN_WIDTH
+    this.setData({
+      NAV_HEIGHT: this.data.NAV_HEIGHT,
+      popup_NAV_HEIGHT: this.data.popup_NAV_HEIGHT + height,
+      popupHeight: this.data.popupHeight + height
+    })
   },
   methods: {
     clearinput () {
@@ -91,6 +136,53 @@ export default {
           })
         }
       })
+    },
+    // 下拉
+    openPopup (e) {
+      this.setData({
+        show: !this.data.show
+      })
+    },
+    popHide () {
+      this.setData({
+        show:false
+      })
+    },
+    popShow () {
+      this.setData({
+        show:true
+      })
+    },
+    cateChange (e) {
+      let item = e.currentTarget.dataset.item
+      if (!item) {
+        item = {
+          categoryId: ''
+        }
+      }
+      this.setData({
+        categoryId: item.categoryId
+      })
+      this.popHide()
+      this.triggerEvent('change', item.categoryId)
+    },
+    changeCateList (e) {
+      let data = e.currentTarget.dataset.item
+      var ctx = this
+      this.data.list.forEach(item => {
+        item.expand = !item.expand
+        if (item.belongId === data.categoryId) {
+          item.hidden = data.expand
+          ctx.data.list.forEach(row => {
+            if (row.belongId === item.categoryId) {
+              row.hidden = data.expand
+            }
+          })
+        }
+      })
+      this.setData({
+        list: this.data.list
+      })
     }
   }
 }
@@ -116,15 +208,147 @@ export default {
   width: 100%;
   font-size: 38rpx;
 }
-  .icon-close-circle-fill{
-    width: 64rpx;
-    height: 64rpx;
-    line-height: 64rpx;
-    font-size: 16px;
-    text-align: center;
-    color: #b5b3b6;
-    position: absolute;
-    right: 0;
-    z-index: 3;
+.icon-close-circle-fill{
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 16px;
+  text-align: center;
+  color: #b5b3b6;
+  position: absolute;
+  right: 0;
+  z-index: 3;
+}
+.icon-fenlei.active{
+  color:#00c0e4;
+}
+.category-list{
+  .iconfont{
+    color: #cfcdd1;
   }
+  .active{
+    color:#00c0e4;
+  }
+  .text{
+    color: #4e4e4e;
+  }
+}
+
+
+// mask
+.ui-popup {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 501;
+  transition-property: transform, visibility;
+  transition-duration: 300ms;
+  max-height: 100%;
+  overflow-y: scroll;
+  -webkit-backface-visibility: hidden;
+  visibility: hidden;
+}
+.ui-popup.show {
+  visibility: visible;
+}
+.ui-popup-content {
+  position: absolute;
+  background-color: #fff;
+}
+.ui-popup-content.bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  transition: transform 300ms;
+  transform: translate3d(0, 100%, 0);
+}
+.ui-popup-content.bottom.show {
+  transform: translate3d(0, 0, 0);
+}
+.ui-popup-content.top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation: slideOut both .3s;
+  transform-origin: 50% 0;
+}
+.ui-popup-content.top.show {
+  animation: slideIn both .3s;
+  transform-origin: 50% 0;
+}
+.ui-popup-content.left {
+  width: auto;
+  height: 100%;
+  top: 0;
+  right: auto;
+  bottom: auto;
+  left: 0;
+  transition: transform 300ms;
+  transform: translate3d(-100%, 0, 0);
+}
+.ui-popup-content.left.show {
+  transform: translate3d(0, 0, 0);
+}
+.ui-popup-content.right {
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: auto;
+  transition: transform 300ms;
+  transform: translate3d(100%, 0, 0);
+}
+.ui-popup-content.right.show {
+  transform: translate3d(0, 0, 0);
+}
+.ui-popup-mask {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  z-index: -1;
+  transition: opacity 400ms;
+}
+.ui-popup-mask.show {
+  opacity: 1;
+}
+.ui-popup-animate-top-enter-active {
+  animation: slideIn both .3s;
+  transform-origin: 50% 0;
+}
+.ui-popup-animate-top-leave-active {
+  animation: slideOut both .3s;
+  transform-origin: 50% 0;
+}
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    -webkit-transform: scaleY(1);
+    transform: scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scaleY(0);
+    transform: scaleY(0);
+  }
+}
+
 </style>

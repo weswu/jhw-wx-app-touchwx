@@ -1,4 +1,5 @@
 import Tips from './tips'
+import api from './api'
 
 /*
  * @author: wes
@@ -124,10 +125,77 @@ const LoadMore = (that) => {
   that.get()  
 }
 
+// 批量操作
+const batchDel = (that, type) => {
+  if (!that.data.ids) {
+    return Tips.toast('未选择')
+  }
+  api.batchDel({
+    data: {ids: that.data.ids},
+    type: type,
+    method: 'post'
+  }).then(res => {
+    if (res.success) {
+      Tips.success('删除成功')
+      that.setData({
+        list: [],
+        'params.page': 1,
+        selected: false
+      })
+      that.get()
+    }
+  })
+}
+const batchDisplay = (that, url, data, display) => {
+  if (!that.data.ids) {
+    return Tips.toast('未选择')
+  }
+  api.batchDisplay({
+    data: data,
+    url: url,
+    method: 'post'
+  }).then(res => {
+    if (res.success) {
+      Tips.success(data.display === '01' || display === 'On' ? '已显示' : '已隐藏')
+      that.setData({
+        list: [],
+        'params.page': 1,
+        selected: false
+      })
+      that.get()
+    }
+  })
+}
+const batchCopy = (that, url, data) => {
+  if (!that.data.ids) {
+    return Tips.toast('未选择')
+  }
+  api.batchCopy({
+    data: data,
+    url: url,
+    method: 'post'
+  }).then(res => {
+    if (res.success) {
+      Tips.success('复制成功')
+      that.setData({
+        list: [],
+        'params.page': 1,
+        selected: false
+      })
+      that.get()
+    }
+  })
+}
+
+
+
 module.exports = {
   del,
   scrollList,
   price,
   formatTime,
-  LoadMore
+  LoadMore,
+  batchDel,
+  batchDisplay,
+  batchCopy
 };

@@ -1,33 +1,29 @@
 <template>
   <view>
-    <cc-header title="新闻管理" count="{{count}}" back="{{!selected}}">
-      <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
+    <cc-header title="{{title}}" count="{{count}}" back="{{!selected}}">
+      <text bindtap="toggleAll" wx:if="{{selected && !toggle}}">全选</text>
+      <text bindtap="toggleAll" wx:if="{{selected && toggle}}">全不选</text>
     </cc-header>
-    <view style="height:100rpx"></view>
-    <cc-lan top="99" bindchange="lanChange"></cc-lan>
+    <!-- head -->
+    <cc-search value="{{params.title}}" type="news" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
+    <cc-lan top="99" type="news" bindchange="lanChange"></cc-lan>
     
+    <!-- body -->
     <ui-row-list>
-      <ui-row url="newsDetail?id={{item.newsId}}" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
-        <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
-          <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
+      <ui-row height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle" align="center" width="123r" data-index="{{index}}" bindtap="toggle">
+          <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
         </ui-col>
-        <ui-col class="text" vertical-align="middle" catchtap="cancel" wx:if="{{selected}}">
+        <ui-col class="text" vertical-align="middle" data-item="{{item}}" bindtap="item">
           {{item.title}}
-          <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
-        </ui-col>
-        <ui-col class="text" vertical-align="middle" wx:if="{{!selected}}">
-          {{item.title}}
-          <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
+          <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{item.viewsum || 0}} </view>
         </ui-col>
       </ui-row>
     </ui-row-list>
     <cc-loadmore more="{{more}}"></cc-loadmore>
 
-    <cc-search value="{{params.title}}" type="news" bindinput="search">
-      <navigator slot="after" url="newsDetail" class="iconfont icon-jia1" style="color:#4e4e4e;width: 100%;" hover-class="none"></navigator>
-    </cc-search>
-
+    <!-- footer -->
     <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
         <ui-col span="3" vertical-align="middle" align="center" bindtap="copy">
@@ -52,9 +48,9 @@
     <view style="height:70px" wx:if="{{selected}}"></view>
     <ui-mask show="{{showMask}}" hide-delay="500">
       <view class="mask_btn">
-        <view>
-          <button data-show="{{'01'}}" bindtap="display">显示</button>
-          <button data-show="{{'00'}}" bindtap="display">隐藏</button>
+        <view class="btn">
+          <view data-show="{{'01'}}" bindtap="display">显示</view>
+          <view data-show="{{'00'}}" bindtap="display">隐藏</view>
         </view>
         <button data-show="{{ false }}" bindtap="more">取消</button>
       </view>
@@ -76,6 +72,7 @@ export default {
     }
   },
   data: {
+    title: '新闻管理',
     list: [],
     params: {
       page: 1,
@@ -84,6 +81,7 @@ export default {
     },
     count: 0,
     more: {},
+    cateList: [],
     selected: false, //选中状态
     ids: '', // 选中项
     toggle: false, // 全选切换状态 
@@ -91,6 +89,12 @@ export default {
   },
   onLoad () {
     this.get()
+    let that = this
+    getApp().getNewsCategory(res => {
+      that.setData({
+        cateList: res
+      })
+    })
   },
   get () {
     this.setData({
@@ -129,6 +133,15 @@ export default {
     })
     this.get()
   },
+  cateChange (e) {
+    this.data.params.page = 1
+    this.data.params.category = e.detail
+    this.setData({
+      list: [],
+      params: this.data.params
+    })
+    this.get()
+  },
   // 全选
   toggleAll () {
     let list = this.data.list
@@ -159,76 +172,37 @@ export default {
         ids = ids ? (ids + ',' + item.newsId) : item.newsId
       }
     })
+    let number = ids ? ids.split(',').length : 0
     this.setData({
-      ids: ids
+      ids: ids,
+      title: '已选择' + number + '条新闻'
     })
   },
-  cancel (e) {
-    this.setData({
-      selected: false
-    })
+  item (e) {
+    let item = e.currentTarget.dataset.item
+    if (this.data.selected) {
+      this.setData({
+        selected: false,
+        title: '新闻管理'
+      })
+    } else {
+      wx.navigateTo({
+        url: 'newsDetail?id=' + item.newsId
+      })
+    }
   },
   // 批量
   copy () {
-    if (!this.data.ids) {
-      return Tips.toast('未选择')
-    }
-    api.newsCopy({
-      data: {newsIds: this.data.ids},
-      method: 'post'
-    }).then(res => {
-      if (res.success) {
-        Tips.success('复制成功')
-        this.setData({
-          list: [],
-          'params.page': 1,
-          selected: false
-        })
-        this.get()
-      }
-    })
+    Utils.batchCopy(this, 'news/copy', {newsIds: this.data.ids})
   },
-  move () {},
   del () {
-    if (!this.data.ids) {
-      return Tips.toast('未选择')
-    }
-    api.newsDel({
-      data: {ids: this.data.ids},
-      method: 'post'
-    }).then(res => {
-      if (res.success) {
-        Tips.success('删除成功')
-        this.setData({
-          list: [],
-          'params.page': 1,
-          selected: false
-        })
-        this.get()
-      }
-    })
+    Utils.batchDel(this, 'news')
   },
   display (e) {
-    if (!this.data.ids) {
-      return Tips.toast('未选择')
-    }
     let display = e.currentTarget.dataset.show
-    api.newsDisplay({
-      data: {
-        newsIds: this.data.ids,
-        display: display
-      },
-      method: 'post'
-    }).then(res => {
-      if (res.success) {
-        Tips.success(display === '01' ? '已显示' : '已隐藏')
-        this.setData({
-          list: [],
-          'params.page': 1,
-          selected: false
-        })
-        this.get()
-      }
+    Utils.batchDisplay(this, 'news/display', {
+      newsIds: this.data.ids,
+      display: display
     })
   },
   more (e) {
@@ -249,7 +223,7 @@ page{
   background: #f1f1f1
 }
 .ui-row-list > .ui-row:not(:last-child):after {
-  left: 35px;
+  left: 123rpx;
 }
 .ui-row-list{
   .text{
@@ -264,52 +238,6 @@ page{
   }
   &.ui-row-border-bottom:after {
     left: 40px;
-  }
-}
-.fixed_btn{
-  color: #a8a9ae;
-  background: #fafafa;
-  .iconfont{
-    color: #9f9f9f;
-    font-size: 20px;
-  }
-}
-.mask_btn{
-  padding:0 15px;
-  position:fixed;
-  width:100%;
-  bottom:20px;
-  button{
-    height: 50px;
-    line-height: 50px;
-    color: #4e4e4e;
-    font-weight:700;
-    background-color:#fff;
-    border-radius: 5px;
-  }
-  view{
-    border-radius: 6px;
-    padding-bottom: 5px;
-    button{
-      height: 55px;
-      line-height: 55px;
-      border-radius: 0;
-      margin: 0;
-      color: #4e4e4e;
-      font-weight:normal;
-      &::after{
-        border-radius: 0;
-      }
-      &:first-child{
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border-bottom: 1px solid #e4e4e4;
-      }
-      &:last-child{
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-      }
-    }
   }
 }
 </style>

@@ -12,20 +12,20 @@ export default {
       'pages/user/login',
       'pages/news/news',
       'pages/product/product',
-      'pages/album/album',
+      'pages/cost/point',
       'pages/home/my',
-      'pages/message/messageReply',
-      'pages/message/messageList',
-      'pages/message/messageDetail',
-      'pages/message/message',
-      'pages/home/index',
       'pages/home/console',
+      'pages/album/album',
+      'pages/news/newsDetail',
+      'pages/message/message',
+      'pages/message/messageList',
+      'pages/message/messageReply',
+      'pages/message/messageDetail',
+      'pages/home/index',
       'pages/home/module',
       'pages/home/tools',
-      'pages/news/newsDetail',
       'pages/pc/miniProgram',
       'pages/pc/website',
-      'pages/cost/point',
       'pages/cost/cost',
       'pages/category/category',
       'pages/user/enterprise',
@@ -40,7 +40,6 @@ export default {
       'pages/setting/webView',
       'pages/shop/shop',
       'pages/static/seo/seoDetail',
-      // 组件
       'pages/components/j-tag',
       'pages/components/j-date'
     ],
@@ -322,6 +321,48 @@ export default {
 .hr{
   background: #f1f1f1;
   height: 32rpx;
+}
+// 底部按钮
+.fixed_btn{
+  color: #a8a9ae;
+  background: #fafafa;
+  .iconfont{
+    color: #9f9f9f;
+    font-size: 20px;
+  }
+}
+.mask_btn{
+  padding:0 15px;
+  position:fixed;
+  width:100%;
+  bottom:20px;
+  z-index: 999;
+  button{
+    height: 50px;
+    line-height: 50px;
+    color: #4e4e4e;
+    font-weight:700;
+    background-color:#fff;
+    border-radius: 5px;
+  }
+  .btn{
+    border-radius:6px;
+    margin-bottom:10px;
+    background:#fff;
+    text-align:center;
+    view{
+      height: 55px;
+      line-height: 55px;
+      border-bottom: 1px solid #e4e4e4;
+      border-radius: 0;
+      margin: 0;
+      color: #4e4e4e;
+      font-weight:normal;
+      &:last-child{
+        border-bottom: none;
+      }
+    }
+  }
 }
 
 /*  重写 radio 样式  */

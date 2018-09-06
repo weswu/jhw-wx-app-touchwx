@@ -4,14 +4,14 @@
       <view class="ui-nav-bar-content">
         <ui-row height="46" class="text">
           <ui-col vertical-align="middle" align="left" width="{{width}}" space-left="10">
-            <view style="width:100%;display:flex;line-height:46px;">
+            <view style="width:100%;display:flex;line-height:46px;overflow:hidden;">
               <i class="iconfont icon-xiangzuo" bindtap="navigateBack" wx:if="{{back}}"></i>
               <slot></slot>
             </view>
           </ui-col>
           <ui-col vertical-align="middle" align="center">
-            <view c>
-              {{title}}<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text>
+            <view>
+              {{title}}<text style="font-size:12px" wx:if="{{count !== 0 && back}}">({{count}})</text>
             </view>
           </ui-col>
           <ui-col vertical-align="middle" width="{{width}}"></ui-col>
@@ -50,7 +50,7 @@ export default {
     },
     width: {
       type: String,
-      value: 40
+      value: '130r'
     }
   },
   options: {

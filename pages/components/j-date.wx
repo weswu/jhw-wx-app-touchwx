@@ -1,7 +1,6 @@
 <template>
   <view>
     <cc-header title="选择日期" custom-style="{{ {backgroundColor:'#fff'} }}"></cc-header>
-      
     <ui-v-calendar
       select-range-mode="{{false}}"
       header-height="30"
@@ -12,10 +11,8 @@
       value="{{radioDate}}"
       theme-color="red"
     ></ui-v-calendar>
-  
   </view>
 </template>
-  
   
 <script>
 export default {
@@ -83,7 +80,6 @@ export default {
       d.substring(d.length - 2, d.length)
     );
   },
-
   onLoad(e) {
     // 计算时间范围
     let radiodate = new Date();
@@ -95,7 +91,7 @@ export default {
     }
     this.radioinit(this.format(date));
   }
-};
+}
 </script>
   
 <style lang="less">

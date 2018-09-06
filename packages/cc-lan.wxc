@@ -3,10 +3,24 @@
     <view style="height:60rpx"></view>
     <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
       <ui-row height="60r" border-bottom style="background:#fff">
-        <ui-col vertical-align="middle" border-right space-left="15">
+        <ui-col vertical-align="middle" space-left="15">
+          <view style="width:100%" wx:if="{{type==='product' || type==='news'}}">
+            <ui-row height="60r" bindtap="openPopup1">
+              <ui-col width="30" vertical-align="middle">
+                <view style="color:#12bedb;font-size:12px;">
+                  {{sortName}}
+                </view>
+              </ui-col>
+              <ui-col vertical-align="middle" align="left">
+                <i class="iconfont icon-xiangxiajiantoushixin {{show1 ? 'active' : ''}}" style="color:#12bedb"></i>
+              </ui-col>
+            </ui-row>
+          </view>
+        </ui-col>
+        <ui-col width="100r" vertical-align="middle" align="center">
           <slot></slot>
         </ui-col>
-        <ui-col width="100" vertical-align="middle" align="right" space-right="5" bindtap="openPopup" class="{{show ? 'active' : ''}}">
+        <ui-col width="100" vertical-align="middle" border-left align="right" space-right="5" bindtap="openPopup" class="{{show ? 'active' : ''}}">
           <view style="width:100%">
             <ui-row height="60r">
               <ui-col vertical-align="middle" align="right" space-right="5">
@@ -36,6 +50,25 @@
         </ui-row-list>
       </view>
       <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show ? 'show' : '' }}" bindtap="popHide"></view>
+    </view>
+    
+    <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show1 ? 'show' : '' }}">
+      <view class="ui-popup-content top {{ show1 ? 'show' : '' }}">
+        <ui-row-list border-left-indent class="sort-list">
+          <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="*this" data-item="{{item}}" bindtap="sortChange">
+            <ui-col vertical-align="middle" class="{{params.sortField === item.value ? 'active' : ''}}">
+              {{item.text}}
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" width="40">
+              <i class="iconfont icon-vertical-align-botto {{params.sortType === 'asc' && params.sortField === item.value ? 'active' : ''}}"/>
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" width="40" space-right="15">
+              <i class="iconfont icon-vertical-align-top {{params.sortType === 'desc' && params.sortField === item.value ? 'active' : ''}}"/>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+      </view>
+      <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show1 ? 'show' : '' }}" bindtap="popHide1"></view>
     </view>
   </view>
 </template>
@@ -70,7 +103,22 @@ export default {
       { value: '2', text: '英文' }
     ],
     name: '中文',
-    lanId: '1'
+    lanId: '1',
+    // 排序
+    params: {
+      sortField: 'sort',
+      searchType: '1',
+      sortType: 'desc'
+    },
+    show1: false,
+    sortList: [
+      { value: 'sort', text: '默认' },
+      { value: 'uploadTime', text: '时间' },
+      { value: 'filename', text: '名称' },
+      { value: 'price', text: '价格' },
+      { value: 'person', text: '人气' }
+    ],
+    sortName: '默认',
   },
   ready () {
     let height = this.data.top/750*wx.WIN_WIDTH
@@ -115,6 +163,29 @@ export default {
           this.triggerEvent('change')
         }
       })
+    },
+    // 排序
+    openPopup1 (e) {
+      this.setData({
+        show1: !this.data.show1
+      })
+    },
+    popHide1 () {
+      this.setData({
+        show1:false
+      })
+    },
+    popShow1 () {
+      this.setData({
+        show:true
+      })
+    },
+    sortChange (e) {
+      let item = e.currentTarget.dataset.item
+      this.setData({
+        sortName: item.text
+      })
+      this.popHide1()
     }
   }
 }
@@ -137,12 +208,20 @@ export default {
   transition: all .3s ease-in;
   &.active{
     transform:rotate(180deg);
-    color:#09C2B1!important;
+    color:#12bedb!important;
   }
 }
 .icon-gou{
   color:#3AC3B0;
   font-size:12px;
+}
+.sort-list{
+  .iconfont{
+    color:#cfcdd1;font-size:42rpx;
+  }
+  .active{
+    color:#12bedb;
+  }
 }
 
 // mask

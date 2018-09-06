@@ -33,7 +33,7 @@
     </ui-row-list>
     <cc-loadmore more="{{more}}"></cc-loadmore>
 
-    <!-- 头 -->
+    <!-- 下拉 -->
     <ui-fixed-view top="{{ NAV_HEIGHT }}" left="{{'0;z-index:9;background:#fff;'}}" right="0">
       <ui-row height="43" border-bottom bindtap="openPopup">
         <ui-col vertical-align="middle" space-left="15">
@@ -170,6 +170,11 @@ export default {
     transform:rotate(180deg);
   }
 }
+
+.ui-row-list > .ui-row:not(:last-child):after {
+  border:none
+}
+
 .text{
   width: 100%;
   border-bottom: 1px solid #dbdbdb;

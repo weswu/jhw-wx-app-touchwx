@@ -97,6 +97,7 @@ export default {
     }
   },
   data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     current1: 0,
     state: '00',
     state2: '00'

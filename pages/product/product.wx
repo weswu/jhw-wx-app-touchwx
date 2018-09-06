@@ -1,38 +1,112 @@
 <template>
   <view>
-    <cc-header title="产品管理" count="{{count}}" back="{{!selected}}">
-      <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
+    <cc-header title="{{title}}" count="{{count}}" back="{{!selected}}">
+      <text bindtap="toggleAll" wx:if="{{selected && !toggle}}">全选</text>
+      <text bindtap="toggleAll" wx:if="{{selected && toggle}}">全不选</text>
     </cc-header>
-    <view style="height:100rpx"></view>
-    <cc-lan top="99" bindchange="lanChange">
-      默认
+    <!-- head -->
+    <cc-search value="{{params.name}}" type="product" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
+    <cc-lan top="99" type="product" bindchange="lanChange">
+      <i class="iconfont icon-{{chenlie === '0' ? 'danhangchenlie' : 'duohangchenlie'}}" bindtap="chenlie"></i>
     </cc-lan>
     
+    <!-- body -->
     <ui-row-list>
-      <ui-row url="newsDetail?id={{item.newsId}}" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
-        <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
-          <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
+      <ui-row class="chenlie-row"  wx:if="{{chenlie === '1'}}">
+        <ui-col span="6" vertical-align="middle" 
+          align="{{index%2 === 0 ? 'left' : 'right'}}" 
+          space-right="{{index%2 === 0 ? '8r' : '0'}}" 
+          space-left="{{index%2 === 1 ? '8r' : '0'}}"
+          wx:for="{{list}}" wx:key="*this">
+          <view class="image">
+            <image mode="aspectFit" src="http://img.jihui88.com/{{item.picPath}}"/>
+          </view>
+          <view class="text" style="width:100%" wx:if="{{!item.switch}}">
+            <view style="height:145rpx">
+              <view class="title"> {{item.name}} </view>
+              <view class="desc" wx:if="{{item.type}}"> 型号：{{item.type}} </view>
+              <view class="price"> ￥{{item.price || 0.00}} </view>
+            </view>
+            <ui-row height="30rpx">
+              <ui-col vertical-align="middle">
+                <view class="store"> 人气：{{item.viewsum || 0}} <text>库存：{{item.store || 0}}</text></view>
+              </ui-col>
+              <ui-col width="30" vertical-align="bottom" align="right" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
+                <i class="iconfont icon-gengduo1" style="color:#686669"></i>
+              </ui-col>
+            </ui-row>
+          </view>
+          <view class="switch" wx:if="{{item.switch}}">
+            <view class="desc" style="height:145rpx" data-show="{{false}}" data-index="{{index}}" catchtap="switch">
+              <view> 显示/隐藏：{{item.isdisplay === '1' ? '显示' : '隐藏'}} </view>
+              <view> 是否上架：{{item.isMarketable ? '是' : '否'}} </view>
+              <view> 添加时间：{{item.addTime}} </view>
+            </view>
+            <ui-row class="btn" height="30rpx">
+              <ui-col vertical-align="middle" align="center">
+                <view class="qrcode" bindtap="switch"> 二维码 </view>
+              </ui-col>
+              <ui-col vertical-align="bottom" align="center" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
+                <view class="view"> 预览 </view>
+              </ui-col>
+            </ui-row>
+          </view>
         </ui-col>
-        <ui-col class="text" vertical-align="middle" catchtap="cancel" wx:if="{{selected}}">
-          {{item.title}}
-          <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
+      </ui-row>
+
+      <view style="height:40rpx;" wx:if="{{chenlie === '0'}}"></view>
+      <ui-row class="item" height="258r" border-bottom wx:for="{{list}}" wx:key="*this" wx:if="{{chenlie === '0'}}">
+        <ui-col vertical-align="middle" align="center" width="90r" data-index="{{index}}" bindtap="toggle">
+          <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
         </ui-col>
-        <ui-col class="text" vertical-align="middle" wx:if="{{!selected}}">
-          {{item.title}}
-          <view class="desc"> {{item.addTime}} <text>{{item.display === '00' ? '隐藏' : '显示'}}</text> 人气：{{viewsum || 0}} </view>
+        <ui-col vertical-align="middle" align="left" width="237r">
+          <image mode="aspectFit" src="http://img.jihui88.com/{{item.picPath}}"/>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle" space-right="15" data-item="{{item}}" bindtap="item" wx:if="{{!item.switch}}">
+          <view style="height:188rpx">
+            <view class="title"> 
+              <text class="isNew" wx:if="{{item.isNew === '01'}}">新品</text>
+              <text class="isBest" wx:if="{{item.isBest === '01'}}">精品</text>
+              <text class="isHot" wx:if="{{item.isHot === '01'}}">热品</text>
+              {{item.name}} 
+            </view>
+            <view class="desc" wx:if="{{item.type}}"> 型号：{{item.type}} </view>
+            <view class="price"> ￥{{item.price || 0.00}} </view>
+          </view>
+          <ui-row height="30r">
+            <ui-col vertical-align="middle">
+              <view class="store"> 人气：{{item.viewsum || 0}} <text>库存：{{item.store || 0}}</text></view>
+            </ui-col>
+            <ui-col width="30" vertical-align="bottom" align="right" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
+              <i class="iconfont icon-gengduo1" style="color:#686669"></i>
+            </ui-col>
+          </ui-row>
+        </ui-col>
+        <ui-col class="switch" vertical-align="middle" data-item="{{item}}" bindtap="item" wx:if="{{item.switch}}">
+          <view style="width:100%"> 
+            <ui-row style="height:218rpx" data-show="{{false}}" data-index="{{index}}" catchtap="switch">
+              <ui-col vertical-align="middle" class="desc">
+                <view> 显示/隐藏：{{item.isdisplay === '1' ? '显示' : '隐藏'}} </view>
+                <view> 是否上架：{{item.isMarketable ? '是' : '否'}} </view>
+                <view> 添加时间：{{item.addTime}} </view>
+              </ui-col>
+              <ui-col class="btn" width="84r" vertical-align="bottom" align="center">
+                <view class="qrcode" bindtap="switch"> 二维码 </view>
+                <view class="view"> 预览 </view>
+              </ui-col>
+            </ui-row>
+          </view>
         </ui-col>
       </ui-row>
     </ui-row-list>
+
     <cc-loadmore more="{{more}}"></cc-loadmore>
 
-    <cc-search value="{{params.title}}" type="news" bindinput="search">
-      <navigator slot="after" url="newsDetail" class="iconfont icon-jia1" style="color:#4e4e4e;width: 100%;" hover-class="none"></navigator>
-    </cc-search>
-
+    <!-- footer -->
     <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="copy">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchCopy">
           <i class="iconfont icon-fuzhi"></i>
           <view class="desc">复制</view>
         </ui-col>
@@ -40,7 +114,7 @@
           <i class="iconfont icon-folder-add-fill2"></i>
           <view class="desc">移动</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="del">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchDel">
           <i class="iconfont icon-delete-fill"></i>
           <view class="desc">删除</view>
         </ui-col>
@@ -54,9 +128,11 @@
     <view style="height:70px" wx:if="{{selected}}"></view>
     <ui-mask show="{{showMask}}" hide-delay="500">
       <view class="mask_btn">
-        <view>
-          <button data-show="{{'01'}}" bindtap="display">显示</button>
-          <button data-show="{{'00'}}" bindtap="display">隐藏</button>
+        <view class="btn">
+          <view data-show="{{'On'}}" bindtap="batchDisplay">显示</view>
+          <view data-show="{{'Off'}}" bindtap="batchDisplay">隐藏</view>
+          <view data-show="{{'01'}}" bindtap="batchMarketable">上架</view>
+          <view data-show="{{'00'}}" bindtap="batchMarketable">下架</view>
         </view>
         <button data-show="{{ false }}" bindtap="more">取消</button>
       </view>
@@ -78,21 +154,30 @@ export default {
     }
   },
   data: {
+    title: '产品管理',
     list: [],
     params: {
       page: 1,
       pageSize: 16,
-      title: ''
+      name: ''
     },
     count: 0,
     more: {},
+    cateList: [],
     selected: false, //选中状态
     ids: '', // 选中项
     toggle: false, // 全选切换状态 
-    showMask: false // 更多
+    showMask: false, // 更多
+    chenlie: '0'
   },
   onLoad () {
     this.get()
+    let that = this
+    getApp().getProductCategory(res => {
+      that.setData({
+        cateList: res
+      })
+    })
   },
   get () {
     this.setData({
@@ -105,17 +190,19 @@ export default {
     }).then(res => {
       if (res.success) {
         res.attributes.data.forEach(item => {
-          item.addTime = Utils.formatTime(item.addTime)
+          item.addTime = Utils.formatTime(item.addTime, 'yyyy-MM-hh')
+          item.switch = false
+          item.price = parseFloat(item.price).toFixed(2)
           item._checked = false
         })
-        Utils.scrollList(this, res, '没有更多新闻')
+        Utils.scrollList(this, res, '没有更多产品')
       }
     })
   },
   // 搜索
   search (e) {
     this.data.params.page = 1
-    this.data.params.title = e.detail
+    this.data.params.name = e.detail
     this.setData({
       list: [],
       params: this.data.params
@@ -124,12 +211,26 @@ export default {
   },
   lanChange () {
     this.data.params.page = 1
-    this.data.params.title = ''
+    this.data.params.name = ''
     this.setData({
       list: [],
       params: this.data.params
     })
     this.get()
+  },
+  cateChange (e) {
+    this.data.params.page = 1
+    this.data.params.category = e.detail
+    this.setData({
+      list: [],
+      params: this.data.params
+    })
+    this.get()
+  },
+  chenlie () {
+    this.setData({
+      chenlie: this.data.chenlie === '0' ? '1' : '0'
+    })
   },
   // 全选
   toggleAll () {
@@ -158,72 +259,61 @@ export default {
     let ids = ''
     list.forEach(item => {
       if (item._checked) {
-        ids = ids ? (ids + ',' + item.newsId) : item.newsId
+        ids = ids ? (ids + ',' + item.productId) : item.productId
       }
     })
+    let number = ids ? ids.split(',').length : 0
     this.setData({
-      ids: ids
+      ids: ids,
+      title: '已选择' + number + '个产品'
     })
   },
-  cancel (e) {
+  item (e) {
+    let item = e.currentTarget.dataset.item
+    if (this.data.selected) {
+      this.setData({
+        selected: false,
+        title: '产品管理'
+      })
+    } else {
+      wx.navigateTo({
+        url: 'productDetail?id=' + item.productId
+      })
+    }
+  },
+  switch (e) {
+    let index = e.currentTarget.dataset.index
+    let show = e.currentTarget.dataset.show
+    this.data.list[index].switch = show 
     this.setData({
-      selected: false
+      list: this.data.list
     })
   },
   // 批量
-  copy () {
-    if (!this.data.ids) {
-      return Tips.toast('未选择')
-    }
-    api.newsCopy({
-      data: {newsIds: this.data.ids},
-      method: 'post'
-    }).then(res => {
-      if (res.success) {
-        Tips.success('复制成功')
-        this.setData({
-          list: [],
-          'params.page': 1,
-          selected: false
-        })
-        this.get()
-      }
-    })
+  batchCopy () {
+    Utils.batchCopy(this, 'product/copyProductByIds', {productIds: this.data.ids})
   },
-  move () {},
-  del () {
-    if (!this.data.ids) {
-      return Tips.toast('未选择')
-    }
-    api.newsDel({
-      data: {ids: this.data.ids},
-      method: 'post'
-    }).then(res => {
-      if (res.success) {
-        Tips.success('删除成功')
-        this.setData({
-          list: [],
-          'params.page': 1,
-          selected: false
-        })
-        this.get()
-      }
-    })
+  batchDel () {
+    Utils.batchDel(this, 'product')
   },
-  display (e) {
-    if (!this.data.ids) {
-      return Tips.toast('未选择')
-    }
+  batchDisplay (e) {
     let display = e.currentTarget.dataset.show
-    api.newsDisplay({
-      data: {
-        newsIds: this.data.ids,
-        display: display
-      },
+    Utils.batchDisplay(this, 'product/batch/display' + display, {
+      ids: this.data.ids
+    }, display)
+  },
+  batchMarketable (e) {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    let url = e.currentTarget.dataset.show
+    api.batchMarketable({
+      data: {productIds: this.data.ids},
+      url: url === '00' ? 'unBatchShelves' : 'batchShelves',
       method: 'post'
     }).then(res => {
       if (res.success) {
-        Tips.success(display === '01' ? '已显示' : '已隐藏')
+        Tips.success(url === '01' ? '上架成功' : '下架成功')
         this.setData({
           list: [],
           'params.page': 1,
@@ -251,65 +341,108 @@ page{
   background: #f1f1f1
 }
 .ui-row-list > .ui-row:not(:last-child):after {
-  left: 35px;
+  left: 326rpx;
 }
 .ui-row-list{
-  .text{
-    color: #4e4e4e;
-    .desc{
-      color: #9f9f9f;
-      font-size: 12px;
-      text{
-        padding: 0 5px
-      }
+  .item{
+    padding-bottom: 40rpx;
+    image{
+      max-width: 216rpx;
+      max-height: 216rpx;
+    }
+    .title{
+      white-space:normal;
+      display:block;
+      height:90rpx;
+      font-size:34rpx;
+      line-height:38rpx;
+      padding-top:10rpx;
     }
   }
-  &.ui-row-border-bottom:after {
-    left: 40px;
+  .store{
+    font-size: 10px;
+    color: #c4c4c4;
+    text{
+      padding-left: 10px
+    }
   }
-}
-.fixed_btn{
-  color: #a8a9ae;
-  background: #fafafa;
-  .iconfont{
-    color: #9f9f9f;
-    font-size: 20px;
+  .price{
+    color: #fc3c00;
   }
-}
-.mask_btn{
-  padding:0 15px;
-  position:fixed;
-  width:100%;
-  bottom:20px;
-  button{
-    height: 50px;
-    line-height: 50px;
-    color: #4e4e4e;
-    font-weight:700;
-    background-color:#fff;
-    border-radius: 5px;
+  .isNew{
+    font-size: 8px;
+    background: #417505;
+    color: #fff;
+    padding: 2px 4px;
+    margin-right: 5px
   }
-  view{
-    border-radius: 6px;
-    padding-bottom: 5px;
-    button{
-      height: 55px;
-      line-height: 55px;
-      border-radius: 0;
-      margin: 0;
-      color: #4e4e4e;
-      font-weight:normal;
-      &::after{
-        border-radius: 0;
+  .isBest{
+    font-size: 8px;
+    background: #ff7e3e;
+    color: #fff;
+    padding: 2px 4px;
+    margin-right: 5px
+  }
+  .isHot{
+    font-size: 8px;
+    background: #d0021b;
+    color: #fff;
+    padding: 2px 4px;
+    margin-right: 5px
+  }
+  .switch{
+    .desc{
+      line-height: 2
+    }
+    .btn{
+      font-size: 10px;
+      color: #fff;
+      view{
+        line-height: 108rpx;
+        display: block;
       }
-      &:first-child{
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        border-bottom: 1px solid #e4e4e4;
+    }
+    .qrcode{
+      background: #ff6900;
+    }
+    .view{
+      background: #ffbc00;
+    }
+  }
+  .chenlie-row{
+    justify-content: space-around;
+    flex-wrap: wrap;
+    background: #f1f1f1;
+    .ui-col-6{
+      height: 571rpx;
+      width: 368rpx;
+      margin-bottom:20rpx;
+      .image{
+        width: 368rpx;
+        height: 368rpx;
+        background: #f5f6fa;
       }
-      &:last-child{
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
+      image{
+        max-width: 368rpx;
+        max-height: 368rpx;
+      }
+    }
+    .text{
+      background: #fff;
+      text-align: left;
+      padding:5rpx 20rpx 0 20rpx;
+    }
+    .switch{
+      background: #fff;
+      text-align: left;
+      width:100%;
+      height: 202rpx;
+      .desc{
+        padding:5rpx 20rpx 0 20rpx;
+        line-height: 1.5;
+      }
+      .btn view{
+        line-height: 57rpx;
       }
     }
   }

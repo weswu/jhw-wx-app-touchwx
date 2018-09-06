@@ -8,51 +8,46 @@
     </view>
     
     <view style="position: relative; z-index: 199;">
-        <view class="touchView" style="height:{{scrollPosition.scrollViewHeight}}px;" catchtouchstart="scrollTouchStart"
-            catchtouchmove="scrollTouchMove" catchtouchend="scrollTouchEnd">
-        </view>
-        <movable-area class="moveable_row {{movableViewPosition.className}}" style="height: {{scrollPosition.scrollViewHeight}}px;">
-          <movable-view style="height: {{scrollPosition.everyOptionCell}}px; width: 100%; background-color: #fff;"
-            direction="vertical" x="{{movableViewPosition.x}}" y="{{movableViewPosition.y}}"
-            damping="9999" friction="9999">
-            <ui-row height="50">
-              <ui-col width="45" vertical-align="middle" align="center">
-                <icon type="circle" size="16" wx:if="{{!movableViewPosition.data.checked}}"></icon>
-                <icon type="success" size="16" wx:if="{{movableViewPosition.data.checked}}"></icon>
-              </ui-col>
-              <ui-col vertical-align="middle">
-                <label>
-                    <checkbox class="weui-check" value="{{movableViewPosition.data.value}}" checked="{{movableViewPosition.data.checked}}"></checkbox>
-                    {{movableViewPosition.data.text}}
-                </label>
-              </ui-col>
-              <ui-col width="40" vertical-align="middle" align="center">
-                 <i class="iconfont icon-tuozhuaicaidandaohang"></i>
-              </ui-col>
-            </ui-row>
-          </movable-view>
-        </movable-area>
-        <scroll-view class="edit_row_holder" scroll-y="{{scrollPosition.scrollY}}" style="height: {{scrollPosition.scrollViewHeight}}px;" bindscroll="bindscroll">
-        <ui-row-list>
-          <checkbox-group bindchange="checkboxChange">
-            <ui-row height="50" border-bottom wx:for="{{optionsListData}}" wx:key="*this" class="{{item.selectClass}}">
+      <view class="touchView" style="height:250px;" catchtouchstart="scrollTouchStart"
+        catchtouchmove="scrollTouchMove" catchtouchend="scrollTouchEnd">
+      </view>
+      <movable-area class="moveable_row {{movableViewPosition.className}}" style="height: 250px;">
+        <movable-view style="height: 50px; width: 100%; background-color: #fff;"
+          direction="vertical" x="{{movableViewPosition.x}}" y="{{movableViewPosition.y}}"
+          damping="9999" friction="9999">
+          <ui-row height="50">
+            <ui-col width="45" vertical-align="middle" align="center">
+              <icon type="circle" size="16" wx:if="{{!movableViewPosition.data.checked}}"></icon>
+              <icon type="success" size="16" wx:if="{{movableViewPosition.data.checked}}"></icon>
+            </ui-col>
+            <ui-col vertical-align="middle">
+              {{movableViewPosition.data.text}}
+            </ui-col>
+            <ui-col width="40" vertical-align="middle" align="center">
+              <i class="iconfont icon-tuozhuaicaidandaohang"></i>
+            </ui-col>
+          </ui-row>
+        </movable-view>
+      </movable-area>
+      <ui-row-list>
+        <checkbox-group bindchange="checkboxChange">
+          <label wx:for="{{optionsListData}}" wx:key="*this">
+            <ui-row height="50" border-bottom class="{{item.selectClass}}">
               <ui-col width="45" vertical-align="middle" align="center">
                 <icon type="circle" size="16" wx:if="{{!item.checked}}"></icon>
                 <icon type="success" size="16" wx:if="{{item.checked}}"></icon>
               </ui-col>
               <ui-col vertical-align="middle">
-                <label>
-                  <checkbox class="weui-check" value="{{item.value}}" checked="{{item.checked}}"></checkbox>
-                  {{item.text}}
-                </label>
+                <checkbox class="weui-check" value="{{item.value}}" checked="{{item.checked}}"></checkbox>
+                {{item.text}}
               </ui-col>
               <ui-col width="40" vertical-align="middle" align="center">
                   <i class="iconfont icon-tuozhuaicaidandaohang"></i>
               </ui-col>
             </ui-row>
-           </checkbox-group>
-        </ui-row-list>
-        </scroll-view>
+          </label>
+        </checkbox-group>
+      </ui-row-list>
     </view>
   </view>
 </template>
@@ -71,9 +66,6 @@ export default {
     scrollPosition:{
       everyOptionCell:50,
       top:wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT + 38,
-      scrollTop:0,
-      scrollY:true,
-      scrollViewHeight:1000,
       scrollViewWidth:375,
       windowViewHeight:1000
     },
@@ -95,12 +87,10 @@ export default {
     var systemInfo= wx.getSystemInfoSync();
     var optionsList = this.optionsDataTranlate(getApp().globalData.customData.mobileSort,"");
     // 开始加载页面
-    var scrollViewHeight = systemInfo.windowHeight-33;
     var scrollViewWidth = systemInfo.windowWidth;
     this.setData({
       optionsListData:optionsList,
       'scrollPosition.scrollViewWidth':scrollViewWidth,
-      'scrollPosition.scrollViewHeight':scrollViewHeight,
       'scrollPosition.windowViewHeight':systemInfo.windowHeight
     });
   },
@@ -131,12 +121,6 @@ export default {
     }
     return optionsList
   },
-  bindscroll:function (event) {
-    var scrollTop = event.detail.scrollTop;
-    this.setData({
-      'scrollPosition.scrollTop':scrollTop
-    })
-  },
   getOptionInfo (code) {
     for(var i=0,j=this.data.optionsListData.length;i<j;i++){
       var optionData= this.data.optionsListData[i];
@@ -148,7 +132,7 @@ export default {
     return {}
   },
   getPositionDomByXY (potions) {
-    var y = potions.y-this.data.scrollPosition.top+this.data.scrollPosition.scrollTop;
+    var y = potions.y-this.data.scrollPosition.top;
     var optionsListData = this.data.optionsListData;
     var everyOptionCell = this.data.scrollPosition.everyOptionCell;
     for(var i=0,j=optionsListData.length;i<j;i++){
@@ -186,7 +170,6 @@ export default {
     var optionsListData = this.data.optionsListData;
 
     this.setData({
-      'scrollPosition.scrollY':false,
       selectItemInfo:secInfo,
       optionsListData:optionsListData,
       'scrollPosition.selectIndex':secInfo.selectIndex
@@ -240,7 +223,6 @@ export default {
     var optionsListData = this.optionsDataTranlate(this.data.optionsListData,"")
     this.setData({
       optionsListData:optionsListData,
-      'scrollPosition.scrollY':true,
       'movableViewPosition.className':"none",
       isBack: false
     })
@@ -266,20 +248,20 @@ export default {
 
 <style lang="less">
 page{
-background-color:#f1f1f1;
+  background-color:#f1f1f1;
 }
 .j_save {
-background-color:#f1f1f1;
-text-align:right;
-padding:0 15px;
-color:#999;
-font-size:12px;
-height: 38px;
-line-height: 38px;
+  background-color:#f1f1f1;
+  text-align:right;
+  padding:0 15px;
+  color:#999;
+  font-size:12px;
+  height: 38px;
+  line-height: 38px;
 }
 .weui-check {
-position:absolute;
-left:-9999px;
+  position:absolute;
+  left:-9999px;
 }
 .icon-tuozhuaicaidandaohang{
   color: #999
@@ -289,7 +271,7 @@ left:-9999px;
 }
 
 // 排序css
-.touchView{z-index: 200; width: 100px;position: absolute;top: 0;left:275px; top: 0;}
+.touchView{z-index: 200; width: 150px;position: absolute;top: 0;left:275px; top: 0;}
 .moveable_row{
   height: 0px;
   width: 100%; position: absolute;top: 0;left: 0; z-index: 100;
@@ -301,5 +283,5 @@ left:-9999px;
     box-shadow: 0 0 12px rgba(0,0,0,.2)
   }
 }
-.dragSelected{  background-color: #ccc;}
+.dragSelected{ background-color: #ccc;}
 </style>
