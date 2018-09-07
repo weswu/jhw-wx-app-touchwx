@@ -1,0 +1,366 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="产品详情"></cc-header>
+
+    <!-- 轮播 -->
+    <view class="swiper-container">
+      <swiper class="swiper_box" bindchange="swiperChange" current="{{swiperCurrent}}"
+        autoplay="{{false}}" circular interval="3000" duration="500">
+        <block wx:for="{{imgList}}" wx:key="*this">
+          <swiper-item>
+            <image mode="aspectFit" src="http://img.jihui88.com/{{item.src}}"/>
+            <view class="btn">
+              <view class="btn_gray">重新上传</view>
+              <view class="btn_gray">删除</view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="dots" wx:if="{{imgList.length > 1}}">
+        <block wx:for="{{imgList}}" wx:key="*this">
+          <view class="dot{{index  == swiperCurrent ? ' active' : ''}}"></view>
+        </block>
+      </view>
+    </view>
+    <ui-row height="218r" class="tabs">
+      <ui-col vertical-align="middle" space-left="15">
+        <ui-tabs index="{{ swiperCurrent }}" width="{{ width-140 }}" bounce="{{false}}" wx:if="{{imgList.length > 0}}"
+          tab-style="{{ {width: '112rpx !important', padding: '0px', marginRight: '24rpx', background: '#f5f6fa', border: '1px solid transparent'} }}"
+          active-tab-style="{{ {border: '1px solid #12bedb'} }}"
+          bindchange="handleChange">
+          <ui-tab  wx:for="{{imgList}}" wx:key="*this" wx:index="idx" >
+            <image mode="aspectFit" src="http://img.jihui88.com/{{item.src}}"/>
+          </ui-tab>
+        </ui-tabs>
+      </ui-col>
+      <ui-col width="50" vertical-align="middle" align="center">
+        <i class="iconfont icon-tianjia"></i>
+      </ui-col>
+      <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+        <ui-icon type="arrow-right"></ui-icon>
+      </ui-col>
+    </ui-row>
+    
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          产品名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+          <input placeholder="产品名称" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          产品分类
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+          请选择
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+            产品型号
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="prodtype" value="{{detail.prodtype}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>  
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          是否上架
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isMarketable">
+            <label>
+              <radio value="01" checked="{{detail.isMarketable === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isMarketable === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          新品商品
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isNew">
+            <label>
+              <radio value="01" checked="{{detail.isNew === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isNew === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          精品商品
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isBest">
+            <label>
+              <radio value="01" checked="{{detail.isBest === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isBest === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          热销商品
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isHot">
+            <label>
+              <radio value="01" checked="{{detail.isHot === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isHot === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.pkey}}&description={{detail.seoDescription}}">
+        <ui-col width="60" vertical-align="middle">
+          SEO设置
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          商城属性
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" url="/pages/components/j-tag?type=product&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.productId}}">
+        <ui-col width="60" vertical-align="middle">
+            产品标签
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+            <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <ui-fixed-view bottom="0" left="0" right="0">
+      <ui-row height="41" border-top style="background: #fff">
+        <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
+          保存
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" bindtap="view" style="background: #d8d8d8;color:#fff">
+          预览
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:80px"></view>
+  </view>
+ </template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-image': '../../packages/cc-image',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail:{},
+    // 多图
+    imgList: [],
+    swiperCurrent: 0
+  },
+  onLoad (e) {
+    // e.id = 'Product_000000000000000000708991'
+    if (e.id) {
+      this.setData({
+        detail: {
+          productId: e.id
+        }
+      })
+      this.get()
+    } else {
+      this.setData({
+        detail: {
+          isMarketable: '01', // 上架,三品
+          isNew: '00',
+          isBest: '00',
+          isHot: '00',
+          price: 0,
+          marketPrice: 0,
+          store: 999,
+          weight: 0,
+          weightUnit: 'kg',
+          priceState: '00',
+          limitState: '00',
+          integralState: '00',
+          attrState: '00', // 关闭属性价格
+          customAttrMapStore: [],
+          productAttributeMapStore: []
+        }
+      })
+    }
+  },
+  get () {
+    api.productDetail({
+      id: this.data.detail.productId
+    }).then(res => {
+      if (res.success) {
+        if (res.attributes.data.tagMapStore.length > 0) {
+          res.attributes.data.tagMap = JSON.stringify(res.attributes.data.tagMapStore)
+        }
+        let data = res.attributes.data
+        let imglist = JSON.parse(data.productImageListStore)
+        let imgList = []
+        imglist && imglist.forEach(item => {
+          imgList.push({id: item.id, src: item.sourceProductImagePath})
+        })
+        this.setData({
+          detail: data,
+          imgList: imgList
+        })
+      }
+    })
+  },
+  // 时间
+  dateChange (e) {
+    this.setData({
+      'detail.addTimeVal': Utils.formatTime(new Date(e)),
+      'detail.addTime': e
+    })
+  },
+  // 预览图片左右移动
+  swiperChange (e){
+    let index = e.detail.current
+    this.setData({
+      swiperCurrent: index
+    })
+  },
+  // 图片
+  handleChange (e) {
+    let index = e.detail.index
+    this.setData({
+      swiperCurrent:index
+    })
+  },
+  updatePic () {
+    this.selectComponent("#image").chooseImage();
+    this.setData({
+      'detail.imagenews': '01'
+    })
+  },
+  clearPic () {
+  },
+  changePic (e) {
+    this.setData({
+      'detail.picPath': e.detail
+    })
+  },
+  // seo
+  seoChange (e) {
+    this.setData({
+      'detail.seoTitle': e.title,
+      'detail.pkey': e.keywords,
+      'detail.seoDescription': e.description
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '产品名称不能为空'
+      },
+      {
+        value: this.data.detail.category,
+        method: 'required',
+        message: '产品分类不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let data = {
+      model: JSON.stringify(this.data.detail),
+      _method: this.data.detail.productId ? 'put' : 'post',
+    }
+    Tips.loading()
+    api.productDetail({
+      data: data,
+      method: 'post',
+      id: this.data.detail.productId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.tabs{
+  background: #fff;
+  image{
+    width: 112rpx;
+    height: 112rpx;
+    box-sizing:border-box;
+  }
+}
+/* 轮播 */
+.swiper_box{
+  background: #f5f6fa;height: 750rpx;
+  .btn{
+    position: absolute;
+    right: 8rpx;
+    top:40rpx;
+    view{
+      margin-right: 26rpx;
+    }
+  }
+}
+swiper-item image{width:750rpx;}
+/* 自定义轮播小圆点 */
+.swiper-container{position:relative}
+.swiper-container .dots{position:absolute;left:0;right:0;bottom:32rpx;display:flex;justify-content:center}
+.swiper-container .dots .dot{margin:0 8rpx;width:22rpx;height:22rpx;background: none;border-radius: 22rpx;border:1px solid #d8d8d8;transition:all .6s}
+.swiper-container .dots .dot.active{background:#d8d8d8;}
+</style>
+

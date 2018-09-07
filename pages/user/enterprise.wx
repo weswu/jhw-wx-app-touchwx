@@ -6,7 +6,7 @@
     <ui-row-list border-left-indent>
       <ui-row height="240r">
         <ui-col width="80" vertical-align="middle">
-            公司LOGO
+          公司LOGO
         </ui-col>
         <ui-col width="80" vertical-align="middle">
           <cc-image id="image" src="{{detail.enterprise.logo}}" width="148r" bindchange="changePic"></cc-image>
@@ -18,7 +18,7 @@
       </ui-row>
       <ui-row height="104r" wx:if="{{detail.type !== 'admin'}}">
         <ui-col width="70" vertical-align="middle">
-            公司名称
+          公司名称
         </ui-col>
         <ui-col class="desc" vertical-align="middle" align="right" space-right="15">
           <input placeholder="请填写" bindinput="input" id="enterprise.name" value="{{detail.enterprise.name}}"/>
@@ -26,7 +26,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            法人代表
+          法人代表
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="enterprise.legalPre" value="{{detail.enterprise.legalPre}}"/>
@@ -38,7 +38,7 @@
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            详细地址
+          详细地址
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="address" value="{{detail.address}}"/>
@@ -46,7 +46,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            联系电话
+          联系电话
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="phone" value="{{detail.phone}}"/>
@@ -54,7 +54,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            法人手机
+          法人手机
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="enterprise.legalPersonCellphone" value="{{detail.enterprise.legalPersonCellphone}}"/>
@@ -62,7 +62,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            传真
+          传真
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="fax" value="{{detail.fax}}"/>
@@ -74,7 +74,7 @@
     <ui-row-list border-left-indent style="margin-bottom: 50px">
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            姓名
+          姓名
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
@@ -82,7 +82,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            手机
+          手机
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="cellphone" value="{{detail.cellphone}}"/>
@@ -90,7 +90,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            Email
+          Email
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="email" value="{{detail.email}}"/>
@@ -98,7 +98,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            性别
+          性别
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <radio-group bindchange="radio" id="sex">
@@ -115,7 +115,7 @@
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-            职务
+          职务
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <input class="desc" placeholder="请填写" bindinput="input" id="position" value="{{detail.position}}"/>

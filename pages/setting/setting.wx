@@ -52,19 +52,12 @@ export default {
     api.logout({
       data: {
         skey: wx.getStorageSync('skey')
-      },
-      method: 'POST'
-    }).then(res => {
-      if (res.success) {
-        wx.navigateTo({
-          url: '/pages/user/login?back=1'
-        })
-      } else {
-        wx.navigateTo({
-          url: '/pages/user/login?back=1'
-        })
       }
-      wx.setStorageSync('attId', '')
+    }).then(res => {
+      getApp().onLaunch()
+      wx.navigateTo({
+        url: '/pages/user/login?back=1'
+      })
     })
   }
 }

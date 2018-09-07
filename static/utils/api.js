@@ -10,7 +10,7 @@ const wxHost = 'https://wx.jihui88.net'
 const wxapplogin = (params) => http(params, wxHost + "/rest/api/user/wxapplogin");
 // 账号登录
 const login = (params) => http(params, wxHost + '/rest/api/user/wxAppLoginByUsernameAndPassword')
-const logout = (params) => http(params, wxHost + '/rest/api/user/wxappLogout')
+const logout = (params) => http(params, host + 'user/logout')
 // 基本数据
 const user = (params) => http(params, host + 'user/detail' + (params ? '/' + params.id : ''))
 const userInfo = (params) => http(params, host + 'user/index')
@@ -49,15 +49,17 @@ const password = (params) => http(params, host + 'user/detail/password')
 const feedback = (params) => http(params, 'https://api.jihui88.net/crm_api/index.php/jihui/jihuifeedback')
 // 相册
 const album = (params) => http(params, host + 'album/list?pageSize=100')
-const albumDetail = (params) => http(params, host + 'album/detail')
+const albumDetail = (params) => http(params, host + 'album/detail' + (params.id ? '/' + params.id : ''))
 const albumAttr = (params) => http(params, host + 'album/attr/list/' + params.id)
 
 const albumCopy = (params) => http(params, host + 'album/albumCopy')
+const albumDel = (params) => http(params, host + 'album/detail/' + params.id)
+const imgDetail = (params) => http(params, host + 'album/attr/img/detail' + (params.id ? '/' + params.id : ''))
 const imgCopy = (params) => http(params, host + 'album/attr/img/copy')
 const imgDel = (params) => http(params, host + 'album/attr/img/delete')
 
 // 分类
-const category = (params) => http(params, host + 'category/' + params.type + '?pageSize=1000')
+const category = (params) => http(params, host + 'category/' + params.url + '?pageSize=1000')
 const categoryDisplay = (params) => http(params, host + 'category/display')
 const categoryDel = (params) => http(params, host + 'category/batchDel')
 const categoryDetail = (params) => http(params, host + 'category/detail' + (params.id ? '/' + params.id : ''))
@@ -131,7 +133,7 @@ module.exports = {
   // 分类
   category, categoryDisplay, categoryDel, categoryDetail,
   // 相册
-  album, albumDetail, albumAttr, albumCopy, imgCopy, imgDel,
+  album, albumDetail, albumAttr, albumCopy, albumDel, imgDetail, imgCopy, imgDel,
 
   login, logout,
   // 站点

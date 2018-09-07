@@ -26,7 +26,7 @@
     <!-- footer -->
     <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="copy">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchCopy">
           <i class="iconfont icon-fuzhi"></i>
           <view class="desc">复制</view>
         </ui-col>
@@ -34,7 +34,7 @@
           <i class="iconfont icon-folder-add-fill2"></i>
           <view class="desc">移动</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="del">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchDel">
           <i class="iconfont icon-delete-fill"></i>
           <view class="desc">删除</view>
         </ui-col>
@@ -49,8 +49,8 @@
     <ui-mask show="{{showMask}}" hide-delay="500">
       <view class="mask_btn">
         <view class="btn">
-          <view data-show="{{'01'}}" bindtap="display">显示</view>
-          <view data-show="{{'00'}}" bindtap="display">隐藏</view>
+          <view data-show="{{'01'}}" bindtap="batchDisplay">显示</view>
+          <view data-show="{{'00'}}" bindtap="batchDisplay">隐藏</view>
         </view>
         <button data-show="{{ false }}" bindtap="more">取消</button>
       </view>
@@ -192,13 +192,13 @@ export default {
     }
   },
   // 批量
-  copy () {
+  batchCopy () {
     Utils.batchCopy(this, 'news/copy', {newsIds: this.data.ids})
   },
-  del () {
+  batchDel () {
     Utils.batchDel(this, 'news')
   },
-  display (e) {
+  batchDisplay (e) {
     let display = e.currentTarget.dataset.show
     Utils.batchDisplay(this, 'news/display', {
       newsIds: this.data.ids,

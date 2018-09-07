@@ -1,13 +1,13 @@
 <template>
   <view>
     <cc-header title="{{title}}" width="{{width}}" back="{{!selected}}">
-      <text bindtap="back" wx:if="{{!selected}}">{{currentCatelog}}</text>
+      <text bindtap="back" wx:if="{{!selected}}">{{catelogName}}</text>
       <text bindtap="toggleAll" wx:if="{{selected && !toggle}}">全选</text>
       <text bindtap="toggleAll" wx:if="{{selected && toggle}}">全不选</text>
     </cc-header>
     <cc-search type="album" 
       value="{{params.filename}}"
-      id="{{currentItem.albumId}}"
+      id="{{albumId}}"
       bindinput="input"
       bindchange="get">
         <i slot="add" class="iconfont icon-folder-add" bindtap="add"></i>
@@ -15,12 +15,16 @@
       </cc-search>
 
     <ui-row-list class="list-content">
-      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this" wx:if="{{item.parentId === currentItem.albumId}}">
+      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this" wx:if="{{item.parentId === albumId}}">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <i class="iconfont icon-file"></i>
         </ui-col>
         <ui-col class="text" vertical-align="middle">
-          {{item.name}}
+          <view  wx:if="{{!item.editing}}">{{item.name}}</view>
+          <input bindinput="input" value="{{item.name}}" wx:if="{{item.editing}}"/>
+        </ui-col>
+        <ui-col width="40" vertical-align="middle" align="center" wx:if="{{item.editing}}" data-item="{{item}}" catchtap="nameChange">
+          <i class="iconfont icon-gou"></i>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked"
           wx:if="{{item.name !== '[系统]微信小程序Banner相册' && item.name !== '首页大广告图' && item.name !== '产品图片' && item.name !== '新闻图片' && item.name !== '默认相册'}}">
@@ -34,9 +38,13 @@
         </ui-col>
         <ui-col class="text" vertical-align="middle">
           <view>
-            <view class="title">{{item.filename}}</view>
-            <view class="desc">{{item.uploadTime}}</view>
+            <view class="title" wx:if="{{!item.editing}}">{{item.filename}}</view>
+            <view class="desc" wx:if="{{!item.editing}}">{{item.uploadTime}}</view>
+          <input bindinput="input" value="{{item.filename}}" wx:if="{{item.editing}}"/>
           </view>
+        </ui-col>
+        <ui-col width="40" vertical-align="middle" align="center" wx:if="{{item.editing}}" data-item="{{item}}" catchtap="imgNameChange">
+          <i class="iconfont icon-gou"></i>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked">
           <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
@@ -44,7 +52,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    <view class="emtpy" wx:if="{{!more.loading && list.length === 0 && currentItem.children.length === 0}}">
+    <view class="emtpy" wx:if="{{!more.loading && list.length === 0 && !fileItem.isroot}}">
       哎呦，文件夹是空的~
     </view>
     <cc-loadmore more="{{more}}"></cc-loadmore>
@@ -83,7 +91,7 @@
           <i class="iconfont icon-folder-add-fill2"></i>
           <view>移动</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchName">
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="rename">
           <i class="iconfont icon-edit-fill"></i>
           <view>重命名</view>
         </ui-col>
@@ -102,7 +110,7 @@
           <block wx:for="{{list}}" wx:key="*this">
             <swiper-item>
               <view class="item" style="height:{{popupHeight-80}}px">
-                <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}"/>
+                <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}" data-index="{{index}}" bindload="imageLoad"/>
               </view>
             </swiper-item>
           </block>
@@ -110,7 +118,7 @@
       </view>
     </ui-mask>
     <!-- 图片操作 -->
-    <ui-fixed-view bottom="0px;z-index:700;background:#fff;" left="0" right="0" wx:if="{{picMask}}">
+    <ui-fixed-view bottom="0px;z-index:700;background:#fff;" left="0" right="0" wx:if="{{picMask && !picDetailMask}}">
       <ui-row height="60" border-top class="fixed_btn">
         <ui-col span="3" vertical-align="middle" align="center" bindtap="downloadPic">
           <i class="iconfont icon-fuzhi"></i>
@@ -142,13 +150,20 @@
       </view>
     </ui-mask>
     <!-- 图片详情 -->
-    <ui-mask show="{{picDetailMask}}" hide-delay="500">
+    <ui-mask show="{{picDetailMask}}" top="{{NAV_HEIGHT}}" bindtap="hidepicDetailMask">
       <view class="mask_pic_detail">
-        {{item.uploadTime}}
-        <view>/相册管理/{{item.filename}}</view>
+        {{list[swiperCurrent].uploadTime}}
+        <ui-row height="60">
+          <ui-col span="7" vertical-align="top" align="left">
+            <view style="width:100%"><text wx:for="{{catelog}}" wx:key="*this">/{{item.name}}</text>/{{list[swiperCurrent].filename}}</view>
+          </ui-col>
+          <ui-col span="5" vertical-align="top" align="right" class="view" bindtap="backcatelog">
+            <view style="width:100%">查看所有目录<i class="iconfont icon-right"></i></view>
+          </ui-col>
+        </ui-row>
         <view class="border"></view>
-        <view>大小：5.28M</view>
-        尺寸：1200*1200
+        <view style="display:none">大小：5.28M</view>
+        尺寸：{{list[swiperCurrent].width}}*{{list[swiperCurrent].width}}
       </view>
     </ui-mask>
   </view>
@@ -187,7 +202,9 @@ export default {
     catelog: [
       {name: '相册管理', albumId: 'all'}
     ],
-    currentCatelog: '',
+    catelogName: '',
+    albumId: 'all',
+    fileItem: {},
     // 图片
     list: [],
     params: {
@@ -204,13 +221,13 @@ export default {
     swiperCurrent: 0,
     showMask: false,
     picDetailMask: false,
-    width: '200r',
+    width: '220r',
     // 选中
     toggle: false,
     ids: '',
     fileids: '',
-    currentItem: {name: '相册管理', albumId: 'all'},
-    picItem: {}
+    // 选择项
+    currentItem: {}
   },
   onLoad () {
     this.getAlbum()
@@ -222,19 +239,10 @@ export default {
       ids: '',
       fileids: ''
     })
-    api.album().then(res => {
-      if (res.success) {
-        let data = res.attributes.data
-        data.forEach(item => {
-          item._checked = false
-          if (!item.parentId) {
-            item.parentId = 'all'
-          }
-        })
-        this.setData({
-          filelist: data
-        })
-      }
+    getApp().getAlbumCategory(res => {
+      that.setData({
+        filelist: res
+      })
     })
   },
   // 图片
@@ -247,13 +255,15 @@ export default {
     })
     api.albumAttr({
       data: this.data.params,
-      id: this.data.currentItem.albumId
+      id: this.data.albumId
     }).then(res => {
       if (res.success) {
-        res.attributes.data.forEach(item => {
+        res.attributes.data.forEach((item, index) => {
           item.uploadTime = Utils.formatTime(item.uploadTime)
           item.name = item.filename.split('.')[0]
           item._checked = false
+          item.editing = false
+          item.index = index
         })
         Utils.scrollList(this, res, ' ')
       }
@@ -274,9 +284,9 @@ export default {
         list: [],
         'params.page': 1,
         title: item.name,
-        currentItem: item,
         catelog: file,
-        currentCatelog: name
+        catelogName: name,
+        albumId: file[file.length-1].albumId
       })
       this.get()
     }
@@ -307,7 +317,7 @@ export default {
       data: {
         model: JSON.stringify({
           name: this.data.name,
-          parentId: this.data.currentItem.albumId,
+          parentId: this.data.albumId,
           blongType: 'AP',
           state: '01'
         })
@@ -396,6 +406,7 @@ export default {
     this.setData({
       filelist: this.data.filelist,
       list: this.data.list,
+      currentItem: row,
       selected: true
     })
     this.initSelcted ()
@@ -431,7 +442,7 @@ export default {
       // 取消选中文件
       let title = '相册管理'
       this.data.filelist.forEach(item => {
-        if (item.albumId === this.data.currentItem.albumId) {
+        if (item.albumId === this.data.albumId) {
           title = item.name
         }
       })
@@ -444,9 +455,8 @@ export default {
       this.setData({
         picMask: true,
         title: (index + 1) + '/' + this.data.list.length,
-        picItem: item,
         swiperCurrent: index,
-        currentCatelog: this.data.catelog[this.data.catelog.length-1].name,
+        catelogName: this.data.catelog[this.data.catelog.length-1].name,
         width: '350r'
       })
     } else {
@@ -460,9 +470,10 @@ export default {
       this.setData({
         title: item.name,
         list: [],
-        currentItem: item,
-        currentCatelog: name,
-        catelog: file
+        catelog: file,
+        catelogName: name,
+        albumId: item.albumId,
+        fileItem: item
       })
       this.get()
     }
@@ -494,28 +505,47 @@ export default {
       }
     })
   },
+  imageLoad: function (e) {
+    let item = e.currentTarget.dataset.item
+    let index = e.currentTarget.dataset.index
+    this.data.list[index].width = e.detail.width
+    this.data.list[index].height = e.detail.height
+    this.setData({
+      list: this.data.list
+    })
+  },
   delPic () {
-    api.picDel({
-      data: {
-        attIds: this.data.item.attId
-      },
+    api.imgDel({
+      data: {attIds: this.data.list[this.data.swiperCurrent].attId},
       method: 'post'
     }).then(res => {
       if (res.success) {
         this.data.list.splice(this.data.swiperCurrent, 1)
-        this.setData({
-          list: this.data.list
-        })
         Tips.success('删除成功')
+        this.setData({
+          list: this.data.list,
+          title: (this.data.swiperCurrent + 1) + '/' + this.data.list.length
+        })
       } else {
         Tips.error(res.msg)
       }
+    })
+  },
+  hidepicDetailMask () {
+    this.setData({
+      picDetailMask: false
     })
   },
   picDetail () {
     this.setData({
       picDetailMask: true
     })
+  },
+  backcatelog () {
+    this.setData({
+      picDetailMask: false
+    })
+    this.hidePicMask()
   },
   more (e) {
     let show = e.currentTarget.dataset.show
@@ -526,14 +556,15 @@ export default {
   hidePicMask () {
     let file = this.data.catelog
     let name = ''
+    let title = file[file.length-1].name
     if (file.length > 1) {
       name = file[file.length-2].name
     }
     this.setData({
       picMask: false,
-      title: this.data.currentItem.name,
-      currentCatelog: name,
-      width: '200r'
+      title: title,
+      catelogName: name,
+      width: '220r'
     })
   },
   // 批量
@@ -542,7 +573,8 @@ export default {
       return Tips.toast('未选择')
     }
     this.setData({
-      selected: false
+      selected: false,
+      title: this.data.catelog[this.data.catelog.length-1].name
     })
     if (this.data.ids) {
       api.imgCopy({
@@ -580,24 +612,134 @@ export default {
       })
     }
   },
-  del () {
-    if (!this.data.ids) {
-      return Tips.toast('未选择')
+  rename (e) {
+    this.data.list.forEach(item => {
+      item.editing = false
+    })
+    this.data.filelist.forEach(item => {
+      item.editing = false
+    })
+    if (e === 'done') {
+      if (this.data.currentItem.attId) {
+        this.data.list[this.data.currentItem.index] = this.data.currentItem
+      }
+      if (this.data.currentItem.albumId) {
+        this.data.filelist[this.data.currentItem.index] = this.data.currentItem
+      }
+    } else {
+      if (this.data.currentItem.attId) {
+        this.data.list[this.data.currentItem.index].editing = true
+      }
+      if (this.data.currentItem.albumId) {
+        this.data.filelist[this.data.currentItem.index].editing = true
+      }
     }
-    api.categoryDel({
-      data: {categoryIds: this.data.ids},
-      method: 'post'
+    this.setData({
+      list: this.data.list
+    })
+    this.setData({
+      filelist: this.data.filelist
+    })
+  },
+  input (e) {
+    if (this.data.currentItem.attId) {
+      this.data.currentItem.filename = e.detail.value
+    }
+    if (this.data.currentItem.albumId) {
+      this.data.currentItem.name = e.detail.value
+    }
+  },
+  nameChange (e) {
+    let item = e.currentTarget.dataset.item
+    let data = {
+      model: JSON.stringify({
+        id: item.albumId,
+        name: this.data.currentItem.name
+      }),
+      _method: 'put'
+    }
+    api.albumDetail({
+      data: data,
+      id: item.albumId,
+      method: 'POST'
     }).then(res => {
       if (res.success) {
-        Tips.success('删除成功')
-        this.setData({
-          selected: false
-        })
-        this.get()
+        Tips.success('修改成功')
       } else {
         Tips.error(res.msg)
       }
     })
+    this.rename('done')
+  },
+  imgNameChange (e) {
+    let item = e.currentTarget.dataset.item
+    let data = {
+      model: JSON.stringify({
+        id: item.attId,
+        filename: this.data.currentItem.filename,
+        editField: true
+      }),
+      _method: 'put'
+    }
+    api.imgDetail({
+      data: data,
+      id: item.attId,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('修改成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+    this.rename('done')
+  },
+  batchDel () {
+    if (!this.data.ids && !this.data.fileids) {
+      return Tips.toast('未选择')
+    }
+    this.setData({
+      selected: false,
+      title: this.data.catelog[this.data.catelog.length-1].name
+    })
+    if (this.data.ids) {
+      api.imgDel({
+        data: {attIds: this.data.ids},
+        method: 'post'
+      }).then(res => {
+        if (res.success) {
+          Tips.success('删除成功')
+          this.setData({
+            list: [],
+            'params.page': 1
+          })
+          this.get()
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
+    if (this.data.fileids) {
+      let ids = this.data.fileids.split(',')
+      ids.forEach((id, index) => {
+        api.albumDel({
+          data: {
+            _method: 'delete'
+          },
+          id: id,
+          method: 'post'
+        }).then(res => {
+          if (res.success) {
+            Tips.success('删除成功')
+            if (ids.length === index + 1) {
+              this.getAlbum()
+            }
+          } else {
+            Tips.error(res.msg)
+          }
+        })
+      })
+    }
   },
   // 加载更多
   onReachBottom () {
@@ -617,6 +759,10 @@ export default {
   }
   image{
     width:80%;
+  }
+  input{
+    border:1px solid #e4e4e4;
+    padding:3px 5px;
   }
 }
 // 搜索
@@ -658,6 +804,9 @@ export default {
     padding:0 15px;
     color:#060407
   }
+  .icon-gou{
+    color: #4c4c4c
+  }
 }
 .emtpy{
   margin-top:50%;
@@ -676,16 +825,24 @@ swiper{
     display:flex;
   }
 }
+// pic detail
 .mask_pic_detail{
   padding:0 15px;
   position:fixed;
   width:100%;
-  bottom:20px;
+  bottom:40px;
   z-index: 999;
-  color: #e4e4e4;
+  color: #fff;
+  font-size: 12px;
+  .ui-row{
+    padding-top: 10px;
+  }
   .border{
-    border-bottom: 1px solid #2a2a2a;
-    padding: 5px 0;
+    border-bottom: 1px solid #5b5b5b;
+    margin: 15px 0;
+  }
+  .view{
+    color: #646464;
   }
 }
 </style>

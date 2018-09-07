@@ -10,12 +10,13 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
-      'pages/news/news',
+      'pages/product/productDetail',
+      'pages/album/album',
+      'pages/home/my',
       'pages/product/product',
       'pages/cost/point',
-      'pages/home/my',
       'pages/home/console',
-      'pages/album/album',
+      'pages/news/news',
       'pages/news/newsDetail',
       'pages/message/message',
       'pages/message/messageList',
@@ -40,8 +41,8 @@ export default {
       'pages/setting/webView',
       'pages/shop/shop',
       'pages/static/seo/seoDetail',
-      'pages/components/j-tag',
-      'pages/components/j-date'
+      'pages/components/jTag',
+      'pages/components/jDate'
     ],
     window: {
       backgroundColor: '#fff',
@@ -112,6 +113,7 @@ export default {
     staticList: [],
     productCategory: [],
     newsCategory: [],
+    albumCategory: [],
     tagList: [],
     // 其它
     appid: 'wx2aba9d238ba02a76',
@@ -238,15 +240,78 @@ export default {
     })
   },
   // 分类
+  getAlbumCategory (cb) {
+    api.album().then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item._checked = false
+          item.editing = false
+          if (!item.parentId) {
+            item.parentId = 'all'
+          }
+        })
+        let data = res.attributes.data
+        let list = []
+        // 1级
+        data.forEach(item => {
+          if (item.parentId === 'all') {
+            item.isroot = false // 根目录和三角
+            item.expand = true // 三角图标展开-关闭
+            item.bg = false // 层级背景颜色
+            item.grade = '1'
+            item.categoryId = item.albumId
+            item.belongId = item.parentId
+            list.push(item)
+          }
+        })
+        // 2级
+        data.forEach(row => {
+          list.forEach((item, index) => {
+            if (item.grade === '1' && (row.parentId === item.albumId)) {
+              item.isroot = true
+              row.isroot = false
+              row.hidden = false // 显示隐藏
+              row.expand = true
+              row.bg = false
+              row.grade = '2'
+              row.categoryId = row.albumId
+              row.belongId = row.parentId
+              list.splice(index + 1, 0, row)
+            }
+          })
+        })
+        // 3级
+        data.forEach(row => {
+          list.forEach((item, index) => {
+            if (item.grade === '2' && (row.parentId === item.albumId)) {
+              item.isroot = true
+              row.isroot = false
+              row.hidden = false
+              row.bg = false
+              row.grade = '3'
+              row.categoryId = row.albumId
+              row.belongId = row.parentId
+              list.splice(index + 1, 0, row)
+            }
+          })
+        })
+        list.forEach((item, index) => {
+          item.index = index
+        })
+        this.globalData.albumCategory = list
+        typeof cb == 'function' && cb(list)
+      }
+    })
+  },
   getProductCategory (cb) {
     this.getCategory(cb, 'product')
   },
   getNewsCategory (cb) {
     this.getCategory(cb, 'news')
   },
-  getCategory (cb, type) {
+  getCategory (cb, url) {
     api.category({
-      type: type
+      url: url
     }).then(res => {
       if (res.success) {
         res.attributes.data.forEach(item => {
@@ -468,11 +533,11 @@ radio {
   background: #d8d8d8;
   color: #fff;
   display: inline-block;
-  height: 25px;
-  line-height: 25px;
+  height: 50rpx;
+  line-height: 50rpx;
   font-size: 12px;
   text-align: center;
-  padding: 0 5px;
-  border-radius: 25px;
+  padding: 0 20rpx;
+  border-radius: 50rpx;
 }
 </style>
