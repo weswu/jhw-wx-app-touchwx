@@ -1,0 +1,90 @@
+<template>
+  <view>
+    <cc-header title="多分类选择"></cc-header>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r" wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle">
+          <cc-category type="{{type}}" categoryId="{{item}}" categoryList="{{categoryList}}" data-index="{{index}}" bindchange="change"></cc-category>
+        </ui-col>
+        <ui-col class="desc" width="65" vertical-align="middle" align="right" space-right="15" wx:if="{{list.length > 1}}" data-index="{{index}}" bindtap="del">
+          删除
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <button bindtap="add">添加</button>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-category': '../../packages/cc-category'
+    }
+  },
+  data: {
+    list: [],
+    type: '',
+    categoryList: []
+  },
+  onLoad (e) {
+    this.setData({
+      list: e.category.split(','),
+      type: e.type
+    })
+    let categoryList = []
+    if (e.type === 'product') {
+      categoryList = getApp().globalData.productCategory
+    }
+    if (e.type === 'news') {
+      categoryList = getApp().globalData.newsCategory
+    }
+    this.setData({
+      categoryList: categoryList
+    })
+  },
+  add () {
+    this.data.list.push(this.data.categoryList[0].categoryId)
+    this.setData({
+      list: this.data.list
+    })
+    this.submit()
+  },
+  del (e) {
+    let index = e.currentTarget.dataset.index
+    this.data.list.splice(index, 1)
+    this.setData({
+      list: this.data.list
+    })
+    this.submit()
+  },
+  change (e) {
+    let index = e.currentTarget.dataset.index
+    this.data.list[index] = e.detail
+    this.setData({
+      list: this.data.list
+    })
+    this.submit()
+  },
+  submit () {
+    var pages = getCurrentPages()
+    var prevPage = pages[pages.length - 2];  //上个页面
+    prevPage.setData({
+      'detail.category': this.data.list.join()
+    })
+    prevPage.initCateName()
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1;
+}
+
+</style>

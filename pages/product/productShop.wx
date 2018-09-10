@@ -1,0 +1,171 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="商城属性"></cc-header>
+
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          商品价格
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+          <input placeholder="请填写" bindinput="input" id="price" value="{{detail.price}}"/>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          元
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+            市场价格
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+          <input placeholder="请填写" bindinput="input" id="marketPrice" value="{{detail.marketPrice}}"/>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          元
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+            商品重量
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="weight" value="{{detail.weight}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+            重量单位
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="weightUnit">
+            <label>
+              <radio value="g" checked="{{detail.weightUnit === 'g'}}"></radio>克
+            </label>
+            <label>
+              <radio value="kg" checked="{{detail.weightUnit === 'kg'}}"></radio>千克
+            </label>
+            <label>
+              <radio value="t" checked="{{detail.weightUnit === 't'}}"></radio>吨
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+            剩余库存
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="store" value="{{detail.store}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+            商品积分
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="point" value="{{detail.point}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>  
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          会员价格
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="priceState">
+            <label>
+              <radio value="01" checked="{{detail.priceState === '01'}}"></radio>开启
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.priceState === '00'}}"></radio>关闭
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          会员限购
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="limitState">
+            <label>
+              <radio value="01" checked="{{detail.limitState === '01'}}"></radio>开启
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.limitState === '00'}}"></radio>关闭
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          积分抵扣
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="integralState">
+            <label>
+              <radio value="01" checked="{{detail.integralState === '01'}}"></radio>开启
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.integralState === '00'}}"></radio>关闭
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <ui-fixed-view bottom="0" left="0" right="0">
+      <ui-row height="82r" border-top style="background: #fff">
+        <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
+          保存
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:80px"></view>
+  </view>
+ </template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail:{}
+  },
+  onLoad () {
+    var pages = getCurrentPages()
+    var prevPage = pages[pages.length - 2];  //上个页面
+    this.setData({
+      detail: prevPage.data.detail
+    })
+  },
+  submit () {
+    var pages = getCurrentPages()
+    var prevPage = pages[pages.length - 2];  //上个页面
+    prevPage.setData({
+      detail: this.data.detail
+    })
+    prevPage.submit()
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+
+</style>
+

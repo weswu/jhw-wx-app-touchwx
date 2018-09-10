@@ -6,70 +6,68 @@
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col width="60" vertical-align="middle">
-            新闻名称
+          新闻名称
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right">
-            <input placeholder="新闻名称" bindinput="input" id="title" value="{{detail.title}}"/>
+          <input placeholder="新闻名称" bindinput="input" id="title" value="{{detail.title}}"/>
         </ui-col>
         <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-            <ui-icon type="arrow-right"></ui-icon>
+          <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="104r">
+      <ui-row height="104r" url="/pages/components/jManyCategory?type=news&category={{detail.category}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
-            新闻分类
+          新闻分类
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right">
-            请选择
+          {{name || '请选择'}}
         </ui-col>
         <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-            <ui-icon type="arrow-right"></ui-icon>
+          <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="104r" url="/pages/components/j-date?time={{detail.addTime}}">
+      <ui-row height="104r" url="/pages/components/jDate?time={{detail.addTime}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
-            延时发布
+          延时发布
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            {{detail.addTimeVal}}
+          {{detail.addTimeVal}}
         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col width="60" vertical-align="middle">
-            来源
+          来源
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            <input placeholder="请填写" bindinput="input" id="origin" value="{{detail.origin}}"/>
+          <input placeholder="请填写" bindinput="input" id="origin" value="{{detail.origin}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col width="60" vertical-align="middle">
-            作者
+          作者
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            <input placeholder="请填写" bindinput="input" id="author" value="{{detail.author}}"/>
+          <input placeholder="请填写" bindinput="input" id="author" value="{{detail.author}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col width="60" vertical-align="middle">
-            是否置顶
+          是否置顶
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <radio-group bindchange="radio" id="topnews">
             <label>
-              <radio value="01" checked="{{detail.topnews === '01'}}"></radio>
-              是
+              <radio value="01" checked="{{detail.topnews === '01'}}"></radio>是
             </label>
             <label>
-              <radio value="00" checked="{{detail.topnews === '00'}}"></radio>
-              否
+              <radio value="00" checked="{{detail.topnews === '00'}}"></radio>否
             </label>
           </radio-group>
         </ui-col>
       </ui-row>
       <ui-row height="240r">
         <ui-col width="70" vertical-align="middle">
-            新闻图片
+          新闻图片
         </ui-col>
         <ui-col width="80" vertical-align="middle">
           <cc-image id="image" src="{{detail.picPath}}" width="148r" bindchange="changePic"></cc-image>
@@ -80,30 +78,31 @@
         <ui-col width="50" vertical-align="middle" bindtap="clearPic">
           <view class="btn_gray">清除</view>
         </ui-col>
+        <ui-col vertical-align="middle"></ui-col>
       </ui-row>
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="104r" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.nkey}}&description={{detail.seoDescription}}">
+      <ui-row height="104r" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.nkey}}&description={{detail.seoDescription}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
-            SEO设置
+          SEO设置
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-            <ui-icon type="arrow-right"></ui-icon>
+          <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="104r" url="/pages/components/j-tag?type=news&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.newsId}}">
+      <ui-row height="104r" url="/pages/components/jTag?type=news&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.newsId}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
-            新闻标签
+          新闻标签
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-            <ui-icon type="arrow-right"></ui-icon>
+          <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
     </ui-row-list>
 
     <ui-fixed-view bottom="0" left="0" right="0">
-      <ui-row height="41" border-top style="background: #fff">
+      <ui-row height="82r" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
           保存
         </ui-col>
@@ -129,10 +128,12 @@ let pageConf = {
     }
   },
   data: {
-    detail:{}
+    detail:{},
+    name: '',
+    categoryList: []
   },
   onLoad (e) {
-    // e.id = 'News_000000000000000000000181172'
+    // e.id = 'News_000000000000000000000182815'
     if (e.id) {
       this.setData({
         detail: {
@@ -160,7 +161,36 @@ let pageConf = {
         this.setData({
           detail: res.attributes.data
         })
+        this.initCategory()
       }
+    })
+  },
+  initCategory () {
+    if (getApp().globalData.newsCategory.length>0) {
+      this.setData({
+        categoryList: getApp().globalData.newsCategory
+      })
+      this.initCateName()
+    } else {
+      let that = this
+      getApp().getNewsCategory(res => {
+        that.setData({
+          categoryList: res
+        })
+        that.initCateName()
+      })
+    }
+  },
+  initCateName () {
+    let name = ''
+    let categoryId = this.data.detail.category.split(',')[0]
+    this.data.detail.category && this.data.categoryList.forEach(item => {
+      if (item.categoryId === categoryId) {
+        name = item.name
+      }
+    })
+    this.setData({
+      name: name
     })
   },
   // 时间

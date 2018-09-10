@@ -9,13 +9,13 @@
         <block wx:for="{{imgList}}" wx:key="*this">
           <swiper-item>
             <image mode="aspectFit" src="http://img.jihui88.com/{{item.src}}"/>
-            <view class="btn">
-              <view class="btn_gray">重新上传</view>
-              <view class="btn_gray">删除</view>
-            </view>
           </swiper-item>
         </block>
       </swiper>
+      <view class="btn">
+        <view class="btn_gray" bindtap="uploadPic">重新上传</view>
+        <view class="btn_gray" bindtap="delPic">删除</view>
+      </view>
       <view class="dots" wx:if="{{imgList.length > 1}}">
         <block wx:for="{{imgList}}" wx:key="*this">
           <view class="dot{{index  == swiperCurrent ? ' active' : ''}}"></view>
@@ -33,7 +33,7 @@
           </ui-tab>
         </ui-tabs>
       </ui-col>
-      <ui-col width="50" vertical-align="middle" align="center">
+      <ui-col width="48" vertical-align="middle" align="center" bindtap="addPic">
         <i class="iconfont icon-tianjia"></i>
       </ui-col>
       <ui-col width="35" vertical-align="middle" align="right" space-right="15">
@@ -54,17 +54,19 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="104r">
+      
+      <ui-row height="104r" url="/pages/components/jManyCategory?type=product&category={{detail.category}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
           产品分类
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right">
-          请选择
+          {{name || '请选择'}}
         </ui-col>
         <ui-col width="35" vertical-align="middle" align="right" space-right="15">
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
+
       <ui-row height="104r">
         <ui-col width="60" vertical-align="middle">
             产品型号
@@ -139,7 +141,7 @@
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="104r" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.pkey}}&description={{detail.seoDescription}}">
+      <ui-row height="104r" url="/pages/static/seo/seoDetail?edit=true&title={{detail.seoTitle}}&keywords={{detail.pkey}}&description={{detail.seoDescription}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
           SEO设置
         </ui-col>
@@ -147,7 +149,7 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="104r">
+      <ui-row height="104r" url="productShop" hover-class="none">
         <ui-col width="60" vertical-align="middle">
           商城属性
         </ui-col>
@@ -155,7 +157,7 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="104r" url="/pages/components/j-tag?type=product&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.productId}}">
+      <ui-row height="104r" url="/pages/components/j-tag?type=product&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.productId}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
             产品标签
         </ui-col>
@@ -166,7 +168,7 @@
     </ui-row-list>
 
     <ui-fixed-view bottom="0" left="0" right="0">
-      <ui-row height="41" border-top style="background: #fff">
+      <ui-row height="82r" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
           保存
         </ui-col>
@@ -195,7 +197,10 @@ let pageConf = {
     detail:{},
     // 多图
     imgList: [],
-    swiperCurrent: 0
+    swiperCurrent: 0,
+    // 多分类
+    name: '',
+    categoryList: []
   },
   onLoad (e) {
     // e.id = 'Product_000000000000000000708991'
@@ -246,7 +251,36 @@ let pageConf = {
           detail: data,
           imgList: imgList
         })
+        this.initCategory()
       }
+    })
+  },
+  initCategory () {
+    if (getApp().globalData.productCategory.length>0) {
+      this.setData({
+        categoryList: getApp().globalData.productCategory
+      })
+      this.initCateName()
+    } else {
+      let that = this
+      getApp().getProductCategory(res => {
+        that.setData({
+          categoryList: res
+        })
+        that.initCateName()
+      })
+    }
+  },
+  initCateName () {
+    let name = ''
+    let categoryId = this.data.detail.category.split(',')[0]
+    this.data.detail.category && this.data.categoryList.forEach(item => {
+      if (item.categoryId === categoryId) {
+        name = item.name
+      }
+    })
+    this.setData({
+      name: name
     })
   },
   // 时间
@@ -270,17 +304,27 @@ let pageConf = {
       swiperCurrent:index
     })
   },
-  updatePic () {
-    this.selectComponent("#image").chooseImage();
-    this.setData({
-      'detail.imagenews': '01'
+  uploadPic () {
+    let obj = Utils.upload({
+      attId: this.data.imgList[this.data.swiperCurrent].src
+    }).then(res => {
+      this.data.imgList[this.data.swiperCurrent] = obj
+      this.setData({
+        imgList: this.data.imgList
+      })
     })
   },
-  clearPic () {
-  },
-  changePic (e) {
+  delPic () {
+    this.data.imgList.splice(this.data.swiperCurrent, 1)
     this.setData({
-      'detail.picPath': e.detail
+      imgList: this.data.imgList
+    })
+  },
+  addPic (e) {
+    let obj = Utils.upload()
+    this.data.imgList.push(obj)
+    this.setData({
+      imgList: this.data.imgList
     })
   },
   // seo
@@ -343,10 +387,22 @@ page{
     height: 112rpx;
     box-sizing:border-box;
   }
+  .icon-tianjia{
+    color: #c6c6cd;
+    font-size: 54rpx;
+  }
+  .icon-arrow-right{
+    color: #c6c6cd;
+  }
 }
 /* 轮播 */
 .swiper_box{
   background: #f5f6fa;height: 750rpx;
+}
+swiper-item image{width:750rpx;}
+/* 自定义轮播小圆点 */
+.swiper-container{
+  position:relative;
   .btn{
     position: absolute;
     right: 8rpx;
@@ -356,9 +412,6 @@ page{
     }
   }
 }
-swiper-item image{width:750rpx;}
-/* 自定义轮播小圆点 */
-.swiper-container{position:relative}
 .swiper-container .dots{position:absolute;left:0;right:0;bottom:32rpx;display:flex;justify-content:center}
 .swiper-container .dots .dot{margin:0 8rpx;width:22rpx;height:22rpx;background: none;border-radius: 22rpx;border:1px solid #d8d8d8;transition:all .6s}
 .swiper-container .dots .dot.active{background:#d8d8d8;}

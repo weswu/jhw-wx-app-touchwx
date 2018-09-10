@@ -5,23 +5,25 @@
 <script>
 import system from './static/utils/system'
 import api from './static/utils/api'
+
 export default {
   config: {
     usingComponents: {},
     pages: [
       'pages/user/login',
       'pages/product/productDetail',
-      'pages/album/album',
-      'pages/home/my',
       'pages/product/product',
-      'pages/cost/point',
-      'pages/home/console',
+      'pages/product/productShop',
       'pages/news/news',
       'pages/news/newsDetail',
+      'pages/album/album',
+      'pages/cost/point',
       'pages/message/message',
       'pages/message/messageList',
       'pages/message/messageReply',
       'pages/message/messageDetail',
+      'pages/home/my',
+      'pages/home/console',
       'pages/home/index',
       'pages/home/module',
       'pages/home/tools',
@@ -42,7 +44,8 @@ export default {
       'pages/shop/shop',
       'pages/static/seo/seoDetail',
       'pages/components/jTag',
-      'pages/components/jDate'
+      'pages/components/jDate',
+      'pages/components/jManyCategory'
     ],
     window: {
       backgroundColor: '#fff',
@@ -123,6 +126,7 @@ export default {
     system.attachInfo()
     wx.setStorageSync('lanId', '1')
     //微信登录
+
     let that = this
     let code = ''
     wx.login({

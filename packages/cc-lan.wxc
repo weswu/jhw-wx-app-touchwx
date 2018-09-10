@@ -1,7 +1,7 @@
 <template>
   <view>
-    <view style="height:60rpx"></view>
-    <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
+    <view style="height:60rpx;background:#fff;"></view>
+    <view class="ui-fixed-view" style="margin-top:-58rpx;right: 0;left: 0">
       <ui-row height="60r" border-bottom style="background:#fff">
         <ui-col vertical-align="middle" space-left="15">
           <view style="width:100%" wx:if="{{type==='product' || type==='news'}}">
@@ -94,7 +94,9 @@ export default {
     }
   },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    NAV_HEIGHT: function(){
+      debugger
+    },
     popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
     show: false,
@@ -121,12 +123,10 @@ export default {
     sortName: '默认',
   },
   ready () {
-    let height = this.data.top/750*wx.WIN_WIDTH
-    let height2 = 60/750*wx.WIN_WIDTH
+    let height = (this.data.top+60)/750*wx.WIN_WIDTH
     this.setData({
-      NAV_HEIGHT: this.data.NAV_HEIGHT + height,
-      popup_NAV_HEIGHT: this.data.popup_NAV_HEIGHT + height + height2,
-      popupHeight: this.data.popupHeight + height + height2
+      popup_NAV_HEIGHT: this.data.popup_NAV_HEIGHT + height,
+      popupHeight: this.data.popupHeight + height
     })
   },
   methods: {

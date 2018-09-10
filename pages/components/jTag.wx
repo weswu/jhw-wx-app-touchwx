@@ -1,22 +1,22 @@
 <template>
   <view>
     <cc-header title="标签设置"></cc-header>
-    <view style="height:46px"></view>
+    <view style="height:50px"></view>
 
     <view style="padding-left:15px;">
       <view class="j_tag_item" wx:for="{{list}}" wx:key="*this" wx:if="{{item._checked}}" data-id="{{item.tagId}}" bindtap="del">{{item.name}}</view>
     </view>
 
-    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT + 46 }}" height="{{popupHeight}}" mask-style="{{ { top: popup_NAV_HEIGHT +46+'px' } }}" bindhide="popHide" bindshow="popShow">
+    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT + 50 }}" height="{{popupHeight}}" mask-style="{{ { top: popup_NAV_HEIGHT +50+'px' } }}" bindhide="popHide" bindshow="popShow">
       <view class="top_pop">
         <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
-          <ui-check-list max="1" label-position="left" options="{{list}}" value="{{checkList}}" type="plain" bindchange="change" color="#3AC3B0"></ui-check-list>
+          <ui-check-list max="1" label-position="left" options="{{checkList}}" type="plain" bindchange="change"></ui-check-list>
         </scroll-view>
       </view>
     </ui-popup>
 
     <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
-      <ui-row height="46" border-bottom style="background:#fff">
+      <ui-row height="50" border-bottom style="background:#fff">
         <ui-col vertical-align="middle" align="center" width="40" bindtap="openPopup">
           <i class="iconfont icon-fenlei" style="color:#4e4e4e"></i>
         </ui-col>
@@ -48,8 +48,8 @@ export default {
     popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
     scroHeight: parseInt(wx.DEFAULT_CONTENT_HEIGHT * 0.8),
     list: [],
-    checkList: [],
     tagMapStore: [],
+    checkList: [],
     name: '',
     show: false
   },
@@ -57,7 +57,7 @@ export default {
     e.id && this.setData({
       id: e.id,
       type: e.type,
-      tagMapStore: JSON.parse(e.tagMapStore)
+      tagMapStore: e.tagMapStore ? JSON.parse(e.tagMapStore) : []
     })
     this.get()
   },
@@ -65,6 +65,7 @@ export default {
     let that = this
     getApp().getTag(res => {
       let list = []
+      let checkList = []
       res.forEach(item => {
         if (item.type === that.data.type) {
           item._checked = false
@@ -73,15 +74,17 @@ export default {
           that.data.tagMapStore && that.data.tagMapStore.forEach(row => {
             if (item.tagId === row.tagId) {
               item._checked = true
-              that.data.checkList.push(item.tagId)
             }
           })
           list.push(item)
+          if (!item._checked) {
+            checkList.push(item)
+          }
         }
       })
       that.setData({
         list: list,
-        checkList: that.data.checkList
+        checkList: checkList
       })
     }) 
   },
@@ -103,18 +106,22 @@ export default {
   },
   change (e) {
     let val = e.detail.value.join('-')
+    let checkList = []
     this.data.list.forEach(item => {
       if (item.tagId === val) {
         this.add(item)
         item._checked = true
       }
+      if (!item._checked) {
+        checkList.push(item)
+      }
     })
-    // this.data.checkList.push(val)
     this.setData({
       list: this.data.list,
-      checkList: that.data.checkList,
+      checkList: checkList,
       show:false
     })
+    this.submit()
   },
   // 添加
   input (e) {
@@ -145,6 +152,7 @@ export default {
             list: this.data.list
           })
         }
+        this.submit()
       } else {
         Tips.error(res.msg)
       }
@@ -162,23 +170,36 @@ export default {
     }).then(res => {
       if (res.success) {
         Tips.success("删除成功")
+        let checkList = []
         this.data.list.forEach(item => {
           if (item.tagId === tagId) {
             item._checked = false
           }
-        })
-        this.data.checkList.forEach((item, index) => {
-          if (item.tagId === tagId) {
-            // that.data.checkList.splice(index, 1)
+          if (!item._checked) {
+            checkList.push(item)
           }
         })
         this.setData({
           list: this.data.list,
-          checkList: that.data.checkList
+          checkList: checkList
         })
+        this.submit()
       } else {
         Tips.error(res.msg)
       }
+    })
+  },
+  submit () {
+    var pages = getCurrentPages()
+    var prevPage = pages[pages.length - 2];  //上个页面
+    let list = []
+    this.data.list.forEach(item => {
+      if (item._checked) {
+        list.push(item)
+      }
+    })
+    prevPage.setData({
+      'detail.tagMap': JSON.stringify(list)
     })
   }
 }

@@ -188,6 +188,40 @@ const batchCopy = (that, url, data) => {
 }
 
 
+const upload = (option) => {
+  var that = this;
+  if (!option) option = {}
+  if (!option.replace) option.replace = '00'
+  if (!option.attId) option.attId = ''
+  if (!option.id) option.id = 'all'
+  wx.chooseImage({
+    count: 1, // 默认1
+    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+    success: function (res) {
+      // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+      wx.showLoading({ title: '正在上传', mask: true})
+      wx.uploadFile({
+        url: 'https://www.jihui88.com/commonutil/uploadUtil2?username=' + getApp().globalData.user.username + '&replace=' + option.replace + '&attId=' + option.attId + '&id=' + option.id,
+        filePath: res.tempFilePaths[0],//临时路径
+        name: 'Filedata',
+        formData: {
+          fileLen: res.tempFiles[0].size,
+          skey: wx.getStorageSync('skey')
+        },
+        success: function (res) {
+          wx.hideLoading()
+          if (res.statusCode === 200) {
+            let obj = {}
+            obj.src = res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
+            obj.id = res.data.split(',')[1]
+            return obj
+          }
+        }
+      })
+    }
+  })
+}
 
 module.exports = {
   del,
@@ -197,5 +231,6 @@ module.exports = {
   LoadMore,
   batchDel,
   batchDisplay,
-  batchCopy
+  batchCopy,
+  upload
 };
