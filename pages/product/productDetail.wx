@@ -25,7 +25,7 @@
     <ui-row height="218r" class="tabs">
       <ui-col vertical-align="middle" space-left="15">
         <ui-tabs index="{{ swiperCurrent }}" width="{{ width-140 }}" bounce="{{false}}" wx:if="{{imgList.length > 0}}"
-          tab-style="{{ {width: '112rpx !important', padding: '0px', marginRight: '24rpx', background: '#f5f6fa', border: '1px solid transparent'} }}"
+          tab-style="{{ {width: '112rpx !important', padding: '0px !important', marginRight: '24rpx', background: '#f5f6fa', border: '1px solid transparent'} }}"
           active-tab-style="{{ {border: '1px solid #12bedb'} }}"
           bindchange="handleChange">
           <ui-tab  wx:for="{{imgList}}" wx:key="*this" wx:index="idx" >
@@ -203,7 +203,6 @@ let pageConf = {
     categoryList: []
   },
   onLoad (e) {
-    // e.id = 'Product_000000000000000000708991'
     if (e.id) {
       this.setData({
         detail: {
@@ -305,10 +304,8 @@ let pageConf = {
     })
   },
   uploadPic () {
-    let obj = Utils.upload({
-      attId: this.data.imgList[this.data.swiperCurrent].src
-    }).then(res => {
-      this.data.imgList[this.data.swiperCurrent] = obj
+    Utils.upload().then(res => {
+      this.data.imgList[this.data.swiperCurrent] = res
       this.setData({
         imgList: this.data.imgList
       })
@@ -321,10 +318,11 @@ let pageConf = {
     })
   },
   addPic (e) {
-    let obj = Utils.upload()
-    this.data.imgList.push(obj)
-    this.setData({
-      imgList: this.data.imgList
+    Utils.upload().then(res => {
+      this.data.imgList.push(res)
+      this.setData({
+        imgList: this.data.imgList
+      })
     })
   },
   // seo
@@ -354,6 +352,26 @@ let pageConf = {
     if (!this.validate()) {
       return;
     }
+    var ctx = this
+    this.data.detail.purchaseNum = this.data.detail.purchaseNum + ''
+    // 图片
+    if (this.data.imgList.length === 0) return Tips.info('请上传图片')
+    this.data.detail.picPath = this.data.imgList[0].src
+    let imageListStore = []
+    this.data.imgList.forEach((item, index) => {
+      if (index === 0) {
+        ctx.data.detail.photo = item.src
+        ctx.data.detail.photoId = item.id
+      } else {
+        imageListStore.push({
+          id: item.id,
+          src: item.src
+        })
+      }
+    })
+    this.data.detail.photo2 = JSON.stringify(imageListStore)
+    this.data.detail.productImageListStore = JSON.stringify(imageListStore)
+
     let data = {
       model: JSON.stringify(this.data.detail),
       _method: this.data.detail.productId ? 'put' : 'post',
@@ -389,7 +407,7 @@ page{
   }
   .icon-tianjia{
     color: #c6c6cd;
-    font-size: 54rpx;
+    font-size: 72rpx;padding-top:2px;
   }
   .icon-arrow-right{
     color: #c6c6cd;

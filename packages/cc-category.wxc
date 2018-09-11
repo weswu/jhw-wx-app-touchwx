@@ -1,14 +1,15 @@
 <template>
 <view>
   <view bindtap="openPopup">
-    {{name}}
+    <view wx:if="{{!title}}">{{name}}</view>
+    <slot></slot>
   </view>
   <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show ? 'show' : '' }}">
     <view class="ui-popup-content top {{ show ? 'show' : '' }}">
       <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
         <ui-row-list border-left-indent class="category-list">
           <ui-row height="102r" border-bottom wx:for="{{categoryList}}" wx:key="*this" wx:if="{{!item.hidden}}">
-            <ui-col class="text {{item.categoryId === categoryId ? 'active' : ''}}" vertical-align="middle" space-left="{{item.grade === '2' ? '20' : item.grade === '3' ? '40' : ''}}" data-item="{{item}}" bindtap="cateChange">
+            <ui-col class="text {{item.categoryId === categoryId ? 'active' : ''}}" vertical-align="middle" align="left" space-left="{{item.grade === '2' ? '20' : item.grade === '3' ? '40' : ''}}" data-item="{{item}}" bindtap="cateChange">
               {{item.name}}
             </ui-col>
             <ui-col vertical-align="middle" align="right" width="40" space-right="15">
@@ -28,10 +29,13 @@
 <script>
 export default {
   properties: {
+    title: {
+      type: Boolean,
+      value: true
+    },
     type: {
       type: String,
       value: ''
-
     },
     categoryId: {
       type: String,

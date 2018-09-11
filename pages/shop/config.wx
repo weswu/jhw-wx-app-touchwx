@@ -1,0 +1,230 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="商品相关配置"></cc-header>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col vertical-align="middle">
+          产品价格登录后可见：
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          PC网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="priceDisplayAfterLoginPc">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.priceDisplayAfterLoginPc === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          手机网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="priceDisplayAfterLoginMobile">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.priceDisplayAfterLoginMobile === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col vertical-align="middle">
+          产品价格隐藏：
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          PC网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="priceDisplayPc">
+            <label wx:for="{{type2list}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.priceDisplayPc === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          手机网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="priceDisplayMobile">
+            <label wx:for="{{type2list}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.priceDisplayMobile === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col vertical-align="middle">
+          市场价格隐藏：
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          PC网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="marketPriceDisplayPc">
+            <label wx:for="{{type2list}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.marketPriceDisplayPc === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          手机网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="marketPriceDisplayMobile">
+            <label wx:for="{{type2list}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.marketPriceDisplayMobile === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col vertical-align="middle">
+          开具发票：
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          PC网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="billState">
+            <label wx:for="{{type2list}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.billState === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.billState === '01'}}">
+        <ui-col width="70" vertical-align="middle">
+          最低金额
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+          <input placeholder="请填写" type="number" bindinput="input" id="billRate" value="{{detail.billRate}}"/>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          %
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent style="margin-bottom:60px;">
+      <ui-row height="104r">
+        <ui-col vertical-align="middle">
+          满多少包邮：
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          PC网站
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="pinkageState">
+            <label wx:for="{{type3list}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.pinkageState === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.pinkageState === '01'}}">
+        <ui-col width="70" vertical-align="middle">
+          最低金额
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+          <input placeholder="请填写" type="number" bindinput="input" id="pinkageMoney" value="{{detail.pinkageMoney}}"/>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          元
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {},
+    typelist: [
+      { text: '启用', value: '01' },
+      { text: '关闭', value: '00' }
+    ],
+    type2list: [
+      { text: '显示', value: '01' },
+      { text: '隐藏', value: '00' }
+    ],
+    type3list: [
+      { text: '开启', value: '01' },
+      { text: '关闭', value: '00' }
+    ]
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.webinfo({
+      id: 'id'
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      }
+    })
+  },
+  submit () {
+    let data = {
+      model: JSON.stringify(this.data.detail),
+      _method: 'put'
+    }
+    api.webinfo({
+      data: data,
+      method: 'POST',
+      id: this.data.detail.webinfoId
+    }).then(res => {
+      if (res.success) {
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

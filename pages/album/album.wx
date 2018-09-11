@@ -81,15 +81,17 @@
     </ui-popup>
     
     <!-- 批量操作 -->
-    <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
+    <ui-fixed-view bottom="0;z-index:700" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
         <ui-col span="3" vertical-align="middle" align="center" bindtap="batchCopy">
           <i class="iconfont icon-fuzhi"></i>
           <view>复制</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchMove">
-          <i class="iconfont icon-folder-add-fill2"></i>
-          <view>移动</view>
+        <ui-col span="3" vertical-align="middle" align="center">
+          <cc-category title="{{false}}" type="album" categoryList="{{filelist}}" bindchange="batchMove">
+            <i class="iconfont icon-folder-add-fill2"></i>
+            <view>移动</view>
+          </cc-category>
         </ui-col>
         <ui-col span="3" vertical-align="middle" align="center" bindtap="rename">
           <i class="iconfont icon-edit-fill"></i>
@@ -141,10 +143,10 @@
     <ui-mask show="{{showMask}}" hide-delay="500">
       <view class="mask_btn">
         <view class="btn">
-          <view>替换图片</view>
-          <view>编辑</view>
-          <view>复制图片的代码</view>
-          <view>复制链接的代码</view>
+          <view bindtap="uploadPic">替换图片</view>
+          <view bindtap="editPic">编辑</view>
+          <view bindtap="copyImg1">复制图片的代码</view>
+          <view bindtap="copyImg2">复制链接的代码</view>
         </view>
         <button data-show="{{ false }}" bindtap="more">取消</button>
       </view>
@@ -153,7 +155,7 @@
     <ui-mask show="{{picDetailMask}}" top="{{NAV_HEIGHT}}" bindtap="hidepicDetailMask">
       <view class="mask_pic_detail">
         {{list[swiperCurrent].uploadTime}}
-        <ui-row height="60">
+        <ui-row height="70">
           <ui-col span="7" vertical-align="top" align="left">
             <view style="width:100%"><text wx:for="{{catelog}}" wx:key="*this">/{{item.name}}</text>/{{list[swiperCurrent].filename}}</view>
           </ui-col>
@@ -179,7 +181,8 @@ export default {
       'cc-loadmore': '../../packages/cc-loadmore',
       'cc-header': '../../packages/cc-header',
       'cc-search': '../../packages/cc-search',
-      'cc-modal': '../../packages/cc-modal'
+      'cc-modal': '../../packages/cc-modal',
+      'cc-category': '../../packages/cc-category'
     }
   },
   data: {
@@ -312,6 +315,7 @@ export default {
       visible1: false
     })
   },
+  // 添加相册
   ok () {
     api.albumDetail({
       data: {
@@ -547,6 +551,52 @@ export default {
     })
     this.hidePicMask()
   },
+  uploadPic () {
+    let img = this.data.list[this.data.swiperCurrent]
+    Utils.upload({
+      attId: img.attId,
+      replace: '01'
+    }).then(res => {
+      Tips.success('替换成功,图片1分钟左右生效')
+      this.refurbish()
+    })
+  },
+  refurbish () {
+    let img = this.data.list[this.data.swiperCurrent]
+    let data = {
+      serverPath: img.serverPath
+    }
+    api.refurbish({
+      data: data,
+      method: 'post'
+    }).then(res => {
+      this.data.list[this.data.swiperCurrent].serverPath = img.serverPath + '?0'
+      this.setData({
+        list: this.data.list
+      })
+    })
+  },
+  editPic () {
+    
+  },
+  copyImg1 () {
+    let img = this.data.list[this.data.swiperCurrent]
+    wx.setClipboardData({
+      data: '<img src="http://img.jihui88.com/' + img.serverPath + '" alt="' + img.filename + '">',
+      success: function(res) {
+        Tips.success('复制成功')
+      }
+    })
+  },
+  copyImg2 () {
+    let img = this.data.list[this.data.swiperCurrent]
+    wx.setClipboardData({
+      data: 'http://img.jihui88.com/' + img.serverPath,
+      success: function(res) {
+        Tips.success('复制成功')
+      }
+    })
+  },
   more (e) {
     let show = e.currentTarget.dataset.show
     this.setData({
@@ -562,6 +612,7 @@ export default {
     }
     this.setData({
       picMask: false,
+      picDetailMask: false,
       title: title,
       catelogName: name,
       width: '220r'
@@ -603,6 +654,60 @@ export default {
           if (res.success) {
             Tips.success('复制成功')
             if (ids.length === index + 1) {
+              this.getAlbum()
+            }
+          } else {
+            Tips.error(res.msg)
+          }
+        })
+      })
+    }
+  },
+  batchMove (e) {
+    if (!this.data.ids && !this.data.fileids) {
+      return Tips.toast('未选择')
+    }
+    this.setData({
+      selected: false,
+      title: this.data.catelog[this.data.catelog.length-1].name
+    })
+    if (this.data.ids) {
+      api.imgMove({
+        data: {
+          attIds: this.data.ids,
+          belongId: e.detail
+        },
+        method: 'post'
+      }).then(res => {
+        if (res.success) {
+          Tips.success('图片移动成功')
+          this.setData({
+            list: [],
+            'params.page': 1
+          })
+          this.get()
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
+    if (this.data.fileids) {
+      let data = {
+        model: JSON.stringify({
+          parentId: e.detail
+        }),
+        _method: 'put'
+      }
+      let ids = this.data.fileids.split(',')
+      ids.forEach((id, index) => {
+        api.albumDetail({
+          data: data,
+          id: id,
+          method: 'post'
+        }).then(res => {
+          if (res.success) {
+            if (ids.length === index + 1) {
+              Tips.success('相册转移成功')
               this.getAlbum()
             }
           } else {
@@ -722,7 +827,7 @@ export default {
     if (this.data.fileids) {
       let ids = this.data.fileids.split(',')
       ids.forEach((id, index) => {
-        api.albumDel({
+        api.albumDetail({
           data: {
             _method: 'delete'
           },

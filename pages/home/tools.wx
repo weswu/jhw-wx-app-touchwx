@@ -109,9 +109,9 @@ export default {
           { url: '/pages/shop/config', text: '商品相关配置', icon: 'icon-shangpin' },
           { url: '/pages/shop/pay', text: '支付方式管理', icon: 'icon-zhifu' },
           { url: '/pages/shop/delivery', text: '物流公司管理', icon: 'icon-gongsi1' },
-          { url: '/pages/shop/bill', text: '物流单据设置', icon: 'icon-wuliu' },
           { url: '/pages/shop/refund', text: '商品退换货管理', icon: 'icon-tuihuanhuo' },
           { url: '/pages/shop/coupon', text: '营销管理', icon: 'icon-yingxiao' },
+          { url: '', text: 'text', icon: 'icon-jia' },
           { url: '', text: 'text', icon: 'icon-jia' }
         ]
       }

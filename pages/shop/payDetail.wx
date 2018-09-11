@@ -1,0 +1,290 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="支付方式详情"></cc-header>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="90" vertical-align="middle">
+          支付方式名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          支付类型
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="categoryPicker" id="paymentConfigType" value="{{current}}" range-key="text" range="{{category}}">
+            <view >{{category[current].text}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="98" vertical-align="middle">
+          支付手续费设置
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="paymentFeeType">
+            <label wx:for="{{feeList}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.paymentFeeType === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+        <ui-col width="70" vertical-align="middle">
+          费率/费用
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="paymentFee" value="{{detail.paymentFee}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view wx:if="{{detail.paymentConfigType === 'alipay'}}">
+      <view class="hr"></view>
+      <ui-row-list border-left-indent>
+        <ui-row height="104r">
+          <ui-col width="70" vertical-align="middle">
+            支付宝类型
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <radio-group bindchange="radio" id="configObject.tenpayType">
+              <label class="radio" wx:for="{{alipayTypeList}}" wx:key="item.value">
+                <radio value="{{item.value}}" checked="{{detail.configObject.tenpayType === item.value}}"></radio>{{item.text}}
+              </label>
+            </radio-group>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            支付宝账号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.account" value="{{detail.configObject.account}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            支付宝商户号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.bargainorId" value="{{detail.configObject.bargainorId}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            支付宝密钥
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.key" value="{{detail.configObject.key}}"/>
+          </ui-col>
+        </ui-row>
+
+        <view style="margin:10px 0;font-size:12px;color:#999">
+          <view style="font-size:14px;">手机网站支付 - RSA(SHA1) ：</view>
+          <view class="a_underline">设置地址：https://openhome.alipay.com/platform/home.htm</view>
+        </view>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            应用APPID
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.mAppId" value="{{detail.configObject.mAppId}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            应用密钥
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.mSecretKey" value="{{detail.configObject.mSecretKey}}"/>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+    </view>
+
+    <view wx:if="{{detail.paymentConfigType === 'wxpay'}}">
+      <view class="hr"></view>
+      <ui-row-list border-left-indent>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            微信appid
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.appid" value="{{detail.configObject.appid}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            应用密钥
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.key" value="{{detail.configObject.key}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            微信商户号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.bargainorId" value="{{detail.configObject.bargainorId}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            应用APPID
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.appsecret" value="{{detail.configObject.appsecret}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+          <ui-col width="70" vertical-align="middle">
+            扫码支付回调链接
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="configObject.qrcodeUrl" value="{{detail.configObject.qrcodeUrl}}"/>
+          </ui-col>
+        </ui-row>
+        <view style="padding:10px 0;font-size:12px;color:#999">
+          设置指引：进入商户平台-->产品中心-->开发配置， 设置扫码支付回调链接：http://www.jihui88.com/rest/pay/qrcode_notify_wx
+        </view>
+      </ui-row-list>
+    </view>
+
+    <ui-row-list border-left-indent style="margin-bottom:50px;">
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          排序
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="sort" value="{{detail.sort}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {},
+    current: 0,
+    category: [
+      { text: '预存款', value: 'deposit' },
+      { text: '线下支付', value: 'offline' },
+      { text: '支付宝', value: 'alipay' },
+      { text: '微信支付', value: 'wxpay' },
+      { text: '自定义支付', value: 'custom' }
+    ],
+    feeList: [
+      { text: '按比例收费', value: 'scale' },
+      { text: '固定手续费', value: 'fixed' }
+    ],
+    alipayTypeList: [
+      { text: '即时交易', value: 'direct' },
+      { text: '担保交易', value: 'partnerMaterial' }
+    ],
+    id: ''
+  },
+  onLoad ({id}) {
+    this.setData({
+      id: id || ''
+    })
+    this.get()
+  },
+  get () {
+    if (this.data.id) {
+      api.orderPayDetail({
+        id: this.data.id
+      }).then(res => {
+        if (res.success) {
+          this.setData({
+            detail: res.attributes.data
+          })
+        }
+      })
+    } else {
+      this.setData({
+        detail: {
+          paymentConfigType: 'deposit',
+          paymentFeeType: 'scale',
+          configObject: {},
+          sort: 0
+        }
+      })
+    }
+  },
+  categoryPicker (e) {
+    var index = e.detail.value
+    this.data.detail[e.currentTarget.id] = this.data.category[index].value
+    this.setData({
+      detail: this.data.detail,
+      current: index
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '支付方式名称不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    Tips.loading()
+    let detail = this.data.detail
+    let data = {
+      model: JSON.stringify(Object.assign(detail, detail.configObject))
+    }
+    let url = ''
+    if (detail.paymentId) {
+      url = '/' + detail.paymentId
+      data._method = 'put'
+    }
+    api.orderPayDetail({
+      data: data,
+      method: 'POST',
+      id: detail.paymentId || ''
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        if (!detail.paymentId) {
+          wx.setStorageSync('orderPayDetail', res.attributes.data)
+          var pages = getCurrentPages()
+          var prevPage = pages[pages.length - 2];  //上个页面
+          prevPage.get()
+          wx.navigateBack()
+        }
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

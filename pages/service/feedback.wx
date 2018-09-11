@@ -59,6 +59,14 @@ let pageConf = {
       { text: '【页面与资料修改】', value: '1508' }
     ]
   },
+  categoryPicker (e) {
+    var index = e.detail.value
+    this.data.detail[e.currentTarget.id] = this.data.category[index].value
+    this.setData({
+      detail: this.data.detail,
+      fdbk_typeIndex: index
+    })
+  },
   validate() {
     const rules = [
       {

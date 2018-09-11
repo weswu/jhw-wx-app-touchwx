@@ -53,10 +53,11 @@ const albumDetail = (params) => http(params, host + 'album/detail' + (params.id 
 const albumAttr = (params) => http(params, host + 'album/attr/list/' + params.id)
 
 const albumCopy = (params) => http(params, host + 'album/albumCopy')
-const albumDel = (params) => http(params, host + 'album/detail/' + params.id)
 const imgDetail = (params) => http(params, host + 'album/attr/img/detail' + (params.id ? '/' + params.id : ''))
 const imgCopy = (params) => http(params, host + 'album/attr/img/copy')
 const imgDel = (params) => http(params, host + 'album/attr/img/delete')
+const imgMove = (params) => http(params, host + 'album/attr/img/move')
+const refurbish = (params) => http(params, host + 'album/single/refurbish')
 
 // 分类
 const category = (params) => http(params, host + 'category/' + params.url + '?pageSize=1000')
@@ -71,6 +72,7 @@ const news = (params) => http(params, host + 'news/list')
 const newsDetail = (params) => http(params, host + 'news/detail/' + params.id)
 const tag = (params) => http(params, host + 'tag/list?pageSize=1000')
 const tagDetail = (params) => http(params, host + 'tag/detail/' + params.id)
+const batchMove = (params) => http(params, host + params.type + '/batch/transfer')
 const batchCopy = (params) => http(params, host + params.url)
 const batchDel = (params) => http(params, host + params.type + '/batch/del')
 const batchDisplay = (params) => http(params, host + params.url)
@@ -129,11 +131,11 @@ module.exports = {
   point, pointProduct, pointRule, signIn,
   // 新闻
   news, newsDetail, tag, tagDetail,
-  batchCopy, batchDel, batchDisplay, batchMarketable,
+  batchMove, batchCopy, batchDel, batchDisplay, batchMarketable,
   // 分类
   category, categoryDisplay, categoryDel, categoryDetail,
   // 相册
-  album, albumDetail, albumAttr, albumCopy, albumDel, imgDetail, imgCopy, imgDel,
+  album, albumDetail, albumAttr, albumCopy, imgDetail, imgCopy, imgDel, imgMove, refurbish,
 
   login, logout,
   // 站点

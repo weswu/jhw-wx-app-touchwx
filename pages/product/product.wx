@@ -18,11 +18,11 @@
           space-right="{{index%2 === 0 ? '8r' : '0'}}" 
           space-left="{{index%2 === 1 ? '8r' : '0'}}"
           wx:for="{{list}}" wx:key="*this">
-          <view class="image">
+          <view class="image" data-item="{{item}}" bindtap="item">
             <image mode="aspectFit" src="http://img.jihui88.com/{{item.picPath}}"/>
           </view>
           <view class="text" style="width:100%" wx:if="{{!item.switch}}">
-            <view style="height:145rpx">
+            <view style="height:145rpx" data-item="{{item}}" bindtap="item">
               <view class="title"> {{item.name}} </view>
               <view class="desc" wx:if="{{item.type}}"> 型号：{{item.type}} </view>
               <view class="price"> ￥{{item.price || 0.00}} </view>
@@ -54,17 +54,18 @@
         </ui-col>
       </ui-row>
 
+      <!-- 列表一 -->
       <view style="height:40rpx;" wx:if="{{chenlie === '0'}}"></view>
       <ui-row class="item" height="258r" border-bottom wx:for="{{list}}" wx:key="*this" wx:if="{{chenlie === '0'}}">
         <ui-col vertical-align="middle" align="center" width="90r" data-index="{{index}}" bindtap="toggle">
           <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
         </ui-col>
-        <ui-col vertical-align="middle" align="left" width="237r">
+        <ui-col vertical-align="middle" align="left" width="237r" data-item="{{item}}" bindtap="item">
           <image mode="aspectFit" src="http://img.jihui88.com/{{item.picPath}}"/>
         </ui-col>
-        <ui-col class="text" vertical-align="middle" space-right="15" data-item="{{item}}" bindtap="item" wx:if="{{!item.switch}}">
-          <view style="height:188rpx">
+        <ui-col class="text" vertical-align="middle" space-right="15" wx:if="{{!item.switch}}">
+          <view style="height:188rpx" data-item="{{item}}" bindtap="item">
             <view class="title"> 
               <text class="isNew" wx:if="{{item.isNew === '01'}}">新品</text>
               <text class="isBest" wx:if="{{item.isBest === '01'}}">精品</text>
@@ -78,12 +79,12 @@
             <ui-col vertical-align="middle">
               <view class="store"> 人气：{{item.viewsum || 0}} <text>库存：{{item.store || 0}}</text></view>
             </ui-col>
-            <ui-col width="30" vertical-align="bottom" align="right" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
+            <ui-col width="30" vertical-align="top" align="right" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
               <i class="iconfont icon-gengduo1" style="color:#686669"></i>
             </ui-col>
           </ui-row>
         </ui-col>
-        <ui-col class="switch" vertical-align="middle" data-item="{{item}}" bindtap="item" wx:if="{{item.switch}}">
+        <ui-col class="switch" vertical-align="middle" wx:if="{{item.switch}}">
           <view style="width:100%"> 
             <ui-row style="height:218rpx" data-show="{{false}}" data-index="{{index}}" catchtap="switch">
               <ui-col vertical-align="middle" class="desc">
@@ -104,15 +105,17 @@
     <cc-loadmore more="{{more}}"></cc-loadmore>
 
     <!-- footer -->
-    <ui-fixed-view bottom="0" left="0" right="0" wx:if="{{selected}}">
+    <ui-fixed-view bottom="0;z-index:700" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
         <ui-col span="3" vertical-align="middle" align="center" bindtap="batchCopy">
           <i class="iconfont icon-fuzhi"></i>
           <view class="desc">复制</view>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="move">
-          <i class="iconfont icon-folder-add-fill2"></i>
-          <view class="desc">移动</view>
+        <ui-col span="3" vertical-align="middle" align="center">
+          <cc-category title="{{false}}" type="product" categoryList="{{cateList}}" bindchange="batchMove">
+            <i class="iconfont icon-folder-add-fill2"></i>
+            <view class="desc">移动</view>
+          </cc-category>
         </ui-col>
         <ui-col span="3" vertical-align="middle" align="center" bindtap="batchDel">
           <i class="iconfont icon-delete-fill"></i>
@@ -150,7 +153,8 @@ export default {
       'cc-loadmore': '../../packages/cc-loadmore',
       'cc-header': '../../packages/cc-header',
       'cc-search': '../../packages/cc-search',
-      'cc-lan': '../../packages/cc-lan'
+      'cc-lan': '../../packages/cc-lan',
+      'cc-category': '../../packages/cc-category'
     }
   },
   data: {
@@ -293,6 +297,9 @@ export default {
   batchCopy () {
     Utils.batchCopy(this, 'product/copyProductByIds', {productIds: this.data.ids})
   },
+  batchMove (e) {
+    Utils.batchMove(this, 'product', e.detail)
+  },
   batchDel () {
     Utils.batchDel(this, 'product')
   },
@@ -355,7 +362,7 @@ page{
       display:block;
       height:90rpx;
       font-size:34rpx;
-      line-height:38rpx;
+      line-height:40rpx;
       padding-top:10rpx;
     }
   }

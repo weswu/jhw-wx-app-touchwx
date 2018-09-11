@@ -1,0 +1,106 @@
+<template>
+  <view>
+    <cc-header title="支付方式管理"></cc-header>
+    <ui-swipe-out height="65" data-index="{{index}}" operate-width="150" style="margin-bottom: 50px;"
+      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+      <view slot="content">
+        <ui-row height="65" class="j_row_list" border-bottom>
+          <ui-col vertical-align="middle" align="left" space-left="15">
+            <view class="text">{{ item.name }}</view>
+            <view class="desc">{{ item.addTime }}</view>
+          </ui-col>
+        </ui-row>
+      </view>
+      <view slot="operate">
+        <view class="j_operate" border-bottom>
+          <ui-row height="65">
+            <ui-col data-id="{{item.paymentId}}" bindtap="nav" vertical-align="middle" align="center">
+              修改
+            </ui-col>
+            <ui-col data-index="{{index}}" bindtap="del" vertical-align="middle" align="center">
+              删除
+            </ui-col>
+          </ui-row>
+        </view>
+      </view>
+    </ui-swipe-out>
+    <button type="primary" bindtap="add" class="fixed">添加</button>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1
+    },
+    el: 'undefined'
+  }, 
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.orderPay({
+      data: this.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
+          item.switcher = 'off'
+        })
+        this.setData({
+          list: res.attributes.data
+        })
+      }
+    })
+  },
+  changeHandler (res) {
+    let index = res.currentTarget.dataset.index
+    if(this.data.el !== index){
+      if (this.data.el !== 'undefined') {
+        this.data.list[this.data.el].switcher = 'off'
+      }
+      this.data.list[index].switcher = 'on'
+      this.setData({
+        list:this.data.list
+      })
+      this.data.el = index  
+    }
+  },
+  nav (e) {
+    wx.navigateTo({
+      url: 'payDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    Utils.del(this, e.currentTarget.dataset.index)
+  },
+  add () {
+    wx.navigateTo({
+      url: 'payDetail'
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.j_row_list{
+  background: #fff
+}
+.j_operate {
+  background: #eee;
+  color:#545454
+}
+</style>
