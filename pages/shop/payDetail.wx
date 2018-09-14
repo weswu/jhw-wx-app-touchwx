@@ -254,15 +254,11 @@ let pageConf = {
     let data = {
       model: JSON.stringify(Object.assign(detail, detail.configObject))
     }
-    let url = ''
-    if (detail.paymentId) {
-      url = '/' + detail.paymentId
-      data._method = 'put'
-    }
+    if (detail.paymentId) data._method = 'put'
     api.orderPayDetail({
       data: data,
       method: 'POST',
-      id: detail.paymentId || ''
+      id: detail.paymentId
     }).then(res => {
       Tips.loaded()
       if (res.success) {

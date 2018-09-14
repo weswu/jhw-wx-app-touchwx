@@ -3,13 +3,14 @@
     <view class="ui-fixed-view" style="top:{{NAV_HEIGHT}}px;right: 0;left: 0">
       <ui-row height="100r" border-bottom style="background:#fff">
         <!-- 左 -->
-        <ui-col vertical-align="middle" align="left" width="124r" space-left="15">
-          <i class="iconfont icon-fenlei {{show ? 'active' : ''}}" wx:if="{{type!=='album'}}" bindtap="openPopup"></i>
+        <ui-col vertical-align="middle" align="left" width="124r" space-left="15"  wx:if="{{type!=='category'}}">
+          <i class="iconfont icon-fenlei {{show ? 'active' : ''}}" wx:if="{{type==='news' || type==='product'}}" bindtap="openPopup"></i>
           <slot name="add"></slot>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="96r" space-right="15" wx:if="{{type==='album'}}">
           <slot name="sort"></slot>
         </ui-col>
+        <ui-col vertical-align="middle" align="center" width="60r" wx:if="{{type==='category'}}"></ui-col>
         <!-- 中 -->
         <ui-col vertical-align="middle">
           <view style="width:100%;">
@@ -29,6 +30,7 @@
           <navigator url="newsDetail" class="iconfont icon-jia1" hover-class="none" wx:if="{{type==='news'}}"></navigator>
           <navigator url="productDetail" class="iconfont icon-jia1" hover-class="none" wx:if="{{type==='product'}}"></navigator>
           <i class="iconfont icon-upload" bindtap="chooseImage" wx:if="{{type==='album'}}"></i>
+          <i class="iconfont icon-jia1" bindtap="addCategory" wx:if="{{type==='category'}}"></i>
         </ui-col>
       </ui-row>
     </view>
@@ -94,7 +96,6 @@ export default {
   ready () {
     let height = (98+60)/750*wx.WIN_WIDTH
     this.setData({
-      NAV_HEIGHT: this.data.NAV_HEIGHT,
       popup_NAV_HEIGHT: this.data.popup_NAV_HEIGHT + height,
       popupHeight: this.data.popupHeight + height
     })

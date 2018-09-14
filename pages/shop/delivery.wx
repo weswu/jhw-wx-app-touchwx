@@ -1,0 +1,112 @@
+<template>
+  <view>
+    <cc-header title="物流公司管理" count="{{count}}"></cc-header>
+  
+    <ui-fixed-view top="{{NAV_HEIGHT}}" left="0;z-index:700" right="0">
+      <ui-row height="100r" border-bottom style="background:#fff;padding:0 15px;">
+        <ui-col vertical-align="middle">
+          <view style="width:100%;">
+            <ui-row height="52r" style="background: #f6f6f6;border-radius:3px;">
+              <ui-col vertical-align="middle" align="center" width="30">
+                <i class="iconfont icon-sousuo"></i>
+              </ui-col>
+              <ui-col vertical-align="middle">
+                <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{params.name}}"></i>
+                <input type="text" value="{{params.name}}" bindinput="search"/>
+              </ui-col>
+            </ui-row>
+          </view>   
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:100rpx"></view>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle">
+          <view class="text">{{ item.name }}</view>
+          <view class="desc">{{ item.addTime }}</view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 16,
+      name: ''
+    },
+    count: 0,
+    more: { loading: true }
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    Utils.loading(this)
+    api.orderDelivery({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
+        })
+        Utils.scrollList(this, res)
+      }
+    })
+  },
+  search(e) {
+    this.setData({
+      'params.page': 1,
+      'params.name': e.detail.value,
+      list: []
+    })
+    this.get()
+  },
+  clearinput () {
+    this.search({
+      detail: {
+        value: ''
+      }
+    })
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+
+.icon-sousuo{
+  color:#afadb1;font-size:14px;
+}
+.icon-close-circle-fill{
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  font-size: 16px;
+  text-align: center;
+  color: #b5b3b6;
+  position: absolute;
+  right: 0;
+  z-index: 3;
+}
+</style>

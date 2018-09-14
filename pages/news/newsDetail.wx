@@ -26,12 +26,12 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="104r" url="/pages/components/jDate?time={{detail.addTime}}" hover-class="none">
+      <ui-row height="104r">
         <ui-col width="60" vertical-align="middle">
           延时发布
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.addTimeVal}}
+          <cc-date value="{{detail.addTime}}" bindchange="dateChange"></cc-date>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -124,16 +124,19 @@ let pageConf = {
   config: {
     usingComponents: {
       'cc-image': '../../packages/cc-image',
+      'cc-date': '../../packages/cc-date',
       'cc-header': '../../packages/cc-header'
     }
   },
   data: {
-    detail:{},
+    detail:{
+      addTime: new Date(),
+      topnews: '00'
+    },
     name: '',
     categoryList: []
   },
   onLoad (e) {
-    // e.id = 'News_000000000000000000000182815'
     if (e.id) {
       this.setData({
         detail: {
@@ -141,13 +144,6 @@ let pageConf = {
         }
       })
       this.get()
-    } else {
-      this.setData({
-        detail: {
-          addTimeVal: Utils.formatTime(new Date()),
-          topnews: '00'
-        }
-      })
     }
   },
   get () {
@@ -196,8 +192,7 @@ let pageConf = {
   // 时间
   dateChange (e) {
     this.setData({
-      'detail.addTimeVal': Utils.formatTime(new Date(e)),
-      'detail.addTime': e
+      'detail.addTime': e.detail
     })
   },
   // 图片
@@ -269,8 +264,5 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1
-}
 </style>
 

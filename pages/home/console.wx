@@ -1,5 +1,5 @@
 <template>
-  <view class="j_console">
+  <view class="j_console bg_color">
     <!-- 自定义导航 -->
     <cc-header title="控制台" back="{{false}}"></cc-header>
 
@@ -234,9 +234,6 @@ export default {
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1;
-}
 .j_console{
   .header{
     background: #373d40;

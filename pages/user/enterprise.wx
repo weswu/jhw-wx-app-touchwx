@@ -1,5 +1,5 @@
 <template>
-  <view class="j_detail">
+  <view class="j_detail bg_color">
     <cc-header title="基本资料"></cc-header>
     <cc-lan bindchange="lanChange"></cc-lan>
    
@@ -259,7 +259,4 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1;
-}
 </style>

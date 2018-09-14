@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="bg_color">
     <cc-header title="标签设置"></cc-header>
     <view style="height:50px"></view>
 
@@ -206,9 +206,6 @@ export default {
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1;
-}
 .j_tag_item{
   font-size: 12px;
   margin-top: 10px;

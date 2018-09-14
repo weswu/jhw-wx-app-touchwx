@@ -1,5 +1,5 @@
 <template>
-  <view class="j_my">
+  <view class="j_my bg_color">
     <!-- 自定义导航 -->
     <cc-header back="{{false}}"></cc-header>
 
@@ -152,9 +152,6 @@ export default{
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1;
-}
 .ui-row-list{
   .iconfont{
     color: #12bedb;

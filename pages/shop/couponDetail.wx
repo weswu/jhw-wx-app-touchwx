@@ -1,0 +1,352 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="优惠券详情"></cc-header>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          优惠券名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          发放总量
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="count" value="{{detail.count}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          面值
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right">
+          <input placeholder="请填写" bindinput="input" id="amount" value="{{detail.amount}}"/>
+        </ui-col>
+        <ui-col width="30" vertical-align="middle" align="center" wx:if="{{detail.israndom !== '02'}}">
+          至
+        </ui-col>
+        <ui-col width="60" class="form_content" vertical-align="middle" wx:if="{{detail.israndom !== '02'}}">
+          <input placeholder="请填写" bindinput="input" id="amountend" value="{{detail.amountend}}"/>
+        </ui-col>
+        <ui-col width="30" vertical-align="middle" align="center">
+          元
+        </ui-col>
+        <ui-col width="70" class="form_content" vertical-align="middle" align="right" space-right="15">
+          <checkbox-group bindchange="checkboxChange">
+            <label>
+              <checkbox value="01" checked="{{detail.israndom === '01'}}"/>随机
+            </label>
+          </checkbox-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          使用门槛
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="thresholdtype">
+            <label wx:for="{{selected1}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.thresholdtype === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+        <ui-col width="40" class="form_content" vertical-align="middle" wx:if="{{detail.thresholdtype === '00'}}">
+          <input placeholder="请填写" bindinput="input" id="threshold" value="{{detail.threshold}}"/>
+        </ui-col>
+        <ui-col width="50" vertical-align="middle" align="center" wx:if="{{detail.thresholdtype === '00'}}">
+          元
+        </ui-col>
+      </ui-row>
+      <ui-row height="240r">
+        <ui-col width="70" vertical-align="middle">
+          封面图片
+        </ui-col>
+        <ui-col width="80" vertical-align="middle">
+          <cc-image id="image" src="{{detail.pic}}" width="148r" bindchange="changePic"></cc-image>
+        </ui-col>
+        <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" bindtap="updatePic">
+          <view class="btn_gray">重新上传</view>
+        </ui-col>
+        <ui-col width="50" vertical-align="middle" bindtap="clearPic">
+          <view class="btn_gray">清除</view>
+        </ui-col>
+        <ui-col vertical-align="middle"></ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          封面颜色
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <view style="width:100%">
+            <radio-group bindchange="radio" id="theme">
+              <label wx:for="{{selected2}}" wx:key="item.value">
+                <radio class="item{{item.value}}" value="{{item.value}}" checked="{{detail.theme === item.value}}"></radio>
+              </label>
+            </radio-group>
+          </view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent style="margin-bottom:50px;">
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          会员等级
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="picker" id="memberrankId" value="{{picker.memberrankId}}" data-list="memberRankList" range-key="name" range="{{memberRankList}}">
+            <view>{{memberRankList[picker.memberrankId].name}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          每人限领
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="picker" id="quantity" value="{{picker.quantity}}" data-list="selected3" range-key="text" range="{{selected3}}">
+            <view>{{selected3[picker.quantity].text}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          生效时间
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <cc-date value="{{detail.beginTime}}" bindchange="date1"></cc-date>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          结束时间
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <cc-date value="{{detail.endTime}}" bindchange="date2"></cc-date>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-image': '../../packages/cc-image',
+      'cc-date': '../../packages/cc-date',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      name: '优惠券',
+      count: 1,
+      amount: 1,
+      israndom: '02', // 不随机
+      thresholdtype: '01', // 不限制
+      theme: '2', // orange色
+      quantity: 0, // 不限张
+      scopeType: '01', // 全部产品
+      memberrankId: '0',
+      beginTime: new Date(),
+      endTime: new Date(new Date().getTime() + 1000 * 60 * 60 * 24)
+    },
+    picker: {
+      memberrankId: 0,
+      quantity: 0
+    },
+    // 退货类型
+    selected1: [
+      { text: '不限制 ', value: '01' },
+      { text: '满 ', value: '00' }
+    ],
+    // 退货状态
+    selected2: [
+      { text: '#f30 ', value: '1' },
+      { text: '#f90 ', value: '2' },
+      { text: '#96f ', value: '3' },
+      { text: '#6c6 ', value: '4' },
+      { text: '#BCBCBC ', value: '5' }
+    ],
+    selected3: [
+      {value: 0, text: '不限张'},
+      {value: 1, text: '1'},
+      {value: 2, text: '2'},
+      {value: 3, text: '3'},
+      {value: 4, text: '4'},
+      {value: 5, text: '5'},
+      {value: 10, text: '10'}
+    ],
+    memberRankList: []
+  },
+  onLoad ({id}) {
+    if (id) {
+      this.get(id)
+    }
+    let list = getApp().globalData.memberRankList
+    if (list.length > 0) {
+      this.initMember(list)
+    } else {
+      getApp().getMemberRank(res => {
+        this.initMember(res)
+      })
+    }
+  },
+  initMember (data) {
+    let list = [
+      {
+        value: '0',
+        name: '所有会员等级'
+      }
+    ]
+    data.forEach(item => {
+      item.value = item.rankId
+      list.push(item)
+    });
+    this.setData({
+      memberRankList: list
+    })
+  },
+  get (id) {
+    api.couponDetail({
+      id: id
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  checkboxChange (e) {
+    this.data.detail.israndom = e.detail.value[0] || '02'
+    this.setData({
+      detail: this.data.detail
+    })
+  },
+  // 时间
+  date1 (e) {
+    this.setData({
+      'detail.beginTime': e.detail
+    })
+  },
+  date2 (e) {
+    this.setData({
+      'detail.endTime': e.detail
+    })
+  },
+  // 图片
+  updatePic () {
+    this.selectComponent("#image").chooseImage();
+  },
+  clearPic () {
+    this.setData({
+      'detail.pic': ''
+    })
+  },
+  changePic (e) {
+    this.setData({
+      'detail.pic': e.detail
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '优惠券名称为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let detail = this.data.detail
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.couponId) data._method = 'put'
+    Tips.loading()
+    api.couponDetail({
+      data: data,
+      method: 'POST',
+      id: detail.couponId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+#theme radio {
+  &.item1{
+    .wx-radio-input{
+      background: #f30;
+    }
+    .wx-radio-input-checked{
+      border-color: #f30 !important;
+      background: #f30 !important;
+    }
+  }
+  &.item2{
+    .wx-radio-input{
+      background: #f90;
+    }
+    .wx-radio-input-checked{
+      border-color: #f90 !important;
+      background: #f90 !important;
+    }
+  }
+  &.item3{
+    .wx-radio-input{
+      background: #96f;
+    }
+    .wx-radio-input-checked{
+      border-color: #96f !important;
+      background: #96f !important;
+    }
+  }
+  &.item4{
+    .wx-radio-input{
+      background: #6c6;
+    }
+    .wx-radio-input-checked{
+      border-color: #6c6 !important;
+      background: #6c6 !important;
+    }
+  }
+  &.item5{
+    .wx-radio-input{
+      background: #BCBCBC;
+    }
+    .wx-radio-input-checked{
+      border-color: #BCBCBC !important;
+      background: #BCBCBC !important;
+    }
+  }
+  transform:scale(0.8);
+  .wx-radio-input{
+    border-radius: 0;
+  }
+}
+</style>

@@ -1,0 +1,58 @@
+<template>
+  <view style="width:100%">
+    <picker mode="date" value="{{date}}" bindchange="bindDateChange">
+      <view class="picker">
+        {{date}}
+      </view>
+    </picker>
+    <picker mode="time" value="{{time}}" bindchange="bindTimeChange" style="margin-left:5px;">
+      <view class="picker">
+        {{time}}
+      </view>
+    </picker>
+  </view>
+</template>
+
+<script>
+import Utils from '../static/utils/utils'
+export default {
+  properties: {
+    value: {
+      type: String,
+      value: ""
+    }
+  },
+  data: {
+    date: '2016-09-01',
+    time: '12:01',
+  },
+  ready () {
+    let date = Utils.formatTime(this.data.value)
+    this.setData({
+      date: date.split(' ')[0],
+      time: date.split(' ')[1]
+    })
+    this.triggerEvent('change', date + ':00')
+  },
+  methods: {
+    bindDateChange: function(e) {
+      this.setData({
+        date: e.detail.value
+      })
+      this.triggerEvent('change', this.data.date + ' ' + this.data.time + ':00')
+    },
+    bindTimeChange: function(e) {
+      this.setData({
+        time: e.detail.value
+      })
+      this.triggerEvent('change', this.data.date + ' ' + this.data.time + ':00')
+    }
+  }
+}
+</script>
+
+<style lang="less">
+picker{
+  display: inline-block;
+}
+</style>

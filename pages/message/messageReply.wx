@@ -1,5 +1,5 @@
 <template>
-  <view class="j_detail">
+  <view class="j_detail bg_color">
     <cc-header title="消息回复"></cc-header>
    
     <ui-row-list border-left-indent>
@@ -167,7 +167,4 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1;
-}
 </style>

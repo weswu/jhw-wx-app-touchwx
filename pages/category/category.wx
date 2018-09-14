@@ -1,87 +1,77 @@
 <template>
-  <view>
+  <view class="bg_color">
     <cc-header title="{{type === 'product' ? '产品' : '新闻'}}分类" back="{{!selected}}">
       <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
     </cc-header>
-    <view style="height:30px"></view>
+    <!-- head -->
+    <cc-lan bindchange="get">
+      <i class="iconfont icon-jia1" bindtap="add" style="color:#4e4e4e;"></i>
+    </cc-lan>
 
-    <ui-row-list>
-    <ui-swipe-out operate-width="120" height="108r"
-      wx:for="{{list}}" wx:key="*this" value="{{item.switcher}}">
-      <view slot="content">
-        <ui-row height="108r" class="j_swipe_list" border-bottom>
-          <ui-col vertical-align="middle" align="center" width="40" catchtap="toggle" data-index="{{index}}">
-            <icon type="circle" size="16" wx:if="{{!item._checked}}"></icon>
-            <icon type="success" size="16" wx:if="{{item._checked}}"></icon>
-          </ui-col>
-          <ui-col class="text" vertical-align="middle" data-index="{{index}}" bindtap="swipeChange"
-          space-left="{{item.grade === '2' ? '40' : item.grade === '3' ? '60' : '20'}}">
-            {{item.name}}
-            <view class="desc"> {{item.isdisplay === '0' ? '隐藏' : '显示'}} 
-          </ui-col>
-        </ui-row>
-      </view>
-      <view slot="operate">
-        <ui-row class="j_swipe_operate" height="108r">
-          <ui-col vertical-align="middle" align="center">
-            <navigator url="" style="width:100%;height:100%;line-height:108rpx;">修改</navigator>
-          </ui-col>
-          <ui-col vertical-align="middle" align="center">
-            <navigator url="/pages/static/seo/seoDetail" style="width:100%;height:100%;line-height:108rpx;">SEO</navigator>
-          </ui-col>
-        </ui-row>
-      </view>
-    </ui-swipe-out>
-    </ui-row-list>
-    <!-- 头 -->
-    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="{{'0;z-index:9;'}}" right="0">
-      <ui-row height="30" border-bottom style="background:#fff">
-        <ui-col vertical-align="middle" border-right space-left="15">
-          <i class="iconfont icon-jia1" style="color:#4e4e4e"></i>
+    <ui-row-list class="category-list">
+      <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="*this" wx:if="{{!item.hidden}}">
+        <ui-col vertical-align="middle" align="center" width="123r" data-index="{{index}}" bindtap="toggle">
+          <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
         </ui-col>
-        <ui-col width="100" vertical-align="middle" align="right" space-right="5" bindtap="openPopup" class="{{show ? 'active' : ''}}">
-          <view style="width:100%">
-            <ui-row height="30">
-              <ui-col vertical-align="middle" align="right" space-right="5">
-                <view style="color:#686868;font-size:12px;">
-                  {{name}}
-                </view>
-              </ui-col>
-              <ui-col width="30" vertical-align="middle" align="center">
-                <ui-icon type="slide_down" size="8" color="#878787;" class="{{show ? 'active' : ''}}"></ui-icon>
-              </ui-col>
-            </ui-row>
-          </view>
+        <ui-col class="text {{item.categoryId === categoryId ? 'active' : ''}}" vertical-align="middle" space-left="{{item.grade === '2' ? '25' : item.grade === '3' ? '50' : ''}}" data-item="{{item}}" bindtap="item">
+          <view  wx:if="{{!item.editing}}">{{item.name}}</view>
+          <input bindinput="input" data-index="{{index}}" value="{{item.name}}" wx:if="{{item.editing}}"/>
+        </ui-col>
+        <ui-col width="40" vertical-align="middle" align="center" wx:if="{{item.editing}}" data-item="{{item}}" catchtap="nameChange">
+          <i class="iconfont icon-gou"></i>
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="40" space-right="15">
+          <i class="iconfont icon-jianquminus25" wx:if="{{item.isroot && item.expand}}" data-item="{{item}}" bindtap="changeCateList"></i>
+          <i class="iconfont icon-jia1" wx:if="{{item.isroot && !item.expand}}" data-item="{{item}}" bindtap="changeCateList"></i>
         </ui-col>
       </ui-row>
-    </ui-fixed-view>
-    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT + 30 }}" height="{{popupHeight}}" mask-style="{{ { top: popup_NAV_HEIGHT +30+'px' } }}" bindhide="popHide2" bindshow="popShow2">
-      <view class="top_pop">
-        <ui-check-list max="1" label-position="left" options="{{ sortList }}" type="plain" value="{{ checklist }}" bindchange="change2" color="#3AC3B0"></ui-check-list>
-      </view>
-    </ui-popup>
+    </ui-row-list>
+
     <!-- 尾 -->
-    <ui-fixed-view bottom="0" left="{{'0;z-index:9;'}}" right="0" wx:if="{{selected}}">
-      <ui-row height="60" border-top class="j_fixed_btn">
-        <ui-col span="3" vertical-align="middle" align="center" data-show="{{'1'}}" bindtap="display">
-          <i class="iconfont icon-xianshi"></i>
-          <view class="desc">显示</view>
+    <ui-fixed-view bottom="0" left="{{'0;z-index:700;'}}" right="0" wx:if="{{selected}}">
+      <ui-row height="60" border-top class="fixed_btn">
+        <ui-col span="3" vertical-align="middle" align="center">
+          <cc-category title="{{false}}" type="{{type}}" categoryList="{{list}}" bindchange="batchMove">
+            <i class="iconfont icon-folder-add-fill2"></i>
+            <view>移动</view>
+          </cc-category>
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" data-show="{{'0'}}" bindtap="display">
-          <i class="iconfont icon-yincang"></i>
-          <view class="desc">隐藏</view>
+        <ui-col span="3" vertical-align="middle" align="center" bindtap="batchDel">
+          <i class="iconfont icon-delete-fill"></i>删除
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="del">
-          <i class="iconfont icon-delete-fill"></i>
-          <view class="desc">删除</view>
+        <ui-col span="3" vertical-align="middle" align="center" data-show="{{'1'}}" bindtap="batchDisplay">
+          <i class="iconfont icon-yanjing"></i>显示
         </ui-col>
-        <ui-col span="3" vertical-align="middle" align="center" bindtap="more">
-          <i class="iconfont icon-folder-add-fill2"></i>
-          <view class="desc">移动</view>
+        <ui-col span="3" vertical-align="middle" align="center" data-show="{{ true }}" bindtap="more">
+          <i class="iconfont icon-gengduo"></i>更多
         </ui-col>
       </ui-row>
     </ui-fixed-view>
     <view style="height:70px" wx:if="{{selected}}"></view>
+    <ui-mask show="{{showMask}}" hide-delay="500">
+      <view class="mask_btn">
+        <view class="btn">
+          <view data-show="{{'0'}}" bindtap="batchDisplay">隐藏</view>
+          <view bindtap="rename">重命名</view>
+          <view data-show="{{false}}" bindtap="batchHidden">展开</view>
+          <view data-show="{{true}}" bindtap="batchHidden">折叠</view>
+        </view>
+        <button data-show="{{ false }}" bindtap="more">取消</button>
+      </view>
+    </ui-mask>
+
+    <cc-modal title="添加分类" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{detail.name}}"></i>
+        <input type="text" value="{{detail.name}}" bindinput="nameInput"/>
+      </view>
+      <view class="add-category">
+        <cc-category type="{{type}}" categoryList="{{list}}" bindchange="batchMove2">
+          <view style="display:inline-block">上级分类：</view>
+        </cc-category>
+      </view>
+    </cc-modal>
   </view>
 </template>
 
@@ -92,26 +82,24 @@ import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-header': '../../packages/cc-header'
+      'cc-header': '../../packages/cc-header',
+      'cc-lan': '../../packages/cc-lan',
+      'cc-modal': '../../packages/cc-modal',
+      'cc-category': '../../packages/cc-category'
     }
   },
   data: {
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
-    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
-    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
-    show: false,
-    sortList: [
-      '中文', '英文'
-    ],
-    checklist: [],
-    name: '中文',
+    title: '分类',
+    // 新增文件夹
+    visible1: false,
+    detail: {},
     // 数据
     list: [],
-    el: "undefined",
     type: 'product',
-    ids: '', // 选中项
     selected: false, //选中状态
-    toggle: false // 全选切换状态 
+    ids: '', // 选中项
+    toggle: false, // 全选切换状态 
+    showMask: false // 更多
   },
   onLoad (e) {
     if (e.type) {
@@ -128,39 +116,103 @@ export default {
     })
     if (this.data.type === 'product') {
       getApp().getProductCategory(res => {
-        that.setData({
-          list: res
-        })
+        that.setList(res)
       }) 
     } else {
       getApp().getNewsCategory(res => {
-        that.setData({
-          list: res
-        })
+        that.setList(res)
       })
     }
   },
-  openPopup (e) {
+  setList (res) {
+    res.forEach((item, index) => {
+      item.editing = false
+      item.index = index
+    })
     this.setData({
-      show: !this.data.show
+      list: res
+    }) 
+  },
+  item (e) {
+    let item = e.currentTarget.dataset.item
+    if (this.data.selected) {
+      this.setData({
+        selected: false
+      })
+    }
+  },
+  changeCateList (e) {
+    let data = e.currentTarget.dataset.item
+    var ctx = this
+    this.data.list.forEach(item => {
+      item.expand = !item.expand
+      if (item.belongId === data.categoryId) {
+        item.hidden = data.expand
+        ctx.data.list.forEach(row => {
+          if (row.belongId === item.categoryId) {
+            row.hidden = data.expand
+          }
+        })
+      }
+    })
+    this.setData({
+      list: this.data.list
     })
   },
-  popHide2 () {
+  // add
+  add () {
     this.setData({
-      show:false
+      visible1: true
     })
   },
-  popShow2 () {
+  nameInput (e) {
     this.setData({
-      show:true
+      'detail.name': e.detail.value
     })
   },
-  change2 (e) {
-    let val = e.detail.value
-    this.data.name = val.join('-')
+  clearinput () {
     this.setData({
-      name:this.data.name,
-      show:false
+      'detail.name': ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible1: false
+    })
+  },
+  batchMove2 (e) {
+    this.setData({
+      'detail.belongId': e.detail
+    })
+  },
+  // 添加
+  ok () {
+    let detail = this.data.detail
+    if (this.data.type === 'product') {
+      detail.type = '10'
+    } else if (this.data.type === 'news') {
+      detail.type = '11'
+    } else {
+      detail.type = '13'
+    }
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.categoryId) {
+      data._method = 'put'
+    }
+    api.categoryDetail({
+      data: data,
+      id: detai.categoryId,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('添加成功')
+        this.cancel()
+        this.get()
+      } else {
+        Tips.error(res.msg)
+      }
     })
   },
   // 全选
@@ -198,25 +250,11 @@ export default {
       ids: ids
     })
   },
-  // 事件
-  swipeChange(e) {
-    let index = e.currentTarget.dataset.index;
-    if (this.data.el !== index) {
-      if (this.data.el !== "undefined") {
-        this.data.list[this.data.el].switcher = "off";
-      }
-      this.data.list[index].switcher = "on";
-      this.setData({
-        list: this.data.list
-      });
-      this.data.el = index;
-    }
-    this.setData({
-      selected: false
-    })
-  },
   // 批量
-  del () {
+  batchMove (e) {
+    Utils.batchMove(this, 'category' + this.data.type, e.detail)
+  },
+  batchDel () {
     if (!this.data.ids) {
       return Tips.toast('未选择')
     }
@@ -235,7 +273,7 @@ export default {
       }
     })
   },
-  display (e) {
+  batchDisplay (e) {
     if (!this.data.ids) {
       return Tips.toast('未选择')
     }
@@ -258,20 +296,96 @@ export default {
       }
     })
   },
-  move () {}
+  batchHidden (e) {
+    let bool = e.currentTarget.dataset.show
+    this.data.list.forEach(item => {
+      if (item.grade !== '1') {
+        item.hidden = bool
+      }
+      item.expand = !bool
+    })
+    this.setData({
+      list: this.data.list
+    })
+  },
+  rename (e) {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    let ids = this.data.ids.split(',')
+    this.data.list.forEach(item => {
+      ids.forEach(id => {
+        if (id === item.categoryId) item.editing = true
+      })
+    })
+    this.setData({
+      list: this.data.list
+    })
+  },
+  input (e) {
+    let index = e.currentTarget.dataset.index
+    var obj ='list['+index+'].name'
+    this.setData({
+      [obj]: e.detail.value
+    })
+  },
+  nameChange (e) {
+    let item = e.currentTarget.dataset.item
+    let data = {
+      model: JSON.stringify({
+        id: item.categoryId,
+        name: item.name
+      }),
+      _method: 'put'
+    }
+    api.categoryDetail({
+      data: data,
+      id: item.categoryId,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('保存成功')
+        var obj ='list['+item.index+']'
+        item.editing = false
+        this.setData({
+          [obj]: item
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  more (e) {
+    let show = e.currentTarget.dataset.show
+    this.setData({
+      showMask: show
+    })
+  }
 }
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1
+.ui-row-list > .ui-row:not(:last-child):after {
+  left: 123rpx;
 }
-.j_fixed_btn{
-  color: #a8a9ae;
-  background: #fafafa;
+.category-list{
   .iconfont{
-    color: #9f9f9f;
-    font-size: 20px;
+    color: #cfcdd1;
+  }
+  .active{
+    color:#00c0e4;
+  }
+  .text{
+    color: #4e4e4e;
+  }
+  input{
+    height: 64rpx;
+    line-height: 64rpx;
+    padding:0 15px;
+    color:#060407
+  }
+  .icon-gou{
+    color: #4c4c4c
   }
 }
 
@@ -285,6 +399,33 @@ page{
   &.active{
     transform:rotate(180deg);
     color:#09C2B1!important;
+  }
+}
+
+.add-content{
+  text-align:left;margin:5px 15px;background:#f6f6f6;
+  height: 64rpx;
+  line-height: 64rpx;    
+  position: relative;
+  .icon-close-circle-fill{
+    width: 64rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    font-size: 16px;
+    text-align: center;
+    color: #b5b3b6;
+    position: absolute;
+    right: 0;
+    z-index: 3;
+  }
+  input{
+    height: 64rpx;
+    line-height: 64rpx;
+    padding:0 15px;
+    color:#060407
+  }
+  .icon-gou{
+    color: #4c4c4c
   }
 }
 </style>

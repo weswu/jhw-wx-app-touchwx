@@ -169,7 +169,7 @@ export default {
   },
   // 加载更多
   onReachBottom() {
-    Utils.LoadMore(this);
+    Utils.loadMore(this);
   }
 };
 </script>

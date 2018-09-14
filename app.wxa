@@ -5,36 +5,41 @@
 <script>
 import system from './static/utils/system'
 import api from './static/utils/api'
-
 export default {
   config: {
     usingComponents: {},
     pages: [
       'pages/user/login',
-      'pages/home/my',
+      'pages/product/product',
+      'pages/category/category',
+      'pages/shop/shop',
+      'pages/news/newsDetail',
+      'pages/shop/shopDetail',
+      'pages/shop/couponDetail',
+      'pages/shop/coupon',
+      'pages/shop/refund',
+      'pages/shop/refundDetail',
       'pages/shop/pay',
       'pages/shop/payDetail',
+      'pages/shop/delivery',
       'pages/shop/config',
-      'pages/shop/shop',
       'pages/album/album',
-      'pages/product/product',
       'pages/product/productDetail',
       'pages/product/productShop',
       'pages/news/news',
-      'pages/news/newsDetail',
-      'pages/cost/point',
       'pages/message/message',
       'pages/message/messageList',
       'pages/message/messageReply',
       'pages/message/messageDetail',
+      'pages/home/my',
       'pages/home/console',
       'pages/home/index',
       'pages/home/module',
       'pages/home/tools',
       'pages/pc/miniProgram',
       'pages/pc/website',
+      'pages/cost/point',
       'pages/cost/cost',
-      'pages/category/category',
       'pages/user/enterprise',
       'pages/user/account',
       'pages/user/password',
@@ -47,7 +52,6 @@ export default {
       'pages/setting/webView',
       'pages/static/seo/seoDetail',
       'pages/components/jTag',
-      'pages/components/jDate',
       'pages/components/jManyCategory'
     ],
     window: {
@@ -121,6 +125,7 @@ export default {
     newsCategory: [],
     albumCategory: [],
     tagList: [],
+    memberRankList: [],
     // 其它
     appid: 'wx2aba9d238ba02a76',
     appsecret: 'c7131553b820b07e778d763bac18e259'
@@ -216,6 +221,7 @@ export default {
           }
           wx.setStorageSync('layoutId', parseInt(layoutId))
         }
+        typeof cb == 'function' && cb(data)
       }
     })
   },
@@ -370,6 +376,9 @@ export default {
         if (list.length > 0) {
           if (list[0].type === '10') this.globalData.productCategory = list
           if (list[0].type === '11') this.globalData.newsCategory = list
+        } else {
+          this.globalData.productCategory = []
+          this.globalData.newsCategory = []
         }
         typeof cb == 'function' && cb(list)
       }
@@ -383,6 +392,15 @@ export default {
       }
       typeof cb == 'function' && cb(this.globalData.tagList)
     })
+  },
+  getMemberRank (cb) {
+    //标签
+    api.memberRank().then(res => {
+      if (res.success) {
+        this.globalData.memberRankList = res.attributes.data
+      }
+      typeof cb == 'function' && cb(this.globalData.memberRankList)
+    })
   }
 }
 </script>
@@ -393,6 +411,9 @@ export default {
 .hr{
   background: #f1f1f1;
   height: 32rpx;
+}
+.bg_color{
+  background-color: #f1f1f1;height:100vh;
 }
 // 底部按钮
 .fixed_btn{
@@ -465,13 +486,16 @@ radio {
     font-size: 12px;
     .mix-text-overflow();
   }
+  .span{
+    padding: 0 5px;
+  }
 }
 
 // 列表左移css
-.j_swipe_list {
-  background-color: #fff;
+.j_row_list{
+  background: #fff
 }
-.j_swipe_operate{
+.j_operate{
   background: #eee;
   color:#545454
 }

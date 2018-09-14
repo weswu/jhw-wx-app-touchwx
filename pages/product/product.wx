@@ -43,8 +43,8 @@
               <view> 添加时间：{{item.addTime}} </view>
             </view>
             <ui-row class="btn" height="30rpx">
-              <ui-col vertical-align="middle" align="center">
-                <view class="qrcode" bindtap="switch"> 二维码 </view>
+              <ui-col vertical-align="middle" align="center" bindtap="qrcode">
+                <view class="qrcode"> 二维码 </view>
               </ui-col>
               <ui-col vertical-align="bottom" align="center" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
                 <view class="view"> 预览 </view>
@@ -93,7 +93,7 @@
                 <view> 添加时间：{{item.addTime}} </view>
               </ui-col>
               <ui-col class="btn" width="84r" vertical-align="bottom" align="center">
-                <view class="qrcode" bindtap="switch"> 二维码 </view>
+                <view class="qrcode" data-show="{{ true }}" catchtap="qrcode"> 二维码 </view>
                 <view class="view"> 预览 </view>
               </ui-col>
             </ui-row>
@@ -101,7 +101,6 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-
     <cc-loadmore more="{{more}}"></cc-loadmore>
 
     <!-- footer -->
@@ -128,6 +127,7 @@
       </ui-row>
     </ui-fixed-view>
     
+    <!-- 更多 -->
     <view style="height:70px" wx:if="{{selected}}"></view>
     <ui-mask show="{{showMask}}" hide-delay="500">
       <view class="mask_btn">
@@ -140,6 +140,26 @@
         <button data-show="{{ false }}" bindtap="more">取消</button>
       </view>
     </ui-mask>
+
+    <!-- 二维码 -->
+    <ui-popup show="{{ qrCodeShow }}" height="270" position="bottom">
+      <ui-row height="45" border-bottom>
+        <ui-col class="text" vertical-align="middle" align="left" space-left="15">
+          请选择站点再生成二维码
+        </ui-col>
+        <ui-col width="100" vertical-align="middle" align="right" space-right="15" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
+          <view class="view" style="color:#12bedb"> 完成 </view>
+        </ui-col>
+      </ui-row>
+      <view class="j_picker">
+        <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;text-align:center" style="width: 100%; height: 220px;" value="{{value}}" bindchange="bindChange">
+          <picker-view-column>
+            <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 50px">网站编辑: {{item.id}}</view>
+          </picker-view-column>
+        </picker-view>
+      </view>
+    </ui-popup>
+
   </view>
 </template>
 
@@ -172,7 +192,11 @@ export default {
     ids: '', // 选中项
     toggle: false, // 全选切换状态 
     showMask: false, // 更多
-    chenlie: '0'
+    chenlie: '0', // 列表排序
+    staticList: [],
+    layout_index: 0,
+    // 二维码
+    qrCodeShow: true
   },
   onLoad () {
     this.get()
@@ -182,6 +206,18 @@ export default {
         cateList: res
       })
     })
+    getApp().getStaticList(res => {
+      that.setData({
+        staticList: res,
+        layoutId: wx.getStorageSync('layoutId')
+      })
+    })
+    if (getApp().globalData.staticList.length > 0){
+      this.setData({
+        staticList: getApp().globalData.staticList,
+        layoutId: wx.getStorageSync('layoutId')
+      })
+    }
   },
   get () {
     this.setData({
@@ -293,6 +329,13 @@ export default {
       list: this.data.list
     })
   },
+  // 二级码
+  qrcode (e) {
+    let show = e.currentTarget.dataset.show
+    this.setData({
+      qrCodeShow: show
+    })
+  },
   // 批量
   batchCopy () {
     Utils.batchCopy(this, 'product/copyProductByIds', {productIds: this.data.ids})
@@ -338,7 +381,7 @@ export default {
   },
   // 加载更多
   onReachBottom () {
-    Utils.LoadMore(this)
+    Utils.loadMore(this)
   }
 }
 </script>

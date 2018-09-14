@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="bg_color">
     <cc-header title="设置"></cc-header>
 
     <ui-row-list border-left-indent>
@@ -30,7 +30,7 @@
     </ui-row-list>
     <view class="hr"></view>
     <ui-row-list>
-      <ui-row height="55" hover-class="none" bindtap="logout">
+      <ui-row height="110r" hover-class="none" bindtap="logout">
           <ui-col vertical-align="middle" align="center" style="font-size:16px;">
               退出账号
           </ui-col>
@@ -64,7 +64,4 @@ export default {
 </script>
 
 <style lang="less">
-page{
-  background: #f1f1f1;
-}
 </style>

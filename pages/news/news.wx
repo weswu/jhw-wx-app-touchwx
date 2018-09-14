@@ -101,10 +101,9 @@ export default {
   },
   get () {
     this.setData({
-      ids: '',
-      'more.tip': '',
-      'more.loading': true
+      ids: ''
     })
+    Utils.loading(this)
     api.news({
       data: this.data.params
     }).then(res => {
@@ -219,7 +218,7 @@ export default {
   },
   // 加载更多
   onReachBottom () {
-    Utils.LoadMore(this)
+    Utils.loadMore(this)
   }
 }
 </script>

@@ -1,0 +1,116 @@
+<template>
+  <view>
+    <cc-header title="商品退货管理" count="{{count}}"></cc-header>
+
+    <ui-swipe-out height="80" data-index="{{index}}" operate-width="150" style="margin-bottom: 50px;"
+      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+      <view slot="content">
+        <ui-row height="80" border-bottom class="j_row_list" wx:for="{{list}}" wx:key="*this">
+          <ui-col vertical-align="middle" space-left="15">
+            <view class="text">手机：{{ item.mobile }}</view>
+            <view class="desc">{{ item.buyerReason }}</view>
+            <view class="desc">{{item.stateText}} <text class="span">{{ item.typeText }}</text> {{ item.addTime }} </view>
+          </ui-col>
+        </ui-row>
+      </view>
+      <view slot="operate">
+        <view class="j_operate" border-bottom>
+          <ui-row height="80">
+            <ui-col data-id="{{item.disputeId}}" bindtap="nav" vertical-align="middle" align="center">
+              修改
+            </ui-col>
+            <ui-col data-index="{{index}}" data-id="{{item.disputeId}}" bindtap="del" vertical-align="middle" align="center">
+              删除
+            </ui-col>
+          </ui-row>
+        </view>
+      </view>
+    </ui-swipe-out>
+
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    listText: [
+      {
+        disputeId: '5555',
+        mobile: '15168352892',
+        buyerReason: '昨天(27日)，记者联系了多家地产中介公司了解到，三环以里店面的成交量环，一般都比上个月要下降三四成左右，三环外降幅更甚。中原地产研究部统计数据显示，截至26号，北京二手房成交量仅有九千五百套，而在5月份同期，该数字已经超',
+        addTime: '2015-11-27 13:45',
+        typeText: '仅退款',
+        stateText: '未处理'
+      }
+    ],
+    params: {
+      page: 1,
+      pageSize: 16
+    },
+    count: 0,
+    more: { loading: true },
+      // 退货类型
+      disputeType: [
+        { text: '仅退款 ', value: 'onlymoney' },
+        { text: '退款并退货 ', value: 'goodandmoney' }
+      ],
+      // 退货状态
+      disputeState: [
+        { text: '未处理 ', value: 'unprocessed', html: '<span style="color: #d0021b;">未处理</span>' },
+        { text: '处理中 ', value: 'processed', html: '<span style="color: #ff7e3e;">处理中</span>' },
+        { text: '已退款 ', value: 'returned', html: '<span style="color: #417505;">已退款</span>' },
+        { text: '已拒绝 ', value: 'invalid', html: '<span style="color: #417505;">已拒绝</span>' },
+        { text: '已完成 ', value: 'completed', html: '<span style="color: #417505;">已完成</span>' },
+        { text: '已关闭 ', value: 'closed', html: '<span style="color: #a0a0a0;">已关闭</span>' }
+      ]
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    Utils.loading(this)
+    api.orderReview({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          this.disputeType.forEach(type => {
+            if (item.type === type.value) item.typeText = type.text
+          })
+          this.disputeState.forEach(state => {
+            if (item.state === state.value) item.stateText = state.text
+          })
+        })
+        Utils.scrollList(this, res)
+      }
+    })
+  },
+  nav (e) {
+    wx.navigateTo({
+      url: 'refundDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  // 删除
+  del (e) {
+    Utils.del(this, e, api.orderPayDetail)
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+
+</style>

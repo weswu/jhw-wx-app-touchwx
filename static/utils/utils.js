@@ -1,18 +1,30 @@
 import Tips from './tips'
 import api from './api'
+import regeneratorRuntime from 'regenerator-runtime'
 
 /*
  * @author: wes
  * @date: 2018-1-17
  * @desc: 删除单个数组
 */
-const del = (that, index) => {
-  that.data.list.splice(index, 1);
-  that.setData({
-    list: that.data.list,
-    count: that.data.count - 1
+const del = async (that, e, http) => {
+  await Tips.confirm('确认删除吗？')
+  Tips.loading()
+  const res = await http({
+    method: 'DELETE',
+    id: e.currentTarget.dataset.id
   })
-  Tips.success('删除成功')
+  Tips.loaded()
+  if (res.success) {
+    that.data.list.splice(e.currentTarget.dataset.index, 1);
+    that.setData({
+      list: that.data.list,
+      count: that.data.count - 1
+    })
+    Tips.success('删除成功')
+  } else {
+    Tips.error(res.msg)
+  }
 };
 
 
@@ -113,7 +125,13 @@ function formatTime(date, format, week) {
  * @date: 2018-8-24
  * @desc: 加载更多
 */
-const LoadMore = (that) => {
+const loading = (that) => {
+  that.setData({
+    'more.tip': '',
+    'more.loading': true
+  }) 
+}
+const loadMore = (that) => {
   let ctx = that.data
   if (ctx.more.loading) { return false }
   ctx.more.loading = true
@@ -264,7 +282,8 @@ module.exports = {
   scrollList,
   price,
   formatTime,
-  LoadMore,
+  loading,
+  loadMore,
   batchDel,
   batchDisplay,
   batchCopy,

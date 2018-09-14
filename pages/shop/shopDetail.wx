@@ -1,0 +1,153 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="支付方式详情"></cc-header>
+    <ui-row-list border-left-indent style="margin-bottom:50px;">
+      <ui-row height="104r">
+        <ui-col width="90" vertical-align="middle">
+          联系电话
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.mobile}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          退货状态
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="categoryPicker" id="state" value="{{current}}" range-key="text" range="{{disputeState}}">
+            <view >{{disputeState[current].text}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="98" vertical-align="middle">
+          退货类型
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="disputeType">
+            <label wx:for="{{disputeType}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.disputeType === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          退货金额
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="amount" value="{{detail.amount}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="100">
+        <ui-col width="70" vertical-align="middle">
+          退货说明
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea class="weui-textarea" placeholder="退货说明"
+          bindinput="input" id="buyerReason" value="{{detail.buyerReason}}" style="width:100%;height: 80px;margin:10px 0;"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      mobile: '15168352892',
+      type: 'onlymoney',
+      state: 'unprocessed',
+    },
+    current: 0,
+    // 退货类型
+    disputeType: [
+      { text: '仅退款 ', value: 'onlymoney' },
+      { text: '退款并退货 ', value: 'goodandmoney' }
+    ],
+    // 退货状态
+    disputeState: [
+      { text: '未处理 ', value: 'unprocessed' },
+      { text: '处理中 ', value: 'processed' },
+      { text: '已退款 ', value: 'returned' },
+      { text: '已拒绝 ', value: 'invalid' },
+      { text: '已完成 ', value: 'completed' },
+      { text: '已关闭 ', value: 'closed' }
+    ]
+  },
+  onLoad ({id}) {
+    this.get(id)
+  },
+  get (id) {
+    api.orderRefundDetail({
+      id: id
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  categoryPicker (e) {
+    var index = e.detail.value
+    this.data.detail[e.currentTarget.id] = this.data.disputeState[index].value
+    this.setData({
+      detail: this.data.detail,
+      current: index
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.amount,
+        method: 'required',
+        message: '退货金额为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let detail = this.data.detail
+    let data = {
+      model: JSON.stringify(detail),
+      _method: 'put'
+    }
+    Tips.loading()
+    api.orderRefundDetail({
+      data: data,
+      method: 'POST',
+      id: detail.disputeId || ''
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('处理成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+
+</style>
