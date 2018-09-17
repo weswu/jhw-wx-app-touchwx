@@ -1,0 +1,116 @@
+<template>
+  <view class="bg_color">
+    <cc-header title="友情链接"></cc-header>
+    <cc-lan bindchange="get"></cc-lan>
+
+    <ui-row-list>
+      <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        <view slot="content">
+          <ui-row height="140r" class="j_row_list" border-bottom>
+            <ui-col vertical-align="middle" align="left" width="130r" space-left="15" data-item="{{item}}" bindtap="item">
+              <image mode="aspectFit" src="http://img.jihui88.com/{{item.image}}" data-index="{{index}}" binderror="error"/>
+            </ui-col>
+            <ui-col vertical-align="middle" align="left" space-left="10">
+              <view class="text">{{ item.name }}</view>
+              <view class="desc">{{ item.url }}</view>
+            </ui-col>
+          </ui-row>
+        </view>
+        <view slot="operate">
+          <view class="j_operate">
+            <ui-row height="140r">
+              <ui-col data-id="{{item.linkId}}" bindtap="nav" vertical-align="middle" align="center">
+                修改
+              </ui-col>
+              <ui-col data-index="{{index}}" data-id="{{item.linkId}}" bindtap="del" vertical-align="middle" align="center">
+                删除
+              </ui-col>
+            </ui-row>
+          </view>
+        </view>
+      </ui-swipe-out>
+    </ui-row-list>
+
+    <navigator url="linkDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-lan': '../../packages/cc-lan'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 200,
+      type: '01'
+    },
+    height: 140/750*wx.WIN_WIDTH,
+    el: 'undefined'
+  }, 
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.link({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.switcher = 'off'
+        })
+        this.setData({
+          list: res.attributes.data
+        })
+      }
+    })
+  },
+  changeHandler (e) {
+    let index = e.currentTarget.dataset.index
+    if(this.data.el !== index){
+      if (this.data.el !== 'undefined') {
+        this.data.list[this.data.el].switcher = 'off'
+      }
+      this.data.list[index].switcher = 'on'
+      this.setData({
+        list:this.data.list
+      })
+      this.data.el = index  
+    }
+  },
+  nav (e) {
+    wx.navigateTo({
+      url: 'linkDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    Utils.del(this, e, api.linkDetail)
+  },
+  error(e) {
+    let index = e.currentTarget.dataset.index
+    this.data.list[index].image = "upload/j/j2/jihui88/picture/2018/08/29/92f8cf7a-cf99-4308-9630-5ca0bceac29f.png"
+    this.setData({
+      list: this.data.list
+    })
+  }
+}
+</script>
+
+<style lang="less">
+.ui-row-border-bottom:after {
+  left: 140rpx;
+}
+image{
+  max-width: 130rpx;
+  max-height: 130rpx;
+}
+</style>

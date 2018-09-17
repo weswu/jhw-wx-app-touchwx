@@ -1,0 +1,109 @@
+<template>
+  <view class="j_detail bg_color">
+    <cc-header title="评价详情"></cc-header>
+    <ui-row-list border-left-indent style="margin-bottom:50px;">
+      <view class="title">{{detail.content}}</view>
+      <view class="time">{{detail.fr_time}}</view>
+      <ui-row height="100">
+        <ui-col width="70" vertical-align="middle">
+          回复
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea class="weui-textarea" placeholder="评价回复"
+          bindinput="input" id="firstreply" value="{{detail.firstreply}}" style="width:100%;height: 80px;margin:10px 0;"/>
+        </ui-col>
+      </ui-row>
+      <view class="title">{{detail.secondcontent}}</view>
+      <view class="time">{{detail.sc_time}}</view>
+      <ui-row height="100">
+        <ui-col width="70" vertical-align="middle">
+          追评回复
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea class="weui-textarea" placeholder="追评回复"
+          bindinput="input" id="secondreply" value="{{detail.secondreply}}" style="width:100%;height: 80px;margin:10px 0;"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">回复</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      content: '环比跌幅超五成。',
+      secondcontent: '昨天(27日)，记者联系了多家地产中介公司了解到，三环以里店面的成交量环，一般都比上个月要下降三四成左右，三环外降幅更甚。中原地产研究部统计数据显示，截至26号，北京二手房成交量仅有九千五百套，而在5月份同期，该数字已经超',
+      fr_time: '2015-11-27 13:45',
+      sc_time: '2015-11-27 13:45'
+    }
+  },
+  onLoad ({id}) {
+    id && this.get(id)
+  },
+  get (id) {
+    api.orderReviewDetail({
+      id: id
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  categoryPicker (e) {
+    var index = e.detail.value
+    this.data.detail[e.currentTarget.id] = this.data.disputeState[index].value
+    this.setData({
+      detail: this.data.detail,
+      current: index
+    })
+  },
+  submit () {
+    let detail = this.data.detail
+    let data = {
+      model: JSON.stringify(detail),
+      _method: 'put'
+    }
+    Tips.loading()
+    api.orderReviewDetail({
+      data: data,
+      method: 'POST',
+      id: detail.disputeId || ''
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('回复成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+.title{
+  color: #666;
+  padding-top: 10px;
+}
+.time{
+  color: #9f9f9f;
+  font-size: 12px;
+  padding-bottom: 10px;
+}
+</style>

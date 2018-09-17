@@ -1,0 +1,119 @@
+<template>
+  <view class="bg_color">
+    <cc-header title="评价管理" count="{{count}}"></cc-header>
+
+    <ui-row-list>
+      <ui-accordion bindchange="slide" wx:for="{{ list }}" header-height="50">
+        <view slot="header">
+          <ui-row height="50" border-bottom class="title">
+            <ui-col class="text" vertical-align="middle" align="left" space-left="10">
+              {{ item.content }}
+            </ui-col>
+            <ui-col class="desc" vertical-align="middle" align="center" width="110">
+              {{ item.fr_time }}
+            </ui-col>
+            <ui-col vertical-align="middle" align="center" width="30"></ui-col>
+          </ui-row>
+        </view>
+        <view slot="content">
+          <ui-row class='content'>
+            <ui-col vertical-align="middle" align="left" space-left="10">
+              {{ item.secondcontent }}
+              <view class="desc">{{item.sc_time}}</view>
+            </ui-col>
+            <ui-col class="detail" vertical-align="middle" align="center" width="50" data-id="{{item.reviewId}}" bindtap="detail">
+              回复
+            </ui-col>
+          </ui-row>
+        </view>
+      </ui-accordion>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    listTest: [
+      {
+        firstreply: '环比跌幅超五成。',
+        secondcontent: '昨天(27日)，记者联系了多家地产中介公司了解到，三环以里店面的成交量环，一般都比上个月要下降三四成左右，三环外降幅更甚。中原地产研究部统计数据显示，截至26号，北京二手房成交量仅有九千五百套，而在5月份同期，该数字已经超',
+        fr_time: '2015-11-27 13:45',
+        sc_time: '2015-11-27 13:45'
+      }
+    ],
+    params: {
+      page: 1,
+      pageSize: 8
+    },
+    count: 0,
+    more: {},
+    height: 140/750*wx.WIN_WIDTH
+  }, 
+  onLoad () {
+    this.get()
+  },
+  get () {
+    Utils.loading(this)
+    api.orderReview({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.switcher = 'off'
+        })
+        Utils.scrollList(this, res, '没有更多评价')
+      }
+    })
+  },
+  lanChange () {
+    this.setData({
+      'params.page': 1,
+      list: []
+    })
+    this.get()
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'reviewDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+.ui-row-border-bottom:after {
+  left: 30rpx;
+}
+.text{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.content{
+  background-color: #F6F6F6;
+  font-size: 13px;
+  border-bottom: 1px solid #fff;
+  color: #666;
+  padding: 10px 0;
+  .detail{
+    color: #00c0e4;
+  }
+}
+</style>

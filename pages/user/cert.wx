@@ -1,0 +1,129 @@
+<template>
+  <view class="bg_color">
+    <cc-header title="荣誉证书" count="{{count}}"></cc-header>
+    <cc-lan bindchange="lanChange"></cc-lan>
+
+    <ui-row-list>
+      <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        <view slot="content">
+          <ui-row height="140r" class="j_row_list" border-bottom>
+            <ui-col vertical-align="middle" align="left" width="130r" space-left="15" data-item="{{item}}" bindtap="item">
+              <image mode="aspectFit" src="http://img.jihui88.com/{{item.att.serverPath}}" data-index="{{index}}" binderror="error"/>
+            </ui-col>
+            <ui-col vertical-align="middle" align="left" space-left="10">
+              <view class="text">{{ item.name }}</view>
+            </ui-col>
+          </ui-row>
+        </view>
+        <view slot="operate">
+          <view class="j_operate">
+            <ui-row height="140r">
+              <ui-col data-id="{{item.certificateId}}" bindtap="nav" vertical-align="middle" align="center">
+                修改
+              </ui-col>
+              <ui-col data-index="{{index}}" data-id="{{item.certificateId}}" bindtap="del" vertical-align="middle" align="center">
+                删除
+              </ui-col>
+            </ui-row>
+          </view>
+        </view>
+      </ui-swipe-out>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <navigator url="certDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header',
+      'cc-lan': '../../packages/cc-lan'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 8
+    },
+    count: 0,
+    more: {},
+    height: 140/750*wx.WIN_WIDTH,
+    el: 'undefined'
+  }, 
+  onLoad () {
+    this.get()
+  },
+  get () {
+    Utils.loading(this)
+    api.cert({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.switcher = 'off'
+        })
+        Utils.scrollList(this, res, '没有更多证书')
+      }
+    })
+  },
+  lanChange () {
+    this.setData({
+      'params.page': 1,
+      list: []
+    })
+    this.get()
+  },
+  changeHandler (e) {
+    let index = e.currentTarget.dataset.index
+    if(this.data.el !== index){
+      if (this.data.el !== 'undefined') {
+        this.data.list[this.data.el].switcher = 'off'
+      }
+      this.data.list[index].switcher = 'on'
+      this.setData({
+        list:this.data.list
+      })
+      this.data.el = index  
+    }
+  },
+  nav (e) {
+    wx.navigateTo({
+      url: 'certDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    Utils.del(this, e, api.linkDetail)
+  },
+  error(e) {
+    let index = e.currentTarget.dataset.index
+    this.data.list[index].att.serverPath = "upload/j/j2/jihui88/picture/2018/08/29/92f8cf7a-cf99-4308-9630-5ca0bceac29f.png"
+    this.setData({
+      list: this.data.list
+    })
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+.ui-row-border-bottom:after {
+  left: 140rpx;
+}
+image{
+  max-width: 130rpx;
+  max-height: 130rpx;
+}
+
+</style>

@@ -62,7 +62,7 @@ const posters = (params) => http(params, 'https://api.jihui88.net/qrcode_poster/
 /***************** 公司信息 ************/
 const enterprise = (params) => http(params, host + 'enterprise/detail' + (params ? '/' + params.id : ''))
 const link = (params) => http(params, host + 'link/list')
-const linkDetail = (params) => http(params, host + 'link/' + (params.method ? 'detail' : 'updateList') + (params.id ? '/' + params.id : ''))
+const linkDetail = (params) => http(params, host + 'link/detail' + (params.id ? '/' + params.id : ''))
 const cert = (params) => http(params, host + 'cert/list')
 const certDetail = (params) => http(params, host + 'cert/detail' + (params.id ? '/' + params.id : ''))
 
@@ -112,6 +112,7 @@ const order = (params) => http(params, host + 'order/list')
 const webinfo = (params) => http(params, host + 'webinfo/detail/' + params.id)
 const orderDetail = (params) => http(params, host + 'order/detail/' + params.id)
 const orderReview = (params) => http(params, host + 'productreview/list')
+const orderReviewDetail = (params) => http(params, host + 'productreview/detail/' + params.id)
 const orderRefund = (params) => http(params, host + 'orderDispute/list')
 const orderRefundDetail = (params) => http(params, host + 'orderDispute/detail/' + params.id)
 const orderPay = (params) => http(params, host + 'paymentconfig/list')
@@ -157,6 +158,6 @@ module.exports = {
   /***************** 会员 ************/
   member, memberDetail, memberRank,
   /***************** 商城 ************/
-  order, webinfo, orderRefund, orderRefundDetail, orderReview, orderPay, orderPayDetail, orderDetail, orderDelivery,
+  order, webinfo, orderRefund, orderRefundDetail, orderReview, orderReviewDetail, orderPay, orderPayDetail, orderDetail, orderDelivery,
   coupon, couponDetail
 }

@@ -10,6 +10,12 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/shop/review',
+      'pages/shop/reviewDetail',
+      'pages/user/cert',
+      'pages/user/certDetail',
+      'pages/user/link',
+      'pages/user/linkDetail',
       'pages/product/product',
       'pages/category/category',
       'pages/shop/shop',
@@ -144,6 +150,10 @@ export default {
           //发起网络请求
           wx.getUserInfo({
             success: function(u) {
+              wx.setStorageSync('nickName', u.userInfo.nickName)
+              wx.setStorageSync('headimgurl', u.userInfo.avatarUrl)
+              wx.setStorageSync('encryptedData', u.encryptedData)
+              wx.setStorageSync('iv', u.iv)
               api.wxapplogin({
                 data: {
                   code: code,
@@ -413,7 +423,24 @@ export default {
   height: 32rpx;
 }
 .bg_color{
-  background-color: #f1f1f1;height:100vh;
+  background-color: #f1f1f1;
+}
+.j_add {
+  position: fixed;
+  right: 30rpx;
+  bottom: 35rpx;
+  width: 100rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  z-index:500;
+  background-color: @primary-color;
+  border-radius:50%;
+  box-shadow: 0 1px 6px rgba(0,0,0,.2);
+  i {
+    font-size: 50rpx;
+    color: #fff;
+  }
 }
 // 底部按钮
 .fixed_btn{

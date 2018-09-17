@@ -1,0 +1,137 @@
+<template>
+  <view class="j_detail bg_color">
+    <cc-header title="荣誉证书"></cc-header>
+    <ui-row-list border-left-indent style="margin-bottom:50px;">
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="240r">
+        <ui-col width="70" vertical-align="middle">
+          图片
+        </ui-col>
+        <ui-col width="80" vertical-align="middle">
+          <cc-image id="image" src="{{detail.att.serverPath}}" width="148r" bindchange="changePic"></cc-image>
+        </ui-col>
+        <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" bindtap="updatePic">
+          <view class="btn_gray">重新上传</view>
+        </ui-col>
+        <ui-col width="50" vertical-align="middle" bindtap="clearPic">
+          <view class="btn_gray">清除</view>
+        </ui-col>
+        <ui-col vertical-align="middle"></ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-image': '../../packages/cc-image'
+    }
+  },
+  data: {
+    detail: {}
+  },
+  onLoad ({id}) {
+    if (id) {
+      this.get(id)
+    } else {
+      this.setData({
+        detail: {
+          att: {
+            serverPath: ''
+          },
+          type: '01'
+        }
+      })
+    }
+  },
+  get (id) {
+    api.certDetail({
+      id: id
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  // 图片
+  updatePic () {
+    this.selectComponent("#image").chooseImage()
+  },
+  clearPic () {
+    this.setData({
+      'detail.att.serverPath': ''
+    })
+  },
+  changePic (e) {
+    this.setData({
+      'detail.att.serverPath': e.detail.src,
+      'detail.attachmentId': e.detail.id
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '证书名称不能为空'
+      },
+      {
+        value: this.data.detail.att.serverPath,
+        method: 'required',
+        message: '证书图片不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let detail = this.data.detail
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.certificateId) data._method = 'put'
+    Tips.loading()
+    api.certDetail({
+      data: data,
+      method: 'POST',
+      id: detail.certificateId || ''
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+        var pages = getCurrentPages()
+        var prevPage = pages[pages.length - 2];  //上个页面
+        prevPage.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+
+</style>

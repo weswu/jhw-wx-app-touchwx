@@ -55,6 +55,7 @@ export default {
       }
     }).then(res => {
       getApp().onLaunch()
+      getApp().globalData.user = {}
       wx.navigateTo({
         url: '/pages/user/login?back=1'
       })

@@ -48,17 +48,17 @@ export default{
   // 处理输入事件
   input(e) {
     const fieldName = e.currentTarget.id;
-    this.data.detail[fieldName] = e.detail.value;
+    var field = "detail." + fieldName
     this.setData({
-      detail: this.data.detail
+      [field]: e.detail.value
     })
   },
   // 处理单选事件
   radio(e) {
     const fieldName = e.currentTarget.id;
-    this.data.detail[fieldName] = e.detail.value;
+    var field = "detail." + fieldName
     this.setData({
-      detail: this.data.detail
+      [field]: e.detail.value
     })
   },
   picker(e) {
@@ -66,9 +66,9 @@ export default{
     const fieldName = e.currentTarget.id
     const list = e.currentTarget.dataset.list
     this.data.picker[fieldName] = index
-    this.data.detail[fieldName] = this.data[list][index].value
+    var field = "detail." + fieldName
     this.setData({
-      detail: this.data.detail,
+      [field]: this.data[list][index].value,
       picker: this.data.picker
     })
   }

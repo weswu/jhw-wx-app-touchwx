@@ -53,7 +53,11 @@ export default {
                 that.setData({
                   src: src
                 });
-                that.triggerEvent('change', src)
+                that.triggerEvent('change', {
+                  id: res.data.split(',')[1],
+                  src: src,
+                  name: res.data.split(',')[2]
+                })
               }
             }
           })

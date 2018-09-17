@@ -210,7 +210,7 @@ let pageConf = {
   },
   changePic (e) {
     this.setData({
-      'detail.picPath': e.detail
+      'detail.picPath': e.detail.src
     })
   },
   // seo

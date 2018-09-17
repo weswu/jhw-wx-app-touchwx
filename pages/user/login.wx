@@ -73,7 +73,11 @@ let pageConf = {
           'detail.code': login.code,
           'detail.skey': wx.getStorageSync('skey'),
           'detail.appid': getApp().globalData.appid,
-          'detail.appsecret': getApp().globalData.appsecret
+          'detail.appsecret': getApp().globalData.appsecret,
+          'detail.nickName': wx.getStorageSync('nickName'),
+          'detail.headimgurl': wx.getStorageSync('headimgurl'),
+          'detail.encryptedData': wx.getStorageSync('encryptedData'),
+          'detail.iv': wx.getStorageSync('iv')
         })
         Tips.loading()
         api.login({

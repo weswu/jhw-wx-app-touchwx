@@ -120,6 +120,9 @@ export default{
     accountInfo: {}
   },
   onLoad () {
+    this.get()
+  },
+  get () {
     let that = this
     getApp().getUser(res => {
       that.setData({
@@ -143,6 +146,9 @@ export default{
     })
   },
   onShow () {
+    if (!getApp().globalData.user.userId) {
+      this.get()
+    }
     this.setData({
       accountInfo: getApp().globalData.accountInfo,
       userInfo: getApp().globalData.userInfo

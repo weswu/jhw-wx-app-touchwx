@@ -257,7 +257,7 @@ let pageConf = {
   },
   changePic (e) {
     this.setData({
-      'detail.pic': e.detail
+      'detail.pic': e.detail.src
     })
   },
   validate() {

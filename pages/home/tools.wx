@@ -61,8 +61,8 @@ export default {
         title: '公司信息',
         children: [
           { url: '/pages/user/enterprise', text: '基本资料', icon: 'icon-ziliao' },
-          { url: '/pages/user/recruit', text: '招聘管理', icon: 'icon-zhaopin' },
           { url: '/pages/user/link', text: '友情链接', icon: 'icon-ziyuan' },
+          { url: '/pages/user/cert', text: '荣誉证书', icon: 'icon-gongsi' },,
           { url: '', text: 'text', icon: 'icon-jia' }
         ]
       },

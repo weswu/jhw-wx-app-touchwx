@@ -184,7 +184,7 @@ let pageConf = {
   },
   changePic (e) {
     this.setData({
-      'detail.enterprise.logo': e.detail
+      'detail.enterprise.logo': e.detail.src
     })
   },
   validate() {
