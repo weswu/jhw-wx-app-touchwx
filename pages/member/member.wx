@@ -1,0 +1,210 @@
+<template>
+  <view>
+    <cc-header title="{{title}}" count="{{count}}" back="{{!selected}}">
+      <view bindtap="toggleAll" wx:if="{{selected}}" style="width:100%">
+        <text wx:if="{{!toggle}}">全选</text>
+        <text wx:if="{{toggle}}">全不选</text>
+      </view>
+    </cc-header>
+    <!-- head -->
+    <cc-search value="{{params.name}}" type="member" list="{{cateList}}" bindinput="search" bindchange="cateChange">
+      <navigator slot="right" url="memberDetail" class="iconfont icon-jia1" hover-class="none"></navigator>
+    </cc-search>
+    
+    <!-- body -->
+    <ui-row-list>
+      <ui-row height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle" align="center" width="123r" data-index="{{index}}" bindtap="toggle">
+          <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle" data-item="{{item}}" bindtap="item">
+          {{item.name || item.username}}
+          <view class="desc"> {{item.addTime}} <text wx:if="{{item.email}}">{{item.email}}</text> </view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <!-- footer -->
+    <ui-fixed-view bottom="0;z-index:700" left="0" right="0" wx:if="{{selected}}">
+      <ui-row height="60" border-top class="fixed_btn">
+        <ui-col vertical-align="middle" align="center" bindtap="batchDel">
+          <i class="iconfont icon-delete-fill"></i>
+          <view class="desc">删除</view>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header',
+      'cc-search': '../../packages/cc-search'
+    }
+  },
+  data: {
+    title: '会员管理',
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 16,
+      name: ''
+    },
+    count: 0,
+    more: {},
+    cateList: [],
+    selected: false, //选中状态
+    ids: '', // 选中项
+    toggle: false // 全选切换状态 
+  },
+  onLoad () {
+    this.get()
+    let that = this
+    getApp().getMemberRank(res => {
+      res.forEach(item => {
+        item.categoryId = item.rankId
+      })
+      that.setData({
+        cateList: res
+      })
+    })
+  },
+  get () {
+    this.setData({
+      ids: ''
+    })
+    Utils.loading(this)
+    api.member({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
+          item._checked = false
+        })
+        Utils.scrollList(this, res, '没有更多会员')
+      }
+    })
+  },
+  // 搜索
+  search (e) {
+    this.data.params.page = 1
+    this.data.params.name = e.detail
+    this.setData({
+      list: [],
+      params: this.data.params
+    })
+    this.get()
+  },
+  cateChange (e) {
+    this.data.params.page = 1
+    this.data.params.memberRankId = e.detail
+    this.setData({
+      list: [],
+      params: this.data.params
+    })
+    this.get()
+  },
+  // 全选
+  toggleAll () {
+    let list = this.data.list
+    let toggle = !this.data.toggle
+    list.forEach(item => {
+      item._checked = toggle
+    })
+    this.setData({
+      list: list,
+      toggle: toggle
+    })
+    this.initSelcted()
+  },
+  toggle (e) {
+    let index = e.currentTarget.dataset.index
+    let field = 'list[' + index + ']._checked'
+    this.setData({
+      [field]: !this.data.list[index]._checked,
+      selected: true
+    })
+    this.initSelcted ()
+  },
+  initSelcted () {
+    let list = this.data.list
+    let ids = ''
+    list.forEach(item => {
+      if (item._checked) {
+        ids = ids ? (ids + ',' + item.memberId) : item.memberId
+      }
+    })
+    let number = ids ? ids.split(',').length : 0
+    this.setData({
+      ids: ids,
+      title: '已选择' + number + '名会员'
+    })
+  },
+  item (e) {
+    let item = e.currentTarget.dataset.item
+    if (this.data.selected) {
+      this.setData({
+        selected: false,
+        title: '会员管理'
+      })
+    } else {
+      wx.navigateTo({
+        url: 'memberDetail?id=' + item.memberId
+      })
+    }
+  },
+  // 批量
+  batchDel () {
+    if (!this.data.ids) {
+      return Tips.toast('未选择')
+    }
+    api.memberBatchDel({
+      data: {memberIds: this.data.ids},
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('删除成功')
+        this.setData({
+          list: [],
+          'params.page': 1,
+          selected: false
+        })
+        this.get()
+      }
+    })
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.ui-row-list > .ui-row:not(:last-child):after {
+  left: 123rpx;
+}
+.ui-row-list{
+  .desc{
+    text{
+      padding: 0 5px
+    }
+  }
+  &.ui-row-border-bottom:after {
+    left: 40px;
+  }
+}
+</style>

@@ -1,0 +1,381 @@
+<template>
+  <view class="j_detail bg_color">
+    <cc-header title="会员详情"></cc-header>
+
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          账号
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="username" value="{{detail.username}}" wx:if="{{!detail.memberId}}"/>
+          <view wx:if="{{detail.memberId}}">{{detail.username}}</view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          昵称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          密码
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="password" value="{{detail.password}}" type="password"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          确认密码
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="rePassword" value="{{detail.rePassword}}" type="password"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          E-mail
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="email" value="{{detail.email}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          积分
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="point" value="{{detail.point}}" type="number"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          预存款
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="deposit" value="{{detail.deposit}}" type="number"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          会员等级
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="categoryPicker" id="memberRank" value="{{rankIndex}}" range-key="name" range="{{memberRankList}}">
+            <view class="weui-select weui-select_in-select-after">{{memberRankList[rankIndex].name}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          是否启用
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isAccountEnabled">
+            <label>
+              <radio value="01" checked="{{detail.isAccountEnabled === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isAccountEnabled === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r" wx:for="{{detail.items}}" wx:key="*this">
+        <ui-col width="60" vertical-align="middle">
+          {{item.name}}
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <checkbox-group bindchange="checkboxChange" data-index="{{index}}" wx:if="{{item.attributeType === 'checkbox'}}">
+            <label wx:for="{{item.value}}" wx:for-index="idx" wx:for-item="row" wx:key="idx">
+              <checkbox value="{{row.value}}" checked="{{row.checked}}"></checkbox>{{row.value}}
+            </label>
+          </checkbox-group>
+          <radio-group bindchange="checkboxChange" data-index="{{index}}" wx:elif="{{item.attributeType === 'select'}}">
+            <label wx:for="{{item.value}}" wx:for-index="idx" wx:for-item="row" wx:key="idx">
+              <radio value="{{row.value}}" checked="{{row.checked}}"></radio>{{row.value}}
+            </label>
+          </radio-group>
+          <picker mode="date" value="{{item.value}}" bindchange="dateChange" wx:elif="{{item.attributeType === 'date'}}">
+            <view class="picker">
+              {{item.value}}
+            </view>
+          </picker>
+          <input placeholder="请填写" bindinput="inputChange" data-index="{{index}}" value="{{item.value}}" wx:else/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view style="height:80px"></view>
+    <button type="primary" bindtap="submit" class="fixed">保存</button>
+  </view>
+ </template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-image': '../../packages/cc-image',
+      'cc-date': '../../packages/cc-date',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail:{
+      addTime: new Date(),
+      topnews: '00'
+    },
+    name: '',
+    rankIndex: 0,
+    memberRankList: [],
+    memberAttrList: []
+  },
+  onLoad (e) {
+    if (e.id) {
+      this.setData({
+        detail: {
+          memberId: e.id
+        }
+      })
+      this.get()
+    } else {
+      this.setData({
+        detail: {
+          isAccountEnabled: '01',
+          point: 0,
+          memberAttributeMapStore: [],
+          item: []
+        }
+      })
+      this.initAttr()
+    }
+    if (getApp().globalData.memberRankList.length>0) {
+      this.initRank(getApp().globalData.memberRankList)
+    } else {
+      let that = this
+      getApp().getMemberRank(res => {
+        that.initRank(res)
+      })
+    }
+  },
+  initRank (data) {
+    this.setData({
+      memberRankList: data
+    })
+    if (!this.data.detail.memberId) {
+      this.setData({
+        'detail.memberRank': data[0].rankId
+      })
+    } else {
+      this.initIndex()
+    }
+  },
+  get () {
+    api.memberDetail({
+      id: this.data.detail.memberId
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        let rankId = data.memberRank.rankId
+        data.memberRank = rankId
+        if (!data.isAccountEnabled) data.isAccountEnabled = '01'
+        if (!data.point) data.point = 0
+        data.item = []
+        this.setData({
+          detail: data
+        })
+        this.initIndex()
+        this.initAttr()
+      }
+    })
+  },
+  initIndex () {
+    this.data.memberRankList.forEach((item, index) => {
+      if (item.attId === this.data.detail.memberRank) {
+        this.setData({
+          rankIndex: index
+        })
+      }
+    })
+  },
+  initAttr () {
+    let that = this
+    let items = []
+    getApp().getMemberAttr(res => {
+      res.forEach(item => {
+        // 属性
+        if (item.attributeType === 'checkbox' || item.attributeType === 'select') {
+          item.value = []
+          item.attributeOptionList.forEach(row => {
+            item.value.push({
+              name: row,
+              value: row
+            })
+          })
+        } else if (item.attributeType === 'number') {
+          item.value = 1
+        } else if (item.attributeType === 'date') {
+          item.value = Utils.formatTime(new Date(), 'yyyy-MM-dd')
+        } else {
+          item.value = ''
+        }
+        that.data.detail.memberAttributeMapStore.forEach(store => {
+          let obj = store.att
+          if (item.attId === obj.attId) {
+            let val = store.element.substring(1, store.element.length - 1)
+            if (item.attributeType === 'checkbox' || item.attributeType === 'select') {
+              item.value.forEach(valItem => {
+                val.split(',').forEach(val2 => {
+                  if (valItem.value === val2) {
+                    valItem.checked = 'true'
+                  }
+                })
+              })
+            } else if (item.attributeType === 'number') {
+              item.value = parseInt(val)
+            } else {
+              item.value = val
+            }
+          }
+        })
+        items.push(item)
+      })
+      that.setData({
+        'detail.items': items,
+        memberAttrList: res
+      })
+    })
+  },
+  categoryPicker (e) {
+    var index = e.detail.value
+    this.setData({
+      'detail.memberRank': this.data.memberRankList[index].rankId,
+      rankIndex: index
+    })
+  },
+  checkboxChange (e) {
+    let index = e.currentTarget.dataset.index
+    let items = this.data.detail.items[index].value
+    let type = this.data.detail.items[index].attributeType
+    let selected = e.detail.value
+    items.forEach(item => {
+      item.checked = ''
+      if (type === 'select') {
+        if (selected === item.value) {
+          item.checked = 'true'
+        }
+      } else {
+        selected.forEach(row => {
+          if (row === item.value) {
+            item.checked = 'true'
+          }
+        })
+      }
+    })
+    let field = 'detail.items['+index+'].value'
+    this.setData({
+      [field]: items
+    })
+  },
+  inputChange (e) {
+    let index = e.currentTarget.dataset.index
+    let field = 'detail.items['+index+'].value'
+    this.setData({
+      [field]: e.detail.value
+    })
+  },
+  // 时间
+  dateChange (e) {
+    let index = e.currentTarget.dataset.index
+    let field = 'detail.items['+index+'].value'
+    this.setData({
+      [field]: e.detail.value
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.username,
+        method: 'required',
+        message: '账号不能为空'
+      },
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '昵称不能为空'
+      },
+      {
+        value: this.data.detail.memberRank,
+        method: 'required',
+        message: '会员等级不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    // 属性
+    let detail = this.data.detail
+    detail.items.forEach(item => {
+      if (item.isEnabled === '01') {
+        if (item.attributeType === 'checkbox' || item.attributeType === 'select') {
+          let val = ''
+          item.value.forEach(row => {
+            if (row.checked === 'true') {
+              val = val ? (',' + item.value)  : item.value
+            }
+          })
+          detail[item.attId] = val
+        } else if (item.attributeType === 'number') {
+          detail[item.attId] = item.value + ''
+        } else if (item.attributeType === 'date') {
+          detail[item.attId] = Utils.formatTime(item.value, 'yyyy-MM-dd')
+        } else {
+          detail[item.attId] = item.value
+        }
+      }
+    })
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.memberId) data._method = 'put'
+    Tips.loading()
+    api.memberDetail({
+      data: data,
+      method: 'post',
+      id: detail.memberId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+
+checkbox{
+  transform:scale(.7);
+}
+</style>
+

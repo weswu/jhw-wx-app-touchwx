@@ -10,6 +10,8 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/member/member',
+      'pages/member/memberDetail',
       'pages/shop/review',
       'pages/shop/reviewDetail',
       'pages/user/cert',
@@ -132,6 +134,7 @@ export default {
     albumCategory: [],
     tagList: [],
     memberRankList: [],
+    memberAttrList: [],
     // 其它
     appid: 'wx2aba9d238ba02a76',
     appsecret: 'c7131553b820b07e778d763bac18e259'
@@ -404,12 +407,19 @@ export default {
     })
   },
   getMemberRank (cb) {
-    //标签
     api.memberRank().then(res => {
       if (res.success) {
         this.globalData.memberRankList = res.attributes.data
       }
       typeof cb == 'function' && cb(this.globalData.memberRankList)
+    })
+  },
+  getMemberAttr (cb) {
+    api.memberAttr().then(res => {
+      if (res.success) {
+        this.globalData.memberAttrList = res.attributes.data
+      }
+      typeof cb == 'function' && cb(this.globalData.memberAttrList)
     })
   }
 }

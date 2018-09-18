@@ -4,7 +4,7 @@
       <ui-row height="100r" border-bottom style="background:#fff">
         <!-- 左 -->
         <ui-col vertical-align="middle" align="left" width="124r" space-left="15"  wx:if="{{type!=='category'}}">
-          <i class="iconfont icon-fenlei {{show ? 'active' : ''}}" wx:if="{{type==='news' || type==='product'}}" bindtap="openPopup"></i>
+          <i class="iconfont icon-fenlei {{show ? 'active' : ''}}" wx:if="{{type==='news' || type==='product' || type==='member'}}" bindtap="openPopup"></i>
           <slot name="add"></slot>
         </ui-col>
         <ui-col vertical-align="middle" align="center" width="96r" space-right="15" wx:if="{{type==='album'}}">
@@ -31,6 +31,7 @@
           <navigator url="productDetail" class="iconfont icon-jia1" hover-class="none" wx:if="{{type==='product'}}"></navigator>
           <i class="iconfont icon-upload" bindtap="chooseImage" wx:if="{{type==='album'}}"></i>
           <i class="iconfont icon-jia1" bindtap="addCategory" wx:if="{{type==='category'}}"></i>
+          <slot name="right"></slot>
         </ui-col>
       </ui-row>
     </view>
@@ -95,6 +96,9 @@ export default {
   },
   ready () {
     let height = (98+60)/750*wx.WIN_WIDTH
+    if (this.data.type === 'member') {
+      height = 99/750*wx.WIN_WIDTH
+    }
     this.setData({
       popup_NAV_HEIGHT: this.data.popup_NAV_HEIGHT + height,
       popupHeight: this.data.popupHeight + height
@@ -227,11 +231,11 @@ export default {
   .iconfont{
     color: #cfcdd1;
   }
-  .active{
-    color:#00c0e4;
-  }
   .text{
     color: #4e4e4e;
+  }
+  .active{
+    color:#00c0e4;
   }
 }
 
