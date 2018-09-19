@@ -16,7 +16,7 @@
               </ui-col>
             </ui-row>
             <view class="desc">
-              {{item.content}}
+              {{item.content || ''}}
             </view>
            </view>
         </ui-col>
@@ -50,7 +50,7 @@
     <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
       <ui-row-list border-left-indent>
         <ui-row height="43" border-bottom wx:for="{{selectList}}" wx:key="*this" data-item="{{item}}" bindtap="change">
-          <ui-col vertical-align="middle">
+          <ui-col vertical-align="middle" class="{{params.recvState === item.key ? 'active' : ''}}">
             {{item.value}}
           </ui-col>
           <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{params.recvState === item.key}}">
@@ -160,7 +160,9 @@ export default {
 </script>
 
 <style lang="less">
-
+page{
+  background: #f1f1f1
+}
 .icon-angle-bottom{
   display: inline-block;
   transform:rotate(0deg);
@@ -175,6 +177,9 @@ export default {
   border:none
 }
 
+.active{
+  color: #12bedb;
+}
 .text{
   width: 100%;
   border-bottom: 1px solid #dbdbdb;
@@ -182,9 +187,5 @@ export default {
 }
 .hr{
   height: 16rpx;
-}
-.time{
-  font-size: 12px;
-  color: #a9aab2;
 }
 </style>

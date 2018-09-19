@@ -14,7 +14,7 @@
       <view slot="operate">
         <view class="j_operate" border-bottom>
           <ui-row height="65">
-            <ui-col data-id="{{item.couponId}}" bindtap="nav" vertical-align="middle" align="center">
+            <ui-col data-id="{{item.couponId}}" bindtap="detail" vertical-align="middle" align="center">
               修改
             </ui-col>
             <ui-col data-index="{{index}}" data-id="{{item.couponId}}" bindtap="del" vertical-align="middle" align="center">
@@ -78,15 +78,16 @@ export default {
       this.data.el = index  
     }
   },
-  nav (e) {
+  detail (e) {
     wx.navigateTo({
       url: 'couponDetail?id=' + e.currentTarget.dataset.id
     })
   },
   del (e) {
+    let id = e.currentTarget.dataset.id
     let data = {
       model: JSON.stringify({
-        id: params.row.couponId,
+        id: id,
         state: '02',
         editField: true
       }),
@@ -94,8 +95,8 @@ export default {
     }
     api.couponDetail({
       data: data,
-      _method:'post',
-      id: e.currentTarget.dataset.id
+      method:'post',
+      id: id
     }).then(res => {
       this.data.list[e.currentTarget.dataset.index].state = '02'
       this.setData({

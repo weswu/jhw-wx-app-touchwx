@@ -16,8 +16,8 @@
           反馈类型
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <picker bindchange="categoryPicker" id="fdbk_type" value="{{fdbk_typeIndex}}" range-key="text" range="{{category}}">
-            <view class="weui-select weui-select_in-select-after">{{category[fdbk_typeIndex].text}}</view>
+          <picker bindchange="picker" id="fdbk_type" value="{{index}}" range-key="text" range="{{category}}">
+            <view>{{category[index].text}}</view>
           </picker>
         </ui-col>
       </ui-row>
@@ -50,7 +50,7 @@ let pageConf = {
     detail: {
       fdbk_type: '5'
     },
-    fdbk_typeIndex: 1,
+    index: 1,
     category: [
       { text: '表扬', value: '4' },
       { text: '建议', value: '5' },
@@ -58,14 +58,6 @@ let pageConf = {
       { text: '【资料修改】', value: '1507' },
       { text: '【页面与资料修改】', value: '1508' }
     ]
-  },
-  categoryPicker (e) {
-    var index = e.detail.value
-    this.data.detail[e.currentTarget.id] = this.data.category[index].value
-    this.setData({
-      detail: this.data.detail,
-      fdbk_typeIndex: index
-    })
   },
   validate() {
     const rules = [

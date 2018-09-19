@@ -1,0 +1,99 @@
+<template>
+  <view class="j_detail bg_color">
+    <cc-header title="商品相关配置"></cc-header>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="100" vertical-align="middle">
+          PC网站注册
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="memberRegisterPcDisplay">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.memberRegisterPcDisplay === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="100" vertical-align="middle">
+          手机网站注册
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="memberRegisterMobileDisplay">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.memberRegisterMobileDisplay === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {},
+    typelist: [
+      { text: '允许', value: '01' },
+      { text: '不允许', value: '00' }
+    ]
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.webinfo({
+      id: 'id'
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        if (!data.memberRegisterPcDisplay) data.memberRegisterPcDisplay = '00'
+        if (!data.memberRegisterMobileDisplay) data.memberRegisterMobileDisplay = '00'
+        this.setData({
+          detail: data
+        })
+      }
+    })
+  },
+  submit () {
+    let data = {
+      model: JSON.stringify({
+        webinfoId: this.data.detail.webinfoId,
+        enterpriseId: this.data.detail.enterpriseId,
+        memberRegisterPcDisplay: this.data.detail.memberRegisterPcDisplay,
+        memberRegisterMobileDisplay: this.data.detail.memberRegisterMobileDisplay
+      }),
+      _method: 'put'
+    }
+    api.webinfo({
+      data: data,
+      method: 'POST',
+      id: this.data.detail.webinfoId
+    }).then(res => {
+      if (res.success) {
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

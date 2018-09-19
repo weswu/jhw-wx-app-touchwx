@@ -97,9 +97,9 @@ export default {
         title: '客户管理',
         children: [
           { url: '/pages/member/member', text: '会员管理', icon: 'icon-Group' },
-          { url: '/pages/member/member_rank', text: '会员等级配置', icon: 'icon-huiyuandengjidengjizuanshi' },
-          { url: '/pages/member/member_attr', text: '会员属性配置', icon: 'icon-huiyuanshuxing' },
-          { url: '/pages/member/member_register', text: '网站会员注册', icon: 'icon-huiyuanzhuce' }
+          { url: '/pages/member/memberRank', text: '会员等级配置', icon: 'icon-huiyuandengjidengjizuanshi' },
+          { url: '/pages/member/memberAttr', text: '会员属性配置', icon: 'icon-huiyuanshuxing' },
+          { url: '/pages/member/memberRegister', text: '网站会员注册', icon: 'icon-huiyuanzhuce' }
         ]
       },
       {

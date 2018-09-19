@@ -10,6 +10,10 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/member/memberAttr',
+      'pages/member/memberRank',
+      'pages/product/product',
+      'pages/member/memberRegister',
       'pages/member/member',
       'pages/member/memberDetail',
       'pages/shop/review',
@@ -18,7 +22,6 @@ export default {
       'pages/user/certDetail',
       'pages/user/link',
       'pages/user/linkDetail',
-      'pages/product/product',
       'pages/category/category',
       'pages/shop/shop',
       'pages/news/newsDetail',
@@ -176,6 +179,11 @@ export default {
                   console.log(resp.msg || 'skey获取失败')
                 }
               })
+            },
+            fail: function(e) {
+              if (that.userInfoReadyCallback) {
+                that.userInfoReadyCallback(e)
+              }
             }
           })
         } else {
@@ -582,6 +590,9 @@ radio {
     color: #4e4e4e;
     .form_content{
       font-size:13px;
+    }
+    input{
+      padding:0 5px;
     }
     input::-webkit-input-placeholder {
       color: #b1b1b1;

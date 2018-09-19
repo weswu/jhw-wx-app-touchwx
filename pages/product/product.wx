@@ -43,7 +43,7 @@
               <view> 添加时间：{{item.addTime}} </view>
             </view>
             <ui-row class="btn" height="30rpx">
-              <ui-col vertical-align="middle" align="center" bindtap="qrcode">
+              <ui-col vertical-align="middle" align="center" data-item="{{item}}" bindtap="qrcode">
                 <view class="qrcode"> 二维码 </view>
               </ui-col>
               <ui-col vertical-align="bottom" align="center" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
@@ -93,7 +93,7 @@
                 <view> 添加时间：{{item.addTime}} </view>
               </ui-col>
               <ui-col class="btn" width="84r" vertical-align="bottom" align="center">
-                <view class="qrcode" data-show="{{ true }}" catchtap="qrcode"> 二维码 </view>
+                <view class="qrcode" data-show="{{ true }}" data-item="{{item}}" catchtap="qrcode"> 二维码 </view>
                 <view class="view"> 预览 </view>
               </ui-col>
             </ui-row>
@@ -142,19 +142,22 @@
     </ui-mask>
 
     <!-- 二维码 -->
+    <ui-fixed-view bottom="0;z-index:700" left="0" right="0" wx:if="{{qrCodeShow}}">
+      <image mode="aspectFit" src="http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/{{layoutId}}/pd?itemId={{item.productId2}}"/>
+    </ui-fixed-view>
     <ui-popup show="{{ qrCodeShow }}" height="270" position="bottom">
       <ui-row height="45" border-bottom>
         <ui-col class="text" vertical-align="middle" align="left" space-left="15">
           请选择站点再生成二维码
         </ui-col>
         <ui-col width="100" vertical-align="middle" align="right" space-right="15" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
-          <view class="view" style="color:#12bedb"> 完成 </view>
+          <view class="view" style="color:#12bedb">完成</view>
         </ui-col>
       </ui-row>
       <view class="j_picker">
-        <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;text-align:center" style="width: 100%; height: 220px;" value="{{value}}" bindchange="bindChange">
+        <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;" style="width: 100%; height: 220px;" value="{{value}}" bindchange="bindChange">
           <picker-view-column>
-            <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 50px">网站编辑: {{item.id}}</view>
+            <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
           </picker-view-column>
         </picker-view>
       </view>
@@ -194,9 +197,11 @@ export default {
     showMask: false, // 更多
     chenlie: '0', // 列表排序
     staticList: [],
+    layoutId: '',
     layout_index: 0,
     // 二维码
-    qrCodeShow: true
+    qrCodeShow: false,
+    item: {}
   },
   onLoad () {
     this.get()
@@ -332,8 +337,10 @@ export default {
   // 二级码
   qrcode (e) {
     let show = e.currentTarget.dataset.show
+    let item = e.currentTarget.dataset.item
     this.setData({
-      qrCodeShow: show
+      qrCodeShow: show,
+      item: item
     })
   },
   // 批量

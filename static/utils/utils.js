@@ -277,6 +277,12 @@ const upload = (option) => {
   }) 
 }
 
+const get = (option) => {
+  var pages = getCurrentPages()
+  var prevPage = pages[pages.length - 2];  //上个页面
+  prevPage.get()
+}
+
 module.exports = {
   del,
   scrollList,
@@ -288,5 +294,6 @@ module.exports = {
   batchDisplay,
   batchCopy,
   batchMove,
-  upload
+  upload,
+  get
 };

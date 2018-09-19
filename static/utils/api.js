@@ -105,7 +105,9 @@ const refurbish = (params) => http(params, host + 'album/single/refurbish')
 const member = (params) => http(params, host + 'member/list')
 const memberDetail = (params) => http(params, host + 'member/detail' + (params.id ? '/' + params.id : ''))
 const memberRank = (params) => http(params, host + 'member/rank/list')
+const memberRankDetail = (params) => http(params, host + 'member/rank/detail' + (params.id ? '/' + params.id : ''))
 const memberAttr = (params) => http(params, host + 'member/attr/list')
+const memberAttrDetail = (params) => http(params, host + 'member/attr/detail' + (params.id ? '/' + params.id : ''))
 const memberBatchDel = (params) => http(params, host + 'member/butchDel')
 
 
@@ -158,7 +160,7 @@ module.exports = {
   /***************** 相册 ************/
   album, albumDetail, albumAttr, albumCopy, imgDetail, imgCopy, imgDel, imgMove, refurbish,
   /***************** 会员 ************/
-  member, memberDetail, memberRank, memberAttr, memberBatchDel,
+  member, memberDetail, memberRank, memberRankDetail, memberAttr, memberAttrDetail, memberBatchDel,
   /***************** 商城 ************/
   order, webinfo, orderRefund, orderRefundDetail, orderReview, orderReviewDetail, orderPay, orderPayDetail, orderDetail, orderDelivery,
   coupon, couponDetail

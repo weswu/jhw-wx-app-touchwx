@@ -1,0 +1,158 @@
+<template>
+  <view class="j_detail bg_color">
+    <cc-header title="会员等级"></cc-header>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          等级名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          折扣
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="preferentialScale" value="{{detail.preferentialScale}}" type="number"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          所需积分
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="point" value="{{detail.point}}" type="number"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          是否默认
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isDefault">
+            <label>
+              <radio value="01" checked="{{detail.isDefault === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isDefault === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="100">
+        <ui-col width="70" vertical-align="middle">
+          等级说明
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea class="weui-textarea" placeholder="等级说明"
+    bindinput="input" id="fdbk_intro1k" value="{{detail.fdbk_intro1k}}" style="width:100%;height: 80px;margin:10px 0;"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">保存</button>
+  </view>
+ </template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail:{}
+  },
+  onLoad (e) {
+    if (e.id) {
+      this.setData({
+        detail: {
+          rankId: e.id
+        }
+      })
+      this.get()
+    } else {
+      this.setData({
+        detail: {
+          isDefault: '00',
+          preferentialScale: 100,
+          point: 0
+        }
+      })
+    }
+  },
+  get () {
+    api.memberRankDetail({
+      id: this.data.detail.rankId
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      }
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '等级名称不能为空'
+      },
+      {
+        value: this.data.detail.preferentialScale,
+        method: 'required',
+        message: '折扣不能为空'
+      },
+      {
+        value: this.data.detail.point,
+        method: 'required',
+        message: '积分不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    // 属性
+    let detail = this.data.detail
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.rankId) data._method = 'put'
+    Tips.loading()
+    api.memberRankDetail({
+      data: data,
+      method: 'post',
+      id: detail.rankId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+        Utils.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+
+checkbox{
+  transform:scale(.7);
+}
+</style>
+

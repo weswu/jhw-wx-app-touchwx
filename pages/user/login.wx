@@ -8,9 +8,10 @@
         <input class="username" placeholder="手机号/帐号" bindinput="input" id="username" value="{{detail.username}}"/>
         <input class="password" placeholder="请输入密码" bindinput="input" id="password" value="{{detail.password}}" type="password"/>
       </view>
-      <button class="weui-btn submit" type="primary" bindtap="submit" style="background:#ff6700">登录</button>
+      <button class="weui-btn submit" type="primary" bindtap="submit" hover-class="none" wx:if="{{!userInfo}}">登录</button>
+      <button class="weui-btn submit" type="primary" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" hover-class="none" wx:if="{{userInfo}}">用户授权</button>
     </view>
-    <view class="other">
+    <view class="other" wx:if="{{!userInfo}}">
       <view class="other-text"><text>其他登录方式</text></view>
       <view class="other-icon">
         <view bindtap="weixin"><i class="iconfont icon-weixin"></i></view>
@@ -32,7 +33,8 @@ let pageConf = {
   },
   data: {
     detail:{},
-    back: false
+    back: false,
+    userInfo: false
   },
   onLoad (e) {
     if (e.back === '1') {
@@ -43,6 +45,24 @@ let pageConf = {
     this.setData({
       'detail.username': wx.getStorageSync('username'),
       'detail.password': wx.getStorageSync('password')
+    })
+    let that = this
+    getApp().userInfoReadyCallback = res =>{
+      that.setData({
+        userInfo: true
+      })
+    }
+  },
+  bindGetUserInfo (e) {
+    getApp().onLaunch()
+    this.setData({
+      userInfo: false
+    })
+    wx.showToast({
+      title: '用户授权成功，请登录',
+      icon: 'none',
+      mask: true,
+      duration: 2000
     })
   },
   validate() {
@@ -151,6 +171,7 @@ export default Page(Object.assign(pageConf, Input))
     font-size: 16px;
     border-radius:3px;
     margin-top:10px;
+    background:#ff6700;
   }
   .password{
     border-top: 1px solid #d9d9d9;

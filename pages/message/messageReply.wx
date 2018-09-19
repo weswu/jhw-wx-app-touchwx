@@ -8,7 +8,7 @@
             发送给：
         </ui-col>
         <ui-col class="desc" vertical-align="middle" align="right">
-          <picker bindchange="picker" id="type" value="{{picker.type}}" data-list="category" range-key="text" range="{{category}}">
+          <picker bindchange="picker2" id="type" value="{{picker.type}}" data-list="category" range-key="text" range="{{category}}">
             <view>{{category[picker.type].text}}</view>
           </picker>
         </ui-col>
@@ -29,7 +29,7 @@
             反馈类型：
         </ui-col>
         <ui-col class="desc" vertical-align="middle" align="right">
-          <picker bindchange="picker" id="fdbkType" value="{{picker.fdbkType}}" data-list="fdbkList" range-key="text" range="{{fdbkList}}">
+          <picker bindchange="picker2" id="fdbkType" value="{{picker.fdbkType}}" data-list="fdbkList" range-key="text" range="{{fdbkList}}">
             <view>{{fdbkList[picker.fdbkType].text}}</view>
           </picker>
         </ui-col>

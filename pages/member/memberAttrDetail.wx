@@ -1,0 +1,224 @@
+<template>
+  <view class="j_detail bg_color">
+    <cc-header title="会员属性"></cc-header>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          属性名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="10">
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          属性类型
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="picker" id="attributeType" value="{{index}}" range-key="text" range="{{category}}">
+            <view>{{category[index].text}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="104r" wx:for="{{detail.items}}" wx:key="*this" wx:if="{{detail.attributeType === 'select' || detail.attributeType === 'checkbox'}}">
+        <ui-col width="60" vertical-align="middle">
+          选项{{index+1}}
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" data-index="{{index}}" bindinput="inputChagne" value="{{item.value}}"/>
+        </ui-col>
+        <ui-col width="60" vertical-align="middle" align="right" space-right="15" data-index="{{index}}" bindclick="handleRemove">
+          删除
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.attributeType === 'select' || detail.attributeType === 'checkbox'}}">
+        <ui-col class="form_content" vertical-align="middle" align="center">
+          <button bindclick="handleAdd">添加</button>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          是否默认
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isRequired">
+            <label>
+              <radio value="01" checked="{{detail.isRequired === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isRequired === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          是否启用
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="isEnabled">
+            <label>
+              <radio value="01" checked="{{detail.isEnabled === '01'}}"></radio>是
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.isEnabled === '00'}}"></radio>否
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">保存</button>
+  </view>
+ </template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail:{},
+    index: 0,
+    category:[
+      { text: '文本', value: 'text' },
+      { text: '数字', value: 'number' },
+      { text: '字母', value: 'alphaint' },
+      { text: '单选项', value: 'select' },
+      { text: '多选项', value: 'checkbox' },
+      { text: '日期', value: 'date' }
+    ]
+  },
+  onLoad (e) {
+    if (e.id) {
+      this.setData({
+        detail: {
+          attId: e.id
+        }
+      })
+      this.get()
+    } else {
+      this.setData({
+        detail: {
+          attributeType: 'text',
+          isRequired: '00',
+          isEnabled: '00',
+          items: [
+            {
+              value: ''
+            }
+          ]
+        }
+      })
+    }
+  },
+  get () {
+    api.memberAttrDetail({
+      id: this.data.detail.attId
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        let index = 0
+        this.data.category.forEach((item, idx) => {
+          if (item.value === data.attributeType){
+            index = idx
+          }
+        })
+        data.items = []
+        this.setData({
+          detail: data,
+          index: index
+        })
+        if (data.attributeType === 'select' || data.attributeType === 'checkbox') {
+          data.attributeOptionList.forEach(item => {
+            this.handleAdd(item)
+          })
+        }
+      }
+    })
+  },
+  handleAdd (val) {
+    this.data.detail.items.push({
+      value: val || { value: '' }
+    })
+    this.setData({
+      'detail.items': this.data.detail.items
+    })
+  },
+  handleRemove (e) {
+    let index = e.currentTarget.dataset.index
+    this.data.detail.items.splice(index, 1)
+    this.setData({
+      'detail.items': this.data.detail.items
+    })
+  },
+  inputChagne (e) {
+    let index = e.currentTarget.dataset.index
+    this.data.detail.items[index].value = e.detail.value
+    this.setData({
+      'detail.items': this.data.detail.items
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '属性名称不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }  
+    // 属性
+    let detail = this.data.detail
+    if (detail.attributeType === 'select' || detail.attributeType === 'checkbox') {
+      if (detail.items.length === 0) return Utils.error('完善选项数据')
+      let store = []
+      detail.items.forEach(item => {
+        store.push(item.value)
+      })
+      detail.attributeOptionStore = JSON.stringify(store)
+    }
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.attId) data._method = 'put'
+    Tips.loading()
+    api.memberAttrDetail({
+      data: data,
+      method: 'post',
+      id: detail.attId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+        Utils.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+
+checkbox{
+  transform:scale(.7);
+}
+</style>
+

@@ -1,0 +1,115 @@
+<template>
+  <view>
+    <cc-header title="会员等级配置"></cc-header>
+    
+    <ui-row-list border-left-indent>
+      <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        <view slot="content">
+          <ui-row height="65" class="j_row_list" border-bottom>
+            <ui-col vertical-align="middle" align="left">
+              <view class="text">{{ item.name }}</view>
+              <view class="desc">
+                折扣:{{item.preferentialScale}}%
+                <text class="span">积分：{{item.point}}</text>
+                <text class="span" wx:if="{{item.isDefault === '01'}}" style="color:#417505">默认</text>
+              </view>
+            </ui-col>
+          </ui-row>
+        </view>
+        <view slot="operate">
+          <view class="j_operate" border-bottom>
+            <ui-row height="65">
+              <ui-col data-index="{{index}}" data-id="{{item.rankId}}" bindtap="detail" vertical-align="middle" align="center">
+                修改
+              </ui-col>
+              <ui-col data-index="{{index}}" data-id="{{item.rankId}}" bindtap="del" vertical-align="middle" align="center">
+                删除
+              </ui-col>
+            </ui-row>
+          </view>
+        </view>
+      </ui-swipe-out>
+    </ui-row-list>
+    <navigator url="memberRankDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    el: 'undefined'
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    let that = this
+    Utils.loading(this)
+    getApp().getMemberRank(res => {
+      res.forEach(item => {
+        item.switcher = 'off'
+      })
+      that.setData({
+        list: res
+      })
+    })
+  },
+  changeHandler (res) {
+    let index = res.currentTarget.dataset.index
+    if(this.data.el !== index){
+      if (this.data.el !== 'undefined') {
+        this.data.list[this.data.el].switcher = 'off'
+      }
+      this.data.list[index].switcher = 'on'
+      this.setData({
+        list:this.data.list
+      })
+      this.data.el = index  
+    }
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'memberRankDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    let index = e.currentTarget.dataset.index
+    let id = e.currentTarget.dataset.id
+    api.memberRankDetail({
+      data: {
+        _method: 'DELETE'
+      },
+      method:'post',
+      id: id
+    }).then(res => {
+      this.data.list.splice(index, 1)
+      this.setData({
+        list: this.data.list
+      })
+      Tips.success('删除成功')
+    })
+  }
+}
+
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.ui-row-list{
+  &.ui-row-border-bottom:after {
+    left: 40px;
+  }
+}
+</style>

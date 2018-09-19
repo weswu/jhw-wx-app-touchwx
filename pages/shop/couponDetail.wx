@@ -97,7 +97,7 @@
           会员等级
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <picker bindchange="picker" id="memberrankId" value="{{picker.memberrankId}}" data-list="memberRankList" range-key="name" range="{{memberRankList}}">
+          <picker bindchange="picker2" id="memberrankId" value="{{picker.memberrankId}}" data-list="memberRankList" range-key="name" range="{{memberRankList}}">
             <view>{{memberRankList[picker.memberrankId].name}}</view>
           </picker>
         </ui-col>
@@ -107,7 +107,7 @@
           每人限领
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <picker bindchange="picker" id="quantity" value="{{picker.quantity}}" data-list="selected3" range-key="text" range="{{selected3}}">
+          <picker bindchange="picker2" id="quantity" value="{{picker.quantity}}" data-list="selected3" range-key="text" range="{{selected3}}">
             <view>{{selected3[picker.quantity].text}}</view>
           </picker>
         </ui-col>

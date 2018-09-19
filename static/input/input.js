@@ -62,6 +62,15 @@ export default{
     })
   },
   picker(e) {
+    var index = e.detail.value
+    const fieldName = e.currentTarget.id
+    var field = "detail." + fieldName
+    this.setData({
+      [field]: this.data.category[index].value,
+      index: index
+    })
+  },
+  picker2(e) {
     const index = e.detail.value
     const fieldName = e.currentTarget.id
     const list = e.currentTarget.dataset.list

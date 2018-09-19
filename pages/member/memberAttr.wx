@@ -1,0 +1,120 @@
+<template>
+  <view>
+    <cc-header title="会员属性配置"></cc-header>
+    
+    <ui-row-list border-left-indent>
+      <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        <view slot="content">
+          <ui-row height="65" class="j_row_list" border-bottom>
+            <ui-col vertical-align="middle" align="left">
+              <view class="text">{{ item.name }}</view>
+              <view class="desc">
+                <text wx:if="{{item.attributeType === 'text'}}">文本</text>
+                <text wx:if="{{item.attributeType === 'number'}}">数字</text>
+                <text wx:if="{{item.attributeType === 'alphaint'}}">字母</text>
+                <text wx:if="{{item.attributeType === 'select'}}">单选</text>
+                <text wx:if="{{item.attributeType === 'checkbox'}}">多选</text>
+                <text wx:if="{{item.attributeType === 'date'}}">日期</text>
+                <text class="span" wx:if="{{item.isRequired === '01'}}" style="color:#417505">必填</text>
+                <text class="span" wx:if="{{item.isEnabled === '01'}}" style="color:#417505">启用</text>
+              </view>
+            </ui-col>
+          </ui-row>
+        </view>
+        <view slot="operate">
+          <view class="j_operate" border-bottom>
+            <ui-row height="65">
+              <ui-col data-index="{{index}}" data-id="{{item.attId}}" bindtap="detail" vertical-align="middle" align="center">
+                修改
+              </ui-col>
+              <ui-col data-index="{{index}}" data-id="{{item.attId}}" bindtap="del" vertical-align="middle" align="center">
+                删除
+              </ui-col>
+            </ui-row>
+          </view>
+        </view>
+      </ui-swipe-out>
+    </ui-row-list>
+    <navigator url="memberAttrDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    el: 'undefined'
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    let that = this
+    Utils.loading(this)
+    getApp().getMemberAttr(res => {
+      res.forEach(item => {
+        item.switcher = 'off'
+      })
+      that.setData({
+        list: res
+      })
+    })
+  },
+  changeHandler (e) {
+    let index = e.currentTarget.dataset.index
+    if(this.data.el !== index){
+      if (this.data.el !== 'undefined') {
+        this.data.list[this.data.el].switcher = 'off'
+      }
+      this.data.list[index].switcher = 'on'
+      this.setData({
+        list:this.data.list
+      })
+      this.data.el = index  
+    }
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'memberAttrDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    let index = e.currentTarget.dataset.index
+    let id = e.currentTarget.dataset.id
+    api.memberAttrDetail({
+      data: {
+        _method: 'DELETE'
+      },
+      method:'post',
+      id: id
+    }).then(res => {
+      this.data.list.splice(index, 1)
+      this.setData({
+        list: this.data.list
+      })
+      Tips.success('删除成功')
+    })
+  }
+}
+
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.ui-row-list{
+  &.ui-row-border-bottom:after {
+    left: 40px;
+  }
+}
+</style>
