@@ -20,7 +20,7 @@
               </ui-col>
               <ui-col vertical-align="middle">
                 <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{value}}"></i>
-                <input type="text" value="{{value}}" bindinput="search"/>
+                <input type="text" value="{{value}}" bindinput="search" confirm-type="search" bindconfirm="confirm"/>
               </ui-col>
             </ui-row>
           </view>
@@ -109,7 +109,10 @@ export default {
       this.triggerEvent('input', '')
     },
     search(e) {
-      this.triggerEvent('input', e.detail.value)
+      this.data.value = e.detail.value
+    },
+    confirm(e) {
+      this.triggerEvent('input',e.detail.value)
     },
     chooseImage () {
       var that = this;

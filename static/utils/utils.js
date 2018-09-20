@@ -7,8 +7,8 @@ import regeneratorRuntime from 'regenerator-runtime'
  * @date: 2018-1-17
  * @desc: 删除单个数组
 */
-const del = async (that, e, http) => {
-  await Tips.confirm('确认删除吗？')
+const del = async (that, e, http, tip) => {
+  await Tips.confirm(tip || '确认删除吗？')
   Tips.loading()
   const res = await http({
     method: 'DELETE',
@@ -277,10 +277,24 @@ const upload = (option) => {
   }) 
 }
 
-const get = (option) => {
+const get = () => {
   var pages = getCurrentPages()
   var prevPage = pages[pages.length - 2];  //上个页面
   prevPage.get()
+}
+
+const switcher = (that, e) => {
+  let index = e.currentTarget.dataset.index;
+  if (that.data.el !== index) {
+    if (that.data.el !== "undefined") {
+      that.data.list[that.data.el].switcher = "off";
+    }
+    that.data.list[index].switcher = "on";
+    that.setData({
+      list: that.data.list
+    });
+    that.data.el = index;
+  }
 }
 
 module.exports = {
@@ -295,5 +309,6 @@ module.exports = {
   batchCopy,
   batchMove,
   upload,
-  get
+  get,
+  switcher
 };

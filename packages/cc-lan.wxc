@@ -20,7 +20,7 @@
         <ui-col width="100r" vertical-align="middle" align="center">
           <slot></slot>
         </ui-col>
-        <ui-col width="100" vertical-align="middle" border-left align="right" space-right="5" bindtap="openPopup" class="{{show ? 'active' : ''}}">
+        <ui-col width="100" vertical-align="middle" border-left align="right" space-right="5" bindtap="openPopup" class="{{show ? 'active' : ''}}" wx:if="{{lan}}">
           <view style="width:100%">
             <ui-row height="60r">
               <ui-col vertical-align="middle" align="right" space-right="5">
@@ -34,8 +34,24 @@
             </ui-row>
           </view>
         </ui-col>
+        <ui-col width="150" vertical-align="middle" border-left align="right" space-right="5" bindtap="openPopup2" class="{{show ? 'active' : ''}}" wx:if="{{website}}">
+          <view style="width:100%">
+            <ui-row height="60r">
+              <ui-col vertical-align="middle" align="right" space-right="5">
+                <view style="color:#686868;font-size:12px;">
+                  网站编号：{{layoutId}}
+                </view>
+              </ui-col>
+              <ui-col width="30" vertical-align="middle" align="center">
+                <i class="iconfont icon-xiangxiajiantoushixin {{show2 ? 'active' : ''}}" ></i>
+              </ui-col>
+            </ui-row>
+          </view>
+        </ui-col>
       </ui-row>
     </view>
+    
+    <!-- lan -->
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show ? 'show' : '' }}">
         <ui-row-list border-left-indent>
@@ -52,6 +68,7 @@
       <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show ? 'show' : '' }}" bindtap="popHide"></view>
     </view>
     
+    <!-- sort -->
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show1 ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show1 ? 'show' : '' }}">
         <ui-row-list border-left-indent class="sort-list">
@@ -69,6 +86,25 @@
         </ui-row-list>
       </view>
       <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show1 ? 'show' : '' }}" bindtap="popHide1"></view>
+    </view>
+
+    <!-- static -->
+    <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show2 ? 'show' : '' }}">
+      <view class="ui-popup-content top {{ show2 ? 'show' : '' }}">
+        <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
+          <ui-row-list border-left-indent>
+            <ui-row height="43" border-bottom wx:for="{{staticList}}" wx:key="*this" data-id="{{item.id}}" bindtap="layoutChange">
+              <ui-col vertical-align="middle">
+                网站编号：{{item.id}}
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{item.id === layoutId}}">
+                <i class="iconfont icon-gou"/>
+              </ui-col>
+            </ui-row>
+          </ui-row-list>
+        </scroll-view>
+      </view>
+      <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show2 ? 'show' : '' }}" bindtap="popHide2"></view>
     </view>
   </view>
 </template>
@@ -91,19 +127,22 @@ export default {
     top: {
       type: Number,
       value: 0
+    },
+    lan: {
+      type: Boolean,
+      value: false
+    },
+    website: {
+      type: Boolean,
+      value: false
     }
   },
   data: {
-    NAV_HEIGHT: function(){
-      debugger
-    },
     popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    scroHeight: parseInt(wx.DEFAULT_CONTENT_HEIGHT * 0.8),
     show: false,
-    lanList: [
-      { value: '1', text: '中文' },
-      { value: '2', text: '英文' }
-    ],
+    lanList: [],
     name: '中文',
     lanId: '1',
     // 排序
@@ -121,12 +160,19 @@ export default {
       { value: 'person', text: '人气' }
     ],
     sortName: '默认',
+    // 站点
+    layoutId: '',
+    show2: false,
+    staticList: []
   },
   ready () {
     let height = (this.data.top+60)/750*wx.WIN_WIDTH
     this.setData({
       popup_NAV_HEIGHT: this.data.popup_NAV_HEIGHT + height,
-      popupHeight: this.data.popupHeight + height
+      popupHeight: this.data.popupHeight + height,
+      layoutId: getApp().globalData.layoutId,
+      staticList: getApp().globalData.staticList,
+      lanList: getApp().globalData.lanList
     })
   },
   methods: {
@@ -177,7 +223,7 @@ export default {
     },
     popShow1 () {
       this.setData({
-        show:true
+        show1:true
       })
     },
     sortChange (e) {
@@ -186,6 +232,32 @@ export default {
         sortName: item.text
       })
       this.popHide1()
+    },
+    // 站点
+    openPopup2 (e) {
+      this.setData({
+        show2: !this.data.show1
+      })
+    },
+    popHide2 () {
+      this.setData({
+        show2:false
+      })
+    },
+    popShow2 () {
+      this.setData({
+        show2:true
+      })
+    },
+    layoutChange (e) {
+      let id = e.currentTarget.dataset.id
+      this.setData({
+        layoutId: id
+      })
+      getApp().globalData.layoutId = id
+      wx.setStorageSync('layoutId', id)
+      this.triggerEvent('layout')
+      this.popHide2()
     }
   }
 }
@@ -212,7 +284,7 @@ export default {
   }
 }
 .icon-gou{
-  color:#3AC3B0;
+  color:#12bedb;
   font-size:12px;
 }
 .sort-list{

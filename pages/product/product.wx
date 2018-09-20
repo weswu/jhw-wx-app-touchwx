@@ -6,7 +6,7 @@
     </cc-header>
     <!-- head -->
     <cc-search value="{{params.name}}" type="product" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
-    <cc-lan top="99" type="product" bindchange="lanChange">
+    <cc-lan lan="{{true}}" top="99" type="product" bindchange="lanChange">
       <i class="iconfont icon-{{chenlie === '0' ? 'danhangchenlie' : 'duohangchenlie'}}" bindtap="chenlie"></i>
     </cc-lan>
     

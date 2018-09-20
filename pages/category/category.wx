@@ -1,10 +1,10 @@
 <template>
-  <view class="bg_color">
+  <view>
     <cc-header title="{{type === 'product' ? '产品' : '新闻'}}分类" back="{{!selected}}">
       <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
     </cc-header>
     <!-- head -->
-    <cc-lan bindchange="get">
+    <cc-lan lan="{{true}}" bindchange="get">
       <i class="iconfont icon-jia1" bindtap="add" style="color:#4e4e4e;"></i>
     </cc-lan>
 

@@ -1,5 +1,5 @@
 <template>
-  <view class="bg_color">
+  <view>
     <cc-header title="咨询与建议"></cc-header>
 
     <ui-row-list border-left-indent>
@@ -53,4 +53,7 @@ export default {
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 </style>

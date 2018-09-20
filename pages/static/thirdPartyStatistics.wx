@@ -1,0 +1,112 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="第三方统计"></cc-header>
+    <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="100" vertical-align="middle">
+          页头设置
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="analysisHeadState">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.analysisHeadState === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="100" wx:if="{{detail.analysisHeadState === '01'}}">
+        <ui-col vertical-align="middle" align="left" space-right="15">
+          <textarea bindinput="input" id="analysisHeadContent" value="{{detail.analysisHeadContent}}" placeholder="统计代码"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="100" vertical-align="middle">
+          页尾设置
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="analysisTailState">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.analysisTailState === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="100" wx:if="{{detail.analysisTailState === '01'}}">
+        <ui-col vertical-align="middle" align="left" space-right="15">
+          <textarea bindinput="input" id="analysisTailContent" value="{{detail.analysisTailContent}}" placeholder="统计代码"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-lan': '../../packages/cc-lan'
+    }
+  },
+  data: {
+    detail: {},
+    typelist: [
+      { text: '启用', value: '01' },
+      { text: '关闭', value: '00' }
+    ]
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.analysis({
+      data: {
+        layoutId: getApp().globalData.layoutId
+      }
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        if (!data.analysisHeadState) data.analysisHeadState = '00'
+        if (!data.analysisTailState) data.analysisTailState = '00'
+        this.setData({
+          detail: data
+        })
+      }
+    })
+  },
+  submit () {
+    let detail = this.data.detail
+    let data = {
+      analysisId: detail.analysisId,
+      analysisHeadState: detail.analysisHeadState,
+      analysisHeadContent: detail.analysisHeadContent || '',
+      analysisTailState: detail.analysisTailState,
+      analysisTailContent: detail.analysisTailContent || ''
+    }
+    api.analysisSave({
+      data: data,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
-  <view class="bg_color">
+  <view>
     <cc-header title="友情链接"></cc-header>
-    <cc-lan bindchange="get"></cc-lan>
+    <cc-lan lan="{{true}}" bindchange="get"></cc-lan>
 
     <ui-row-list>
       <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
@@ -106,6 +106,9 @@ export default {
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 .ui-row-border-bottom:after {
   left: 140rpx;
 }

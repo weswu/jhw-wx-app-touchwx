@@ -3,46 +3,74 @@
     <cc-header title="我的网站" count="{{count}}"></cc-header>
 
     <ui-row-list border-left-indent>
-    <ui-swipe-out operate-width="120" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
-    bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="80">
+      <ui-swipe-out operate-width="120" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
+      bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="90">
         <view slot="content">
-          <ui-row height="80" class="top_tip" border-bottom>
+          <ui-row height="90" class="j_row_list" border-bottom>
             <ui-col class="text" vertical-align="middle">
               <view style="width: 100%;">
-                  <ui-row height="30">
-                    <ui-col align="left" vertical-align="middle">
-                        <text class="ui-text">{{item.seoTitle}}</text>
-                    </ui-col>
-                    <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                        <text class="desc">编号：{{item.id}}</text>
-                    </ui-col>
-                  </ui-row>
-                  <view class="desc">
-                    <navigator url="/pages/setting/webView?src={{item.url}}">
-                      {{item.url}}
-                    </navigator>
-                    {{ item.endTime }}
-                    <!-- 状态 -->
-                    <text class="type" wx:if="{{item.state === '0'}}">审核中</text>
-                    <text class="type" wx:elif="{{item.state === '3'}}" style="background: #d0021b;">审核未通过</text>
-                    <text class="type" wx:else="{{!item.bind.address}}">未上线</text>
-                  </view>
+                <ui-row height="30">
+                  <ui-col align="left" vertical-align="middle">
+                    <text class="ui-text">{{item.seoTitle}}</text>
+                  </ui-col>
+                  <ui-col align="right" width="100" vertical-align="middle" space-right="10">
+                    <text class="desc">编号：{{item.id}}</text>
+                  </ui-col>
+                </ui-row>
+                <view class="desc">
+                  <navigator url="/pages/setting/webView?src={{item.url}}">
+                    {{item.url}}
+                  </navigator>
+                  <text wx:if="{{item.endTime}}">到期时间：{{ item.endTime }}</text>
+                  <text wx:if="{{!item.endTime}}">已到期</text>
+                  <text class="type">{{item.lan}}</text>
+                  <!-- 状态 -->
+                  <text class="type" wx:if="{{item.state === '0'}}">未开通</text>
+                  <text class="type" wx:if="{{item.state === '1'}}">已开通</text>
+                  <text class="type" wx:if="{{item.bind.online === '00'}}">未上线</text>
+                  <text class="type" wx:if="{{item.bind.online === '01'}}">已上线</text>
+                  <text class="type" wx:if="{{item.bind.country === 'cn'}}">中国机房</text>
+                  <text class="type" wx:if="{{item.bind.country === 'en'}}">美国机房</text>
+                  <text class="type" wx:if="{{item.bind.country === 'hc'}}">香港机房</text>
+                </view>
               </view>
             </ui-col>
           </ui-row>
         </view>
         <view slot="operate">
-           <ui-row class="dome_operate" height="80">
-              <ui-col vertical-align="middle" align="center">
-                  <view class="delete" data-item='{{item}}' data-index='{{index}}' bindtap="copy">复制</view>
-              </ui-col>
-              <ui-col vertical-align="middle" align="center">
-                  <view class="delete" data-item='{{item}}' data-index='{{index}}' bindtap="del">删除</view>
-              </ui-col>
-            </ui-row>
+          <ui-row class="j_operate" height="90">
+            <ui-col vertical-align="middle" align="center">
+              <view class="delete" data-item='{{item}}' data-index='{{index}}' bindtap="copy">复制</view>
+            </ui-col>
+            <ui-col vertical-align="middle" align="center">
+              <view class="delete" data-id='{{item.id}}' data-index='{{index}}' bindtap="del">删除</view>
+            </ui-col>
+          </ui-row>
         </view>
-    </ui-swipe-out>
+      </ui-swipe-out>
     </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+    
+    <view class="j_add" data-show="{{ true }}" bindtap="openPopup" style="background:#ff6700;"><i class="iconfont icon-jia"></i></view>
+
+    <ui-popup show="{{ show }}" position="bottom" height="300">
+      <view style="padding: 15px;">
+        <radio-group class="website_add_select">
+        <ui-row height="200">
+          <ui-col vertical-align="middle" align="center" wx:for="{{countryType}}" wx:key="*this" 
+            data-value='{{item.value}}' bindtap="radioChange" >
+            <label>
+              <radio value="{{item.value}}" checked="{{detail.country === item.value}}"></radio>
+            </label>
+            <image mode="aspectFit" src="http://www.jihui88.com/manage_v4/platform/img/country{{item.value}}.png"/>
+            <view>{{item.text}}</view>
+            <view class="content">{{item.content}}</view>
+          </ui-col>
+        </ui-row>
+      </radio-group>
+        <button bindtap="add" class="origin" type="primary">现在创建网站</button>
+      </view>
+    </ui-popup>
   </view>
 </template>
 
@@ -54,6 +82,7 @@ import regeneratorRuntime from 'regenerator-runtime'
 export default {
   config: {
     usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
       'cc-header': '../../packages/cc-header'
     }
   },
@@ -65,31 +94,46 @@ export default {
       sortType: "desc"
     },
     count: 0,
-    more: { loading: true },
-    el: "undefined"
+    more: {},
+    el: "undefined",
+    lanList: [],
+    show: false,
+    detail: {
+      country: 'cn'
+    },
+    countryType: [
+      { text: '香港', value: 'hc', content: '免备案' },
+      { text: '美国', value: 'en', content: '免备案' },
+      { text: '中国大陆', value: 'cn', content: '阿里云主机，需备案' }
+    ]
   },
   onLoad() {
-    this.get();
+    this.get()
+    this.setData({
+      lanList: getApp().globalData.lanList
+    })
   },
   get() {
+    this.setData({
+      'more.tip': '',
+      'more.loading': true
+    })
     api.staticList({
       data: this.data.params
     }).then(res => {
       if (res.success) {
         res.attributes.data.forEach(item => {
-          item.switcher = "off";
-          if (item.language === "1") {
-            item.lan = "中文";
-          }
-          if (item.language === "2") {
-            item.lan = "英文";
-          }
+          item.switcher = "off"
+          this.data.lanList.forEach(row => {
+            if (item.language === row.value) {
+              item.lan = row.text
+            }
+          })
           if (item.bind.address) {
             let src = item.bind.address;
             item.url = src.indexOf("http") > -1 ? src : "http://" + src;
           } else {
-            item.url =
-              "http://pc.jihui88.com/rest/site/" + item.id + "/index";
+            item.url = "http://pc.jihui88.com/rest/site/" + item.id + "/index";
           }
           item.endTime = Utils.formatTime(item.endTime);
         });
@@ -98,24 +142,7 @@ export default {
     });
   },
   async del(e) {
-    await Tips.confirm('确认删除吗？')
-    var item = e.target.dataset.item;
-    var index = e.target.dataset.index;
-    Tips.loading()
-    api.staticDetail({
-      method: 'DELETE',
-      id: e.target.dataset.item.id
-    }).then(res => {
-      Tips.loaded()
-      if (res.success) {
-        Utils.del(this, index)
-        this.setData({
-          el: "undefined"
-        });
-      } else {
-        Tips.error(res.msg)
-      }
-    })
+    Utils.del(this, e, api.staticDetail, '请谨慎！站点（网站编号：'+e.target.dataset.id+'）将会被彻底删除!')
   },
   copy (e) {
     let item = e.target.dataset.item
@@ -153,19 +180,60 @@ export default {
       }
     })
   },
-  changeHandler1(res) {
-    console.log(this.data.el);
-    let index = res.currentTarget.dataset.index;
-    if (this.data.el !== index) {
-      if (this.data.el !== "undefined") {
-        this.data.list[this.data.el].switcher = "off";
-      }
-      this.data.list[index].switcher = "on";
-      this.setData({
-        list: this.data.list
-      });
-      this.data.el = index;
+  changeHandler1(e) {
+    Utils.switcher(this, e)
+  },
+  openPopup (e) {
+    let show = e.currentTarget.dataset.show
+    this.setData({
+      show: show
+    })
+  },
+  radioChange (e) {
+    let value = e.currentTarget.dataset.value
+    this.setData({
+      'detail.country': value
+    })
+  },
+  add () {
+    let data = {
+      model: JSON.stringify({
+        title: '我的网站',
+        seoTitle: '我的网站',
+        language: '1',
+        grade: 1,
+        name: '我的网站',
+        cellphone: '',
+        categoryId: '7',
+        entName: '',
+        areaPath: ''
+      }),
+      country: this.data.detail.country
     }
+    Tips.loading()
+    api.staticDetail({
+      data: data,
+      method: 'POST'
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        let data = res.attributes.data
+        wx.showToast({
+          title: "网站创建成功（网站编号："+data.id+"）！您可以免费试用1个月，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。当然也可以联系我们，为您量身定制设计。",
+          icon: 'none',
+          mask: true,
+          duration: 8000
+        });
+        this.data.list.splice(0, 0, data)
+        this.setData({
+          list: this.data.list,
+          show: false
+        })
+        getApp().globalData.staticList.splice(0, 0, data)
+      } else {
+        Tips.error(res.msg)
+      }
+    })
   },
   // 加载更多
   onReachBottom() {
@@ -176,12 +244,10 @@ export default {
 
 <style lang="less">
 @import "./static/styles/mixins";
-.dome_operate{
-  background: #eee;
-  color:#545454
+page{
+  background: #f1f1f1;
 }
-.top_tip {
-  background-color: #fff;
+.j_row_list {
   .text {
     .ui-text {
       width:100%;
@@ -196,6 +262,23 @@ export default {
     .type{
       padding-left: 10px;
     }
+  }
+}
+button[type="primary"].origin{
+  background: #ff6700;
+}
+.website_add_select{
+  margin-top: 20px;
+  color: #9c9fa4;
+  font-size: 12px;
+  label{
+    text-align: left;
+  }
+  image{
+    width: 90%;
+  }
+  .content{
+    height: 90px;;
   }
 }
 </style>

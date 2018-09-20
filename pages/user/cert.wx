@@ -1,7 +1,7 @@
 <template>
-  <view class="bg_color">
+  <view>
     <cc-header title="荣誉证书" count="{{count}}"></cc-header>
-    <cc-lan bindchange="lanChange"></cc-lan>
+    <cc-lan lan="{{true}}" bindchange="lanChange"></cc-lan>
 
     <ui-row-list>
       <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
@@ -118,6 +118,9 @@ export default {
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 .ui-row-border-bottom:after {
   left: 140rpx;
 }

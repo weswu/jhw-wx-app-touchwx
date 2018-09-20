@@ -1,5 +1,5 @@
 <template>
-  <view class="j_detail bg_color">
+  <view class="j_detail">
     <cc-header title="会员等级"></cc-header>
 
     <ui-row-list border-left-indent>
@@ -47,8 +47,8 @@
           等级说明
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea class="weui-textarea" placeholder="等级说明"
-    bindinput="input" id="fdbk_intro1k" value="{{detail.fdbk_intro1k}}" style="width:100%;height: 80px;margin:10px 0;"/>
+          <textarea class="weui-textarea" placeholder="等级说明" bindinput="input" 
+            id="fdbk_intro1k" value="{{detail.fdbk_intro1k}}"/>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -150,7 +150,9 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
-
+page{
+  background: #f1f1f1;
+}
 checkbox{
   transform:scale(.7);
 }

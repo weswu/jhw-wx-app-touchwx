@@ -58,6 +58,9 @@ const spread = (params) => http(params, host + 'poster/list?pageSize=72')
 const spreadRank = (params) => http(params, wxHost + '/rest/api/comm/poster/userlist')
 const posters = (params) => http(params, 'https://api.jihui88.net/qrcode_poster/api/poster')
 
+const analysis = (params) => http(params, pcHost + 'analysis/detail')
+const analysisSave = (params) => http(params, pcHost + 'analysis/save')
+
 
 /***************** 公司信息 ************/
 const enterprise = (params) => http(params, host + 'enterprise/detail' + (params ? '/' + params.id : ''))
@@ -144,6 +147,7 @@ module.exports = {
   staticList, staticDetail, staticAdd,
   seoDetail,
   bind, bindDetail,
+  analysis, analysisSave,
   /***************** 公司信息 ************/
   enterprise, 
   link, linkDetail,

@@ -8,14 +8,14 @@
     <cc-search type="album" 
       value="{{params.filename}}"
       id="{{albumId}}"
-      bindinput="input"
+      bindinput="search"
       bindchange="get">
         <i slot="add" class="iconfont icon-folder-add" bindtap="add"></i>
         <i slot="sort" class="iconfont icon-paixu {{show ? 'active' : ''}}" bindtap="openPopup"></i>
       </cc-search>
 
     <ui-row-list class="list-content">
-      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this" wx:if="{{item.parentId === albumId}}">
+      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this" wx:if="{{item.parentId === albumId && item.search}}">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <i class="iconfont icon-file"></i>
         </ui-col>
@@ -123,11 +123,11 @@
     <ui-fixed-view bottom="0px;z-index:700;background:#fff;" left="0" right="0" wx:if="{{picMask && !picDetailMask}}">
       <ui-row height="60" border-top class="fixed_btn">
         <ui-col span="3" vertical-align="middle" align="center" bindtap="downloadPic">
-          <i class="iconfont icon-fuzhi"></i>
+          <i class="iconfont icon-msnui-cloud-download"></i>
           <view class="desc">下载</view>
         </ui-col>
         <ui-col span="3" vertical-align="middle" align="center" bindtap="picDetail">
-          <i class="iconfont icon-folder-add-fill2"></i>
+          <i class="iconfont icon-htmal5icon28"></i>
           <view class="desc">详情</view>
         </ui-col>
         <ui-col span="3" vertical-align="middle" align="center" bindtap="delPic">
@@ -337,6 +337,24 @@ export default {
       }
     })
   },
+  // 搜索
+  search (e) {
+    this.data.params.page = 1
+    this.data.params.filename = e.detail
+    this.data.filelist.forEach(item => {
+      if (item.name.indexOf(e.detail) > -1) {
+        item.search = true
+      } else {
+        item.search = false
+      }
+    })
+    this.setData({
+      list: [],
+      filelist: this.data.filelist,
+      params: this.data.params
+    })
+    this.get()
+  },
   // 排序下拉
   openPopup () {
     this.setData({
@@ -366,13 +384,6 @@ export default {
       params: params,
       list: [],
       show:false
-    })
-    this.get()
-  },
-  // 搜索
-  input (e) {
-    this.setData({
-      'params.filename': e.detail
     })
     this.get()
   },
@@ -854,6 +865,9 @@ export default {
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 .list-content {
   .ui-row:not(:last-child):after {
     left: 120rpx;
