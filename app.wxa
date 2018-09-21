@@ -5,11 +5,14 @@
 <script>
 import system from './static/utils/system'
 import api from './static/utils/api'
+
 export default {
   config: {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/news/newsDetail',
+      'pages/news/news',
       'pages/album/album',
       'pages/product/product',
       'pages/pc/website',
@@ -26,7 +29,6 @@ export default {
       'pages/user/linkDetail',
       'pages/category/category',
       'pages/shop/shop',
-      'pages/news/newsDetail',
       'pages/shop/shopDetail',
       'pages/shop/couponDetail',
       'pages/shop/coupon',
@@ -38,7 +40,6 @@ export default {
       'pages/shop/config',
       'pages/product/productDetail',
       'pages/product/productShop',
-      'pages/news/news',
       'pages/message/message',
       'pages/message/messageList',
       'pages/message/messageReply',

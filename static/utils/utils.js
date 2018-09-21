@@ -88,7 +88,7 @@ const price = (v) => {
 */
 function formatTime(date, format, week) {
   if (!date) return ''
-  date = new Date(date)
+  date = new Date(parseInt(date))
   format = format || 'yyyy-MM-dd hh:mm'
   var weekday = new Date(new Date() - 1000 * 60 * 60 * 24 * 6)
   if (week && date.getFullYear() === new Date().getFullYear() && date > weekday) {
