@@ -9,8 +9,7 @@
           回复
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea class="weui-textarea" placeholder="评价回复"
-          bindinput="input" id="firstreply" value="{{detail.firstreply}}" style="width:100%;height: 80px;margin:10px 0;"/>
+          <textarea placeholder="评价回复" bindinput="input" id="firstreply" value="{{detail.firstreply}}"/>
         </ui-col>
       </ui-row>
       <view class="title">{{detail.secondcontent}}</view>
@@ -20,8 +19,7 @@
           追评回复
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea class="weui-textarea" placeholder="追评回复"
-          bindinput="input" id="secondreply" value="{{detail.secondreply}}" style="width:100%;height: 80px;margin:10px 0;"/>
+          <textarea placeholder="追评回复" bindinput="input" id="secondreply" value="{{detail.secondreply}}"/>
         </ui-col>
       </ui-row>
     </ui-row-list>

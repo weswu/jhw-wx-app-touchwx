@@ -47,7 +47,7 @@
           等级说明
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea class="weui-textarea" placeholder="等级说明" bindinput="input" 
+          <textarea placeholder="等级说明" bindinput="input" 
             id="fdbk_intro1k" value="{{detail.fdbk_intro1k}}"/>
         </ui-col>
       </ui-row>

@@ -1,7 +1,10 @@
 <template>
   <view>
     <cc-header title="{{type === 'product' ? '产品' : '新闻'}}分类" back="{{!selected}}">
-      <text bindtap="toggleAll" wx:if="{{selected}}">全选</text>
+      <view bindtap="toggleAll" wx:if="{{selected}}" style="width:100%">
+        <text wx:if="{{!toggle}}">全选</text>
+        <text wx:if="{{toggle}}">全不选</text>
+      </view>
     </cc-header>
     <!-- head -->
     <cc-lan lan="{{true}}" bindchange="get">
@@ -226,6 +229,11 @@ export default {
       list: list,
       toggle: toggle
     })
+    if (!toggle) {
+      this.setData({
+        selected: false
+      })
+    }
     this.initSelcted()
   },
   // 单选

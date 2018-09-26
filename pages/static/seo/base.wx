@@ -1,0 +1,89 @@
+<template>
+  <view>
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
+      <ui-tabs tab-style="{{ {width:width/3+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
+        <ui-tab>待缴费<text style="font-size:12px" wx:if="{{count0 !== 0}}">({{count0}})</text></ui-tab>
+        <ui-tab>消费记录<text style="font-size:12px" wx:if="{{count1 !== 0}}">({{count1}})</text></ui-tab>
+        <ui-tab>已购产品<text style="font-size:12px" wx:if="{{count2 !== 0}}">({{count2}})</text></ui-tab>
+      </ui-tabs>
+    </ui-fixed-view>
+    <ui-row-list border-left-indent>
+      <ui-row height="160r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle">
+            <view style="width: 100%;">
+              <ui-row height="60r">
+                <ui-col align="left" vertical-align="middle">
+                    <text>订单编号：{{item.outTradeNo}}</text>
+                </ui-col>
+                <ui-col align="right" width="100" vertical-align="middle" space-right="15">
+                    <text class="price">￥{{item.paidPrice | '-'}}</text>
+                </ui-col>
+              </ui-row>
+            </view>
+            <view class="desc">{{item.name}}</view>
+            <view class="desc">{{item.addTime}}</view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+  </view>
+</template>
+
+<script>
+import api from '../../../static/utils/api'
+import Tips from '../../../static/utils/tips'
+import Utils from '../../../static/utils/utils'
+export default {
+  data: {
+    current1:0,
+    scrollTop:0,
+    width:wx.WIN_WIDTH,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    list: [],
+    params: {
+      size: 10,
+      page: 0,
+      sort: 'addTime,desc'
+    },
+    count0: 0,
+    count1: 0,
+    count2: 0,
+    more: { loading: true }
+  },
+  onPageScroll (e) {
+    console.log(e)
+    this.setData({
+      scrollTop: e.scrollTop
+    })
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.costUnPaid({
+      data: this.data.params
+    }).then(res => {
+      this.init(res)
+    })
+  },
+  //横屏竖屏切换
+  handleChange (e) {
+    this.setData({
+      current1: e.detail.index,
+      'params.page': 0,
+      list: []
+    })
+    this.get()
+  },
+  // 加载更多
+  onReachBottom () {
+    this.setData({
+      'params.page': this.data.params.page+= 1
+    })
+    this.get()
+  }
+}
+</script>
+
+<style lang="less">
+.price { color: #ff7e3e;font-size: 13px;}
+</style>

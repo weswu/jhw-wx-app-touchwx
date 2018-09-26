@@ -26,8 +26,8 @@
           反馈内容
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea class="weui-textarea" placeholder="请描述您的反馈内容，并附带上您的手机号码，我们好及时对接您提的反馈内容。"
-    bindinput="input" id="fdbk_intro1k" value="{{detail.fdbk_intro1k}}" style="width:100%;height: 80px;margin:10px 0;"/>
+          <textarea placeholder="请描述您的反馈内容，并附带上您的手机号码，我们好及时对接您提的反馈内容。"
+            bindinput="input" id="fdbk_intro1k" value="{{detail.fdbk_intro1k}}"/>
         </ui-col>
       </ui-row>
     </ui-row-list>

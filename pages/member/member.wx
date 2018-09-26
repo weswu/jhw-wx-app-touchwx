@@ -125,7 +125,17 @@ export default {
       list: list,
       toggle: toggle
     })
+    if (!toggle) {
+      this.selectedBack()
+    }
     this.initSelcted()
+  },
+  selectedBack () {
+    // 取消选中
+    this.setData({
+      selected: false,
+      title: '会员管理'
+    })
   },
   toggle (e) {
     let index = e.currentTarget.dataset.index
@@ -153,10 +163,7 @@ export default {
   item (e) {
     let item = e.currentTarget.dataset.item
     if (this.data.selected) {
-      this.setData({
-        selected: false,
-        title: '会员管理'
-      })
+      this.selectedBack()
     } else {
       wx.navigateTo({
         url: 'memberDetail?id=' + item.memberId
@@ -176,9 +183,9 @@ export default {
         Tips.success('删除成功')
         this.setData({
           list: [],
-          'params.page': 1,
-          selected: false
+          'params.page': 1
         })
+        this.selectedBack()
         this.get()
       }
     })

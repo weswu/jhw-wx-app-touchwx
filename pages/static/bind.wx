@@ -1,0 +1,174 @@
+<template>
+  <view>
+    <cc-header title="域名绑定"></cc-header>
+    <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
+  
+    <ui-row-list border-left-indent>
+      <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150" style="margin-bottom: 50px;"
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        <view slot="content">
+        <ui-row height="120r" border-bottom class="j_row_list">
+          <ui-col vertical-align="middle">
+            <view style="width: 100%;">
+              <ui-row height="60r">
+                <ui-col align="left" vertical-align="middle">
+                    <text>{{ item.address }}</text>
+                </ui-col>
+                <ui-col class="desc" align="right" width="100" vertical-align="middle" space-right="10">
+                  <text>编号:{{ item.layoutId }}</text>
+                </ui-col>
+              </ui-row>
+            </view>
+            <view class="desc">
+              {{ item.addTime }}
+              <text class="span" wx:if="{{item.country==='cn'}}">中国机房</text>
+              <text class="span" wx:if="{{item.country==='en'}}">美国机房</text>
+              <text class="span" wx:if="{{item.country==='hc'}}">香港机房</text>
+              <text class="span wait" wx:if="{{item.state==='00'}}">审核中</text>
+              <text class="span green" wx:if="{{item.state==='01'}}">已绑定</text>
+              <text class="span red" wx:if="{{item.state==='02'}}">未绑定</text>
+              <text class="span green" wx:if="{{item.online==='01'}}">已上线</text>
+              <text class="span red" wx:if="{{item.online==='00'}}">未上线</text>
+            </view>
+          </ui-col>
+        </ui-row>
+        </view>
+        <view slot="operate">
+          <view class="j_operate" border-bottom>
+            <ui-row height="120r">
+              <ui-col data-id="{{item.id}}" bindtap="detail" vertical-align="middle" align="center">
+                修改
+              </ui-col>
+              <ui-col data-index="{{index}}" data-id="{{item.id}}" bindtap="del" vertical-align="middle" align="center">
+                删除
+              </ui-col>
+            </ui-row>
+          </view>
+        </view>
+      </ui-swipe-out>
+    </ui-row-list>
+
+    <view bindtap="add" class="j_add"><i class="iconfont icon-jia"></i></view>
+    
+    <cc-modal title="新建绑定域名" visible="{{ visible }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
+        <input type="text" value="{{name}}" bindinput="nameInput" placeholder="baidu"/>
+      </view>
+    </cc-modal>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-lan': '../../packages/cc-lan',
+      'cc-modal': '../../packages/cc-modal'
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 100
+    },
+    el: 'undefined',
+    height: 120/750*wx.WIN_WIDTH,
+    visible: false,
+    name: ''
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.bind({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
+          item.switcher = 'off'
+        })
+        this.setData({
+          list: data
+        })
+      }
+    })
+  },
+  changeHandler (e) {
+    Utils.switcher(this, e)
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'bindDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    Utils.del(this, e, api.bindDetail)
+  },
+  add () {
+    this.setData({
+      visible: true
+    })
+  },
+  nameInput (e) {
+    this.setData({
+      name: e.detail.value
+    })
+  },
+  clearinput () {
+    this.setData({
+      name: ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible: false
+    })
+  },
+  // 添加
+  ok () {
+    let layoutId = getApp().globalData.layoutId
+    if (!layoutId) {
+      return Utils.toast('请选择右上角站点')
+    }
+    let data = {
+      layoutId: layoutId,
+      address: this.data.name,
+      country: 'cn'
+    }
+    api.bindAdd({
+      data: data,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('添加成功')
+        this.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.wait{
+  color: #f5a623
+}
+.green{
+  color: #417505
+}
+.red{
+  color: #d0021b
+}
+</style>

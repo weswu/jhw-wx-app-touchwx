@@ -7,12 +7,12 @@
     <checkbox-group bindchange="checkboxChange">
       <ui-row-list>
       <view wx:for="{{list}}" wx:key="*this" wx:for-item="row">
-          <ui-row height="40">
-            <ui-col width="20" vertical-align="middle"></ui-col>
-            <ui-col class="text" vertical-align="middle">
-               <view class="title">{{row.title}}</view> 
-            </ui-col>
-          </ui-row>
+        <ui-row height="40">
+          <ui-col width="20" vertical-align="middle"></ui-col>
+          <ui-col class="text" vertical-align="middle">
+            <view class="title">{{row.title}}</view> 
+          </ui-col>
+        </ui-row>
         <ui-row border-top border-bottom class="row-border">
           <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{row.children}}" wx:key="item.value">
             <label>
@@ -47,13 +47,13 @@ export default {
       {
         title: '站点管理',
         children: [
-          { url: '/pages/static/static', text: '站点数据管理', icon: 'icon-shuju' },
+          { url: '/pages/pc/website', text: '站点数据管理', icon: 'icon-shuju' },
           { url: '/pages/static/seo', text: 'SEO管理', icon: 'icon-SEO' },
-          { url: '/pages/static/beian', text: '域名备案', icon: 'icon-yuming' },
+          { url: '/pages/static/bind', text: '域名绑定', icon: 'icon-yuming' },
           { url: '/pages/static/sitemap', text: 'Sitemap生成', icon: 'icon-sitemap' },
-          { url: '/pages/static/seo_batch', text: '批量提交', icon: 'icon-tijiao' },
           { url: '/pages/static/thirdPartyStatistics', text: '第三方统计', icon: 'icon-tongji' },
           { url: '/pages/static/convenient', text: '便捷登录配置', icon: 'icon-denglu' },
+          { url: '', text: 'text', icon: 'icon-jia' },
           { url: '', text: 'text', icon: 'icon-jia' }
         ]
       },

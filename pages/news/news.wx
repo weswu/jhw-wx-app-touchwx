@@ -1,8 +1,10 @@
 <template>
   <view>
     <cc-header title="{{title}}" count="{{count}}" back="{{!selected}}">
-      <text bindtap="toggleAll" wx:if="{{selected && !toggle}}">全选</text>
-      <text bindtap="toggleAll" wx:if="{{selected && toggle}}">全不选</text>
+      <view bindtap="toggleAll" wx:if="{{selected}}" style="width:100%">
+        <text wx:if="{{!toggle}}">全选</text>
+        <text wx:if="{{toggle}}">全不选</text>
+      </view>
     </cc-header>
     <!-- head -->
     <cc-search value="{{params.title}}" type="news" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
@@ -155,7 +157,17 @@ export default {
       list: list,
       toggle: toggle
     })
+    if (!toggle) {
+      this.selectedBack()
+    }
     this.initSelcted()
+  },
+  selectedBack () {
+    // 取消选中
+    this.setData({
+      selected: false,
+      title: '新闻管理'
+    })
   },
   toggle (e) {
     let list = this.data.list
@@ -183,10 +195,7 @@ export default {
   item (e) {
     let item = e.currentTarget.dataset.item
     if (this.data.selected) {
-      this.setData({
-        selected: false,
-        title: '新闻管理'
-      })
+      this.selectedBack()
     } else {
       wx.navigateTo({
         url: 'newsDetail?id=' + item.newsId

@@ -5,15 +5,20 @@
 <script>
 import system from './static/utils/system'
 import api from './static/utils/api'
-
 export default {
   config: {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/static/sitemap',
+      'pages/static/convenient',
+      'pages/static/bindDetail',
+      'pages/static/bind',
+      'pages/home/my',
+      'pages/static/seo',
+      'pages/album/album',
       'pages/news/newsDetail',
       'pages/news/news',
-      'pages/album/album',
       'pages/product/product',
       'pages/pc/website',
       'pages/member/memberAttr',
@@ -44,7 +49,6 @@ export default {
       'pages/message/messageList',
       'pages/message/messageReply',
       'pages/message/messageDetail',
-      'pages/home/my',
       'pages/home/console',
       'pages/home/index',
       'pages/home/module',
@@ -492,6 +496,28 @@ export default {
     font-size: 50rpx;
     color: #fff;
   }
+}
+.j_tip {
+  color: #595959;
+  padding: 7px 15px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  background: #f9f9f9;
+  line-height: 1.7;
+  position: relative;
+  font-size: 12px;
+  margin: 7px 0;
+  .red{
+    color: #ff0800;
+    padding-right: 3px;
+  }
+  .grey {
+    color: #646464;
+  }
+}
+.btn_info{
+  color:#12bedb;
+  font-size: 13px;
 }
 // 底部按钮
 .fixed_btn{

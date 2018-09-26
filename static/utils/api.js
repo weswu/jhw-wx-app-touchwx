@@ -51,8 +51,12 @@ const staticAdd = (params) => http(params, 'http://www.jihui88.com/rest/pc/index
 // seo
 const seoDetail = (params) => http(params, pcHost + 'baseLayout/detail' + (params.id ? '/' + params.id : ''))
 // 域名绑定
-const bind = (params) => http(params, host + 'bind/list')
-const bindDetail = (params) => http(params, host + 'bind/detail' + (params.id ? '/' + params.id : ''))
+const bind = (params) => http(params, pcHost + 'bind/bindList')
+const bindDetail = (params) => http(params, pcHost + 'bind/bindDetail')
+const bindAdd = (params) => http(params, pcHost + 'bind/bindAdd')
+const bindEdit = (params) => http(params, pcHost + 'bind/bindEdit')
+
+
 // 推广
 const spread = (params) => http(params, host + 'poster/list?pageSize=72')
 const spreadRank = (params) => http(params, wxHost + '/rest/api/comm/poster/userlist')
@@ -60,6 +64,13 @@ const posters = (params) => http(params, 'https://api.jihui88.net/qrcode_poster/
 
 const analysis = (params) => http(params, pcHost + 'analysis/detail')
 const analysisSave = (params) => http(params, pcHost + 'analysis/save')
+const authLogin = (params) => http(params, pcHost + 'authLogin/detail')
+// Sitemap生成
+const saveRobotsOrSitemap = (params) => http(params, host + 'seotools/saveRobotsOrSitemap')
+const seotoolsSave = (params) => http(params, host + 'seotools/save')
+const sitemapcap = (params) => http(params, host + 'seotools/sitemapcap')
+
+
 
 
 /***************** 公司信息 ************/
@@ -146,8 +157,10 @@ module.exports = {
   /***************** 站点 ************/
   staticList, staticDetail, staticAdd,
   seoDetail,
-  bind, bindDetail,
+  bind, bindDetail, bindAdd, bindEdit,
   analysis, analysisSave,
+  authLogin,
+  saveRobotsOrSitemap, seotoolsSave, sitemapcap,
   /***************** 公司信息 ************/
   enterprise, 
   link, linkDetail,

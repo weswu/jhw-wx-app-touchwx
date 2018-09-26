@@ -1,0 +1,190 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="便捷登录配置"></cc-header>
+    <cc-lan website="{{true}}" bindlayout="layoutChange"></cc-lan>
+
+    <view class="j_tip">开放平台设置：以下为开放平台申请时需所填写的数据</view>
+    <ui-row height="104r">
+      <ui-col class="desc" vertical-align="middle" space-left="15">
+        网站地址：http://pc.jihui88.com/rest/site/{{layoutId}}/index
+      </ui-col>
+    </ui-row>
+    <ui-row height="104r">
+      <ui-col class="desc" vertical-align="middle" space-left="15">
+        回调地址：http://www.jihui88.com/rest/api/comm/site_oauth/oauth
+      </ui-col>
+    </ui-row>
+    <view class="j_tip">我的网站设置：以下为填写开放平台申请后返回的AppId与密钥。</view>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="220r">
+        <ui-col width="70" vertical-align="middle">
+          <view style="width:100%">
+          微信登录
+          </view>
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle">
+          <view style="width:100%">
+          使用条件：
+          <view>1.需绑定过域名<navigator url="/pages/static/bind" class="j_a">[点击查看]</navigator> </view>
+          <view>2.需在微信开放平台申请一个登录应用</view>
+          <view>https://open.weixin.qq.com/cgi-bin/applist</view>
+          </view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="100" vertical-align="middle">
+          是否开启
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="oauthWeixinState">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.oauthWeixinState === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.oauthWeixinState === '01'}}">
+        <ui-col width="100" vertical-align="middle">
+          微信应用AppId
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="oauthWeixinAppId" value="{{detail.oauthWeixinAppId}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.oauthWeixinState === '01'}}">
+        <ui-col width="90" vertical-align="middle">
+          微信应用密钥
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="oauthWeixinSecret" value="{{detail.oauthWeixinSecret}}"/>
+        </ui-col>
+      </ui-row>
+
+      <ui-row height="220r">
+        <ui-col width="70" vertical-align="middle">
+          <view style="width:100%">
+          QQ登录
+          </view>
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle">
+          <view style="width:100%">
+          使用条件：
+          <view>1.需绑定过域名<navigator url="/pages/static/bind" class="j_a">[点击查看]</navigator> </view>
+          <view>2.需在QQ开放平台申请一个登录应用</view>
+          <view>https://connect.qq.com/manage.html</view>
+          </view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="100" wx:if="{{detail.analysisHeadState === '01'}}">
+        <ui-col vertical-align="middle" align="left" space-right="15">
+          <textarea bindinput="input" id="analysisHeadContent" value="{{detail.analysisHeadContent}}" placeholder="统计代码"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="100" vertical-align="middle">
+          是否开启
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="oauthQqState">
+            <label wx:for="{{typelist}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.oauthQqState === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.oauthQqState === '01'}}">
+        <ui-col width="100" vertical-align="middle">
+          QQ应用AppId
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="oauthQqAppId" value="{{detail.oauthQqAppId}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.oauthQqState === '01'}}">
+        <ui-col width="90" vertical-align="middle">
+          QQ应用密钥
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="oauthQqSecret" value="{{detail.oauthQqSecret}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view style="height:50px;"></view>
+    <button type="primary" bindtap="submit" class="fixed">保存</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-lan': '../../packages/cc-lan'
+    }
+  },
+  data: {
+    detail: {
+      oauthWeixinState: '00',
+      oauthQqState: '00'
+    },
+    typelist: [
+      { text: '是', value: '01' },
+      { text: '否', value: '00' }
+    ],
+    layoutId: ''
+  },
+  onLoad () {
+    this.layoutChange()
+  },
+  get () {
+    api.authLogin({
+      data: {
+        layoutId: this.data.layoutId
+      }
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        if (!data.oauthWeixinState) data.oauthWeixinState = '00'
+        if (!data.oauthQqState) data.oauthQqState = '00'
+        this.setData({
+          detail: data
+        })
+      }
+    })
+  },
+  layoutChange () {
+    this.setData({
+      layoutId: getApp().globalData.layoutId
+    })
+    this.get()
+  },
+  submit () {
+    api.authLogin({
+      data: this.data.detail,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+.j_a{
+  color: #0366ce;
+  display: inline-block;
+}
+.j_detail .ui-row-list .ui-row .desc {
+  font-size:12px;
+}
+</style>

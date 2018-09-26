@@ -75,17 +75,7 @@ export default {
     })
   },
   changeHandler (e) {
-    let index = e.currentTarget.dataset.index
-    if(this.data.el !== index){
-      if (this.data.el !== 'undefined') {
-        this.data.list[this.data.el].switcher = 'off'
-      }
-      this.data.list[index].switcher = 'on'
-      this.setData({
-        list:this.data.list
-      })
-      this.data.el = index  
-    }
+    Utils.switcher(this, e)
   },
   nav (e) {
     wx.navigateTo({

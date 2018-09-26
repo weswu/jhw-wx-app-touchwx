@@ -1,0 +1,183 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="域名绑定详情"></cc-header>
+    <view class="j_title">主域名绑定的步骤<text>（请求帮助QQ：260404208）</text></view>
+    <view class="j_tip"><text class="red">第1步：</text>空间选择</view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="90" vertical-align="middle">
+          机房
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{category[index].text}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.country === 'cn'}}">
+        <ui-col width="90" vertical-align="middle">
+          ICP备案号
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="icp" value="{{detail.icp}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    
+    <view class="j_tip"><text class="red">第2步：</text>请在此输入您已经拥有的自定义域名。审核(或清除)周期大概2个工作日。</view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          主域名
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="address" value="{{detail.address}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view class="j_tip"><text class="red">第3步：</text>域名解析 (注意：请确保您的自定义域名解析正确，域名设置变动一般需要几个小时生效，最长可达2天)</view>
+    <view class="j_table">
+      <ui-row border-bottom border-top height="40">
+        <ui-col border-right vertical-align="middle" align="center" span="3">
+          解析域名
+        </ui-col>
+        <ui-col border-right vertical-align="middle" align="center" span="4">
+          记录类型
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" span="5">
+          记录值
+        </ui-col>
+      </ui-row>
+      <ui-row border-bottom height="40">
+        <ui-col border-right vertical-align="middle" align="center" span="3">
+          www.
+        </ui-col>
+        <ui-col border-right vertical-align="middle" align="center" span="4">
+          CNAME
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" span="5">
+          gn2.dns.jihui88.com
+        </ui-col>
+      </ui-row>
+      <ui-row border-bottom height="40" space-bottom="10">
+        <ui-col border-right vertical-align="middle" align="center" span="3">
+          
+        </ui-col>
+        <ui-col border-right vertical-align="middle" align="center" span="4">
+          CNAME
+        </ui-col>
+        <ui-col vertical-align="middle" align="center" span="5">
+          gn2.dns.jihui88.com
+        </ui-col>
+      </ui-row>
+    </view>
+
+    <ui-row-list border-left-indent wx:if="{{detail.country === 'cn'}}">
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          网安备案号
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="psr" value="{{detail.psr}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          网安备案链接地址
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="seccurityLink" value="{{detail.seccurityLink}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view style="height:50px;"></view>
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      country: 'cn'
+    },
+    index: 0,
+    category:[
+      { text: '国内机房', value: 'cn' },
+      { text: '美国机房', value: 'en' },
+      { text: '香港机房', value: 'hc' }
+    ]
+  },
+  onLoad ({id}) {
+    this.setData({
+      'detail.bindId': id || ''
+    })
+    this.get()
+  },
+  get () {
+    api.bindDetail({
+      data: {
+        bindId: this.data.detail.bindId
+      }
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        this.data.category.forEach((item, index) => {
+          if (item.value === data.country) {
+            this.setData({
+              index: index
+            })
+          }
+        })
+        this.setData({
+          detail: data
+        })
+      }
+    })
+  },
+  submit () {
+    Tips.loading()
+    api.bindEdit({
+      data: this.data.detail,
+      method: 'POST'
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        var pages = getCurrentPages()
+        var prevPage = pages[pages.length - 2];  //上个页面
+        prevPage.get()
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+
+//表格
+.j_table{
+  color: #a0a0a0;
+  font-size: 12px;
+}
+.j_title{
+  font-size: 14px;
+  padding: 15px 0 10px 15px;
+  color: #5b5b5b;
+  text {
+    font-size: 12px;
+    margin: 0 5px 0 5px;
+  }
+}
+</style>

@@ -2,8 +2,10 @@
   <view>
     <cc-header title="{{title}}" width="{{width}}" back="{{!selected}}">
       <text bindtap="back" wx:if="{{!selected}}">{{catelogName}}</text>
-      <text bindtap="toggleAll" wx:if="{{selected && !toggle}}">全选</text>
-      <text bindtap="toggleAll" wx:if="{{selected && toggle}}">全不选</text>
+      <view bindtap="toggleAll" wx:if="{{selected}}" style="width:100%">
+        <text wx:if="{{!toggle}}">全选</text>
+        <text wx:if="{{toggle}}">全不选</text>
+      </view>
     </cc-header>
     <cc-search type="album" 
       value="{{params.filename}}"
@@ -21,13 +23,13 @@
         </ui-col>
         <ui-col class="text" vertical-align="middle">
           <view  wx:if="{{!item.editing}}">{{item.name}}</view>
+          <view class="desc" wx:if="{{!item.editing && !item.hideTime}}">{{item.addTime}}</view>
           <input bindinput="input" value="{{item.name}}" wx:if="{{item.editing}}"/>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="center" wx:if="{{item.editing}}" data-item="{{item}}" catchtap="nameChange">
           <i class="iconfont icon-gou"></i>
         </ui-col>
-        <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked"
-          wx:if="{{item.name !== '[系统]微信小程序Banner相册' && item.name !== '首页大广告图' && item.name !== '产品图片' && item.name !== '新闻图片' && item.name !== '默认相册'}}">
+        <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked" wx:if="{{!item.hideTime}}">
           <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="10" wx:if="{{item._checked}}"></icon>
         </ui-col>
@@ -175,6 +177,7 @@
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
+import regeneratorRuntime from 'regenerator-runtime'
 export default {
   config: {
     usingComponents: {
@@ -243,6 +246,12 @@ export default {
       fileids: ''
     })
     getApp().getAlbumCategory(res => {
+      res.forEach((item, index) => {
+        item.addTime = Utils.formatTime(item.addTime)
+        if (item.name === '[系统]微信小程序Banner相册' || item.name === '首页大广告图' || item.name === '产品图片' || item.name === '新闻图片' || item.name === '默认相册') {
+          item.hideTime = true
+        }
+      })
       that.setData({
         filelist: res
       })
@@ -401,7 +410,17 @@ export default {
       filelist: this.data.filelist,
       toggle: toggle
     })
+    if (!toggle) {
+      this.selectedBack()
+    }
     this.initSelcted()
+  },
+  selectedBack () {
+    // 取消选中文件
+    this.setData({
+      selected: false,
+      title: this.data.catelog[this.data.catelog.length-1].name
+    })
   },
   checked (e) {
     let row = e.currentTarget.dataset.item
@@ -435,7 +454,7 @@ export default {
       }
     })
     this.data.filelist.forEach(item => {
-      if (item._checked && item.name !== '[系统]微信小程序Banner相册' && item.name !== '首页大广告图' && item.name !== '产品图片' && item.name !== '新闻图片' && item.name !== '默认相册') {
+      if (item._checked && !item.hideTime) {
         fileids = fileids ? (fileids + ',' + item.albumId) : item.albumId
       }
     })
@@ -454,17 +473,7 @@ export default {
     let item = e.currentTarget.dataset.item
     let index = e.currentTarget.dataset.index
     if (this.data.selected) {
-      // 取消选中文件
-      let title = '相册管理'
-      this.data.filelist.forEach(item => {
-        if (item.albumId === this.data.albumId) {
-          title = item.name
-        }
-      })
-      this.setData({
-        selected: false,
-        title: title
-      })
+      this.selectedBack()
     } else if (item.attId) {
       /* 预览图片 */
       this.setData({
@@ -529,7 +538,8 @@ export default {
       list: this.data.list
     })
   },
-  delPic () {
+  async delPic () {
+    await Tips.confirm('确认删除图片吗？')
     api.imgDel({
       data: {attIds: this.data.list[this.data.swiperCurrent].attId},
       method: 'post'
@@ -634,10 +644,7 @@ export default {
     if (!this.data.ids && !this.data.fileids) {
       return Tips.toast('未选择')
     }
-    this.setData({
-      selected: false,
-      title: this.data.catelog[this.data.catelog.length-1].name
-    })
+    this.selectedBack()
     if (this.data.ids) {
       api.imgCopy({
         data: {attIds: this.data.ids},
@@ -678,10 +685,7 @@ export default {
     if (!this.data.ids && !this.data.fileids) {
       return Tips.toast('未选择')
     }
-    this.setData({
-      selected: false,
-      title: this.data.catelog[this.data.catelog.length-1].name
-    })
+    this.selectedBack()
     if (this.data.ids) {
       api.imgMove({
         data: {
@@ -810,14 +814,12 @@ export default {
     })
     this.rename('done')
   },
-  batchDel () {
+  async batchDel () {
     if (!this.data.ids && !this.data.fileids) {
       return Tips.toast('未选择')
     }
-    this.setData({
-      selected: false,
-      title: this.data.catelog[this.data.catelog.length-1].name
-    })
+    await Tips.confirm('确认删除吗？')
+    this.selectedBack()
     if (this.data.ids) {
       api.imgDel({
         data: {attIds: this.data.ids},

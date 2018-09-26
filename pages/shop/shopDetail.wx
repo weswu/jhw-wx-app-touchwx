@@ -45,8 +45,7 @@
           退货说明
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea class="weui-textarea" placeholder="退货说明"
-          bindinput="input" id="buyerReason" value="{{detail.buyerReason}}" style="width:100%;height: 80px;margin:10px 0;"/>
+          <textarea placeholder="退货说明" bindinput="input" id="buyerReason" value="{{detail.buyerReason}}"/>
         </ui-col>
       </ui-row>
     </ui-row-list>

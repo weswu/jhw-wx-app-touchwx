@@ -95,6 +95,9 @@ export default {
       }
     })
   },
+  changeHandler (e) {
+    Utils.switcher(this, e)
+  },
   nav (e) {
     wx.navigateTo({
       url: 'refundDetail?id=' + e.currentTarget.dataset.id
