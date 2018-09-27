@@ -1,7 +1,7 @@
 <template>
   <view>
     <cc-header title="支付方式管理"></cc-header>
-    <ui-swipe-out height="65" data-index="{{index}}" operate-width="150" style="margin-bottom: 50px;"
+    <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
       bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
       <view slot="content">
         <ui-row height="65" class="j_row_list" border-bottom>
@@ -24,7 +24,7 @@
         </view>
       </view>
     </ui-swipe-out>
-    <button type="primary" bindtap="add" class="fixed">添加</button>
+    <view bindtap="add" class="j_add"><i class="iconfont icon-jia"></i></view>
   </view>
 </template>
 

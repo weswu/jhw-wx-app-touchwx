@@ -2,7 +2,7 @@
   <view>
     <cc-header title="商品退货管理" count="{{count}}"></cc-header>
 
-    <ui-swipe-out height="80" data-index="{{index}}" operate-width="150" style="margin-bottom: 50px;"
+    <ui-swipe-out height="80" data-index="{{index}}" operate-width="150"
       bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
       <view slot="content">
         <ui-row height="80" border-bottom class="j_row_list" wx:for="{{list}}" wx:key="*this">

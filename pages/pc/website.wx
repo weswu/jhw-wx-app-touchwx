@@ -102,7 +102,6 @@ export default {
       country: 'cn'
     },
     countryType: [
-      { text: '香港', value: 'hc', content: '免备案' },
       { text: '美国', value: 'en', content: '免备案' },
       { text: '中国大陆', value: 'cn', content: '阿里云主机，需备案' }
     ]

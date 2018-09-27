@@ -23,21 +23,49 @@
           <!-- <ui-icon type="more" size="16" color="#fff"></ui-icon> -->
         </ui-col>
       </ui-row>
-
     </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}"></view>
+    <view style="height:{{NAV_HEIGHT}}px"></view>
+
+    <cc-lan website="{{current === 0}}" lan="{{current === 1}}" bindlayout="layoutChante" bindchange="lanChante">
+      <view slot="category" style="color:#12bedb;font-size:12px;" bindtap="openPopup">
+        <text wx:if="{{current === 0}}">{{category[index1].text}}</text>
+        <text wx:if="{{current === 1}}">{{category2[index2].text}}</text>
+        <i class="iconfont icon-xiangxiajiantoushixin {{show ? 'active' : ''}}" style="color:#12bedb;font-size:10px;"></i>
+      </view>
+    </cc-lan>
+
+    <ui-popup cropout show="{{show }}" position="top" top="{{ top }}" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
+      <view class="top_pop">
+        <ui-row-list border-left-indent>
+          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="*this" data-index="{{index}}" bindtap="change" wx:if="{{current === 0}}">
+            <ui-col vertical-align="middle">
+              {{item.text}}
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{index1 === index}}">
+              <i class="iconfont icon-gou"/>
+            </ui-col>
+          </ui-row>
+          <ui-row height="43" border-bottom wx:for="{{category2}}" wx:key="*this" data-index="{{index}}" bindtap="change" wx:if="{{current === 1}}">
+            <ui-col vertical-align="middle">
+              {{item.text}}
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width="40" space-right="15">
+              <i class="iconfont icon-gou" wx:if="{{index1 === index && current === 0}}"></i>
+              <i class="iconfont icon-gou" wx:if="{{index2 === index && current === 1}}"></i>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+      </view>
+    </ui-popup>
+
     <swiper style="height:{{ contentHeight }}px" class="content" current="{{ current }}" bindchange="handleContentChange">
       <swiper-item>
-        <scroll-view scroll-y style="height:{{DEFAULT_CONTENT_HEIGHT}}px" class="content_list">
-          <import src="seo/base.wxml" />a
+        <scroll-view scroll-y style="height:{{DEFAULT_CONTENT_HEIGHT}}px" bindscrolltolower="loadmore">
+          <seo-base id="base" index="{{index1}}" type="{{category[index1].value}}"/>
         </scroll-view>
       </swiper-item>
       <swiper-item>
-        <scroll-view scroll-y style="height:{{DEFAULT_CONTENT_HEIGHT}}px" class="content_list">
-          <view wx:for="{{ items1 }}" class="{{index % 2 == 0 ? 'grey-bg':''}}">
-            {{ item }}
-          </view>
-        </scroll-view>
+        <seo-template id="template" index="{{index2}}" type="{{category2[index2].value}}"/>
       </swiper-item>
     </swiper>
   </view>
@@ -46,7 +74,12 @@
 <script>
 export default {
   config: {
-    "disableScroll":true
+    usingComponents: {
+      'seo-base': '../../packages/seo-base',
+      'seo-template': '../../packages/seo-template',
+      'cc-lan': '../../packages/cc-lan'
+    },
+    disableScroll: true
   },
   data : {
     inkBarStyle:{
@@ -57,84 +90,120 @@ export default {
     tabStyle:{
       'color':'#fff'
     },
-    DEFAULT_CONTENT_HEIGHT:wx.DEFAULT_CONTENT_HEIGHT,
+    DEFAULT_CONTENT_HEIGHT:wx.DEFAULT_CONTENT_HEIGHT - 60/750*wx.WIN_WIDTH,
     width:wx.WIN_WIDTH,
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
     current: 0,
-    items0: [],
-    items1: [],
-    items2: [],
-    items3: [],
-    items4: [],
-    items5: [],
-    items6: [],
-    items7: [],
-    items8: [],
-    items9: [],
-    contentHeight: wx.DEFAULT_CONTENT_HEIGHT,
+    contentHeight: wx.DEFAULT_CONTENT_HEIGHT - 60/750*wx.WIN_WIDTH,
     tabsWidth: wx.WIN_WIDTH - 70,
     navBarStyle:{
       'background-color':'#373d40',
       'color':'#fff'
-    }
+    },
+    // 下拉
+    top: 66,
+    show: false,
+    index1: 0,
+    category: [
+      { text: '导航', value: 'pc' },
+      { text: '产品分类', value: 'category/product' },
+      { text: '产品', value: 'product/list' },
+      { text: '新闻分类', value: 'category/news' },
+      { text: '新闻', value: 'news/list' }
+    ],
+    index2: 0,
+    category2: [
+      { text: '基本栏目模板配置', value: '0' },
+      { text: '新闻分类页模板配置', value: '1' },
+      { text: '产品分类页模板配置', value: '2' },
+      { text: '新闻详细页模板配置', value: '3' },
+      { text: '产品详细页模板配置', value: '4' }
+    ]
+  },
+  onLoad (){
+    this.setData({
+      top: this.data.popup_NAV_HEIGHT + 60/750*wx.WIN_WIDTH
+    })
   },
   navigateBack () {
     wx.navigateBack()
   },
   handleChange (e) {
-    console.log(e)
-    let index = e.detail.index
-    // this.data.current = index
     this.setData({
-      current:index
+      current:e.detail.index
     })
-    // this[key] = index
   },
   handleContentChange (e) {
-    // this[key] = index
-    console.log(e)
-    let index = e.detail.current
     this.setData({
-      current:index
+      current:e.detail.current
     })
   },
-  onReady:function(){
-    let items0=[]
-    let items1=[]
-    let items2=[]
-    let items3=[]
-    let items4=[]
-    let items5=[]
-    let items6=[]
-    let items7=[]
-    let items8=[]
-    let items9=[]
-    for (let i = 1; i <= 100; i++) {
-      items0.push(i + ' - 推荐项目列表')
-      items1.push(i + ' - 热点项目列表')
-      items2.push(i + ' - 视频项目列表')
-      items3.push(i + ' - 问答项目列表')
-      items4.push(i + ' - 社会项目列表')
-      items5.push(i + ' - 娱乐项目列表')
-      items6.push(i + ' - 科技项目列表')
-      items7.push(i + ' - 汽车项目列表')
-
+  // 下拉
+  openPopup (e) {
+    this.setData({
+      show: !this.data.show
+    })
+  },
+  popHide () {
+    this.setData({
+      show:false
+    })
+  },
+  popShow () {
+    this.setData({
+      show:true
+    })
+  },
+  change (e) {
+    let index = e.currentTarget.dataset.index
+    this.popHide()
+    if (this.data.current === 0) {
+      this.setData({
+        index1: index
+      })
+      this.selectComponent("#base").init()
+    } else {
+      this.setData({
+        index2: index
+      })
+      this.selectComponent("#template").init()
     }
-    this.setData({
-      items0:items0,
-      items1:items1,
-      items2:items2,
-      items3:items4,
-      items4:items4,
-      items5:items5,
-      items6:items6,
-      items7:items7
-    })
   },
+  layoutChante () {
+    if (this.data.current === 0) {
+      this.selectComponent("#base").init()
+    }
+  },
+  lanChante () {
+    if (this.data.current === 1) {
+      this.selectComponent("#template").get()
+    }
+  },
+  // 加载更多
+  loadmore () {
+    this.selectComponent("#base").loadMore()
+  }
 }
 
 </script>
 
 <style lang="less">
 
+.icon-xiangxiajiantoushixin{
+  font-size: 10px;
+  color: #686868;
+  display: inline-block;
+  transform:rotate(0deg);
+  transition: all .3s ease-in;
+  &.active{
+    transform:rotate(180deg);
+    color:#12bedb!important;
+  }
+}
+.icon-gou{
+  color:#12bedb;
+  font-size:12px;
+}
 </style>

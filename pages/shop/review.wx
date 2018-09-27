@@ -3,7 +3,7 @@
     <cc-header title="评价管理" count="{{count}}"></cc-header>
 
     <ui-row-list>
-      <ui-accordion bindchange="slide" wx:for="{{ list }}" header-height="50">
+      <ui-accordion bindchange="slide" wx:for="{{ list }}" wx:key="*this" header-height="50">
         <view slot="header">
           <ui-row height="50" border-bottom class="title">
             <ui-col class="text" vertical-align="middle" align="left" space-left="10">

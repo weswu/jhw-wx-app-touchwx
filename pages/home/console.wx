@@ -1,5 +1,5 @@
 <template>
-  <view class="j_console bg_color">
+  <view class="j_console">
     <!-- 自定义导航 -->
     <cc-header title="控制台" back="{{false}}"></cc-header>
 

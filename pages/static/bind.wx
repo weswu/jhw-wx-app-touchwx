@@ -4,7 +4,7 @@
     <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
   
     <ui-row-list border-left-indent>
-      <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150" style="margin-bottom: 50px;"
+      <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
         bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
         <view slot="content">
         <ui-row height="120r" border-bottom class="j_row_list">

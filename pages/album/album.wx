@@ -166,8 +166,8 @@
           </ui-col>
         </ui-row>
         <view class="border"></view>
-        <view style="display:none">大小：5.28M</view>
-        尺寸：{{list[swiperCurrent].width}}*{{list[swiperCurrent].width}}
+        <view wx:if="{{list[swiperCurrent].fsize}}">大小：{{list[swiperCurrent].fsize}}</view>
+        尺寸：{{list[swiperCurrent].width}}*{{list[swiperCurrent].height}}
       </view>
     </ui-mask>
   </view>
@@ -276,6 +276,11 @@ export default {
           item._checked = false
           item.editing = false
           item.index = index
+          if (item.fsize) {
+            if (item.fsize < 1024) item.fsize = item.fsize.toFixed(2) + "B"
+            if (item.fsize < 1024 * 1024) item.fsize = (item.fsize/1024).toFixed(2) + "KB"
+            if (item.fsize < 1024 * 1024 * 1024) item.fsize = (item.fsize/(1024 * 1024)).toFixed(2) + "M"
+          }
         })
         Utils.scrollList(this, res, ' ')
       }

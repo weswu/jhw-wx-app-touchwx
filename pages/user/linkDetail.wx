@@ -1,5 +1,5 @@
 <template>
-  <view class="j_detail bg_color">
+  <view class="j_detail">
     <cc-header title="友情链接"></cc-header>
     <ui-row-list border-left-indent style="margin-bottom:50px;">
       <ui-row height="104r">
@@ -138,5 +138,7 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
-
+page{
+  background: #f1f1f1
+}
 </style>

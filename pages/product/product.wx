@@ -8,7 +8,7 @@
     </cc-header>
     <!-- head -->
     <cc-search value="{{params.name}}" type="product" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
-    <cc-lan lan="{{true}}" top="99" type="product" bindchange="lanChange">
+    <cc-lan lan="{{true}}" top="99" params="{{params}}" type="product" bindchange="lanChange" bindsort="sortChange">
       <i class="iconfont icon-{{chenlie === '0' ? 'danhangchenlie' : 'duohangchenlie'}}" bindtap="chenlie"></i>
     </cc-lan>
     
@@ -188,7 +188,9 @@ export default {
     params: {
       page: 1,
       pageSize: 16,
-      name: ''
+      name: '',
+      sortName: 'sort',
+      sortType: 'desc'
     },
     count: 0,
     more: {},
@@ -262,6 +264,13 @@ export default {
     this.setData({
       list: [],
       params: this.data.params
+    })
+    this.get()
+  },
+  sortChange (e) {
+    this.setData({
+      list: [],
+      params: e.detail
     })
     this.get()
   },

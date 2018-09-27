@@ -8,7 +8,7 @@
     </cc-header>
     <!-- head -->
     <cc-search value="{{params.title}}" type="news" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
-    <cc-lan lan="{{true}}" top="99" type="news" bindchange="lanChange"></cc-lan>
+    <cc-lan lan="{{true}}" top="99" params="{{params}}" type="news" bindchange="lanChange" bindsort="sortChange"></cc-lan>
     
     <!-- body -->
     <ui-row-list>
@@ -82,7 +82,9 @@ export default {
     params: {
       page: 1,
       pageSize: 16,
-      title: ''
+      title: '',
+      sortName: 'sort',
+      sortType: 'desc'
     },
     count: 0,
     more: {},
@@ -134,6 +136,13 @@ export default {
     this.setData({
       list: [],
       params: this.data.params
+    })
+    this.get()
+  },
+  sortChange (e) {
+    this.setData({
+      list: [],
+      params: e.detail
     })
     this.get()
   },

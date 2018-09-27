@@ -11,6 +11,7 @@ const wxapplogin = (params) => http(params, wxHost + "/rest/api/user/wxapplogin"
 // 账号登录
 const login = (params) => http(params, wxHost + '/rest/api/user/wxAppLoginByUsernameAndPassword')
 const logout = (params) => http(params, host + 'user/logout')
+const api = (params) => http(params, host + params.url)
 /***************** 基本数据 ************/
 const user = (params) => http(params, host + 'user/detail' + (params ? '/' + params.id : ''))
 const userInfo = (params) => http(params, host + 'user/index')
@@ -48,8 +49,6 @@ const messageDetail = (params) => http(params, host + 'message/detail' + (params
 const staticList = (params) => http(params, pcHost + 'baseLayout/list')
 const staticDetail = (params) => http(params, pcHost + 'baseLayout/detail' + (params.id ? '/' + params.id : ''))
 const staticAdd = (params) => http(params, 'http://www.jihui88.com/rest/pc/index/list')
-// seo
-const seoDetail = (params) => http(params, pcHost + 'baseLayout/detail' + (params.id ? '/' + params.id : ''))
 // 域名绑定
 const bind = (params) => http(params, pcHost + 'bind/bindList')
 const bindDetail = (params) => http(params, pcHost + 'bind/bindDetail')
@@ -69,8 +68,13 @@ const authLogin = (params) => http(params, pcHost + 'authLogin/detail')
 const saveRobotsOrSitemap = (params) => http(params, host + 'seotools/saveRobotsOrSitemap')
 const seotoolsSave = (params) => http(params, host + 'seotools/save')
 const sitemapcap = (params) => http(params, host + 'seotools/sitemapcap')
-
-
+// seo
+const seoNav = (params) => http(params, pcHost + 'navigator/list')
+const seoNavDetail = (params) => http(params, pcHost + 'navigator/detail' + (params ? '/' + params.id : ''))
+const seoDetail = (params) => http(params, host + 'seo/pc/detail' + (params ? '/' + params.id : ''))
+const seoSave = (params) => http(params, host + 'seo/pc/save/' + params.id)
+const seoTemplate = (params) => http(params, host + 'seoTemplate/list')
+const seoTemplateDetail = (params) => http(params, host + 'seoTemplate/detail')
 
 
 /***************** 公司信息 ************/
@@ -141,7 +145,7 @@ const couponDetail = (params) => http(params, host + 'coupon/detail' + (params.i
 
 
 module.exports = {
-  wxapplogin, login, logout,
+  wxapplogin, login, logout, api,
   /***************** 基本数据 ************/
   user, userInfo, customData, customUpdate, changeLan,
   area,
@@ -156,11 +160,12 @@ module.exports = {
   message, messageDetail,
   /***************** 站点 ************/
   staticList, staticDetail, staticAdd,
-  seoDetail,
   bind, bindDetail, bindAdd, bindEdit,
   analysis, analysisSave,
   authLogin,
   saveRobotsOrSitemap, seotoolsSave, sitemapcap,
+  seoNav, seoNavDetail,
+  seoDetail, seoSave, seoTemplate, seoTemplateDetail,
   /***************** 公司信息 ************/
   enterprise, 
   link, linkDetail,

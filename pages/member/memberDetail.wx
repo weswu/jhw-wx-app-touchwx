@@ -1,5 +1,5 @@
 <template>
-  <view class="j_detail bg_color">
+  <view class="j_detail">
     <cc-header title="会员详情"></cc-header>
 
     <view class="hr"></view>
@@ -373,7 +373,9 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
-
+page{
+  background: #f1f1f1
+}
 checkbox{
   transform:scale(.7);
 }

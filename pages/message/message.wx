@@ -62,7 +62,9 @@ export default {
     // recvState 00未读  01已读
     api.message({
       data: {
-        pageSize: 1
+        pageSize: 1,
+        countRecvState: '00',
+        recvState: '01'
       }
     }).then(res => {
       if (res.success) {

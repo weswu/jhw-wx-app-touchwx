@@ -16,6 +16,7 @@
               </ui-col>
             </ui-row>
           </view>
+          <slot name="category"></slot>
         </ui-col>
         <ui-col width="100r" vertical-align="middle" align="center">
           <slot></slot>
@@ -72,15 +73,15 @@
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show1 ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show1 ? 'show' : '' }}">
         <ui-row-list border-left-indent class="sort-list">
-          <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="*this" data-item="{{item}}" bindtap="sortChange">
-            <ui-col vertical-align="middle" class="{{params.sortField === item.value ? 'active' : ''}}">
+          <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="*this" data-item="{{item}}" bindtap="sortChange" wx:if="{{item.type === type}}">
+            <ui-col vertical-align="middle" class="{{params.sortName === item.value ? 'active' : ''}}">
               {{item.text}}
             </ui-col>
             <ui-col vertical-align="middle" align="center" width="40">
-              <i class="iconfont icon-vertical-align-botto {{params.sortType === 'asc' && params.sortField === item.value ? 'active' : ''}}"/>
+              <i class="iconfont icon-vertical-align-botto {{params.sortType === 'asc' && params.sortName === item.value ? 'active' : ''}}"/>
             </ui-col>
             <ui-col vertical-align="middle" align="center" width="40" space-right="15">
-              <i class="iconfont icon-vertical-align-top {{params.sortType === 'desc' && params.sortField === item.value ? 'active' : ''}}"/>
+              <i class="iconfont icon-vertical-align-top {{params.sortType === 'desc' && params.sortName === item.value ? 'active' : ''}}"/>
             </ui-col>
           </ui-row>
         </ui-row-list>
@@ -135,6 +136,13 @@ export default {
     website: {
       type: Boolean,
       value: false
+    },
+    params: {
+      type: Object,
+      value: {
+        sortName: 'sort',
+        sortType: 'desc'
+      }
     }
   },
   data: {
@@ -146,18 +154,17 @@ export default {
     name: '中文',
     lanId: '1',
     // 排序
-    params: {
-      sortField: 'sort',
-      searchType: '1',
-      sortType: 'desc'
-    },
     show1: false,
     sortList: [
-      { value: 'sort', text: '默认' },
-      { value: 'uploadTime', text: '时间' },
-      { value: 'filename', text: '名称' },
-      { value: 'price', text: '价格' },
-      { value: 'person', text: '人气' }
+      { value: 'sort', text: '默认', type: 'product' },
+      { value: 'addTime', text: '时间', type: 'product' },
+      { value: 'name', text: '名称', type: 'product' },
+      { value: 'price', text: '价格', type: 'product' },
+      { value: 'viewsum', text: '人气', type: 'product' },
+      { value: 'sort', text: '默认', type: 'news' },
+      { value: 'addTime', text: '时间', type: 'news' },
+      { value: 'title', text: '名称', type: 'news' },
+      { value: 'viewsum', text: '人气', type: 'news' }
     ],
     sortName: '默认',
     // 站点
@@ -231,12 +238,19 @@ export default {
       this.setData({
         sortName: item.text
       })
+      let params = this.data.params
+      if (params.sortName === item.value) {
+        params.sortType = params.sortType === 'asc' ? 'desc' : 'asc'
+      } else {
+        params.sortName = item.value
+      }
+      this.triggerEvent('sort', params)
       this.popHide1()
     },
     // 站点
     openPopup2 (e) {
       this.setData({
-        show2: !this.data.show1
+        show2: !this.data.show2
       })
     },
     popHide2 () {

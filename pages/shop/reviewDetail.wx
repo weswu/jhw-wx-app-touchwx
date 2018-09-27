@@ -1,5 +1,5 @@
 <template>
-  <view class="j_detail bg_color">
+  <view class="j_detail">
     <cc-header title="评价详情"></cc-header>
     <ui-row-list border-left-indent style="margin-bottom:50px;">
       <view class="title">{{detail.content}}</view>
@@ -95,6 +95,9 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 .title{
   color: #666;
   padding-top: 10px;

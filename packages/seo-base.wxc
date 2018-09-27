@@ -1,0 +1,132 @@
+<template>
+  <view>
+    <ui-row-list border-left-indent>
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col vertical-align="middle">
+          <view style="width: 100%;">
+            <view class="name">{{item.name}}</view>
+            <view class="desc">{{item.page}}</view>
+          </view>
+        </ui-col>
+        <ui-col width="50" vertical-align="middle" class="info" data-item="{{item}}" bindtap="detail">
+          SEO
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="more" wx:if="{{ more.tip !== '' }}">{{ more.tip }}</view>
+    <view class="more" wx:elif="{{ more.tip === '' && more.loading }}">正在加载</view>
+  </view>
+</template>
+
+<script>
+import api from '../static/utils/api'
+import Utils from '../static/utils/utils'
+export default {
+  properties: {
+    index: {
+      type: Number,
+      value: 0
+    },
+    type: {
+      type: String,
+      value: 0
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 16
+    },
+    count: 0,
+    more: {}
+  },
+  ready () {
+    this.get()
+  },
+  methods: {
+    init () {
+      this.setData({
+        list: [],
+        'params.page': 1
+      })
+      this.get()
+    },
+    get () {
+      this.setData({
+        'params.layoutId': getApp().globalData.layoutId,
+        'more.loading': true,
+        'more.tip': ''
+      })
+      if (this.data.index === 0) {
+        api.seoNav({
+          data: this.data.params
+        }).then(res => {
+          Utils.scrollList(this, res)
+        })
+      } else {
+        api.api({
+          data: this.data.params,
+          url: this.data.type
+        }).then(res => {
+          this.data.index === 4 && res.attributes.data.forEach(item => {
+            item.name = item.title
+          });
+          Utils.scrollList(this, res)
+        })
+      }
+    },
+    detail (e) {
+      let item = e.currentTarget.dataset.item
+      let active = this.data.type
+      let id = ''
+      let type = 'page'
+      if (active === 'category/product') {
+        id = item.categoryId
+        type = 'cate_product'
+      } else if (active === 'category/news') {
+        id = item.categoryId
+        type = 'cate_news'
+      } else if (active === 'product/list') {
+        id = item.productId
+        type = 'product'
+      } else if (active === 'news/list') {
+        id = item.newsId
+        type = 'news'
+      } else {
+        id = item.id
+      }
+      wx.navigateTo({
+        url: '/pages/static/seo/seoDetail?id=' + id + '&type=' + type
+      })
+    },
+    // 加载更多
+    loadMore () {
+      Utils.loadMore(this)
+    }
+  }
+}
+</script>
+
+<style lang="less">
+@import '../static/styles/row-list';
+@import '../static/styles/row';
+@import '../static/styles/col';
+.info{
+  color:#12bedb;
+}
+.name{
+  color: #4e4e4e;
+}
+.desc{
+  color:#9f9f9f;
+  font-size:12px;
+}
+.more{
+  color:#9f9f9f;
+  font-size:12px;
+  text-align: center;
+  padding: 10px 0;
+}
+</style>
+

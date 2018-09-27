@@ -48,11 +48,9 @@ const scrollList = (that, res, text) => {
   let ctx = that.data
   if (res.success) {
     addAll(ctx.list, res.attributes.data)
-
     if(ctx.params.page === 1){
       ctx.count = res.attributes.count
     }
-
     let pageSize = ctx.params.pageSize || 16
     if (res.attributes.data.length < pageSize) {
       ctx.more.tip = text || '加载完毕'
@@ -144,10 +142,11 @@ const loadMore = (that) => {
 }
 
 // 批量操作
-const batchDel = (that, type) => {
+const batchDel = async (that, type) => {
   if (!that.data.ids) {
     return Tips.toast('未选择')
   }
+  await Tips.confirm('确认删除吗？')
   api.batchDel({
     data: {ids: that.data.ids},
     type: type,

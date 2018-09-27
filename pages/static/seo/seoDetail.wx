@@ -45,7 +45,9 @@ let pageConf = {
   },
   data: {
     detail: {},
-    edit: false
+    edit: false,
+    id: '',
+    page: ''
   },
   onLoad (e) {
     if (e.title === 'null'){
@@ -63,12 +65,60 @@ let pageConf = {
         edit: true
       })
     }
+    if (e.id) {
+      this.setData({
+        id: e.id,
+        page: e.type
+      })
+      if (e.type === 'page') {
+        api.seoNavDetail({
+          id: e.id
+        }).then(res => {
+          if (res.success) {
+            let model = res.attributes.data || {}
+            this.setData({
+              detail:{
+                title: model.seoTitle || '',
+                keywords: model.seoKeywords || '',
+                description: model.seoDescription || ''
+              }
+            })
+          }
+        })
+      } else {
+        api.seoDetail({
+          id: e.id
+        }).then(res => {
+          if (res.success) {
+            this.setData({
+              detail: res.attributes.data || {}
+            })
+          }
+        })
+      }
+    }
   },
   submit () {
-    var pages = getCurrentPages();
-    var prevPage = pages[pages.length - 2];
-    prevPage.seoChange(this.data.detail);
-    wx.navigateBack();
+    if (this.data.id) {
+      let data = {
+        model: JSON.stringify(this.data.detail),
+        _method: 'put'
+      }
+      api.seoSave({
+        data: data,
+        id: (this.data.detail.seoId || this.data.page),
+        method: 'post'
+      }).then(res => {
+        if (res.success) {
+          Tips.success('保存成功')
+        }
+      })
+    } else {
+      var pages = getCurrentPages();
+      var prevPage = pages[pages.length - 2];
+      prevPage.seoChange(this.data.detail);
+      wx.navigateBack();
+    }
   }
 }
 export default Page(Object.assign(pageConf, Input))

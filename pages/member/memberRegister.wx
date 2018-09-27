@@ -1,5 +1,5 @@
 <template>
-  <view class="j_detail bg_color">
+  <view class="j_detail">
     <cc-header title="商品相关配置"></cc-header>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
