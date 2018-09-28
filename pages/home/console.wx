@@ -39,7 +39,7 @@
                <view class="title">订单管理</view> 
             </ui-col>
             <ui-col width="70" vertical-align="middle">
-              <navigator url="/pages/shop/shop?active=0" class="weui-cell__ft"><text class="info">我的订单</text></navigator>
+              <navigator url="/pages/shop/shop" class="weui-cell__ft"><text class="info">我的订单</text></navigator>
             </ui-col>
           </ui-row>
           <ui-row border-bottom height="85">
@@ -131,8 +131,8 @@ export default {
       {}
     ],
     orders: [
-      {url: '/pages/shop/shop?active=1', text: '待付款', icon: 'icon-fukuan'},
-      {url: '/pages/shop/shop?active=2', text: '待发货', icon: 'icon-fahuo1'},
+      {url: '/pages/shop/shop?paymentStatus=0', text: '待付款', icon: 'icon-fukuan'},
+      {url: '/pages/shop/shop?shippingStatus=0', text: '待发货', icon: 'icon-fahuo1'},
       {url: '/pages/shop/review', text: '待评价', icon: 'icon-ic-comment'},
       {url: '/pages/shop/refund', text: '退换/售后', icon: 'icon-shouhou1'}
     ],

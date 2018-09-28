@@ -10,6 +10,7 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/shop/shop',
       'pages/static/seo',
       'pages/static/seo/base',
       'pages/static/sitemap',
@@ -34,7 +35,6 @@ export default {
       'pages/user/link',
       'pages/user/linkDetail',
       'pages/category/category',
-      'pages/shop/shop',
       'pages/shop/shopDetail',
       'pages/shop/couponDetail',
       'pages/shop/coupon',
@@ -654,10 +654,6 @@ radio {
     input{
       padding:0 5px;
     }
-    input::-webkit-input-placeholder {
-      color: #b1b1b1;
-      font-size: 12px;
-    }
     textarea{
       width:100%;height: 80px;margin:10px 0;
     }
@@ -670,6 +666,10 @@ radio {
       font-size:13px;
     }
   }
+}
+input::-webkit-input-placeholder {
+  color: #b1b1b1;
+  font-size: 12px;
 }
 .btn_gray{
   background: #d8d8d8;

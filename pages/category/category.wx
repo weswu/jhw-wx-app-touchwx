@@ -238,10 +238,10 @@ export default {
   },
   // 单选
   toggle (e) {
-    let list = this.data.list
-    list[e.currentTarget.dataset.index]._checked = !list[e.currentTarget.dataset.index]._checked
+    let index = e.currentTarget.dataset.index
+    let field = 'list[' + index + ']._checked'
     this.setData({
-      list: list,
+      [field]: !this.data.list[index]._checked,
       selected: true
     })
     this.initSelcted ()

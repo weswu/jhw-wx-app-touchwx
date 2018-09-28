@@ -47,7 +47,7 @@ let pageConf = {
     detail: {},
     edit: false,
     id: '',
-    page: ''
+    type: ''
   },
   onLoad (e) {
     if (e.title === 'null'){
@@ -68,7 +68,7 @@ let pageConf = {
     if (e.id) {
       this.setData({
         id: e.id,
-        page: e.type
+        type: e.type
       })
       if (e.type === 'page') {
         api.seoNavDetail({
@@ -83,6 +83,11 @@ let pageConf = {
                 description: model.seoDescription || ''
               }
             })
+            if (model.seoId){
+              this.setData({
+                id:model.seoId
+              })
+            }
           }
         })
       } else {
@@ -100,19 +105,40 @@ let pageConf = {
   },
   submit () {
     if (this.data.id) {
-      let data = {
-        model: JSON.stringify(this.data.detail),
-        _method: 'put'
-      }
-      api.seoSave({
-        data: data,
-        id: (this.data.detail.seoId || this.data.page),
-        method: 'post'
-      }).then(res => {
-        if (res.success) {
-          Tips.success('保存成功')
+      let detail = this.data.detail
+      if (this.data.type === 'page') {
+          let data = {
+          model: JSON.stringify({
+            seoTitle: detail.title,
+            seoKeywords: detail.keywords,
+            seoDescription: detail.description
+          }),
+          _method: 'put'
         }
-      })
+        api.seoNavDetail({
+          data: data,
+          id: this.data.id,
+          method: 'post'
+        }).then(res => {
+          if (res.success) {
+            Tips.success('保存成功')
+          }
+        })
+      } else {
+          let data = {
+          model: JSON.stringify(detail),
+          _method: 'put'
+        }
+        api.seoSave({
+          data: data,
+          id: this.data.id,
+          method: 'post'
+        }).then(res => {
+          if (res.success) {
+            Tips.success('保存成功')
+          }
+        })
+      }
     } else {
       var pages = getCurrentPages();
       var prevPage = pages[pages.length - 2];
