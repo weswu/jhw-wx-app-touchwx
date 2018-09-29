@@ -9,7 +9,7 @@
           <view class="left_icon left_icon">
             <view class="maoyan" style="background: #{{item.color}}">
               <i class="iconfont {{item.icon}}"></i>
-              <ui-badge custom-style="{{customStyle3}}" text="{{item.count}}" wx:if="{{item.count !== 0}}"></ui-badge>
+              <ui-badge custom-style="{{customStyle3}}" text="{{item.count}}" wx:if="{{item.count > 0}}"></ui-badge>
             </view>
           </view>
         </ui-col>
@@ -128,12 +128,12 @@ export default {
         color: #4e4e4e;
     }
     .time{
-        font-size: 14px;
+        font-size: 13px;
         color: #9b9ca5;
     }
     view{
         color: #9b9ca5;
-        font-size: 12px;
+        font-size: 13px;
         .mix-text-overflow();
     }
   }

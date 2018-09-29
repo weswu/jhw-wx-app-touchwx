@@ -38,7 +38,7 @@
     <ui-row-list>
       <ui-row height="258r" border-bottom wx:for="{{list}}" wx:key="*this">
         <ui-col vertical-align="middle" align="center" width="90r" data-index="{{index}}" bindtap="toggle">
-          <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
+          <icon type="circle" size="18" wx:if="{{!item._checked && (item.orderStatus === 'invalid' || item.orderStatus === 'cancel')}}"></icon>
           <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
         </ui-col>
         <ui-col vertical-align="middle" align="left" width="237r" data-item="{{item}}" bindtap="item">
@@ -48,10 +48,11 @@
           <view style="wdith:100%">
             编号：{{item.orderSn}}
             <view class="price"> ￥{{item.totalAmount || 0.00}} </view>
-            <view class="title"> 
-              <text class="isNew" wx:if="{{item.isNew === '01'}}">新品</text>
-              <text class="isBest" wx:if="{{item.isBest === '01'}}">精品</text>
-              <text class="isHot" wx:if="{{item.isHot === '01'}}">热品</text>
+            <view class="title">
+              <!-- 订单状态 -->
+              <text style="background:{{row.style}}" wx:if="{{item.orderStatus === row.value}}" wx:for="{{orderStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
+              <text style="background:{{row.style}}" wx:if="{{item.paymentStatus === row.value}}" wx:for="{{paymentStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
+              <text style="background:{{row.style}}" wx:if="{{item.shippingStatus === row.value}}" wx:for="{{shippingStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
             </view>
           </view>
          </ui-col>
@@ -129,6 +130,30 @@ export default {
     }
   },
   data :{
+    // 付款状态
+    paymentStatus: [
+      { text: '未支付', value: 'unpaid', style: '#d0021b' },
+      { text: '部分支付', value: 'partPayment', style: '#ff7e3e' },
+      { text: '已支付', value: 'paid', style: '#417505' },
+      { text: '部分退款', value: 'partRefund', style: '#ff7e3e' },
+      { text: '全额退款', value: 'refunded', style: '#000000' }
+    ],
+    // 配送状态
+    shippingStatus: [
+      { text: '未发货', value: 'unshipped', style: '#d0021b' },
+      { text: '部分发贫', value: 'partShipped', style: '#ff7e3e' },
+      { text: '已发货', value: 'shipped', style: '#417505' },
+      { text: '部分退货', value: 'partReshiped', html: '' },
+      { text: '已退货', value: 'reshiped', html: '' }
+    ],
+    // 订单状态
+    orderStatus: [
+      { text: '未处理', value: 'unprocessed', style: '#d0021b' },
+      { text: '已处理', value: 'processed', style: '#417505' },
+      { text: '已完成', value: 'completed', style: '#5b5b5b' },
+      { text: '已作废', value: 'invalid', style: '#a0a0a0' },
+      { text: '已取消', value: 'cancel', style: '#d0021b' }
+    ],
     list: [],
     params: {
       page: 1,
@@ -176,14 +201,18 @@ export default {
   },
   onLoad (e) {
     if (e.paymentStatus) {
-      this.category1[e.paymentStatus].checked = true
+      this.data.category1.forEach((item, index) => {
+        item.checked = (item.value === e.paymentStatus)
+      })
       this.setData({
          category1: this.data.category1,
         'params.paymentStatus': e.paymentStatus
       })
     }
     if (e.shippingStatus) {
-      this.category2[e.shippingStatus].checked = true
+      this.data.category2.forEach((item, index) => {
+        item.checked = (item.value === e.shippingStatus)
+      })
       this.setData({
          category2: this.data.category2,
         'params.shippingStatus': e.shippingStatus
@@ -342,7 +371,7 @@ export default {
       this.selectedBack()
     } else {
       wx.navigateTo({
-        url: 'orderDetail?id=' + item.ordertId
+        url: 'shopDetail?id=' + item.orderId
       })
     }
   },
@@ -366,6 +395,7 @@ page{
 }
 .j_search{
   background:#fff;
+  width: 100%;
   .iconfont{
     color:#4e4e4e;
     font-size: 44rpx;
@@ -400,8 +430,8 @@ page{
       line-height:40rpx;
       padding-top:10rpx;
       text{
-        font-size: 8px;
-        background: #ff7e3e;
+        font-size: 10px;
+        background: #999;
         color: #fff;
         padding: 2px 4px;
         margin-right: 5px

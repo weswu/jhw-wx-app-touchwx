@@ -8,17 +8,25 @@
         <input class="username" placeholder="手机号/帐号" bindinput="input" id="username" value="{{detail.username}}"/>
         <input class="password" placeholder="请输入密码" bindinput="input" id="password" value="{{detail.password}}" type="password"/>
       </view>
-      <button class="weui-btn submit" type="primary" bindtap="submit" hover-class="none" wx:if="{{!userInfo}}">登录</button>
-      <button class="weui-btn submit" type="primary" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" hover-class="none" wx:if="{{userInfo}}">用户授权</button>
+      <button class="submit" type="primary" bindtap="submit" hover-class="none">登录</button>
     </view>
-    <view class="other" wx:if="{{!userInfo}}">
+    <view class="other">
       <view class="other-text"><text>其他登录方式</text></view>
       <view class="other-icon">
         <view bindtap="weixin"><i class="iconfont icon-weixin"></i></view>
         <view bindtap="weixin" class="text">微信</view>
       </view>
     </view>
-  </view>
+    <view class="auth" wx:if="{{authorize}}">
+      <view class="j_auth">
+      <view class="title">登录授权</view>
+      <view class="content">为保证小程序的正常运行，请
+        <view>点击授权！</view>
+      </view>
+      <button class="btn-weixin" type="primary" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" hover-class="none">授权</button>
+      <view>
+    </view>
+  </view> 
  </template>
 
 <script>
@@ -34,7 +42,7 @@ let pageConf = {
   data: {
     detail:{},
     back: false,
-    userInfo: false
+    authorize: false
   },
   onLoad (e) {
     if (e.back === '1') {
@@ -49,14 +57,14 @@ let pageConf = {
     let that = this
     getApp().userInfoReadyCallback = res =>{
       that.setData({
-        userInfo: true
+        authorize: true
       })
     }
   },
   bindGetUserInfo (e) {
     getApp().onLaunch()
     this.setData({
-      userInfo: false
+      authorize: false
     })
     wx.showToast({
       title: '用户授权成功，请登录',
@@ -126,6 +134,37 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
+.auth{
+  position: fixed;
+  top:0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  bottom: 0;
+  z-index: 99;
+  background: #fff;
+  .j_auth{
+    margin: 150px 40px 0 40px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border-radius: 3px;
+    .title{
+      color: #585858;
+      margin: 0 20px;
+      padding: 15px 0;
+      border-bottom: 1px solid #eee;
+    }
+    .content{
+      font-size: 12px;
+      color: #999;
+      padding: 25px 0;
+    }
+  }
+  .btn-weixin{
+    background: #1ac332
+  }
+}
+
 .logo{
   text-align:center;
   image{

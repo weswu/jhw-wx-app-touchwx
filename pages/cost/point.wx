@@ -18,15 +18,15 @@
     <view class="sticky-in-relative-container">
       <ui-sticky scroll-top="{{ scrollTop }}" top="{{NAV_HEIGHT}}" custom-style="{{ {backgroundColor:'#FFF'} }}" stick-on-tap>
         <view>
-          <ui-tabs tab-style="{{ {width:width/3+'px !important',color: '#4e4e4e',borderBottom: '2px solid #fff'} }}" active-tab-style="{{ {width:width/3+'px !important',color: '#ccb27b !important',borderBottom: '2px solid #ccb27b'} }}" index="{{index}}" bindchange="handleChange">
-            <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
+          <ui-tabs tab-style="{{ {width:width/3+'px !important',color: '#4e4e4e',fontSize: '34rpx;',borderBottom: '2px solid #fff'} }}" active-tab-style="{{ {width:width/3+'px !important',color: '#ccb27b !important',borderBottom: '2px solid #ccb27b'} }}" index="{{index}}" bindchange="handleChange">
+            <ui-tab>积分列表<text style="font-size:30rpx" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
             <ui-tab>积分兑换</ui-tab>
             <ui-tab>积分规则</ui-tab>
           </ui-tabs>
         </view>
         <view slot="sticky">
-          <ui-tabs tab-style="{{ {width:width/3+'px !important',color: '#4e4e4e',borderBottom: '2px solid #fff'} }}" active-tab-style="{{ {width:width/3+'px !important',color: '#ccb27b !important',borderBottom: '2px solid #ccb27b'} }}" index="{{index}}" bindchange="handleChange">
-            <ui-tab>积分列表<text style="font-size:12px" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
+          <ui-tabs tab-style="{{ {width:width/3+'px !important',color: '#4e4e4e',fontSize: '34rpx',borderBottom: '2px solid #fff'} }}" active-tab-style="{{ {width:width/3+'px !important',color: '#ccb27b !important',borderBottom: '2px solid #ccb27b'} }}" index="{{index}}" bindchange="handleChange">
+            <ui-tab>积分列表<text style="font-size:30rpx" wx:if="{{count !== 0}}">({{count}})</text></ui-tab>
             <ui-tab>积分兑换</ui-tab>
             <ui-tab>积分规则</ui-tab>
           </ui-tabs>

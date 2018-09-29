@@ -139,7 +139,7 @@ let pageConf = {
       Tips.loaded()
       if (res.success) {
         Tips.success('保存成功')
-        Utils.get()
+        Utils.prev().get()
       } else {
         Tips.error(res.msg)
       }

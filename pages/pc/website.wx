@@ -3,7 +3,7 @@
     <cc-header title="我的网站" count="{{count}}"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-swipe-out operate-width="120" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
+      <ui-swipe-out operate-width="180" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
       bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="90">
         <view slot="content">
           <ui-row height="90" class="j_row_list" border-bottom>
@@ -18,9 +18,7 @@
                   </ui-col>
                 </ui-row>
                 <view class="desc">
-                  <navigator url="/pages/setting/webView?src={{item.url}}">
-                    {{item.url}}
-                  </navigator>
+                  <view>{{item.url}}</view>
                   <text wx:if="{{item.endTime}}">到期时间：{{ item.endTime }}</text>
                   <text wx:if="{{!item.endTime}}">已到期</text>
                   <text class="type">{{item.lan}}</text>
@@ -40,10 +38,13 @@
         <view slot="operate">
           <ui-row class="j_operate" height="90">
             <ui-col vertical-align="middle" align="center">
-              <view class="delete" data-item='{{item}}' data-index='{{index}}' bindtap="copy">复制</view>
+              <view data-item='{{item}}' bindtap="view">查看</view>
             </ui-col>
             <ui-col vertical-align="middle" align="center">
-              <view class="delete" data-id='{{item.id}}' data-index='{{index}}' bindtap="del">删除</view>
+              <view data-item='{{item}}' data-index='{{index}}' bindtap="copy">复制</view>
+            </ui-col>
+            <ui-col vertical-align="middle" align="center">
+              <view data-id='{{item.id}}' data-index='{{index}}' bindtap="del">删除</view>
             </ui-col>
           </ui-row>
         </view>
@@ -192,6 +193,12 @@ export default {
     let value = e.currentTarget.dataset.value
     this.setData({
       'detail.country': value
+    })
+  },
+  view (e) {
+    let item = e.currentTarget.dataset.item
+    wx.navigateTo({
+      url: '/pages/setting/webView?src=' + item.url
     })
   },
   add () {

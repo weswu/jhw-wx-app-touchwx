@@ -1,56 +1,217 @@
 <template>
   <view class="j_detail">
-    <cc-header title="支付方式详情"></cc-header>
-    <ui-row-list border-left-indent style="margin-bottom:50px;">
+    <cc-header title="订单详情"></cc-header>
+    <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col width="90" vertical-align="middle">
-          联系电话
+          订单状态
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.mobile}}
-        </ui-col>
+          <view style="width:100%">
+            [<text style="color:{{item.style}}" wx:if="{{detail.orderStatus === item.value}}" wx:for="{{orderStatus}}" wx:key="*this">{{item.text}}</text>]
+            [<text style="color:{{item.style}}" wx:if="{{detail.paymentStatus === item.value}}" wx:for="{{paymentStatus}}" wx:key="*this">{{item.text}}</text>]
+            [<text style="color:{{item.style}}" wx:if="{{detail.shippingStatus === item.value}}" wx:for="{{shippingStatus}}" wx:key="*this">{{item.text}}</text>]
+          </view>
+         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-          退货状态
+          订单编号
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <picker bindchange="categoryPicker" id="state" value="{{current}}" range-key="text" range="{{disputeState}}">
-            <view >{{disputeState[current].text}}</view>
-          </picker>
+          {{detail.orderSn}}
         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col width="98" vertical-align="middle">
-          退货类型
+          下单时间
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <radio-group bindchange="radio" id="disputeType">
-            <label wx:for="{{disputeType}}" wx:key="item.value">
-              <radio value="{{item.value}}" checked="{{detail.disputeType === item.value}}"></radio>{{item.text}}
-            </label>
-          </radio-group>
+          {{detail.addTime}}
         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-          退货金额
+          商品总金额
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <input placeholder="请填写" bindinput="input" id="amount" value="{{detail.amount}}"/>
+          <text class="red">￥{{detail.productTotalPrice || 0}}元</text>
         </ui-col>
       </ui-row>
-      <ui-row height="100">
+      <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-          退货说明
+          订单总金额
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea placeholder="退货说明" bindinput="input" id="buyerReason" value="{{detail.buyerReason}}"/>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <text class="red">￥{{detail.totalAmount || 0}}元</text>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          积分抵扣
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <text class="red">￥{{detail.integralMoney || 0}}元</text>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          使用积分
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memberPoint}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          配送方式
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.deliveryType.name}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          配送费用
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.deliveryFee}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          支付方式
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.paymentConfig.name}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          支付手续费
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.paymentFee}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          商品重量
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.productWeight}}{{detail.productWeightUnit}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          附言
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memo}}
         </ui-col>
       </ui-row>
     </ui-row-list>
 
-    <button type="primary" bindtap="submit" class="fixed">提交</button>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          收货人姓名
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.shipName}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          收货地区
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.shipArea}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          收货地址
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.shipAddress}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          邮编
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.shipZipCode}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          电话
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.shipPhone}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          手机
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.shipMobile}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          用户名
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memberObj.name || detail.memberObj.username}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          会员等级
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memberObj.memberRank.name}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          预存款余额
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memberObj.deposit}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          最后登录IP
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memberObj.loginIp}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          E-mail
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memberObj.email}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          积分
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          {{detail.memberObj.memberRank.point}}
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
   </view>
 </template>
 
@@ -65,33 +226,44 @@ let pageConf = {
     }
   },
   data: {
-    detail: {
-      mobile: '15168352892',
-      type: 'onlymoney',
-      state: 'unprocessed',
-    },
-    current: 0,
-    // 退货类型
-    disputeType: [
-      { text: '仅退款 ', value: 'onlymoney' },
-      { text: '退款并退货 ', value: 'goodandmoney' }
+    // 付款状态
+    paymentStatus: [
+      { text: '未支付', value: 'unpaid', style: '#d0021b' },
+      { text: '部分支付', value: 'partPayment', style: '#ff7e3e' },
+      { text: '已支付', value: 'paid', style: '#417505' },
+      { text: '部分退款', value: 'partRefund', style: '#ff7e3e' },
+      { text: '全额退款', value: 'refunded', style: '#000000' }
     ],
-    // 退货状态
-    disputeState: [
-      { text: '未处理 ', value: 'unprocessed' },
-      { text: '处理中 ', value: 'processed' },
-      { text: '已退款 ', value: 'returned' },
-      { text: '已拒绝 ', value: 'invalid' },
-      { text: '已完成 ', value: 'completed' },
-      { text: '已关闭 ', value: 'closed' }
-    ]
+    // 配送状态
+    shippingStatus: [
+      { text: '未发货', value: 'unshipped', style: '#d0021b' },
+      { text: '部分发贫', value: 'partShipped', style: '#ff7e3e' },
+      { text: '已发货', value: 'shipped', style: '#417505' },
+      { text: '部分退货', value: 'partReshiped', html: '' },
+      { text: '已退货', value: 'reshiped', html: '' }
+    ],
+    // 订单状态
+    orderStatus: [
+      { text: '未处理', value: 'unprocessed', style: '#d0021b' },
+      { text: '已处理', value: 'processed', style: '#417505' },
+      { text: '已完成', value: 'completed', style: '#5b5b5b' },
+      { text: '已作废', value: 'invalid', style: '#a0a0a0' },
+      { text: '已取消', value: 'cancel', style: '#d0021b' }
+    ],
+    detail: {
+      deliveryType: {},
+      memberObj: {
+        memberRank: {}
+      },
+      paymentConfig: {}
+    }
   },
   onLoad ({id}) {
     this.get(id)
   },
   get (id) {
-    api.orderRefundDetail({
-      id: id
+    api.orderDetail({
+      id: id || 'ff8081815156ec210151674174c801b9'
     }).then(res => {
       if (res.success) {
         this.setData({
@@ -101,24 +273,6 @@ let pageConf = {
         Tips.error(res.msg)
       }
     })
-  },
-  categoryPicker (e) {
-    var index = e.detail.value
-    this.data.detail[e.currentTarget.id] = this.data.disputeState[index].value
-    this.setData({
-      detail: this.data.detail,
-      current: index
-    })
-  },
-  validate() {
-    const rules = [
-      {
-        value: this.data.detail.amount,
-        method: 'required',
-        message: '退货金额为空'
-      }
-    ];
-    return this.check(rules);
   },
   submit () {
     if (!this.validate()) {

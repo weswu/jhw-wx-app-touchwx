@@ -37,36 +37,36 @@
     <view class="j_tip"><text class="red">第3步：</text>域名解析 (注意：请确保您的自定义域名解析正确，域名设置变动一般需要几个小时生效，最长可达2天)</view>
     <view class="j_table">
       <ui-row border-bottom border-top height="40">
-        <ui-col border-right vertical-align="middle" align="center" span="3">
+        <ui-col border-right vertical-align="middle" align="center" span="5">
           解析域名
         </ui-col>
-        <ui-col border-right vertical-align="middle" align="center" span="4">
+        <ui-col border-right vertical-align="middle" align="center" span="3">
           记录类型
         </ui-col>
-        <ui-col vertical-align="middle" align="center" span="5">
+        <ui-col vertical-align="middle" align="center" span="4">
           记录值
         </ui-col>
       </ui-row>
-      <ui-row border-bottom height="40">
-        <ui-col border-right vertical-align="middle" align="center" span="3">
-          www.
+      <ui-row border-bottom height="50">
+        <ui-col border-right vertical-align="middle" align="center" span="5">
+          {{detail.address}}
         </ui-col>
-        <ui-col border-right vertical-align="middle" align="center" span="4">
+        <ui-col border-right vertical-align="middle" align="center" span="3">
           CNAME
         </ui-col>
-        <ui-col vertical-align="middle" align="center" span="5">
-          gn2.dns.jihui88.com
+        <ui-col vertical-align="middle" align="center" span="4">
+          <text wx:if="{{detail.country === 'cn'}}">gn1.dsn.</text><text wx:else>gw1.dns.</text>jihui88.com
         </ui-col>
       </ui-row>
-      <ui-row border-bottom height="40" space-bottom="10">
-        <ui-col border-right vertical-align="middle" align="center" span="3">
+      <ui-row border-bottom height="50" space-bottom="10" wx:if="{{!isTwoDomain}}">
+        <ui-col border-right vertical-align="middle" align="center" span="5">
           
         </ui-col>
-        <ui-col border-right vertical-align="middle" align="center" span="4">
+        <ui-col border-right vertical-align="middle" align="center" span="3">
           CNAME
         </ui-col>
-        <ui-col vertical-align="middle" align="center" span="5">
-          gn2.dns.jihui88.com
+        <ui-col vertical-align="middle" align="center" span="4">
+          <text wx:if="{{detail.country === 'cn'}}">gn1.dns.</text><text wx:else>gw1.dns.</text>jihui88.com
         </ui-col>
       </ui-row>
     </view>
@@ -114,7 +114,8 @@ let pageConf = {
       { text: '国内机房', value: 'cn' },
       { text: '美国机房', value: 'en' },
       { text: '香港机房', value: 'hc' }
-    ]
+    ],
+    isTwoDomain: false
   },
   onLoad ({id}) {
     this.setData({
@@ -140,7 +141,19 @@ let pageConf = {
         this.setData({
           detail: data
         })
+        this.isDonain()
       }
+    })
+  },
+  isDonain () {
+    let bol = false
+    if (this.detail.address.split('.').length > 3) {
+      bol = true
+    } else {
+      bol = false
+    }
+    this.setData({
+      isTwoDomain: bol
     })
   },
   submit () {
@@ -154,6 +167,7 @@ let pageConf = {
         var pages = getCurrentPages()
         var prevPage = pages[pages.length - 2];  //上个页面
         prevPage.get()
+        this.isDonain()
         Tips.success("保存成功")
       } else {
         Tips.error(res.msg)

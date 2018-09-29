@@ -276,10 +276,9 @@ const upload = (option) => {
   }) 
 }
 
-const get = () => {
+const prev = () => {
   var pages = getCurrentPages()
-  var prevPage = pages[pages.length - 2];  //上个页面
-  prevPage.get()
+  return pages[pages.length - 2];  //上个页面
 }
 
 const switcher = (that, e) => {
@@ -308,6 +307,6 @@ module.exports = {
   batchCopy,
   batchMove,
   upload,
-  get,
+  prev,
   switcher
 };

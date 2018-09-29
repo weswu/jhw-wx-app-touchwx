@@ -1,6 +1,17 @@
 <template>
   <view>
     <cc-header title="{{title}}"></cc-header>
+    <!-- 下拉 -->
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:9;background:#fff" right="0">
+      <ui-row height="43" border-bottom bindtap="openPopup">
+        <ui-col vertical-align="middle" space-left="15">
+          {{name}}
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="40" space-right="15">
+          <i class="iconfont icon-angle-bottom {{show ? 'active' : ''}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
     <view style="height:43px"></view>
 
     <ui-row-list wx:for="{{list}}" wx:key="*this">
@@ -11,8 +22,8 @@
               <ui-col vertical-align="middle">
                 {{item.title}}
               </ui-col>
-              <ui-col class="time" width="130" vertical-align="middle" align="right">
-                2018-05-05 15:2
+              <ui-col class="desc" width="130" vertical-align="middle" align="right">
+                {{item.addTime}}
               </ui-col>
             </ui-row>
             <view class="desc">
@@ -21,7 +32,7 @@
            </view>
         </ui-col>
       </ui-row>
-      <ui-row url="messageDetail?id={{item.messageId}}" height="95r" hover-class="none">
+      <ui-row height="95r" data-item="{{item}}" bindtap="detail">
         <ui-col vertical-align="middle" style="color:#12bedb" space-left="15">
           查看详情
         </ui-col>
@@ -32,20 +43,6 @@
       <view class="hr"></view>
     </ui-row-list>
     <cc-loadmore more="{{more}}"></cc-loadmore>
-
-    <!-- 下拉 -->
-    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="{{'0;z-index:9;background:#fff;'}}" right="0">
-      <ui-row height="43" border-bottom bindtap="openPopup">
-        <ui-col vertical-align="middle" space-left="15">
-          <view>
-            {{name}}
-          </view>
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" width="40" space-right="15">
-          <i class="iconfont icon-angle-bottom {{show ? 'active' : ''}}"/>
-        </ui-col>
-      </ui-row>
-    </ui-fixed-view>
 
     <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
       <ui-row-list border-left-indent>
@@ -119,6 +116,24 @@ export default {
         })
         Utils.scrollList(this, res)
       }
+    })
+  },
+  detail (e) {
+    let item = e.currentTarget.dataset.item
+    if (item.recvState === '01') {
+      let prev = Utils.prev()
+      let list = prev.data.list
+      list.forEach(row => {
+        if (row.type === item.type){
+          row.count -= 1
+        }
+      })
+      prev.setData({
+        list: list
+      })
+    }
+    wx.navigateTo({
+      url: 'messageDetail?id=' + item.messageId
     })
   },
   openPopup (e) {
