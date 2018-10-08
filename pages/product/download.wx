@@ -1,0 +1,223 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="产品下载"></cc-header>
+
+    <view style="background-color:#f5f5f5">
+      <view style="width:240px;margin:0 auto">
+        <ui-tabs width="240" tab-style="{{tabStyle}}" auto-width="{{false}}" index="{{ current3 }}"  bindchange="handleChange3">
+            <ui-tab>
+                <view class="item item-right">产品表格下载</view>
+            </ui-tab>
+            <ui-tab>
+                <view class="item item-left">产品相册下载</view>
+            </ui-tab>
+        </ui-tabs>
+      </view>
+    </view>
+    <swiper class="content" current="{{ current3 }}" bindchange="handleContentChange3">
+      <swiper-item>
+        <view class="j_tip">
+          表格模板内容：需要的请“打勾”，再点下载。
+        </view>
+        <checkbox-group bindchange="checkboxChange">
+          <ui-row-list>
+            <ui-row border-top border-bottom class="row-border">
+              <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list}}" wx:key="*this">
+                <label>
+                  <checkbox value="{{item.text}}" checked="{{item.checked}}"></checkbox>
+                  <view>{{item.text}}</view>
+                </label>
+              </ui-col>
+            </ui-row>
+          </ui-row-list>
+        </checkbox-group>
+        <view class="j_tip">
+          温馨提醒（如需下载下面的内容，请先选择好所属的网站编号） 
+        </view>
+        <ui-row height="104r">
+          <ui-col class="text" width="80" vertical-align="middle" space-left="15">
+            网站编号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+             <picker bindchange="picker" value="{{index}}" range-key="id" range="{{category}}">
+              <view>{{category[index].id}}</view>
+            </picker>
+          </ui-col>
+        </ui-row>
+        <checkbox-group bindchange="checkboxChange2">
+          <ui-row-list>
+            <ui-row border-top border-bottom class="row-border">
+              <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list2}}" wx:key="*this">
+                <label>
+                  <checkbox value="{{item.text}}" checked="{{item.checked}}"></checkbox>
+                  <view>{{item.text}}</view>
+                </label>
+              </ui-col>
+            </ui-row>
+          </ui-row-list>
+        </checkbox-group>
+        <button type="primary" bindtap="downExcel">下载</button>
+      </swiper-item>
+      <swiper-item>
+        <button type="primary" bindtap="downImg">下载</button>
+      </swiper-item>
+    </swiper>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  }, 
+  data :{
+    current3: 0,
+    tabStyle:{
+      'flex':'0 0 40px'
+    },
+    col: [],
+    col2: [],
+    list: [
+      { value: 'name', text: '产品名称' },
+      { value: 'prodtype', text: '产品型号' },
+      { value: 'category', text: '产品分类' },
+      { value: 'picName', text: '产品图片' },
+      { value: 'proddesc', text: '产品内容' },
+      { value: 'detail1', text: '产品描述' },
+      { value: 'detail2', text: '产品卖点' },
+      { value: 'attr', text: '商城属性' },
+      { value: 'price', text: '价格' },
+      { value: 'weight', text: '重量' },
+      { value: 'store', text: '库存' },
+      { value: 'isMarketable', text: '是否上架' },
+      { value: 'isNew', text: '新品' },
+      { value: 'isBest', text: '精品' },
+      { value: 'isHot', text: '热销' },
+      { value: 'tag', text: '产品标签' }
+    ],
+    list2: [
+      { value: 'qrcode', text: '产品二维码' },
+      { value: '1', text: '-' },
+      { value: '2', text: '-' },
+      { value: '3', text: '-' }
+    ],
+    index: 0,
+    category: []
+  },
+  onLoad () {
+    let id = getApp().globalData.layoutId
+    let list = getApp().globalData.staticList
+    this.setData({
+      category: list
+    })
+    list.forEach((item, index) => {
+      if (item.id === id) {
+        this.setData({
+          index: index
+        })
+      }
+    })
+  },
+  handleChange3 (e) {
+    let index = e.detail.index
+    this.setData({
+      current3:index
+    })
+  },
+  handleContentChange3 (e) {
+    let current = e.detail.current
+    this.setData({
+      current3:current
+    })
+  },
+  checkboxChange (e) {
+    this.setData({
+      col: e.detail.value
+    })
+  },
+  checkboxChange2 (e) {
+    this.setData({
+      col2: e.detail.value
+    })
+  },
+  picker (e) {
+    this.setData({
+      index: e.detail.value
+    })
+  },
+  downExcel () {
+    let data = {
+      fields: this.data.col.join() + (this.data.col2.length > 0 ? ',' + this.data.col2.join() : ''),
+      layoutId: this.data.list[this.data.index].id
+    }
+    api.exportProductsToExcel({
+      data: data,
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        wx.downloadFile({
+          url: res.attributes.data,
+          success (res) {
+            Tips.success('下载成功')
+          }
+        })
+      } else {
+        Tips.error('下载失败')
+      }
+    })
+  },
+  downImg () {
+    Tips.loading()
+    api.exportProductImg().then(res => {
+      if (res.success) {
+        Tips.loaded()
+        wx.downloadFile({
+          url: res.attributes.data,
+          success (res) {
+            Tips.success('下载成功')
+          }
+        })
+      } else {
+        Tips.error('下载失败')
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+.content{
+  height: 100vh;
+}
+.ui-row{
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .ui-col-3{
+    height: 60px;
+    border-bottom: 1px solid #e9e9e9;
+    font-size: 12px;color: #656565;
+  }
+  &.row-border{
+    &::after{
+      border-bottom:none
+    }
+  }
+}
+
+checkbox{
+  transform:scale(.7);
+  .wx-checkbox-input{
+    margin:0;
+  }
+  .wx-checkbox-input.wx-checkbox-input-checked{
+    color: #34b34a !important;
+  }
+}
+button{
+  margin-top:20px;
+}
+</style>

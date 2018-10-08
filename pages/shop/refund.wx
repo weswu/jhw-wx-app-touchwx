@@ -91,7 +91,7 @@ export default {
             if (item.state === state.value) item.stateText = state.text
           })
         })
-        Utils.scrollList(this, res)
+        Utils.scrollList(this, res, '没有更多退货商品')
       }
     })
   },

@@ -90,6 +90,11 @@ const news = (params) => http(params, host + 'news/list')
 const newsDetail = (params) => http(params, host + 'news/detail/' + params.id)
 const product = (params) => http(params, host + 'product/list')
 const productDetail = (params) => http(params, host + 'product/detail/' + params.id)
+const exportProductsToExcel = (params) => http(params, host + 'product/exportProductsToExcel')
+const exportProductImg = (params) => http(params, host + 'product/exportProductImg')
+const downloadProductExcel = (params) => http(params, host + 'product/downloadProductExcel')
+
+
 // 分类
 const category = (params) => http(params, host + 'category/' + params.url + '?pageSize=1000')
 const categoryDisplay = (params) => http(params, host + 'category/display')
@@ -172,7 +177,7 @@ module.exports = {
   cert, certDetail,
   /***************** 新闻*产品 ************/
   news, newsDetail,
-  product, productDetail,
+  product, productDetail, exportProductsToExcel, exportProductImg, downloadProductExcel,
   // 分类
   category, categoryDisplay, categoryDel, categoryDetail,
   // 批量

@@ -10,6 +10,8 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/product/import',
+      'pages/product/download',
       'pages/shop/shopDetail',
       'pages/home/my',
       'pages/shop/shop',

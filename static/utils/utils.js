@@ -236,7 +236,7 @@ const batchCopy = (that, url, data) => {
 }
 
 
-const upload = (option) => {
+const upload = (option, number) => {
   var that = this;
   option = Object.assign({
     replace: '00',
@@ -245,7 +245,7 @@ const upload = (option) => {
   }, option)
   return new Promise(function(resolve, reject){
     wx.chooseImage({
-      count: 1, // 默认1
+      count: number || 1, // 默认1
       sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
       success: function (res) {

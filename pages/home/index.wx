@@ -46,7 +46,7 @@
     </view>
 
     <ui-row border-top border-bottom class="grids1" height="105">
-      <ui-col border-right align="center" vertical-align="middle">
+      <ui-col border-right align="center" vertical-align="middle" bindtap="jihui">
         <view class="image"><image mode="widthFix" src="../../images/index/logo.png"/></view>
         <view class="label">认识机汇网</view>
       </ui-col>
@@ -293,6 +293,14 @@ export default {
         }
       })
     }
+  },
+  jihui () {
+    wx.setClipboardData({
+      data: 'http://www.jihui88.com',
+      success: function(res) {
+        Tips.toast('主页复制成功，请到浏览器上打开')
+      }
+    })
   }
 }
 </script>
