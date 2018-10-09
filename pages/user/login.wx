@@ -67,7 +67,7 @@ let pageConf = {
       authorize: false
     })
     wx.showToast({
-      title: '用户授权成功，请登录',
+      title: '授权成功',
       icon: 'none',
       mask: true,
       duration: 2000

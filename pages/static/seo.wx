@@ -38,7 +38,7 @@
       <view class="top_pop">
         <ui-row-list border-left-indent>
           <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="*this" data-index="{{index}}" bindtap="change" wx:if="{{current === 0}}">
-            <ui-col vertical-align="middle">
+            <ui-col vertical-align="middle" class="{{index === index1 ? 'active' : ''}}">
               {{item.text}}
             </ui-col>
             <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{index1 === index}}">
@@ -46,7 +46,7 @@
             </ui-col>
           </ui-row>
           <ui-row height="43" border-bottom wx:for="{{category2}}" wx:key="*this" data-index="{{index}}" bindtap="change" wx:if="{{current === 1}}">
-            <ui-col vertical-align="middle">
+            <ui-col vertical-align="middle" class="{{index === index2 ? 'active' : ''}}">
               {{item.text}}
             </ui-col>
             <ui-col vertical-align="middle" align="right" width="40" space-right="15">
@@ -205,5 +205,8 @@ export default {
 .icon-gou{
   color:#12bedb;
   font-size:12px;
+}
+.top_pop .active{
+  color:#12bedb;
 }
 </style>

@@ -3,38 +3,38 @@
     <cc-header title="账号信息"></cc-header>
    
     <view class="header">
-        <view class="logo">
-            <image slot="content" src="http://img.jihui88.com/{{accountInfo.headimg}}" binderror="error"/>
-        </view>
+      <view class="logo">
+        <image slot="content" src="http://img.jihui88.com/{{accountInfo.headimg}}" binderror="error"/>
+      </view>
     </view>
 
     <ui-row-list border-left-indent>
       <ui-row height="104r">
-          <ui-col vertical-align="middle">
-              账号昵称
-          </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right">
-            <input style="height:10px;line-height:10px;" placeholder="请输入昵称" bindblur="input" value="{{accountInfo.nickName}}"/>
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14" color="#999"></ui-icon>
-          </ui-col>
+        <ui-col vertical-align="middle">
+            账号昵称
+        </ui-col>
+        <ui-col class="desc" width="100" vertical-align="middle" align="right">
+          <input style="height:10px;line-height:10px;" placeholder="请输入昵称" bindblur="input" value="{{accountInfo.nickName}}"/>
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+            <ui-icon type="arrow-right" size="14" color="#999"></ui-icon>
+        </ui-col>
       </ui-row>
       <ui-row height="104r">
-          <ui-col vertical-align="middle">
-              会员账号ID
-          </ui-col>
-          <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
-              {{user.username}}
-          </ui-col>
+        <ui-col vertical-align="middle">
+            会员账号ID
+        </ui-col>
+        <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
+            {{user.username}}
+        </ui-col>
       </ui-row>
       <ui-row height="104r">
-          <ui-col vertical-align="middle">
-              注册时间
-          </ui-col>
-          <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
-              {{user.addTime}}
-          </ui-col>
+        <ui-col vertical-align="middle">
+            注册时间
+        </ui-col>
+        <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
+            {{user.addTime}}
+        </ui-col>
       </ui-row>
     </ui-row-list>
   </view>
@@ -89,20 +89,23 @@ export default {
 </script>
 
 <style lang="less">
-  .header{
-    background: #373d40;
-    text-align: center;height:200rpx;
-    padding-top: 25rpx;
-    .logo{
-      width:150rpx;
-      height:150rpx;
-      margin:0 auto;
-    }
-    image {
-      max-width:150rpx;
-      max-height: 150rpx;
-      vertical-align:middle;
-      border-radius: 75rpx;
-    }
+page{
+  background: #f1f1f1
+}
+.header{
+  background: #373d40;
+  text-align: center;height:200rpx;
+  padding-top: 25rpx;
+  .logo{
+    width:150rpx;
+    height:150rpx;
+    margin:0 auto;
   }
+  image {
+    max-width:150rpx;
+    max-height: 150rpx;
+    vertical-align:middle;
+    border-radius: 75rpx;
+  }
+}
 </style>

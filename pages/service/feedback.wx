@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="j_detail">
     <cc-header title="服务反馈"></cc-header>
 
     <ui-row-list border-left-indent>

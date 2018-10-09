@@ -36,7 +36,7 @@
           <ui-row height="40">
             <ui-col width="20" vertical-align="middle"></ui-col>
             <ui-col class="text" vertical-align="middle">
-               <view class="title">订单管理</view> 
+              <view class="title">订单管理</view> 
             </ui-col>
             <ui-col width="70" vertical-align="middle">
               <navigator url="/pages/shop/shop" class="weui-cell__ft"><text class="info">我的订单</text></navigator>
@@ -45,7 +45,7 @@
           <ui-row border-bottom height="85">
             <ui-col border-right align="center" vertical-align="middle" wx:for="{{orders}}" wx:key="*this">
               <navigator url="{{item.url}}" class="content">
-                  <i class="iconfont {{item.icon}}"></i>
+                <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view> 
               </navigator>
             </ui-col>
@@ -68,10 +68,10 @@
           </ui-row>
           <ui-row border-bottom class="row-border">
             <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{tools}}" wx:key="*this">
-              <navigator url="{{item.url}}" class="content" wx:if="{{!item.editting || item.icon === 'icon-jia'}}">
-                  <i class="iconfont {{item.icon}}"></i>
+              <view class="content" wx:if="{{!item.editting || item.icon === 'icon-jia'}}" data-item="{{item}}" bindtap="href">
+                <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view> 
-              </navigator>
+              </view>
               <view class="weui-grid {{!item.url ? 'opacity' : ''}}" wx:if="{{item.editting && item.icon !== 'icon-jia'}}">
                 <i class="iconfont icon-jianhao" bindtap="jian" data-idx="{{index}}"></i>
                 <i class="iconfont {{item.icon}}"></i>
@@ -102,18 +102,26 @@
         </ui-row-list>
         <view class="hr"></view>
       </view>
-
     </view>
+      
+    <cc-modal title="新建相册" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
+        <input type="text" value="{{name}}" bindinput="nameInput"/>
+      </view>
+    </cc-modal>
   </view>
 </template>
 
 <script>
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-header': '../../packages/cc-header'
+      'cc-header': '../../packages/cc-header',
+      'cc-modal': '../../packages/cc-modal'
     }
   },
   data: {
@@ -147,7 +155,10 @@ export default {
       {url: '/pages/member/member', text: '客户管理', icon: 'icon-kehuguanli'},
       {url: '/pages/shop/shop', text: '商城管理', icon: 'icon-jiankangshangcheng'},
       {}
-    ]
+    ],
+    // 新增文件夹
+    visible1: false,
+    name: ''
   },
   onShow () {
     this.get()
@@ -204,6 +215,59 @@ export default {
     this.setData({
       toggleTools: bol,
       tools: tools
+    })
+  },
+  href (e) {
+    let item = e.currentTarget.dataset.item
+    if (item.text === '新建相册') {
+      this.setData({
+        visible1: true
+      })
+    } else if (item.text === '上传图片') {
+      Utils.upload(data, 9).then(res => {
+        Tips.error('上传成功')
+      })
+    } else {
+      wx.navigateTo({
+        url: item.url
+      })
+    }
+  },
+  // add 
+  nameInput (e) {
+    this.setData({
+      name: e.detail.value
+    })
+  },
+  clearinput () {
+    this.setData({
+      name: ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible1: false
+    })
+  },
+  // 添加相册
+  ok () {
+    api.albumDetail({
+      data: {
+        model: JSON.stringify({
+          name: this.data.name,
+          parentId: '',
+          blongType: 'AP',
+          state: '01'
+        })
+      },
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('添加成功')
+        this.cancel()
+      } else {
+        Tips.error(res.msg)
+      }
     })
   },
   save () {
@@ -308,6 +372,33 @@ page{
       overflow:hidden;
       color: #999;
     }
+  }
+}
+// 新建相册
+.add-content{
+  text-align:left;margin:5px 15px;background:#f6f6f6;
+  height: 64rpx;
+  line-height: 64rpx;    
+  position: relative;
+  .icon-close-circle-fill{
+    width: 64rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    font-size: 16px;
+    text-align: center;
+    color: #b5b3b6;
+    position: absolute;
+    right: 0;
+    z-index: 3;
+  }
+  input{
+    height: 64rpx;
+    line-height: 64rpx;
+    padding:0 15px;
+    color:#060407
+  }
+  .icon-gou{
+    color: #4c4c4c
   }
 }
 </style>

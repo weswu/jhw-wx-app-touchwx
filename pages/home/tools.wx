@@ -71,8 +71,8 @@ export default {
         children: [
           { url: '/pages/product/product', text: '产品列表', icon: 'icon-liebiao1' },
           { url: '/pages/category/category?type=product', text: '产品分类', icon: 'icon-classifi' },
-          { url: '/pages/product/product_import', text: '导入', icon: 'icon-daoru' },
-          { url: '/pages/product/product_download', text: '下载', icon: 'icon-xiazai' }
+          { url: '/pages/product/import', text: '导入', icon: 'icon-daoru' },
+          { url: '/pages/product/download', text: '下载', icon: 'icon-xiazai' }
         ]
       },
       {
@@ -88,8 +88,8 @@ export default {
         title: '相册管理',
         children: [
           { url: '/pages/album/album', text: '图片目录', icon: 'icon-mulu' },
-          { url: '/pages/album/addAlbum', text: '新建相册', icon: 'icon-xinjian' },
-          { url: '/pages/album/shangchuanPic', text: '上传图片', icon: 'icon-shangchuan' },
+          { url: '', text: '新建相册', icon: 'icon-xinjian' },
+          { url: '', text: '上传图片', icon: 'icon-shangchuan' },
           { url: '/pages/album/recycle', text: '回收站', icon: 'icon-huishouzhan' }
         ]
       },

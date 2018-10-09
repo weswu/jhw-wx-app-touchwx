@@ -13,8 +13,10 @@
                   <ui-col align="left" vertical-align="middle">
                     <text class="ui-text">{{item.seoTitle}}</text>
                   </ui-col>
-                  <ui-col align="right" width="100" vertical-align="middle" space-right="10">
-                    <text class="desc">编号：{{item.id}}</text>
+                  <ui-col class="desc" align="right" width="100" vertical-align="middle" space-right="10">
+                    <view style="width:100%">
+                    编号：{{item.id}}<ui-badge custom-style="padding: 3px;" wx:if="{{item.count === 1}}" class="badge"></ui-badge>
+                    </view>
                   </ui-col>
                 </ui-row>
                 <view class="desc">
@@ -79,7 +81,6 @@
 import api from "../../static/utils/api";
 import Tips from "../../static/utils/tips";
 import Utils from "../../static/utils/utils";
-import regeneratorRuntime from 'regenerator-runtime'
 export default {
   config: {
     usingComponents: {
@@ -105,7 +106,8 @@ export default {
     countryType: [
       { text: '美国', value: 'en', content: '免备案' },
       { text: '中国大陆', value: 'cn', content: '阿里云主机，需备案' }
-    ]
+    ],
+    ids: '' // 复制小红点
   },
   onLoad() {
     this.get()
@@ -141,7 +143,7 @@ export default {
       }
     });
   },
-  async del(e) {
+  del(e) {
     Utils.del(this, e, api.staticDetail, '请谨慎！站点（网站编号：'+e.target.dataset.id+'）将会被彻底删除!')
   },
   copy (e) {
@@ -170,7 +172,9 @@ export default {
       Tips.loaded()
       if (res.success) {
         Tips.success('复制成功')
-        this.data.list.splice(0, 0, res.attributes.data)
+        let data = res.attributes.data
+        data.count = 1
+        this.data.list.splice(0, 0, data)
         this.setData({
           list: this.data.list,
           el: "undefined"
@@ -286,5 +290,10 @@ button[type="primary"].origin{
   .content{
     height: 90px;;
   }
+}
+.badge{
+  position:absolute;
+  top:-1px;
+  margin-left:-1px;
 }
 </style>

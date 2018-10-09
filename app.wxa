@@ -22,6 +22,7 @@ export default {
       'pages/static/bindDetail',
       'pages/static/bind',
       'pages/album/album',
+      'pages/album/recycle',
       'pages/news/newsDetail',
       'pages/news/news',
       'pages/product/product',
