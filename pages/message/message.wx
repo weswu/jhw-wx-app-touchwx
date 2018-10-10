@@ -53,10 +53,19 @@ export default {
       'position': 'absolute',
       'top': '-5px',
       'right': '-15px'
-    }
+    },
+    index: 0
   },
   onLoad () {
     this.get()
+    this.setData({
+      index: 1
+    })
+  },
+  onShow () {
+    if (this.data.index === 1) {
+      this.get()
+    }
   },
   get () {
     // recvState 00未读  01已读
@@ -64,7 +73,7 @@ export default {
       data: {
         pageSize: 1,
         countRecvState: '00',
-        recvState: '01'
+        recvState: ''
       }
     }).then(res => {
       if (res.success) {

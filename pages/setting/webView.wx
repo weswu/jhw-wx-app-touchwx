@@ -16,7 +16,9 @@ export default {
     src: ''
   },
   onLoad (option){
-    if (option.src.indexOf('pc.jihui88.com') > -1){
+    if (option.itemId) {
+      option.src = option.src + '?itemId=' + option.itemId + '&isMobile=true'
+    } else if (option.src.indexOf('pc.jihui88.com') > -1){
       option.src = option.src + '?isMobile=true'
     }
     this.setData({

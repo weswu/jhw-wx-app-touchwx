@@ -46,10 +46,10 @@
             </view>
             <ui-row class="btn" height="30rpx">
               <ui-col vertical-align="middle" align="center" data-item="{{item}}" bindtap="qrcode">
-                <view class="qrcode"> 二维码 </view>
+                <view class="qrcode" data-show="{{1}}" data-item="{{item}}" catchtap="qrcode"> 二维码 </view>
               </ui-col>
               <ui-col vertical-align="bottom" align="center" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
-                <view class="view"> 预览 </view>
+                <view class="view" data-show="{{2}}" data-item="{{item}}" catchtap="qrcode"> 预览 </view>
               </ui-col>
             </ui-row>
           </view>
@@ -95,8 +95,8 @@
                 <view> 添加时间：{{item.addTime}} </view>
               </ui-col>
               <ui-col class="btn" width="84r" vertical-align="bottom" align="center">
-                <view class="qrcode" data-show="{{ true }}" data-item="{{item}}" catchtap="qrcode"> 二维码 </view>
-                <view class="view"> 预览 </view>
+                <view class="qrcode" data-show="{{1}}" data-item="{{item}}" catchtap="qrcode"> 二维码 </view>
+                <view class="view" data-show="{{2}}" data-item="{{item}}" catchtap="qrcode"> 预览 </view>
               </ui-col>
             </ui-row>
           </view>
@@ -144,20 +144,25 @@
     </ui-mask>
 
     <!-- 二维码 -->
-    <ui-fixed-view bottom="0;z-index:700" left="0" right="0" wx:if="{{qrCodeShow}}">
-      <image mode="aspectFit" src="http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/{{layoutId}}/pd?itemId={{item.productId2}}"/>
-    </ui-fixed-view>
-    <ui-popup show="{{ qrCodeShow }}" height="270" position="bottom">
+    <ui-mask show="{{selectStatic === 3}}" hide-on-tap="{{false}}" class="mask_wrap" custom-style="{{customStyle}}">
+      <view class="photo" style="width:{{width-50}}px">
+        <view class="top_view">
+          <i class="iconfont icon-quxiao icon_top" bindtap="handleSelectStatic"></i>
+        </view>
+        <image style="width:{{width-50}}px;height:{{width-50}}px" mode="aspectFit" src="http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/{{layoutId}}/pd?itemId={{item.productId2}}"/>
+      </view>
+    </ui-mask>
+    <ui-popup show="{{ selectStatic === 1 || selectStatic === 2 }}" height="270" position="bottom">
       <ui-row height="45" border-bottom>
         <ui-col class="text" vertical-align="middle" align="left" space-left="15">
-          请选择站点再生成二维码
+          <text wx:if="{{selectStatic === 1}}">请选择站点再生成二维码</text><text wx:if="{{selectStatic === 2}}">请选择站点再预览</text>
         </ui-col>
-        <ui-col width="100" vertical-align="middle" align="right" space-right="15" data-show="{{true}}" data-index="{{index}}" catchtap="switch">
+        <ui-col width="100" vertical-align="middle" align="right" space-right="15" data-show="{{true}}" data-index="{{index}}" catchtap="generate">
           <view class="view" style="color:#12bedb">完成</view>
         </ui-col>
       </ui-row>
       <view class="j_picker">
-        <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;" style="width: 100%; height: 220px;" value="{{value}}" bindchange="bindChange">
+        <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;" style="width: 100%; height: 220px;" value="{{value}}" bindchange="layoutIdChange">
           <picker-view-column>
             <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
           </picker-view-column>
@@ -175,14 +180,15 @@ import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-loadmore': '../../packages/cc-loadmore',
       'cc-header': '../../packages/cc-header',
-      'cc-search': '../../packages/cc-search',
       'cc-lan': '../../packages/cc-lan',
+      'cc-search': '../../packages/cc-search',
+      'cc-loadmore': '../../packages/cc-loadmore',
       'cc-category': '../../packages/cc-category'
     }
   },
   data: {
+    width:wx.WIN_WIDTH,
     title: '产品管理',
     list: [],
     params: {
@@ -204,6 +210,7 @@ export default {
     layoutId: '',
     layout_index: 0,
     // 二维码
+    selectStatic: 0,
     qrCodeShow: false,
     item: {}
   },
@@ -218,13 +225,13 @@ export default {
     getApp().getStaticList(res => {
       that.setData({
         staticList: res,
-        layoutId: wx.getStorageSync('layoutId')
+        layoutId: getApp().globalData.layoutId
       })
     })
     if (getApp().globalData.staticList.length > 0){
       this.setData({
         staticList: getApp().globalData.staticList,
-        layoutId: wx.getStorageSync('layoutId')
+        layoutId: getApp().globalData.layoutId
       })
     }
   },
@@ -240,8 +247,9 @@ export default {
       if (res.success) {
         res.attributes.data.forEach(item => {
           item.addTime = Utils.formatTime(item.addTime, 'yyyy-MM-hh')
-          item.switch = false
+          item.picPathth = Utils.picUrl(item.picPathth, 4)
           item.price = parseFloat(item.price).toFixed(2)
+          item.switch = false
           item._checked = false
         })
         Utils.scrollList(this, res, '没有更多产品')
@@ -358,8 +366,30 @@ export default {
     let show = e.currentTarget.dataset.show
     let item = e.currentTarget.dataset.item
     this.setData({
-      qrCodeShow: show,
+      selectStatic: show,
       item: item
+    })
+  },
+  // 生成二级码
+  layoutIdChange (e) {
+    this.setData({
+      layoutId: this.data.staticList[e.detail.value].id
+    })
+  },
+  generate () {
+    let num = this.data.selectStatic
+    this.setData({
+      selectStatic: this.data.selectStatic === 1 ? 3 : 0
+    })
+    if (num === 2) {
+      wx.navigateTo({
+        url: '/pages/setting/webView?src=http://pc.jihui88.com/rest/site/'+this.data.layoutId+'/pd&itemId='+this.data.item.productId2
+      })
+    }
+  },
+  handleSelectStatic () {
+    this.setData({
+      selectStatic: 0
     })
   },
   // 批量
@@ -521,6 +551,26 @@ page{
         line-height: 57rpx;
       }
     }
+  }
+}
+.mask_wrap {
+  .photo {
+      padding: 0;
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      image {
+          display: block;
+          width: 100%;
+      }
+      .icon_top{
+        display: block;
+        text-align: right;
+        color: #fff;
+        font-size: 96rpx;
+      }
   }
 }
 </style>

@@ -93,7 +93,7 @@
           </ui-row>
           <ui-row border-bottom class="row-border">
             <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{dataManageCenter}}" wx:key="*this">
-              <navigator url="{{item.url}}" class="content">
+              <navigator url="dataManagement?active={{index}}" class="content">
                 <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view> 
               </navigator>
@@ -147,13 +147,13 @@ export default {
     tools: [],
     toggleTools: false,
     dataManageCenter: [
-      {url: '/pages/pc/website', text: '站点管理', icon: 'icon-qiu'},
-      {url: '/pages/user/enterprise', text: '公司信息', icon: 'icon-kujialeqiyezhan_gongsishili'},
-      {url: '/pages/product/product', text: '产品管理', icon: 'icon-product'},
-      {url: '/pages/news/news', text: '新闻管理', icon: 'icon-xinwenzixun'},
-      {url: '/pages/album/album', text: '相册管理', icon: 'icon-xiangce'},
-      {url: '/pages/member/member', text: '客户管理', icon: 'icon-kehuguanli'},
-      {url: '/pages/shop/shop', text: '商城管理', icon: 'icon-jiankangshangcheng'},
+      {text: '站点管理', icon: 'icon-qiu'},
+      {text: '公司信息', icon: 'icon-kujialeqiyezhan_gongsishili'},
+      {text: '产品管理', icon: 'icon-product'},
+      {text: '新闻管理', icon: 'icon-xinwenzixun'},
+      {text: '相册管理', icon: 'icon-xiangce'},
+      {text: '客户管理', icon: 'icon-kehuguanli'},
+      {text: '商城管理', icon: 'icon-jiankangshangcheng'},
       {}
     ],
     // 新增文件夹

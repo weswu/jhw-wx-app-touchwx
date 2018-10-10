@@ -122,6 +122,14 @@ const imgCopy = (params) => http(params, host + 'album/attr/img/copy')
 const imgDel = (params) => http(params, host + 'album/attr/img/delete')
 const imgMove = (params) => http(params, host + 'album/attr/img/move')
 const refurbish = (params) => http(params, host + 'album/single/refurbish')
+// 回收站
+const albumRecycle = (params) => http(params, host + 'album/recycle/list')
+const albumAttrRecycle = (params) => http(params, host + 'album/attr/recycle/' + params.id)
+const restoreImg = (params) => http(params, host + 'album/restoreImg?attIds=' + params.id)
+const restore = (params) => http(params, host + 'album/restore?albumIds=' + params.id)
+const attCleanAll = (params) => http(params, host + 'album/attCleanAll')
+const recycleDel = (params) => http(params, host + 'album/recycleDel?albumIds=' + params.id)
+const attBatchDel = (params) => http(params, host + 'album/attBatchDel?attIds=' + params.id)
 
 
 /***************** 会员 ************/
@@ -186,7 +194,8 @@ module.exports = {
   tag, tagDetail,
   /***************** 相册 ************/
   album, albumDetail, albumAttr, albumCopy, imgDetail, imgCopy, imgDel, imgMove, refurbish,
-  /***************** 会员 ************/
+  albumRecycle, albumAttrRecycle, restoreImg, restore, attCleanAll, recycleDel, attBatchDel,
+  /***************** 会员 ********** 
   member, memberDetail, memberRank, memberRankDetail, memberAttr, memberAttrDetail, memberBatchDel,
   /***************** 商城 ************/
   order, webinfo, orderRefund, orderRefundDetail, orderReview, orderReviewDetail, orderPay, orderPayDetail, orderDetail, orderDelivery,

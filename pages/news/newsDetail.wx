@@ -101,6 +101,25 @@
       </ui-row>
     </ui-row-list>
 
+    <!-- 预览 -->
+    <ui-popup show="{{ selectStatic }}" height="270" position="bottom">
+      <ui-row height="45" border-bottom>
+        <ui-col class="text" vertical-align="middle" align="left" space-left="15">
+          请选择站点再预览
+        </ui-col>
+        <ui-col width="100" vertical-align="middle" align="right" space-right="15" data-show="{{true}}" data-index="{{index}}" catchtap="generate">
+          <view class="view" style="color:#12bedb">完成</view>
+        </ui-col>
+      </ui-row>
+      <view class="j_picker">
+        <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;" style="width: 100%; height: 220px;" value="{{value}}" bindchange="layoutIdChange">
+          <picker-view-column>
+            <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
+          </picker-view-column>
+        </picker-view>
+      </view>
+    </ui-popup>
+
     <ui-fixed-view bottom="0" left="0" right="0">
       <ui-row height="82r" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
@@ -134,9 +153,17 @@ let pageConf = {
       topnews: '00'
     },
     name: '',
-    categoryList: []
+    categoryList: [],
+    // 预览
+    staticList: [],
+    layoutId: '',
+    selectStatic: false
   },
   onLoad (e) {
+    this.setData({
+      staticList: getApp().globalData.staticList,
+      layoutId: getApp().globalData.layoutId
+    })
     if (e.id) {
       this.setData({
         detail: {
@@ -258,7 +285,22 @@ let pageConf = {
       }
     })
   },
-  view () {}
+  // 预览
+  layoutIdChange (e) {
+    this.setData({
+      layoutId: this.data.staticList[e.detail.value].id
+    })
+  },
+  view () {
+    this.setData({
+      selectStatic: true
+    })
+  },
+  generate () {
+    wx.navigateTo({
+      url: '/pages/setting/webView?src=http://pc.jihui88.com/rest/site/'+this.data.layoutId+'/nd&itemId='+this.data.detail.newsId2
+    })
+  }
 }
 export default Page(Object.assign(pageConf, Input))
 </script>

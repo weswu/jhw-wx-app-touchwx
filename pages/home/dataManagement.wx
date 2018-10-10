@@ -1,0 +1,55 @@
+<template>
+  <view>
+    <cc-header title="{{list[active].title}}"></cc-header>
+   
+    <ui-row-list border-left-indent>
+      <ui-row height="102r" border-bottom url="{{item.url}}" hover-class="none"
+        wx:for="{{list[active].children}}" wx:key="*this" wx:if="{{item.text !== 'text'}}">
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
+          <i class="iconfont {{item.icon}}"></i>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          {{item.text}}
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+  </view>
+</template>
+
+<script>
+import tools from '../../static/data/tools'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: tools,
+    active: 0
+  },
+  onLoad (e) {
+    this.setData({
+      active: e.active
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.ui-row-list{
+  .iconfont{
+    color: #12bedb;
+    font-size:20px;
+  }
+}
+.ui-row-list > .ui-row:not(:last-child):after {
+  left: 35px;
+}
+</style>

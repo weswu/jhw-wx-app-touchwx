@@ -5,6 +5,20 @@
     <view class="article">
       <view class="title">{{detail.title}}</view>
       <view class="time">{{detail.addTime}}</view>
+      <ui-row border-bottom border-top height="40">
+        <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+          发件人：{{detail.fromName || ''}}
+        </ui-col>
+      </ui-row>
+      <ui-row border-bottom height="40" space-bottom="20">
+        <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+          联系电话：{{detail.fromPhone || ''}}
+        </ui-col>
+        <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+          Email：{{detail.fromEmail || ''}}
+        </ui-col>
+      </ui-row>
+
       <rich-text nodes="{{detail.content}}"/>
     </view>
     <view style="height:82rpx" wx:if="{{detail.type === '03'}}"></view>
