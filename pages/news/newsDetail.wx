@@ -142,9 +142,9 @@ import Utils from '../../static/utils/utils'
 let pageConf = {
   config: {
     usingComponents: {
+      'cc-header': '../../packages/cc-header',
       'cc-image': '../../packages/cc-image',
-      'cc-date': '../../packages/cc-date',
-      'cc-header': '../../packages/cc-header'
+      'cc-date': '../../packages/cc-date'
     }
   },
   data: {

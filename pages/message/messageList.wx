@@ -89,17 +89,25 @@ export default {
     params: {
       page: 1,
       recvState: '',
-      type: ''
+      type: '',
+      posterId: ''
     },
     count: 0,
     more: {}
   },
   onLoad (e) {
-    this.setData({
-      title: e.title || '消息',
-      'params.type': e.type || '',
-      'params.recvState': e.recvState || ''
-    })
+    if (e.posterId) {
+      this.setData({
+        title: '员工消息',
+        'params.posterId': e.posterId
+      })  
+    } else {
+      this.setData({
+        title: e.title || '消息',
+        'params.type': e.type || '',
+        'params.recvState': e.recvState || ''
+      })
+    }
     this.get()
   },
   get () {

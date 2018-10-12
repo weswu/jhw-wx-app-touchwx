@@ -1,0 +1,138 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="物流单据详情"></cc-header>
+    <view class="j_tip">提示：添加单据背景图和打印项，请到pc端操作</view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          单据名称
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="picker" id="corpId" value="{{index}}" range-key="name" range="{{category}}">
+            <view >{{category[index].name}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.paymentConfigType !== 'custom'}}">
+        <ui-col width="70" vertical-align="middle">
+          单据尺寸用
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <view style="width:100%">
+            <input placeholder="请填写" bindinput="input" id="singleWidth" value="{{detail.singleWidth}}"/><text class="unit">x</text>
+            <input placeholder="请填写" bindinput="input" id="singleHeight" value="{{detail.singleHeight}}"/><text class="unit">mm</text>
+          </view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      img: 'upload/g/g2/ggggfj/picture/2015/10/30/67a5bb09-22a0-4d66-a4e1-3f256746367a.jpg',
+      singleWidth: '922',
+      singleHeight: '510',
+      corpId: ''
+    },
+    index: 0,
+    category: [],
+    id: ''
+  },
+  onLoad ({id}) {
+    this.setData({
+      'detail.singleId': id || ''
+    })
+    id && this.get()
+    this.getCate()
+  },
+  get () {
+    api.orderBillDetail({
+      id: this.data.detail.singleId
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+        this.init()
+      }
+    })
+  },
+  getCate () {
+    api.orderDelivery().then(res => {
+      let data = res.attributes.data
+      data.forEach(item => {
+        item.value = item.corpId
+      })
+      this.setData({
+        category: data
+      })
+      this.init()
+    })
+  },
+  init () {
+    let detail = this.data.detail
+    if (this.data.category.length > 0 && detail.corpId) {
+      this.data.category.forEach((item, index) => {
+        if (item.corpId === detail.corpId) {
+          this.setData({
+            index: index
+          })
+        }
+      })
+    }
+  },
+  submit () {
+    Tips.loading()
+    let detail = this.data.detail
+    detail.name = this.data.category[this.data.index].name
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.singleId) data._method = 'put'
+    api.orderBillDetail({
+      data: data,
+      method: 'POST',
+      id: detail.singleId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        var pages = getCurrentPages()
+        var prevPage = pages[pages.length - 2];  //上个页面
+        prevPage.get()
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+input{
+  width: 60px;
+  text-align: center;
+  display: inline-block;
+  vertical-align:bottom;
+}
+.unit{
+  padding: 0 2px 0 5px;
+}
+</style>

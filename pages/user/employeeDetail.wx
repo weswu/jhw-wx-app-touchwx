@@ -1,0 +1,211 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="员工详情"></cc-header>
+    <view class="j_tip">提示：登录页面打勾'使用员工账号登录'，即可绑定微信和QQ登录</view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          员工账号
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="username" value="{{detail.username}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          姓名
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.memberId}}" url="authority?id={{detail.memberId}}" hover-class="none">
+        <ui-col width="70" vertical-align="middle">
+          权限
+        </ui-col>
+        <ui-col class="infoColor" vertical-align="middle" align="right" space-right="15">
+          设置
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.memberId}}">
+        <ui-col width="70" vertical-align="middle">
+          重置密码
+        </ui-col>
+        <ui-col class="infoColor" vertical-align="middle" align="right" space-right="15">
+          <text data-show="{{true}}" bindtap="toggle" wx:if="{{!resetPassword}}">重置</text>
+          <text data-show="{{false}}" bindtap="toggle" wx:if="{{resetPassword}}">取消</text>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{!detail.memberId || resetPassword}}">
+        <ui-col width="70" vertical-align="middle">
+          密码
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="password" value="{{detail.password}}" type="password"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{!detail.memberId || resetPassword}}">
+        <ui-col width="70" vertical-align="middle">
+          确认密码
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="rePassword" value="{{detail.rePassword}}" type="password"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          性别
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <radio-group bindchange="radio" id="sex">
+            <label>
+              <radio value="00" checked="{{detail.sex === '00'}}"></radio>男
+            </label>
+            <label>
+              <radio value="01" checked="{{detail.sex === '01'}}"></radio>女
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          职位
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="position" value="{{detail.position}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          电话
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="phone" value="{{detail.phone}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          手机
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="mobile" value="{{detail.mobile}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          Email
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="email" value="{{detail.email}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view style="height:80px;"></view>
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      sex: '00',
+      memberId: 'ccc'
+    },
+    resetPassword: false
+  },
+  onLoad ({id}) {
+    if (id) {
+      this.get(id)
+    }
+  },
+  get (id) {
+    api.employeeDetail({
+      id: id
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        data.password = ''
+        this.setData({
+          detail: data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  toggle (e) {
+    let show = e.currentTarget.dataset.show
+    this.setData({
+      resetPassword: show
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.username,
+        method: 'required',
+        message: '员工账号不能为空'
+      },
+      {
+        value: this.data.detail.name,
+        method: 'required',
+        message: '姓名不能为空'
+      },
+      {
+        value: this.data.detail.password,
+        method: !this.data.detail.memberId && 'required',
+        message: '密码不能为空'
+      },
+      {
+        value: this.data.detail.rePassword,
+        method: !this.data.detail.memberId && 'required',
+        message: '确认密码不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let detail = this.data.detail
+    let data = {
+      model: JSON.stringify(detail)
+    }
+    if (detail.memberId) data._method = 'put'
+    Tips.loading()
+    api.employeeDetail({
+      data: data,
+      method: 'POST',
+      id: detail.memberId || ''
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+        var pages = getCurrentPages()
+        var prevPage = pages[pages.length - 2];  //上个页面
+        prevPage.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

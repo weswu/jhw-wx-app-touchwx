@@ -10,6 +10,19 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/static/beian',
+      'pages/static/batch',
+      'pages/user/employeeAnalysis',
+      'pages/user/partner',
+      'pages/user/team',
+      'pages/user/recruit',
+      'pages/user/recruitDetail',
+      'pages/shop/bill',
+      'pages/shop/billDetail',
+      'pages/user/company',
+      'pages/user/employee',
+      'pages/user/authority',
+      'pages/user/employeeDetail',
       'pages/album/recycle',
       'pages/product/product',
       'pages/home/console',
@@ -156,6 +169,7 @@ export default {
       { value: '1', text: '中文', type: 'cn' },
       { value: '2', text: '英文', type: 'en' }
     ],
+    userprivilege: [], // 员工权限
     appid: 'wx2aba9d238ba02a76',
     appsecret: 'c7131553b820b07e778d763bac18e259'
   },
@@ -473,6 +487,21 @@ export default {
       }
       typeof cb == 'function' && cb(this.globalData.memberAttrList)
     })
+  },
+  getAuth (cb) {
+    api.userprivilege().then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        data.forEach(item => {
+          item._checked = false
+        })
+        data.push({})
+        data.push({})
+        data.push({})
+        this.globalData.userprivilege = data
+      }
+      typeof cb == 'function' && cb(this.globalData.userprivilege)
+    })
   }
 }
 </script>
@@ -486,6 +515,9 @@ export default {
 }
 .red {
   color: #d0021b;
+}
+.infoColor{
+  color: @info-color;
 }
 .j_add {
   position: fixed;

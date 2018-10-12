@@ -1,0 +1,115 @@
+<template>
+  <view>
+    <cc-header title="员工推广分析" count="{{count}}"></cc-header>
+
+    <ui-fixed-view top="{{ fixedTop }}" left="0;z-index:999" right="0">
+      <ui-row-list border-left-indent>
+        <ui-row class="text" height="100r" border-bottom>
+          <ui-col vertical-align="middle" align="left">
+            开始时间
+          </ui-col>
+          <ui-col class="desc" vertical-align="middle" align="right" width="150" space-right="15">
+            <cc-date value="{{params.startDate}}" format="{{'yyyy-MM-dd'}}" bindchange="dateChange"></cc-date>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+      <ui-row-list border-left-indent>
+        <ui-row class="text" height="100r">
+          <ui-col vertical-align="middle" align="left">
+            结束时间
+          </ui-col>
+          <ui-col class="desc" vertical-align="middle" align="right" width="150" space-right="15">
+            <cc-date value="{{params.endDate}}" format="{{'yyyy-MM-dd'}}" bindchange="dateChange2"></cc-date>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+    </ui-fixed-view>
+    <view style="height:200rpx;"></view>
+
+    <ui-row-list wx:for="{{list}}" wx:key="*this" border-left-indent>
+      <ui-row class="text" height="110r" border-bottom>
+        <ui-col vertical-align="middle" align="left">
+          {{index+1}}、{{item.name}}
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle" align="right" width="150" space-right="15" wx:if="{{item.layoutId}}">
+          <view class="text">分站编号:{{ item.layoutId || '' }}</view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="80r" border-bottom>
+        <ui-col class="desc" span="4" border-left border-right vertical-align="middle" space-left="10">
+          新增浏量：{{item.viewCount}}
+        </ui-col>
+        <ui-col class="desc" span="4" vertical-align="middle" space-left="10">
+          新增询盘：{{item.messageCount}}
+        </ui-col>
+        <ui-col class="desc" span="4" vertical-align="middle" space-left="10">
+          新增成交：{{item.orderCount}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="80r" border-bottom>
+        <ui-col class="desc" span="6" border-left border-right vertical-align="middle" space-left="10">
+          新增注册：{{item.registerCount}}
+        </ui-col>
+        <ui-col class="desc" span="6" vertical-align="middle" space-left="10">
+          转发量：{{item.shareCount}}
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-date': '../../packages/cc-date',
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      startDate: '',
+      endDate: ''
+    },
+    count: 0,
+    height: 140/750*wx.WIN_WIDTH
+  }, 
+  onLoad () {
+    this.get()
+  },
+  get () {
+    Utils.loading(this)
+    api.employeeAnalysis({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          list: res.attributes.data
+        })
+      }
+    })
+  },
+  // 时间
+  dateChange (e) {
+    this.setData({
+      'params.startDate': e.detail
+    })
+    this.get()
+  },
+  dateChange2 (e) {
+    this.setData({
+      'params.endDate': e.detail
+    })
+    this.get()
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

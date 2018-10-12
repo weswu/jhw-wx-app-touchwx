@@ -11,32 +11,53 @@
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col vertical-align="middle">
-            账号昵称
+          账号昵称
         </ui-col>
         <ui-col class="desc" width="100" vertical-align="middle" align="right">
           <input style="height:10px;line-height:10px;" placeholder="请输入昵称" bindblur="input" value="{{accountInfo.nickName}}"/>
         </ui-col>
         <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-            <ui-icon type="arrow-right" size="14" color="#999"></ui-icon>
+          <ui-icon type="arrow-right" size="14" color="#999"></ui-icon>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col vertical-align="middle">
-            会员账号ID
+          会员账号ID
         </ui-col>
         <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
-            {{user.username}}
+          {{user.username}}
         </ui-col>
       </ui-row>
       <ui-row height="104r">
         <ui-col vertical-align="middle">
-            注册时间
+          注册时间
         </ui-col>
         <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
-            {{user.addTime}}
+          {{user.addTime}}
         </ui-col>
       </ui-row>
     </ui-row-list>
+
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="102r" url="employee" hover-class="none">
+        <ui-col vertical-align="middle">
+          员工账号管理
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <ui-row height="102r" url="" hover-class="none">
+        <ui-col vertical-align="middle">
+          员工推广分析
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    
   </view>
 </template>
 

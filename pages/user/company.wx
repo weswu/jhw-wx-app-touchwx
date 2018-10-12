@@ -1,0 +1,52 @@
+<template>
+  <view>
+    <cc-header title="公司简介"></cc-header>
+    <view class="j_tip">提示：请到pc端编辑</view>
+    <view class="j_editor">
+      <rich-text nodes="{{detail.edesc}}"/>
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {}
+  },
+  onLoad () {
+    if (!getApp().globalData.enterprise.enterpriseId) {
+      this.get()
+    } else {
+      this.setData({
+        detail: getApp().globalData.enterprise
+      })
+    }
+  },
+  get () {
+    api.enterprise().then(res => {
+      if (res.success) {
+        this.setData({
+          detail: res.attributes.data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.j_editor{
+padding: 0 10px;background:#fff
+}
+</style>

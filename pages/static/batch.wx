@@ -1,0 +1,35 @@
+<template>
+  <view>
+    <cc-header title="批量提交"></cc-header>
+
+    <view class="j_tip">
+      温馨提醒：向各大搜索引擎提交网址，可以加快网站被搜索引擎收录。 一个网站只需提交一次（首页），搜索引擎会自动收录网页。 不保证一定能收录您提交的网站
+    </view>
+
+    <view class="j_tip">
+      请到pc端提交网站地址
+      <view>百度提交入口：http://www.sousuoyinqingtijiao.com/baidu/tijiao/</view>
+      好搜提交入口：http://info.so.360.cn/site_submit.html
+      <view>搜搜/搜狗提交入口：http://fankui.help.sogou.com/index.php/web/web/index?type=1</view>
+      必应Bing提交入口：https://www.bing.com/toolbox/submit-site-url
+    </view>
+
+  </view>
+</template>
+
+<script>
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {}
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

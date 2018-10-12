@@ -1,0 +1,97 @@
+<template>
+  <view>
+    <cc-header title="物流单据设置"></cc-header>
+    <ui-swipe-out height="80" data-index="{{index}}" operate-width="150"
+      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+      <view slot="content">
+        <ui-row height="80" class="j_row_list" border-bottom>
+          <ui-col vertical-align="middle" align="left" width="80" space-left="15" data-item="{{item}}" bindtap="item">
+            <image mode="aspectFit" src="http://img.jihui88.com/{{item.img}}" data-index="{{index}}" binderror="error"/>
+          </ui-col>
+          <ui-col vertical-align="middle" align="left" space-left="15">
+            <view class="text">{{ item.name }}</view>
+            <view class="desc">大小：{{ item.singleWidth }}x{{ item.singleHeight }}</view>
+          </ui-col>
+        </ui-row>
+      </view>
+      <view slot="operate">
+        <view class="j_operate" border-bottom>
+          <ui-row height="80">
+            <ui-col data-id="{{item.singleId}}" bindtap="detail" vertical-align="middle" align="center">
+              修改
+            </ui-col>
+            <ui-col data-index="{{index}}" data-id="{{item.singleId}}" bindtap="del" vertical-align="middle" align="center">
+              删除
+            </ui-col>
+          </ui-row>
+        </view>
+      </view>
+    </ui-swipe-out>
+    <view bindtap="add" class="j_add"><i class="iconfont icon-jia"></i></view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 100
+    },
+    el: 'undefined'
+  }, 
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.orderBill({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.img = Utils.picUrl(item.img, 5)
+          item.switcher = 'off'
+        })
+        this.setData({
+          list: res.attributes.data
+        })
+      }
+    })
+  },
+  changeHandler (e) {
+    Utils.switcher(this, e)
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'billDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    Utils.del(this, e, api.orderBillDetail)
+  },
+  error(e) {
+    let index = e.currentTarget.dataset.index
+    this.data.list[index].src = "upload/j/j2/jihui88/picture/2018/08/29/92f8cf7a-cf99-4308-9630-5ca0bceac29f.png"
+    this.setData({
+      list: this.data.list
+    })
+  },
+  add () {
+    wx.navigateTo({
+      url: 'billDetail'
+    })
+  }
+}
+</script>
+
+<style lang="less">
+</style>

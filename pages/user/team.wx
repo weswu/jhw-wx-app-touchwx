@@ -1,6 +1,6 @@
 <template>
   <view>
-    <cc-header title="友情链接"></cc-header>
+    <cc-header title="团队介绍"></cc-header>
     <cc-lan lan="{{true}}" bindchange="get"></cc-lan>
 
     <ui-row-list>
@@ -32,7 +32,7 @@
       </ui-swipe-out>
     </ui-row-list>
 
-    <navigator url="linkDetail?type=02" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+    <navigator url="linkDetail?type=03" class="j_add"><i class="iconfont icon-jia"></i></navigator>
   </view>
 </template>
 
@@ -52,7 +52,7 @@ export default {
     params: {
       page: 1,
       pageSize: 200,
-      type: '01'
+      type: '03'
     },
     height: 140/750*wx.WIN_WIDTH,
     el: 'undefined'
@@ -79,7 +79,7 @@ export default {
   },
   detail (e) {
     wx.navigateTo({
-      url: 'linkDetail?id=' + e.currentTarget.dataset.id
+      url: 'linkDetail?id=' + e.currentTarget.dataset.id + '&type=03'
     })
   },
   del (e) {

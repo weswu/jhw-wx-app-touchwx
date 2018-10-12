@@ -1,6 +1,6 @@
 <template>
   <view class="j_detail">
-    <cc-header title="友情链接"></cc-header>
+    <cc-header title="{{title}}"></cc-header>
     <ui-row-list border-left-indent style="margin-bottom:50px;">
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
@@ -33,6 +33,15 @@
         </ui-col>
         <ui-col vertical-align="middle"></ui-col>
       </ui-row>
+      <ui-row height="100" wx:if="{{detail.type === '03'}}">
+        <ui-col width="70" vertical-align="middle">
+          描述
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea placeholder="成员描述"
+            bindinput="input" id="content" value="{{detail.content}}"/>
+        </ui-col>
+      </ui-row>
     </ui-row-list>
 
     <button type="primary" bindtap="submit" class="fixed">提交</button>
@@ -51,17 +60,19 @@ let pageConf = {
     }
   },
   data: {
+    title: '友情链接',
     detail: {}
   },
-  onLoad ({id}) {
+  onLoad ({id, type}) {
     if (id) {
       this.get(id)
     } else {
       this.setData({
         detail: {
           image: '',
-          type: '01'
-        }
+          type: type
+        },
+        title: type === '01' ? '友情链接' : (type === '02' ? '合作伙伴' : '团队介绍')
       })
     }
   },

@@ -1,29 +1,39 @@
 <template>
   <view class="j_detail">
-    <cc-header title="荣誉证书"></cc-header>
+    <cc-header title="招聘详情"></cc-header>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-          名称
+          标题
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+          <input placeholder="请填写" bindinput="input" id="title" value="{{detail.title}}"/>
         </ui-col>
       </ui-row>
-      <ui-row height="240r">
+      <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
-          图片
+          职务
         </ui-col>
-        <ui-col width="80" vertical-align="middle">
-          <cc-image id="image" src="{{detail.att.serverPath}}" width="148r" bindchange="changePic"></cc-image>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="duty" value="{{detail.duty}}"/>
         </ui-col>
-        <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" bindtap="updatePic">
-          <view class="btn_gray">重新上传</view>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          招聘人数
         </ui-col>
-        <ui-col width="50" vertical-align="middle" bindtap="clearPic">
-          <view class="btn_gray">清除</view>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="sum" value="{{detail.sum}}"/>
         </ui-col>
-        <ui-col vertical-align="middle"></ui-col>
+      </ui-row>
+      <ui-row height="100">
+        <ui-col width="70" vertical-align="middle">
+          要求
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea placeholder="请填写"
+            bindinput="input" id="content" value="{{detail.content}}"/>
+        </ui-col>
       </ui-row>
     </ui-row-list>
 
@@ -47,21 +57,15 @@ let pageConf = {
   },
   onLoad ({id}) {
     if (id) {
-      this.get(id)
-    } else {
       this.setData({
-        detail: {
-          att: {
-            serverPath: ''
-          },
-          type: '01'
-        }
+        'detail.jobId': id
       })
     }
+    id && this.get()
   },
-  get (id) {
-    api.certDetail({
-      id: id
+  get () {
+    api.recruitDetail({
+      id: this.data.detail.jobId
     }).then(res => {
       if (res.success) {
         this.setData({
@@ -72,32 +76,17 @@ let pageConf = {
       }
     })
   },
-  // 图片
-  updatePic () {
-    this.selectComponent("#image").chooseImage()
-  },
-  clearPic () {
-    this.setData({
-      'detail.att.serverPath': ''
-    })
-  },
-  changePic (e) {
-    this.setData({
-      'detail.att.serverPath': e.detail.src,
-      'detail.attachmentId': e.detail.id
-    })
-  },
   validate() {
     const rules = [
       {
-        value: this.data.detail.name,
+        value: this.data.detail.title,
         method: 'required',
-        message: '证书名称不能为空'
+        message: '标题不能为空'
       },
       {
-        value: this.data.detail.att.serverPath,
+        value: this.data.detail.duty,
         method: 'required',
-        message: '证书图片不能为空'
+        message: '职务不能为空'
       }
     ];
     return this.check(rules);
@@ -110,12 +99,12 @@ let pageConf = {
     let data = {
       model: JSON.stringify(detail)
     }
-    if (detail.certificateId) data._method = 'put'
+    if (detail.jobId) data._method = 'put'
     Tips.loading()
-    api.certDetail({
+    api.recruitDetail({
       data: data,
       method: 'POST',
-      id: detail.certificateId || ''
+      id: detail.jobId || ''
     }).then(res => {
       Tips.loaded()
       if (res.success) {

@@ -1,0 +1,129 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="设置用户权限"></cc-header>
+
+    <view class="j_tip">
+      提示：权限功能只用于pc端员工登录设置
+    </view>
+
+    <checkbox-group bindchange="checkboxChange">
+      <ui-row-list>
+        <ui-row border-top border-bottom class="row-border">
+          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list}}" wx:key="*this">
+            <label>
+              <checkbox value="{{item.userprivilegeId}}" checked="{{item._checked}}"></checkbox>
+              <view wx:if="{{item.sort === 4}}">网站界面管理</view>
+              <view wx:else>{{item.pname}}</view>
+            </label>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+    </checkbox-group>
+
+    <button type="primary" bindtap="submit">保存</button>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  }, 
+  data :{
+    list: [],
+    value: '',
+    id: ''
+  },
+  onLoad ({id}) {
+    let list = getApp().globalData.userprivilege
+    if (list.length>0) {
+      this.init(list)
+    } else {
+      let that = this
+      getApp().getAuth(res => {
+        that.init(res)
+      })
+    }
+    this.setData({
+      id: id
+    })
+  },
+  init (data) {
+    this.setData({
+      list: data
+    })
+    this.data.id && this.get()
+  },
+  get (id) {
+    api.userprivDetail({
+      id: this.data.id
+    }).then(res => {
+      this.data.list.forEach(item => {
+        res.attributes.data.forEach(row => {
+          if (item.userprivilegeId === row.userprivilegeId) {
+            item._checked = true
+          }
+        })
+      })
+      this.setData({
+        list: this.data.list
+      })
+    })
+  },
+  checkboxChange (e) {
+    this.setData({
+      value: e.detail.value.join()
+    })
+    debugger
+  },
+  submit () {
+    api.userprivDetail({
+      data: {
+        userprivilegeId: this.data.value
+      },
+      id: this.data.id,
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('保存成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+.ui-row{
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .ui-col-3{
+    height: 60px;
+    border-bottom: 1px solid #e9e9e9;
+    font-size: 12px;color: #656565;
+  }
+  &.row-border{
+    &::after{
+      border-bottom:none
+    }
+  }
+}
+
+checkbox{
+  transform:scale(.7);
+  .wx-checkbox-input{
+    margin:0;
+  }
+  .wx-checkbox-input.wx-checkbox-input-checked{
+    color: #34b34a !important;
+  }
+}
+button{
+  margin-top:20px;
+}
+</style>

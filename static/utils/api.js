@@ -28,6 +28,12 @@ const feedback = (params) => http(params, 'https://api.jihui88.net/crm_api/index
 /***************** 账号信息 ************/
 const accountInfo = (params) => http(params, host + 'user/accountInfo/' + params.id)
 const accountOauth = (params) => http(params, host + 'oauth/list')
+const employee = (params) => http(params, host + 'submember/list')
+const employeeDetail = (params) => http(params, host + 'submember/detail' + (params.id ? '/' + params.id : ''))
+const employeeAnalysis = (params) => http(params, host + 'submember/statistical')
+const userprivilege = (params) => http(params, host + 'userprivilege/list?version=v4')
+const userprivDetail = (params) => http(params, host + 'userpriv/detail/' + params.id)
+
 // 费用中心
 const costUnPaid = (params) => http(params, buyHost + 'order/listUnPaid')
 const costOrder = (params) => http(params, buyHost + 'order/orderHistory')
@@ -54,6 +60,8 @@ const bind = (params) => http(params, pcHost + 'bind/bindList')
 const bindDetail = (params) => http(params, pcHost + 'bind/bindDetail')
 const bindAdd = (params) => http(params, pcHost + 'bind/bindAdd')
 const bindEdit = (params) => http(params, pcHost + 'bind/bindEdit')
+const bindDetail2 = (params) => http(params, pcHost + 'bind/detail/' + params.id)
+const profile = (params) => http(params, host + 'profile/detail/all')
 
 
 // 推广
@@ -83,6 +91,8 @@ const link = (params) => http(params, host + 'link/list')
 const linkDetail = (params) => http(params, host + 'link/detail' + (params.id ? '/' + params.id : ''))
 const cert = (params) => http(params, host + 'cert/list')
 const certDetail = (params) => http(params, host + 'cert/detail' + (params.id ? '/' + params.id : ''))
+const recruit = (params) => http(params, host + 'job/list')
+const recruitDetail = (params) => http(params, host + 'job/detail' + (params.id ? '/' + params.id : ''))
 
 
 /***************** 新闻*产品 ************/
@@ -155,6 +165,8 @@ const orderPayDetail = (params) => http(params, host + 'paymentconfig/detail' + 
 const orderDelivery = (params) => http(params, host + 'deliverycorp/list')
 const coupon = (params) => http(params, host + 'coupon/list')
 const couponDetail = (params) => http(params, host + 'coupon/detail' + (params.id ? '/' + params.id : ''))
+const orderBill = (params) => http(params, host + 'deliverycorpSingle/list')
+const orderBillDetail = (params) => http(params, host + 'deliverycorpSingle/detail' + (params.id ? '/' + params.id : ''))
 
 
 module.exports = {
@@ -166,14 +178,14 @@ module.exports = {
   // 推广
   spread, spreadRank, posters,
   /***************** 账号信息 ************/
-  accountInfo, accountOauth,
+  accountInfo, accountOauth, employee, employeeDetail, employeeAnalysis, userprivilege, userprivDetail,
   costUnPaid, costOrder, costPaid, costDetail,
   point, pointProduct, pointRule, signIn,
   /***************** 消息中心 ************/
   message, messageDetail,
   /***************** 站点 ************/
   staticList, staticDetail, staticAdd,
-  bind, bindDetail, bindAdd, bindEdit,
+  bind, bindDetail, bindAdd, bindEdit, bindDetail2, profile,
   analysis, analysisSave,
   authLogin,
   saveRobotsOrSitemap, seotoolsSave, sitemapcap,
@@ -183,6 +195,7 @@ module.exports = {
   enterprise, 
   link, linkDetail,
   cert, certDetail,
+  recruit, recruitDetail,
   /***************** 新闻*产品 ************/
   news, newsDetail,
   product, productDetail, exportProductsToExcel, exportProductImg, downloadProductExcel,
@@ -199,5 +212,5 @@ module.exports = {
   member, memberDetail, memberRank, memberRankDetail, memberAttr, memberAttrDetail, memberBatchDel,
   /***************** 商城 ************/
   order, webinfo, orderRefund, orderRefundDetail, orderReview, orderReviewDetail, orderPay, orderPayDetail, orderDetail, orderDelivery,
-  coupon, couponDetail
+  coupon, couponDetail, orderBill, orderBillDetail
 }

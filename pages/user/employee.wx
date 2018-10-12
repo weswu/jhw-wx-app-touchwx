@@ -1,0 +1,123 @@
+<template>
+  <view>
+    <cc-header title="员工账号管理" count="{{count}}"></cc-header>
+
+    <ui-row-list wx:for="{{list}}" wx:key="*this" border-left-indent data-index="{{index}}" bindtap="itemChange">
+      <ui-row class="text" height="110r" border-bottom>
+        <ui-col vertical-align="middle" align="left">
+          {{index+1}}、{{item.username}}
+        </ui-col>
+        <ui-col class="desc" vertical-align="middle" align="right" width="130r" space-right="10">
+          <view class="text">{{ item.layoutId || '' }}</view>
+        </ui-col>
+      </ui-row>
+      <ui-row height="80r" border-bottom>
+        <ui-col class="desc" span="5" border-left border-right vertical-align="middle" space-left="10">
+          姓名：{{item.name || ''}}
+        </ui-col>
+        <ui-col class="desc" span="7" vertical-align="middle" space-left="10">
+          手机号码：{{item.mobile || ''}}
+        </ui-col>
+      </ui-row>
+      <ui-row height="80r" border-bottom>
+        <ui-col class="desc" span="5" border-left border-right vertical-align="middle" space-left="10">
+          职位：{{item.position || ''}}
+        </ui-col>
+        <ui-col class="desc" span="7" vertical-align="middle" space-left="10">
+          Email：{{item.email || ''}}
+        </ui-col>
+      </ui-row>
+      <ui-row class="text" height="90r" border-bottom wx:if="{{item._checked}}">
+        <ui-col vertical-align="middle" align="center" data-id="{{item.memberId}}" bindtap="message">留言</ui-col>
+        <ui-col vertical-align="middle" align="center" data-id="{{item.memberId}}" bindtap="auth">权限</ui-col>
+        <ui-col vertical-align="middle" align="center" data-id="{{item.memberId}}" bindtap="detail">修改</ui-col>
+        <ui-col vertical-align="middle" align="center" data-index="{{index}}" data-id="{{item.memberId}}" bindtap="del">
+          删除
+        </ui-col>
+        <ui-col vertical-align="middle" align="center">推广</ui-col>
+      </ui-row>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <navigator url="employeeDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 8
+    },
+    count: 0,
+    more: {},
+    height: 140/750*wx.WIN_WIDTH,
+    el: 'undefined'
+  }, 
+  onLoad () {
+    this.get()
+  },
+  get () {
+    Utils.loading(this)
+    api.employee({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item._checked = false
+        })
+        Utils.scrollList(this, res)
+      }
+    })
+  },
+  itemChange (e) {
+    let index = e.currentTarget.dataset.index
+    let field = 'list['+ index + ']._checked'
+    this.setData({
+      [field]: !this.data.list[index]._checked
+    })
+  },
+  encodeId (target) {
+    return target == null ? '' : target.replace(/^[^1-9]+/, '')
+  },
+  message (e) {
+    wx.navigateTo({
+      url: '/pages/message/messageList?posterId=' + this.encodeId(e.currentTarget.dataset.id)
+    })
+  },
+  auth (e) {
+    wx.navigateTo({
+      url: 'authority?id=' + e.currentTarget.dataset.id
+    })
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'employeeDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  del (e) {
+    Utils.del(this, e, api.employeeDetail)
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

@@ -1,0 +1,463 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="域名备案"></cc-header>
+    <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
+    
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:999" right="0">
+      <ui-tabs tab-style="{{ {width:width/3+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
+        <ui-tab>基本信息</ui-tab>
+        <ui-tab>自助备案</ui-tab>
+        <ui-tab>代理备案</ui-tab>
+      </ui-tabs>
+    </ui-fixed-view>
+    <view style="height:40px;"></view>
+
+    <view class="hr"></view>
+
+    <view wx:if="{{current1 === 0}}">
+      <view class="j_tip">温馨提醒： 请完善备案信息，方便网站“界面编辑”调取。备案主要是为了规范网络安全化，维护网站经营者的合法权益，保障网民的合法利益。</view>
+      <ui-row-list border-left-indent>
+        <ui-row height="104r">
+          <ui-col width="80" vertical-align="middle">
+            ICP备案号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="公信备案" bindinput="input" id="icp" value="{{detail.icp}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r">
+          <ui-col width="80" vertical-align="middle">
+            网安备案号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="公安备案" bindinput="input" id="psr" value="{{detail.psr}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r">
+          <ui-col width="80" vertical-align="middle">
+            网安备案链接地址
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="公安备案" bindinput="input" id="seccurityLink" value="{{detail.seccurityLink}}"/>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+      <button type="primary" bindtap="bindSubmit" class="fixed">提交</button>
+    </view>
+    
+    <view wx:if="{{current1 === 1}}">
+      <view class="j_tip">
+        温馨提醒： 备案只针对国内的空间，放国外不需要备案。如有问题，请咨询：QQ：260404208
+        <view>
+          备案在阿里云,教程地址
+        </view>
+        https://beian.aliyun.com/?utm_content=se_1351982
+      </view>
+    </view>
+    
+    <view wx:if="{{current1 === 2}}">
+      <view class="j_tip">
+        温馨提醒： 为了更好的帮您备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）如有问题，请咨询：QQ：260404208
+        <view>
+          购买“代理备案”
+        </view>
+        http://buy.jihui88.com/
+      </view>
+
+      <ui-row-list border-left-indent>
+        <ui-row height="104r">
+          <ui-col width="60" vertical-align="middle">
+            备案人
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" space-right="15">
+            <radio-group bindchange="radio" id="type">
+              <label>
+                <radio value="00" checked="{{detail.type === '00'}}"></radio>负责人备案
+              </label>
+              <label>
+                <radio value="01" checked="{{detail.type === '01'}}"></radio>法人自己备案
+              </label>
+            </radio-group>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+      <view class="hr"></view>
+      <ui-row-list border-left-indent>
+        <ui-row height="104r">
+          <ui-col width="80" vertical-align="middle">
+            域名
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="例如：abc.com" bindinput="input" id="address" value="{{detail.address}}"/>
+          </ui-col>
+        </ui-row>
+        
+        <ui-row height="240r">
+          <ui-col width="70" vertical-align="middle">
+            域名证书
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image id="image" src="{{detail.enterprise.domainCertPic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10">
+            <view class="btn_gray" data-val="{{'enterprise.domainCertPic'}}" bindtap="updatePic">重新上传</view>
+            <view class="btn_gray view" data-index="{{0}}" bindtap="view">查看示例</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'enterprise.domainCertPic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+        <ui-row height="240r">
+          <ui-col width="70" vertical-align="middle">
+            营业执照
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.enterprise.certPic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10">
+            <view class="btn_gray" data-val="{{'enterprise.certPic'}}" bindtap="updatePic">重新上传</view>
+            <view class="btn_gray view" data-index="{{1}}" bindtap="view">查看示例</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'enterprise.certPic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+      </ui-row-list>
+      <!-- 身份证 -->
+      <view class="j_tip">
+        身份证正反电子版<view class="infoColor" data-index="{{2}}" bindtap="view">查看示例</view>
+      </view>
+      <ui-row-list border-left-indent>
+        <ui-row height="240r">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            法人身份证正面
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.emergency.certFrontPic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" data-val="{{'emergency.certFrontPic'}}" bindtap="updatePic">
+            <view class="btn_gray">重新上传</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'emergency.certFrontPic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+        <ui-row height="240r">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            法人身份证反面
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.emergency.certReversePic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" data-val="{{'emergency.certReversePic'}}" bindtap="updatePic">
+            <view class="btn_gray">重新上传</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'emergency.certReversePic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+        <ui-row height="240r" wx:if="{{detail.type === '00'}}">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            负责人身份证正面
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.principal.certFrontPic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" data-val="{{'principal.certFrontPic'}}" bindtap="updatePic">
+            <view class="btn_gray">重新上传</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'principal.certFrontPic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+        <ui-row height="240r" wx:if="{{detail.type === '00'}}">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            负责人身份证反面
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.principal.certReversePic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" data-val="{{'principal.certReversePic'}}" bindtap="updatePic">
+            <view class="btn_gray">重新上传</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'principal.certReversePic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+      </ui-row-list>
+      <!-- 幕布照 -->
+      <view class="j_tip">
+        幕布照示例地址：https://help.aliyun.com/knowledge_detail/36968.html
+      </view>
+      <ui-row-list border-left-indent>
+        <ui-row height="240r">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            <text wx:if="{{detail.type === '00'}}">负责人幕布照</text><text wx:if="{{detail.type === '01'}}">法人幕布照</text>
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.enterprise.legalPersonBust}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" data-val="{{'enterprise.legalPersonBust'}}" bindtap="updatePic">
+            <view class="btn_gray">重新上传</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'enterprise.legalPersonBust'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+      </ui-row-list>
+      <!-- 身份证 -->
+      <view class="j_tip">
+        手持身份证照片<view class="infoColor" data-index="{{3}}" bindtap="view">查看示例</view>
+      </view>
+      <ui-row-list border-left-indent>
+        <ui-row height="240r" wx:if="{{detail.type === '00'}}">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            负责人手持身份证照片
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.principal.certHandPic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" data-val="{{'principal.certHandPic'}}" bindtap="updatePic">
+            <view class="btn_gray">重新上传</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'principal.certHandPic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+        <ui-row height="240r" wx:if="{{detail.type === '01'}}">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            法人手持身份证照片
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.emergency.certHandPic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10" data-val="{{'emergency.certHandPic'}}" bindtap="updatePic">
+            <view class="btn_gray">重新上传</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'emergency.certHandPic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+
+        <ui-row height="104r">
+          <ui-col width="80" vertical-align="middle">
+            法人手机号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="enterprise.legalPersonCellphone" value="{{detail.enterprise.legalPersonCellphone}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r">
+          <ui-col width="80" vertical-align="middle">
+            法人邮箱
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="enterprise.email" value="{{detail.enterprise.email}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.type === '00'}}">
+          <ui-col width="80" vertical-align="middle">
+            负责人手机号
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="principal.cellphone" value="{{detail.principal.cellphone}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r" wx:if="{{detail.type === '00'}}">
+          <ui-col width="80" vertical-align="middle">
+            负责人邮箱
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="principal.email" value="{{detail.principal.email}}"/>
+          </ui-col>
+        </ui-row>
+        <ui-row height="104r">
+          <ui-col width="80" vertical-align="middle">
+            座机电话
+          </ui-col>
+          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+            <input placeholder="请填写" bindinput="input" id="enterprise.phone" value="{{detail.enterprise.phone}}"/>
+          </ui-col>
+        </ui-row>
+
+        <ui-row height="240r">
+          <ui-col width="70" vertical-align="middle" space-right="5">
+            上传核验单
+          </ui-col>
+          <ui-col width="80" vertical-align="middle">
+            <cc-image src="{{detail.webinfo.checkPic}}" width="148r" bindchange="changePic"></cc-image>
+          </ui-col>
+          <ui-col width="90" vertical-align="middle" space-left="5" space-right="10">
+            <view class="btn_gray" data-val="{{'webinfo.checkPic'}}" bindtap="updatePic">重新上传</view>
+            <view class="btn_gray view" data-index="{{4}}" bindtap="view">查看示例</view>
+          </ui-col>
+          <ui-col width="50" vertical-align="middle" data-val="{{'webinfo.checkPic'}}" bindtap="clearPic">
+            <view class="btn_gray">清除</view>
+          </ui-col>
+          <ui-col vertical-align="middle"></ui-col>
+        </ui-row>
+       
+      </ui-row-list>
+      
+      <view style="height:80px;"></view>
+      <button type="primary" bindtap="submit" class="fixed">提交</button>
+    </view>
+  </view>
+ </template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-image': '../../packages/cc-image',
+      'cc-lan': '../../packages/cc-lan'
+    }
+  },
+  data: {
+    width:wx.WIN_WIDTH,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT + 59/750*wx.WIN_WIDTH,
+    detail:{},
+    bindDetail: {},
+    current1: 2,
+    imgList: [
+      {src: 'http://img.jihui88.com/wcd/upload//j//j2//jihui//picture//2018//05//22/f35c8add-c844-4019-b506-d6c6c8c6038b.jpg'},
+      {src: 'http://img.jihui88.com/upload/j/j2/jihui88/picture/2018/05/24/0aadd6ac-98ad-4cb9-9414-a0e689c12078.jpg'},
+      {src: 'http://img.jihui88.com/wcd/upload//j//j2//jihui88//picture//2016//11//25/ab58eb04-e56b-4e06-b84a-f96d250e89e7.jpg'},
+      {src: 'http://img.jihui88.com/wcd/upload//g//g2//ggggfj//picture//2016//11//25/d86eaccb-81b8-45b8-8125-4617de1750f0.jpg'},
+      {src: 'http://gtms02.alicdn.com/tps/i2/TB1f.iSJVXXXXXkXFXX6HFAMXXX-1240-1980.jpg'}
+    ]
+  },
+  onLoad (e) {
+    this.get()
+  },
+  get () {
+    if (this.data.current1 === 0) {
+      api.bindDetail2({
+        id: getApp().globalData.layoutId
+      }).then(res => {
+        if (res.success) {
+          this.setData({
+            detail: res.attributes.data,
+            bindDetail: res.attributes.data
+          })
+        }
+      })
+    }
+    if (this.data.current1 === 2) {
+      api.profile().then(res => {
+        if (res.success) {
+          let data = res.attributes.data
+          data.type = '00'
+          data.address = this.data.bindDetail.address
+          this.setData({
+            detail: data
+          })
+        }
+      })
+    }
+  },
+  //横屏竖屏切换
+  handleChange (e) {
+    this.setData({
+      current1: e.detail.index
+    })
+    this.get()
+  },
+  // 图片
+  updatePic (e) {
+    this.selectComponent("#image").chooseImage();
+  },
+  clearPic (e) {
+    let val = e.currentTarget.dataset.val
+    let field = 'detail.' + val
+    this.setData({
+      [field]: ''
+    })
+  },
+  changePic (e) {
+    let val = e.currentTarget.dataset.val
+    let field = 'detail.' + val
+    this.setData({
+      [field]: e.detail.src
+    })
+  },
+  view (e) {
+    let index = e.currentTarget.dataset.index
+    wx.previewImage({
+      urls: [this.data.imgList[index].src]
+    })
+  },
+  bindSubmit (e) {
+    let detail = this.data.detail
+    if (detail.id || detail.profileId === 'all') {
+      if (detail.profileId === 'all') {
+        detail = this.data.bindDetail
+        detail.address = this.data.detail.address
+      }
+      let data = {
+        model: JSON.stringify(detail),
+        _method: 'put'
+      }
+      Tips.loading()
+      api.bindDetail2({
+        data: data,
+        method: 'post',
+        id: detail.id
+      }).then(res => {
+        Tips.loaded()
+        if (res.success) {
+          if (e !== 'tip') Tips.success('保存成功')
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    } else {
+      if (e !== 'tip') Tips.toast('请选择站点')
+    }
+  },
+  submit () {
+    this.bindSubmit('tip')
+    let data = {
+      model: JSON.stringify(this.data.detail),
+      _method: 'put'
+    }
+    Tips.loading()
+    api.profile({
+      data: data,
+      method: 'post'
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.btn_gray.view{
+  margin-top:10px;
+}
+</style>
+

@@ -3,7 +3,7 @@
     <cc-header title="{{list[active].title}}"></cc-header>
    
     <ui-row-list border-left-indent>
-      <ui-row height="102r" border-bottom url="{{item.url}}" hover-class="none"
+      <ui-row height="102r" border-bottom hover-class="none" data-item="{{item}}" bindtap="href"
         wx:for="{{list[active].children}}" wx:key="*this" wx:if="{{item.text !== 'text'}}">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont {{item.icon}}"></i>
@@ -16,25 +16,50 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
+    <cc-modal title="新建相册" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
+        <input type="text" value="{{name}}" bindinput="nameInput"/>
+      </view>
+    </cc-modal>
   </view>
 </template>
 
 <script>
 import tools from '../../static/data/tools'
+import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-header': '../../packages/cc-header'
+      'cc-header': '../../packages/cc-header',
+      'cc-modal': '../../packages/cc-modal'
     }
   },
   data: {
     list: tools,
-    active: 0
+    active: '0',
+    visible1: false
   },
   onLoad (e) {
     this.setData({
       active: e.active
     })
+  },
+  href (e) {
+    let item = e.currentTarget.dataset.item
+    if (item.text === '新建相册') {
+      this.setData({
+        visible1: true
+      })
+    } else if (item.text === '上传图片') {
+      Utils.upload(data, 9).then(res => {
+        Tips.error('上传成功')
+      })
+    } else {
+      wx.navigateTo({
+        url: item.url
+      })
+    }
   }
 }
 </script>

@@ -21,13 +21,13 @@
           <picker-view-column>
             <view wx:for="{{days}}" wx:key="*this">{{item}}日</view>
           </picker-view-column>
-          <picker-view-column>
+          <picker-view-column wx:if="{{!isday}}">
             <view wx:for="{{hours}}" wx:key="*this">{{item}}时</view>
           </picker-view-column>
-          <picker-view-column>
+          <picker-view-column wx:if="{{!isday}}">
             <view wx:for="{{minutes}}" wx:key="*this"><text wx:if="{{item<10}}">0</text>{{item}}分</view>
           </picker-view-column>
-          <picker-view-column>
+          <picker-view-column wx:if="{{!isday}}">
             <view wx:for="{{seconds}}" wx:key="*this"><text wx:if="{{item<10}}">0</text>{{item}}秒</view>
           </picker-view-column>
         </picker-view>
@@ -67,6 +67,10 @@ export default {
     value: {
       type: String,
       value: ""
+    },
+    format: {
+      type: String,
+      value: "yyyy-MM-dd hh:mm:ss"
     }
   },
   data: {
@@ -81,10 +85,11 @@ export default {
     // 值
     val: '',
     time: [9999, 1, 1],
+    isday: false
   },
   ready () {
-    let date = Utils.formatTime(this.data.value || new Date(), 'yyyy-MM-dd-hh-mm-ss').split('-')
-    let val = Utils.formatTime(this.data.value || new Date(), 'yyyy-MM-dd hh:mm:ss')
+    let date = Utils.formatTime(this.data.value || new Date().getTime(), this.data.format).split('-')
+    let val = Utils.formatTime(this.data.value, this.data.format) || '请选择'
     this.initDay(date[0], date[1])
     let year = 0
     years.forEach((item, index) => {
@@ -97,6 +102,11 @@ export default {
       val: val
     })
     this.triggerEvent('change', val)
+    if (this.data.format === 'yyyy-MM-dd') {
+      this.setData({
+        isday: true
+      })
+    }
   },
   methods: {
     openPopup (e) {
@@ -136,8 +146,11 @@ export default {
     },
     submit () {
       let val = this.data.time
-      let value = years[val[0]] + '-' + this.initTwo(val[1]+1) + '-' + this.initTwo(val[2]+1) + ' ' +
+      let value = years[val[0]] + '-' + this.initTwo(val[1]+1) + '-' + this.initTwo(val[2]+1)
+      if (!this.data.isday) {
+        value = value + ' ' +
         this.initTwo(val[3]) + ':' + this.initTwo(val[4]) + ':' + this.initTwo(val[5])
+      }
       this.setData({
         val: value
       })

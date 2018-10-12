@@ -4,20 +4,24 @@ let data = [
     children: [
       { url: '/pages/pc/website', text: '站点数据管理', icon: 'icon-shuju' },
       { url: '/pages/static/seo', text: 'SEO管理', icon: 'icon-SEO' },
+      { url: '/pages/static/baian', text: '域名备案', icon: 'icon-yuming' },
       { url: '/pages/static/bind', text: '域名绑定', icon: 'icon-yuming' },
       { url: '/pages/static/sitemap', text: 'Sitemap生成', icon: 'icon-sitemap' },
+      { url: '/pages/static/batch', text: '批量提交', icon: 'icon-tijiao' },
       { url: '/pages/static/thirdPartyStatistics', text: '第三方统计', icon: 'icon-tongji' },
-      { url: '/pages/static/convenient', text: '便捷登录配置', icon: 'icon-denglu' },
-      { url: '', text: 'text', icon: 'icon-jia' },
-      { url: '', text: 'text', icon: 'icon-jia' }
+      { url: '/pages/static/convenient', text: '便捷登录配置', icon: 'icon-denglu' }
     ]
   },
   {
     title: '公司信息',
     children: [
       { url: '/pages/user/enterprise', text: '基本资料', icon: 'icon-ziliao' },
+      { url: '/pages/user/company', text: '公司简介', icon: 'icon-gongsi' },
+      { url: '/pages/user/recruit', text: '招聘管理', icon: 'icon-zhaopin' },
       { url: '/pages/user/link', text: '友情链接', icon: 'icon-ziyuan' },
       { url: '/pages/user/cert', text: '荣誉证书', icon: 'icon-gongsi' },
+      { url: '/pages/user/partner', text: '合作伙伴', icon: 'icon-Group' },
+      { url: '/pages/user/team', text: '团队介绍', icon: 'icon-huiyuan' },
       { url: '', text: 'text', icon: 'icon-jia' }
     ]
   },
@@ -64,9 +68,9 @@ let data = [
       { url: '/pages/shop/config', text: '商品相关配置', icon: 'icon-shangpin' },
       { url: '/pages/shop/pay', text: '支付方式管理', icon: 'icon-zhifu' },
       { url: '/pages/shop/delivery', text: '物流公司管理', icon: 'icon-gongsi1' },
+      { url: '/pages/shop/bill', text: '物流单据设置', icon: 'icon-fahuo1' },
       { url: '/pages/shop/refund', text: '商品退换货管理', icon: 'icon-tuihuanhuo' },
       { url: '/pages/shop/coupon', text: '营销管理', icon: 'icon-yingxiao' },
-      { url: '', text: 'text', icon: 'icon-jia' },
       { url: '', text: 'text', icon: 'icon-jia' }
     ]
   }

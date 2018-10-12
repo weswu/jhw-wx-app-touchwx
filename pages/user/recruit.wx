@@ -1,29 +1,33 @@
 <template>
   <view>
-    <cc-header title="友情链接"></cc-header>
+    <cc-header title="招聘管理"></cc-header>
     <cc-lan lan="{{true}}" bindchange="get"></cc-lan>
 
-    <ui-row-list>
+    <ui-row-list border-left-indent>
       <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
         bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
         <view slot="content">
-          <ui-row height="140r" class="j_row_list" border-bottom>
-            <ui-col vertical-align="middle" align="left" width="130r" space-left="15" data-item="{{item}}" bindtap="item">
-              <image mode="aspectFit" src="http://img.jihui88.com/{{item.image}}" data-index="{{index}}" binderror="error"/>
+          <ui-row height="80r" class="j_row_list" data-item="{{item}}" bindtap="item">
+            <ui-col class="text" vertical-align="middle">
+              {{item.title}}
             </ui-col>
-            <ui-col vertical-align="middle" align="left" space-left="10">
-              <view class="text">{{ item.name }}</view>
-              <view class="desc">{{ item.url }}</view>
+            <ui-col class="desc" width="150" vertical-align="middle" align="right" space-right="15">
+              {{ item.addTime }}
+            </ui-col>
+          </ui-row>
+          <ui-row height="60r" class="j_row_list" border-bottom data-item="{{item}}" bindtap="item">
+            <ui-col class="desc" vertical-align="top">
+              职务：{{item.duty}}    人数:{{item.sum}}
             </ui-col>
           </ui-row>
         </view>
         <view slot="operate">
           <view class="j_operate">
             <ui-row height="140r">
-              <ui-col data-id="{{item.linkId}}" bindtap="detail" vertical-align="middle" align="center">
+              <ui-col data-id="{{item.jobId}}" bindtap="detail" vertical-align="middle" align="center">
                 修改
               </ui-col>
-              <ui-col data-index="{{index}}" data-id="{{item.linkId}}" bindtap="del" vertical-align="middle" align="center">
+              <ui-col data-index="{{index}}" data-id="{{item.jobId}}" bindtap="del" vertical-align="middle" align="center">
                 删除
               </ui-col>
             </ui-row>
@@ -32,7 +36,7 @@
       </ui-swipe-out>
     </ui-row-list>
 
-    <navigator url="linkDetail?type=02" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+    <navigator url="recruitDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
   </view>
 </template>
 
@@ -51,8 +55,7 @@ export default {
     list: [],
     params: {
       page: 1,
-      pageSize: 200,
-      type: '01'
+      pageSize: 100
     },
     height: 140/750*wx.WIN_WIDTH,
     el: 'undefined'
@@ -61,11 +64,12 @@ export default {
     this.get()
   },
   get () {
-    api.link({
+    api.recruit({
       data: this.data.params
     }).then(res => {
       if (res.success) {
         res.attributes.data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
           item.switcher = 'off'
         })
         this.setData({
@@ -79,18 +83,11 @@ export default {
   },
   detail (e) {
     wx.navigateTo({
-      url: 'linkDetail?id=' + e.currentTarget.dataset.id
+      url: 'recruitDetail?id=' + e.currentTarget.dataset.id
     })
   },
   del (e) {
-    Utils.del(this, e, api.linkDetail)
-  },
-  error(e) {
-    let index = e.currentTarget.dataset.index
-    this.data.list[index].image = "upload/j/j2/jihui88/picture/2018/08/29/92f8cf7a-cf99-4308-9630-5ca0bceac29f.png"
-    this.setData({
-      list: this.data.list
-    })
+    Utils.del(this, e, api.recruitDetail)
   }
 }
 </script>
@@ -98,12 +95,5 @@ export default {
 <style lang="less">
 page{
   background: #f1f1f1
-}
-.ui-row-border-bottom:after {
-  left: 140rpx;
-}
-image{
-  max-width: 130rpx;
-  max-height: 130rpx;
 }
 </style>
