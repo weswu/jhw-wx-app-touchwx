@@ -9,7 +9,11 @@ let data = [
       { url: '/pages/static/sitemap', text: 'Sitemap生成', icon: 'icon-sitemap' },
       { url: '/pages/static/batch', text: '批量提交', icon: 'icon-tijiao' },
       { url: '/pages/static/thirdPartyStatistics', text: '第三方统计', icon: 'icon-tongji' },
-      { url: '/pages/static/convenient', text: '便捷登录配置', icon: 'icon-denglu' }
+      { url: '/pages/static/convenient', text: '便捷登录配置', icon: 'icon-denglu' },
+      { url: '/pages/static/storageService', text: '附件存储服务', icon: 'icon-ai30' },
+      { url: '', text: 'text', icon: 'icon-jia' },
+      { url: '', text: 'text', icon: 'icon-jia' },
+      { url: '', text: 'text', icon: 'icon-jia' }
     ]
   },
   {

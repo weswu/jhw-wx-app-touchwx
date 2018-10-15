@@ -10,6 +10,7 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/static/storageService',
       'pages/static/beian',
       'pages/static/batch',
       'pages/user/employeeAnalysis',

@@ -83,6 +83,9 @@ const seoDetail = (params) => http(params, host + 'seo/pc/detail' + (params ? '/
 const seoSave = (params) => http(params, host + 'seo/pc/save/' + params.id)
 const seoTemplate = (params) => http(params, host + 'seoTemplate/list')
 const seoTemplateDetail = (params) => http(params, host + 'seoTemplate/detail')
+// 附件
+const attachment = (params) => http(params, pcHost + 'third_app/attachment/list')
+const attachmentSave = (params) => http(params, pcHost + 'third_app/attachment/save/' + params.id)
 
 
 /***************** 公司信息 ************/
@@ -191,6 +194,7 @@ module.exports = {
   saveRobotsOrSitemap, seotoolsSave, sitemapcap,
   seoNav, seoNavDetail,
   seoDetail, seoSave, seoTemplate, seoTemplateDetail,
+  attachment, attachmentSave,
   /***************** 公司信息 ************/
   enterprise, 
   link, linkDetail,
@@ -208,7 +212,7 @@ module.exports = {
   /***************** 相册 ************/
   album, albumDetail, albumAttr, albumCopy, imgDetail, imgCopy, imgDel, imgMove, refurbish,
   albumRecycle, albumAttrRecycle, restoreImg, restore, attCleanAll, recycleDel, attBatchDel,
-  /***************** 会员 ********** 
+  /***************** 会员 **********/
   member, memberDetail, memberRank, memberRankDetail, memberAttr, memberAttrDetail, memberBatchDel,
   /***************** 商城 ************/
   order, webinfo, orderRefund, orderRefundDetail, orderReview, orderReviewDetail, orderPay, orderPayDetail, orderDetail, orderDelivery,

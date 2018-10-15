@@ -46,6 +46,11 @@ export default {
     })
   },
   href (e) {
+    let data = {
+      replace: '00',
+      attId: '',
+      id: 'all'
+    }
     let item = e.currentTarget.dataset.item
     if (item.text === '新建相册') {
       this.setData({
@@ -60,6 +65,43 @@ export default {
         url: item.url
       })
     }
+  },
+  // add 
+  nameInput (e) {
+    this.setData({
+      name: e.detail.value
+    })
+  },
+  clearinput () {
+    this.setData({
+      name: ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible1: false
+    })
+  },
+  // 添加相册
+  ok () {
+    api.albumDetail({
+      data: {
+        model: JSON.stringify({
+          name: this.data.name,
+          parentId: '',
+          blongType: 'AP',
+          state: '01'
+        })
+      },
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('添加成功')
+        this.cancel()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
   }
 }
 </script>

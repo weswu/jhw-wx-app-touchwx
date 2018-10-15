@@ -32,7 +32,7 @@
           {{index+1}}、{{item.name}}
         </ui-col>
         <ui-col class="desc" vertical-align="middle" align="right" width="150" space-right="15" wx:if="{{item.layoutId}}">
-          <view class="text">分站编号:{{ item.layoutId || '' }}</view>
+          <view class="text">推广站点:{{ item.layoutId || '' }}</view>
         </ui-col>
       </ui-row>
       <ui-row height="80r" border-bottom>
@@ -81,7 +81,6 @@ export default {
     this.get()
   },
   get () {
-    Utils.loading(this)
     api.employeeAnalysis({
       data: this.data.params
     }).then(res => {

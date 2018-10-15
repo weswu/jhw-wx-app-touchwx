@@ -218,6 +218,11 @@ export default {
     })
   },
   href (e) {
+    let data = {
+      replace: '00',
+      attId: '',
+      id: 'all'
+    }
     let item = e.currentTarget.dataset.item
     if (item.text === '新建相册') {
       this.setData({

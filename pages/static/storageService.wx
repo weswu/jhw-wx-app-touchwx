@@ -1,0 +1,193 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="附件存储服务"></cc-header>
+
+    <view class="j_tip">
+      采用专业存储方案的好处：
+      <view>- 数据自动多重备份，不会因为硬件问题造成数据丢失；</view>
+      - 存储空间不受限制，根据业务需求自行扩展；
+    </view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          可选方案
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15" style="font-size:12px;">
+          <radio-group bindchange="radio" id="name">
+            <label wx:for="{{category}}" wx:key="item.value">
+              <radio value="{{item.value}}" checked="{{detail.name === item.value}}"></radio>{{item.text}}
+            </label>
+          </radio-group>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view class="j_tip" wx:if="{{detail.name === 'aliyun'}}">
+      阿里云简介：  无免费套餐，适合对性能和速度有要求的客户（数据访问频繁，且有性能需要），可选方案较多
+      <view>价格详细:https://www.aliyun.com/price/product</view>
+    </view>
+    <view class="j_tip" wx:if="{{detail.name === 'qiniuyun'}}">
+      七牛云简介：  有免费套餐，适合对性能和速度要求不高的客户，可选方案较少
+      <view>价格详细:https://www.qiniu.com/prices</view>
+    </view>
+    <view class="j_tip" wx:if="{{detail.name === 'jhyun'}}">
+      上传涉及侵权、敏感、非法内容的文档将会被移除；
+      <view>每次最多上传10份文档，每份文档不超过10M；</view>
+      我们支持以下格式的文档上传：
+      <view>MS Office文档：doc，docx，ppt，pptx，xls，xlsx，rtf，</view>
+      WPS office系列：wps，et，dps，
+      <view>PDF：pdf</view>
+      纯文本：txt
+      <view>-</view>
+      <view>机汇云提供1GB的免费空间，用于存放网站附件，如上传数量、文档大小、格式无法满足，请选择阿里云或者七牛云。</view>
+      <ui-row height="104r">
+        <ui-col width="60" vertical-align="middle">
+          空间占用量
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15" style="font-size:12px;">
+          <view class="disk_bg">
+            <view class="disk" style="width:{{percent}}%"></view>
+          </view>
+          {{diskCapacity}}M/1GB
+        </ui-col>
+      </ui-row>
+      附件管理：请到pc端操作
+    </view>
+
+    <ui-row-list border-left-indent wx:if="{{detail.name === 'aliyun' || detail.name === 'qiniuyun'}}">
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          AppId
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="appid" value="{{detail.appid}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          密钥
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="appsecret" value="{{detail.appsecret}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          空间
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="bucketname" value="{{detail.bucketname}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{detail.name === 'aliyun'}}">
+        <ui-col width="70" vertical-align="middle">
+          地域节点
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="endpoint" value="{{detail.endpoint}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <view style="height:80px;" wx:if="{{detail.name !== ''}}"></view>
+    <button type="primary" bindtap="submit" class="fixed" wx:if="{{detail.name !== ''}}">保存设置</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      name: 'jhyun'
+    },
+    category: [
+      { text: '无', value: '' },
+      { text: '阿里云', value: 'aliyun' },
+      { text: '七牛云', value: 'qiniuyun' },
+      { text: '机汇云', value: 'jhyun' }
+    ],
+    list: [],
+    diskCapacity: 0,
+    percent: 0
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.attachment().then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        let detail = {}
+        data.forEach(item => {
+          if (item.state === '01') {
+            detail = JSON.parse(JSON.stringify(item))
+          }
+        })
+        this.setData({
+          list: data,
+          detail: detail,
+          diskCapacity: res.attributes.diskCapacity,
+          percent: res.attributes.diskCapacity / 1024 * 100
+        })
+      }
+    })
+  },
+  radio (e) {
+    this.data.list.forEach(item => {
+      if (item.name === e.detail.value) {
+        this.setData({
+          detail: item
+        })
+      }
+    })
+  },
+  submit () {
+    let detail = this.data.detail
+    let data = {
+      appid: detail.appid,
+      appsecret: detail.appsecret,
+      bucketname: detail.bucketname,
+      endpoint: detail.endpoint
+    }
+    api.attachmentSave({
+      data: data,
+      id: detail.id,
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success("保存成功")
+        this.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.disk_bg{
+  width:150px;
+  background-color:#f3f3f3;
+  border-radius:100px;
+  vertical-align:middle;
+  height:5px;
+  .disk{
+    position: absolute;
+    border-radius:100px;
+    background: #e7ae5f;height:5px;
+  }
+}
+</style>

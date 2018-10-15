@@ -48,7 +48,7 @@
           <ui-icon type="arrow-right" size="14"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="102r" url="" hover-class="none">
+      <ui-row height="102r" url="employeeAnalysis" hover-class="none">
         <ui-col vertical-align="middle">
           员工推广分析
         </ui-col>
