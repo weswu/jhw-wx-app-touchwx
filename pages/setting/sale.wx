@@ -4,49 +4,40 @@
 
     <ui-row-list border-left-indent>
       <ui-row height="102r" url="/pages/user/password" hover-class="none">
-          <ui-col vertical-align="middle">
-              登录密码
-          </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right">
-              重新设置
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14"></ui-icon>
-          </ui-col>
+        <ui-col vertical-align="middle">
+          登录密码
+        </ui-col>
+        <ui-col class="desc" width="100" vertical-align="middle" align="right">
+          重新设置
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
       </ui-row>
       <ui-row height="102r">
-          <ui-col vertical-align="middle">
-              备用邮箱
-          </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right">
-              {{user.email}}
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14"></ui-icon>
-          </ui-col>
+        <ui-col vertical-align="middle">
+          备用邮箱
+        </ui-col>
+        <ui-col class="desc" width="100" vertical-align="middle" align="right" space-right="15">
+          {{user.email}}
+        </ui-col>
       </ui-row>
       
       <view wx:for="{{oauth}}" wx:key="*this">
         <ui-row height="102r" border-bottom wx:if="{{item.type === 'weixin'}}">
           <ui-col vertical-align="middle">
-              微信
+            微信
           </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right">
-              {{item.nickname}}
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14"></ui-icon>
+          <ui-col class="desc" width="100" vertical-align="middle" align="right" space-right="15">
+            {{item.nickname}}
           </ui-col>
         </ui-row>
         <ui-row height="102r" wx:if="{{item.type === 'cellphone'}}">
           <ui-col vertical-align="middle">
-              手机
+            手机
           </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right">
-              {{item.nickname}}
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14"></ui-icon>
+          <ui-col class="desc" width="100" vertical-align="middle" align="right" space-right="15">
+            {{item.nickname}}
           </ui-col>
         </ui-row>
       </view>

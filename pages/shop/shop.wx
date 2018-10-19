@@ -37,18 +37,22 @@
     <!-- body -->
     <ui-row-list>
       <ui-row height="258r" border-bottom wx:for="{{list}}" wx:key="*this">
-        <ui-col vertical-align="middle" align="center" width="90r" data-index="{{index}}" bindtap="toggle">
-          <icon type="circle" size="18" wx:if="{{!item._checked && (item.orderStatus === 'invalid' || item.orderStatus === 'cancel')}}"></icon>
+        <ui-col vertical-align="middle" align="center" width="90r" data-index="{{index}}" bindtap="toggle"
+          wx:if="{{item.orderStatus === 'invalid' || item.orderStatus === 'cancel'}}">
+          <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
         </ui-col>
+        <ui-col vertical-align="middle" align="center" width="90r" wx:else></ui-col>
         <ui-col vertical-align="middle" align="left" width="237r" data-item="{{item}}" bindtap="item">
           <image mode="aspectFit" src="http://img.jihui88.com/{{item.picPath}}"/>
+          <text class="productTotalQuantity">{{item.productTotalQuantity}}件</text>
         </ui-col>
         <ui-col class="text" vertical-align="middle" data-item="{{item}}" bindtap="item">
           <view style="wdith:100%">
-            编号：{{item.orderSn}}
+            <view class="title"> 编号：{{item.orderSn}} </view>
+            <view class="desc"> 下单时间：{{item.addTime}} </view>
             <view class="price"> ￥{{item.totalAmount || 0.00}} </view>
-            <view class="title">
+            <view class="status">
               <!-- 订单状态 -->
               <text style="background:{{row.style}}" wx:if="{{item.orderStatus === row.value}}" wx:for="{{orderStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
               <text style="background:{{row.style}}" wx:if="{{item.paymentStatus === row.value}}" wx:for="{{paymentStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
@@ -173,6 +177,7 @@ export default {
     top: 66,
     show: false,
     index1: 0,
+    // 付款状态
     category1: [
       { text: '全部', value: '', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: true},
       { text: '未支付', value: '0', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: false},
@@ -181,6 +186,7 @@ export default {
       { text: '部分退款', value: '3', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: false },
       { text: '全额退款', value: '4', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: false }
     ],
+    // 配送状态
     category2: [
       { text: '全部', value: '', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: true},
       { text: '未发货', value: '0', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: false },
@@ -190,6 +196,7 @@ export default {
       { text: '已退货', value: '4', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: false },
       { text: '无配送', value: '5', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: false }
     ],
+    // 订单状态
     category3: [
       { text: '全部', value: '', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: true},
       { text: '未处理', value: '0', tagStyle: tagStyle6, tagSelectedStyle: selectStyle2, checked: false },
@@ -216,6 +223,15 @@ export default {
       this.setData({
          category2: this.data.category2,
         'params.shippingStatus': e.shippingStatus
+      })
+    }
+    if (e.orderStatus) {
+      this.data.category3.forEach((item, index) => {
+        item.checked = (item.value === e.orderStatus)
+      })
+      this.setData({
+         category3: this.data.category3,
+        'params.orderStatus': e.orderStatus
       })
     }
     this.get()
@@ -422,7 +438,7 @@ page{
       max-width: 216rpx;
       max-height: 216rpx;
     }
-    .title{
+    .status{
       white-space:normal;
       display:block;
       height:90rpx;
@@ -440,6 +456,13 @@ page{
   }
   .price{
     color: #fc3c00;
+  }
+  .productTotalQuantity{
+    position: absolute;
+    background: rgba(255,90,0,.5);
+    padding: 0 .2rem;
+    color: #fff;
+    left: 0;bottom:0;
   }
 }
 

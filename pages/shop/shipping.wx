@@ -1,0 +1,206 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="发货"></cc-header>
+    <ui-row-list border-left-indent style="margin-bottom:50px;">
+      <ui-row height="104r">
+        <ui-col width="90" vertical-align="middle">
+          物流费用
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="deliveryFee" value="{{detail.deliveryFee}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          收货人姓名
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="shipName" value="{{detail.shipName}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="98" vertical-align="middle">
+          收货地址
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="shipAddress" value="{{detail.shipAddress}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          电话
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="shipPhone" value="{{detail.shipPhone}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          物流编号
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="deliverySn" value="{{detail.deliverySn}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          邮编
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="shipZipCode" value="{{detail.shipZipCode}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          手机
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="shipMobile" value="{{detail.shipMobile}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          发货备注
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="memo" value="{{detail.memo}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <button type="primary" bindtap="submit" class="fixed" wx:if="{{!edit}}">提交</button>
+    <button type="primary" bindtap="save" class="fixed" wx:if="{{edit}}">修改</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {},
+    shipping: {},
+    edit: false
+  },
+  onLoad ({id, edit}) {
+    this.get(id)
+    this.setData({
+      edit: edit || false
+    })
+  },
+  get (id) {
+    api.orderShipping({
+      id: id //|| '8a9e457e66867291016686f6334a002c'
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        this.setData({
+          shipping: data,
+          detail: data.shippingSet[0] || {
+            deliveryType: {
+              typeId: data.deliveryType.typeId
+            },
+            shipName: data.shipName,
+            shipArea: data.shipArea,
+            shipAreaPath: data.shipAreaPath,
+            shipAddress: data.shipAddress,
+            shipZipCode: data.shipZipCode,
+            shipPhone: data.shipPhone,
+            shipMobile: data.shipMobile,
+            memo: data.memo,
+            deliveryFee: data.deliveryFee
+          }
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  submit () {
+    let list = []
+    this.data.shipping.orderItemSet.forEach(item => {
+      list.push({
+        productQuantity: item.productQuantity,
+        productId: item.product.productId,
+        skuCode: item.skuCode
+      })
+    })
+    let ship = Object.assign(this.data.shipping, {
+      id: this.data.shipping.orderId,
+      orderId: this.data.shipping.orderId,
+      typeId: this.data.detail.deliveryType.typeId,
+      shipping_deliveryCorpName: this.data.detail.deliveryCorpName,
+      shipping_deliveryFee: this.data.detail.deliveryFee,
+      shipping_shipName: this.data.detail.shipName,
+      shipping_shipAddress: this.data.detail.shipAddress,
+      shipping_shipPhone: this.data.detail.shipPhone,
+      shipping_deliverySn: this.data.detail.deliverySn,
+      shipping_shipZipCode: this.data.detail.shipZipCode,
+      shipping_shipMobile: this.data.detail.shipMobile,
+      shipping_memo: this.data.detail.memo,
+      shipping_shipAreaPath: this.data.detail.shipAreaPath,
+      deliveryItemSet: this.data.detail.deliveryItemSet || list
+    })
+    let data = {
+      model: JSON.stringify(ship),
+      _method: 'put'
+    }
+    Tips.loading()
+    api.orderShipping({
+      data: data,
+      method: 'POST',
+      id: this.data.shipping.orderId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+        Utils.prev.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  save () {
+    let data = {
+      id: this.data.shipping.orderId, // orderId
+      deliverySn: this.data.detail.deliverySn, // 物流编号
+      shipAreaPath: this.data.detail.shipAreaPath, // 收货地区
+      shippingName: this.data.detail.shipName, // 收货人姓名
+      shippingAddress: this.data.detail.shipAddress, // 收货人地址
+      shippingZipCode: this.data.detail.shipZipCode, // 收货人地址
+      shippingMobile: this.data.detail.shipMobile,
+      shippingMemo: this.data.detail.memo,
+      shippingCrop: this.data.detail.deliveryCorpName,
+      deliveryCorpName: this.data.detail.deliveryCorpName
+    }
+    Tips.loading()
+    api.deliverySnEdit({
+      data: data,
+      method: 'POST',
+      id: this.data.shipping.orderId
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+        Utils.prev.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1;
+}
+</style>

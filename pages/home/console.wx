@@ -139,8 +139,8 @@ export default {
       {}
     ],
     orders: [
-      {url: '/pages/shop/shop?paymentStatus=0', text: '待付款', icon: 'icon-fukuan'},
-      {url: '/pages/shop/shop?shippingStatus=0', text: '待发货', icon: 'icon-fahuo1'},
+      {url: '/pages/shop/shop?paymentStatus=0&orderStatus=1', text: '待付款', icon: 'icon-fukuan'},
+      {url: '/pages/shop/shop?paymentStatus=2&shippingStatus=0&orderStatus=1', text: '待发货', icon: 'icon-fahuo1'},
       {url: '/pages/shop/review', text: '待评价', icon: 'icon-ic-comment'},
       {url: '/pages/shop/refund', text: '退换/售后', icon: 'icon-shouhou1'}
     ],

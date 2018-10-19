@@ -1,225 +1,96 @@
 <template>
-  <view class="j_detail">
+  <view>
     <cc-header title="订单详情"></cc-header>
+
     <ui-row-list border-left-indent>
       <ui-row height="104r">
-        <ui-col width="90" vertical-align="middle">
-          订单状态
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <view style="width:100%">
-            [<text style="color:{{item.style}}" wx:if="{{detail.orderStatus === item.value}}" wx:for="{{orderStatus}}" wx:key="*this">{{item.text}}</text>]
-            [<text style="color:{{item.style}}" wx:if="{{detail.paymentStatus === item.value}}" wx:for="{{paymentStatus}}" wx:key="*this">{{item.text}}</text>]
-            [<text style="color:{{item.style}}" wx:if="{{detail.shippingStatus === item.value}}" wx:for="{{shippingStatus}}" wx:key="*this">{{item.text}}</text>]
-          </view>
-         </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          订单编号
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.orderSn}}
+        <ui-col class="title" vertical-align="middle">
+          <view style="width:100%">订单状态：<text class="orange">{{detail.text}}</text></view>
         </ui-col>
       </ui-row>
-      <ui-row height="104r">
-        <ui-col width="98" vertical-align="middle">
-          下单时间
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.addTime}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          商品总金额
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <text class="red">￥{{detail.productTotalPrice || 0}}元</text>
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          订单总金额
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <text class="red">￥{{detail.totalAmount || 0}}元</text>
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          积分抵扣
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          <text class="red">￥{{detail.integralMoney || 0}}元</text>
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          使用积分
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memberPoint}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          配送方式
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.deliveryType.name}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          配送费用
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.deliveryFee}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          支付方式
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.paymentConfig.name}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          支付手续费
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.paymentFee}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          商品重量
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.productWeight}}{{detail.productWeightUnit}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          附言
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memo}}
-        </ui-col>
-      </ui-row>
+      <view class="desc">
+        {{detail.prompt}}
+      </view>
     </ui-row-list>
-
     <view class="hr"></view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          收货人姓名
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.shipName}}
+        <ui-col class="title" vertical-align="middle">
+          收货信息
         </ui-col>
       </ui-row>
+      <view class="order_info">
+        <view><text>收货人：</text>{{detail.shipName}}</view>
+        <view><text>手机：</text>{{detail.shipMobile}}</view>
+        <view wx:if="{{detail.shipPhone}}"><text>电话：</text>{{detail.shipPhone}}</view>
+        <view><text>收货地址：</text>{{detail.shipAddress}}</view>
+      </view>
+    </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
       <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          收货地区
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.shipArea}}
+        <ui-col class="title" vertical-align="middle">
+          商品信息
         </ui-col>
       </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          收货地址
+      <ui-row height="200r" wx:for="{{detail.orderItemSet}}" wx:key="*this">
+        <ui-col width="200r" vertical-align="middle">
+          <image mode="aspectFit" src="http://img.jihui88.com/{{item.product.picPath}}"/>
         </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.shipAddress}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          邮编
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.shipZipCode}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          电话
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.shipPhone}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          手机
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.shipMobile}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          用户名
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memberObj.name || detail.memberObj.username}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          会员等级
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memberObj.memberRank.name}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          预存款余额
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memberObj.deposit}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          最后登录IP
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memberObj.loginIp}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          E-mail
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memberObj.email}}
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
-          积分
-        </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{detail.memberObj.memberRank.point}}
-        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" space-right="15">
+          <view style="width:100%">
+            <view class="title"> {{item.productName}} </view>
+            <view class="desc"> ￥{{item.productPrice}} ×{{item.productQuantity}}</view>
+          </view>
+         </ui-col>
       </ui-row>
     </ui-row-list>
+    <view class="hr"></view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col class="title" vertical-align="middle">
+          订单信息
+        </ui-col>
+      </ui-row>
+      <view class="order_info">
+        <view><text>订单号：</text>{{detail.orderSn}}</view>
+        <view><text>下单时间：</text>{{detail.addTime}}</view>
+        <view wx:if="{{detail.memo}}"><text>买家留言：</text>{{detail.memo}}</view>
+        <view><text>付款时间：</text>{{detail.paymentTime || '-'}}</view>
+        <view><text>发货时间：</text>{{detail.shippingTime || '-'}}</view>
+      </view>
+    </ui-row-list>
+    <view class="hr"></view>
 
+    <view style="height:80px;"></view>
+    <ui-fixed-view bottom="0" left="0" right="0">
+      <ui-row height="120r" class="footer">
+        <ui-col class="total" vertical-align="middle" space-left="15">
+          <view style="width:100%">
+            应付款:<text class="orange">￥{{detail.totalAmount}} 元</text>
+          </view>  
+        </ui-col>
+        <ui-col width="90" class="form_content primary" vertical-align="middle" bindtap="completed"
+          wx:if="{{detail.orderStatus === 'processed' && detail.shippingStatus === 'shipped'}}">
+          完成订单
+         </ui-col>
+        <ui-col width="60" class="form_content primary" vertical-align="middle" bindtap="shippedEdit" style="margin-left:10px"
+          wx:if="{{detail.orderStatus !== 'completed' && detail.orderStatus !== 'invalid' && detail.shippingStatus === 'shipped'}}">
+          修改
+        </ui-col>
+        <ui-col width="60" class="form_content primary" vertical-align="middle" bindtap="shipped" style="margin-left:10px"
+          wx:if="{{detail.orderStatus !== 'completed' && detail.orderStatus !== 'invalid' && detail.shippingStatus !== 'shipped'}}">
+          发货
+         </ui-col>
+      </ui-row>
+    </ui-fixed-view>
   </view>
 </template>
 
 <script>
-import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
@@ -263,44 +134,134 @@ let pageConf = {
   },
   get (id) {
     api.orderDetail({
-      id: id || 'ff8081815156ec210151674174c801b9'
+      id: id //|| 'ff80818159586b6501595a939850009d'
     }).then(res => {
       if (res.success) {
+        let detail = res.attributes.data
+        if (detail.shippingSet.length > 0) {
+          detail.shippingTime = detail.shippingSet[0].addTime
+        }
+        detail.orderLogSet.forEach(item => {
+          if (item.orderLogType === 'payment') {
+            detail.paymentTime = item.addTime
+          }
+        })
+        if (detail.orderStatus === 'completed') {
+          detail.text = '已完成'
+          if (detail.paymentStatus === 'paid' && detail.shippingStatus === 'shipped') {
+            detail.prompt = '交易已成功'
+          } else {
+            detail.prompt = '交易已结束'
+          }
+        } else if (detail.orderStatus === 'invalid') {
+          detail.text = '已作废'
+        } else if (detail.paymentStatus === 'unpaid') {
+          let date = new Date(detail.addTime).getTime() + 30*60*1000 - new Date().getTime()
+          if (date > 0) {
+            detail.text = '等待买家付款'
+            detail.prompt = '买家还有' + parseInt(date/60000) + '分钟来完成“付款”操作，逾期未完成，本交易将自动关闭'
+          } else {
+            detail.prompt = '“付款”操作已自动关闭'
+            detail.text = '买家未付款'
+          }
+        } else if (detail.paymentStatus === 'paid' && detail.shippingStatus === 'unshipped') {
+          detail.text = '等待您发货'
+          detail.prompt = '买家已付款，请您尽快发货。如果您无法发货，请及时与买家联系并说明情况'
+        } else if (detail.shippingStatus === 'shipped') {
+          if (detail.orderStatus === 'unprocessed') {
+            detail.text = '未处理'
+          } else if (detail.orderStatus === 'processed') {
+            detail.text = '已处理'
+          } else if (detail.orderStatus === 'completed') {
+            detail.text = '已完成'
+          } else {
+            detail.text = '已作废'
+          }
+          let date = new Date(detail.shippingTime).getTime() + 15*24*60*60*1000 - new Date().getTime()
+          if (date > 0) {
+            let day = parseInt(date / (24*60*60*1000))
+            let hour = parseInt(date / (60*60*1000)) % 24
+            detail.prompt = '买家还有' + day + '天' + hour + '小时' + '来完成本次交易的“确认收货“'
+            detail.text = '等待买家确认收货'
+          } else {
+            detail.text = '买家已确认收货'
+            detail.prompt = '交易已成功'
+          }
+        }
         this.setData({
-          detail: res.attributes.data
+          detail: detail
         })
       } else {
         Tips.error(res.msg)
       }
     })
   },
-  submit () {
-    if (!this.validate()) {
-      return;
-    }
-    let detail = this.data.detail
-    let data = {
-      model: JSON.stringify(detail),
-      _method: 'put'
-    }
+  completed () {
     Tips.loading()
-    api.orderRefundDetail({
-      data: data,
+    api.orderCompleted({
       method: 'POST',
-      id: detail.disputeId || ''
+      id: detail.orderId
     }).then(res => {
       Tips.loaded()
       if (res.success) {
-        Tips.success('处理成功')
+        Tips.success('订单完成')
+        this.get()
       } else {
         Tips.error(res.msg)
       }
     })
+  },
+  shipped () {
+    wx.navigateTo({
+      url: 'shipping?id=' + this.data.detail.orderId
+    })
+  },
+  shippedEdit () {
+    wx.navigateTo({
+      url: 'shipping?id=' + this.data.detail.orderId + '&edit=01'
+    })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
-
+page{
+  background: #f1f1f1
+}
+image{
+  max-width: 180rpx;
+  max-height: 180rpx;
+}
+.title{
+  font-size: 16px;
+}
+.desc{
+  color: #9f9f9f;
+  padding: 10px 0;
+  font-size: 12px;
+}
+.order_info{
+  color: #595959;
+  font-size: 12px;
+  padding: 5px 0;
+  line-height: 25px;
+  text{
+    color: #a8a8a8;
+    text-align: right;
+    width: 80px;
+    display: inline-block;
+  }
+}
+.footer{
+  background: #fafafa;
+  font-size: 16px;
+}
+.orange{
+  color: #ff7300;
+}
+.primary{
+  background: #14a4ff;
+  color: #fff;
+  text-align: center;
+}
 </style>

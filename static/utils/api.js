@@ -170,6 +170,11 @@ const coupon = (params) => http(params, host + 'coupon/list')
 const couponDetail = (params) => http(params, host + 'coupon/detail' + (params.id ? '/' + params.id : ''))
 const orderBill = (params) => http(params, host + 'deliverycorpSingle/list')
 const orderBillDetail = (params) => http(params, host + 'deliverycorpSingle/detail' + (params.id ? '/' + params.id : ''))
+// 订单详情
+const orderCompleted = (params) => http(params, host + 'order/completed/' + params.id)
+const orderShipping = (params) => http(params, host + 'orderShipping/detail/' + params.id)
+const orderPayment = (params) => http(params, host + 'orderPayment/detail/' + params.id)
+const deliverySnEdit = (params) => http(params, host + 'orderPayment/deliverySnEdit')
 
 
 module.exports = {
@@ -216,5 +221,6 @@ module.exports = {
   member, memberDetail, memberRank, memberRankDetail, memberAttr, memberAttrDetail, memberBatchDel,
   /***************** 商城 ************/
   order, webinfo, orderRefund, orderRefundDetail, orderReview, orderReviewDetail, orderPay, orderPayDetail, orderDetail, orderDelivery,
+  orderCompleted, orderShipping, orderPayment, deliverySnEdit,
   coupon, couponDetail, orderBill, orderBillDetail
 }
