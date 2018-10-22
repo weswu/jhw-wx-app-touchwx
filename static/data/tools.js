@@ -4,7 +4,7 @@ let data = [
     children: [
       { url: '/pages/pc/website', text: '站点数据管理', icon: 'icon-shuju' },
       { url: '/pages/static/seo', text: 'SEO管理', icon: 'icon-SEO' },
-      { url: '/pages/static/baian', text: '域名备案', icon: 'icon-yuming' },
+      { url: '/pages/static/beian', text: '域名备案', icon: 'icon-yuming' },
       { url: '/pages/static/bind', text: '域名绑定', icon: 'icon-yuming' },
       { url: '/pages/static/sitemap', text: 'Sitemap生成', icon: 'icon-sitemap' },
       { url: '/pages/static/batch', text: '批量提交', icon: 'icon-tijiao' },

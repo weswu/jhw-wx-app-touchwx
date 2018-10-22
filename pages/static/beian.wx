@@ -91,7 +91,11 @@
             <input placeholder="例如：abc.com" bindinput="input" id="address" value="{{detail.address}}"/>
           </ui-col>
         </ui-row>
-        
+        <ui-row height="90r">
+          <ui-col class="desc" vertical-align="middle">
+            请您上传主办单位有效证件扫描件，证件应不大于400KB。
+          </ui-col>
+        </ui-row>
         <ui-row height="240r">
           <ui-col width="70" vertical-align="middle">
             域名证书
@@ -332,7 +336,7 @@ let pageConf = {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT + 59/750*wx.WIN_WIDTH,
     detail:{},
     bindDetail: {},
-    current1: 2,
+    current1: 0,
     imgList: [
       {src: 'http://img.jihui88.com/wcd/upload//j//j2//jihui//picture//2018//05//22/f35c8add-c844-4019-b506-d6c6c8c6038b.jpg'},
       {src: 'http://img.jihui88.com/upload/j/j2/jihui88/picture/2018/05/24/0aadd6ac-98ad-4cb9-9414-a0e689c12078.jpg'},

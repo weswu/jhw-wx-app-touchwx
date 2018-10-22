@@ -1,7 +1,7 @@
 <template>
   <view class="j_detail">
     <cc-header title="物流单据详情"></cc-header>
-    <view class="j_tip">提示：添加单据背景图和打印项，请到pc端操作</view>
+    <view class="j_tip">温馨提醒：添加单据背景图和打印项，请到pc端操作</view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">

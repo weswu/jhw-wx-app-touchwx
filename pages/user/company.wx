@@ -1,7 +1,7 @@
 <template>
   <view>
     <cc-header title="公司简介"></cc-header>
-    <view class="j_tip">提示：请到pc端编辑</view>
+    <view class="j_tip">温馨提醒：请到电脑端查看编辑</view>
     <view class="j_editor">
       <rich-text nodes="{{detail.edesc}}"/>
     </view>

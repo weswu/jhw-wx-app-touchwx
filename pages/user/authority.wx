@@ -3,7 +3,7 @@
     <cc-header title="设置用户权限"></cc-header>
 
     <view class="j_tip">
-      提示：权限功能只用于pc端员工登录设置
+      温馨提醒：权限功能只用于pc端员工登录设置
     </view>
 
     <checkbox-group bindchange="checkboxChange">

@@ -2,42 +2,9 @@
   <view>
     <cc-header title="账号信息"></cc-header>
    
-    <view class="wx-content-info" wx:if="{{imageSrc}}" style="{{isShowImg ? 'display:block' : 'display:none'}}">
-      <view wx:if="{{isShowImg}}" class="wx-corpper" style="width:{{cropperInitW}}rpx;height:{{cropperInitH}}rpx;background:#000">
-        <view class="wx-corpper-content" style="width:{{cropperW}}rpx;height:{{cropperH}}rpx;left:{{cropperL}}rpx;top:{{cropperT}}rpx">
-          <image src="{{imageSrc}}" style="width:{{cropperW}}rpx;height:{{cropperH}}rpx"></image>
-          <view class="wx-corpper-crop-box" bindtouchstart="contentStartMove" bindtouchmove="contentMoveing" style="width:{{cutW}}rpx;height:{{cutH}}rpx;left:{{cutL}}rpx;top:{{cutT}}rpx">
-            <view class="wx-cropper-view-box">
-              <!-- <view class="wx-cropper-viewer">
-                <image src="{{imageSrc}}" style="width:{{cropperW}}rpx;height:{{cropperH}}rpx;left:{{cropperL - cutL}}rpx;top:{{cropperT - cutT}}rpx"></image>
-              </view> -->
-              <view class="wx-cropper-dashed-h"></view>
-              <view class="wx-cropper-dashed-v"></view>
-              <view class="wx-cropper-line-t" data-drag="top" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-line-r" data-drag="right" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-line-b" data-drag="bottom" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-line-l" data-drag="left" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-point point-t" data-drag="top" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-point point-tr" data-drag="topTight"></view>
-              <view class="wx-cropper-point point-r" data-drag="right" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-point point-rb" data-drag="rightBottom" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-point point-b" data-drag="bottom" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-point point-bl" data-drag="bottomLeft"></view>
-              <view class="wx-cropper-point point-l" data-drag="left" catchtouchstart="dragStart" catchtouchmove="dragMove"></view>
-              <view class="wx-cropper-point point-lt" data-drag="leftTop"></view>
-            </view>
-          </view>
-        </view>
-        <!-- <view class="wx-cropper-drag-box"></view> -->
-      </view>
-      <canvas canvas-id="myCanvas" style="position:absolute;border: 1px solid red; width:{{qualityWidth}}px;height:{{qualityWidth/innerAspectRadio}}px;top:-9999px;left:-9999px;"></canvas>
-      <button wx:if="{{isShowImg}}" type="primary" bindtap="getImageInfo" style="position:fixed;bottom:120rpx;width:30%;left:20%;transform:translate3d(-50%,0,0)"> 点击生成图片 </button>
-
-      <button wx:if="{{isShowImg}}" type="primary" bindtap="closeImage" style="position:fixed;bottom:120rpx;width:30%;left:60%;transform:translate3d(-50%,0,0)"> 关闭 </button>
-    </view>
 
     <view class="header">
-      <view class="logo" bindtap="getImage">
+      <view class="logo" bindtap="goToCropper">
         <image src="http://img.jihui88.com/{{accountInfo.headimg}}" binderror="error"/>
       </view>
     </view>
@@ -97,29 +64,6 @@
 </template>
 
 <script>
-// pages/wx-cropper/index.js
-// 手机的宽度
-var windowWRPX = 750
-// 拖动时候的 pageX
-var pageX = 0
-// 拖动时候的 pageY
-var pageY = 0
-
-var pixelRatio = wx.getSystemInfoSync().pixelRatio
-
-// 调整大小时候的 pageX
-var sizeConfPageX = 0
-// 调整大小时候的 pageY
-var sizeConfPageY = 0
-
-var initDragCutW = 0
-var initDragCutL = 0
-var initDragCutH = 0
-var initDragCutT = 0
-var qualityWidth = 1080
-var innerAspectRadio = 1
-// 移动时 手势位移与 实际元素位移的比
-var dragScaleP = 2
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
@@ -131,33 +75,7 @@ export default {
   },
   data: {
     user: {},
-    accountInfo: {},
-    // imageSrc: 'https://lpd.hi-finance.com.cn/20170918001.jpg',
-    // 'https://lpd.hi-finance.com.cn/9019013.png'
-    imageSrc: 'https://lpd.hi-finance.com.cn/20170918001.jpg',
-    isShowImg: false,
-    // 初始化的宽高
-    cropperInitW: windowWRPX,
-    cropperInitH: windowWRPX,
-    // 动态的宽高
-    cropperW: windowWRPX,
-    cropperH: windowWRPX,
-    // 动态的left top值
-    cropperL: 0,
-    cropperT: 0,
-
-    // 图片缩放值
-    scaleP: 0,
-    imageW: 0,
-    imageH: 0,
-
-    // 裁剪框 宽高
-    cutW: 0,
-    cutH: 0,
-    cutL: 0,
-    cutT: 0,
-    qualityWidth: qualityWidth,
-    innerAspectRadio: innerAspectRadio
+    accountInfo: {}
   },
   onLoad () {
     let user = getApp().globalData.user
@@ -165,6 +83,18 @@ export default {
     this.setData({
       user: user,
       accountInfo: getApp().globalData.accountInfo
+    })
+    
+    let that = this
+    getApp().getUser(res => {
+      that.setData({
+        user: res.user
+      })
+      getApp().getAccountInfo(res => {
+        that.setData({
+          accountInfo: res
+        })
+      })
     })
   },
   error () {
@@ -177,6 +107,11 @@ export default {
       'accountInfo.nickName': e.detail.value
     })
     this.submit()
+  },
+  goToCropper () {
+    wx.navigateTo({
+      url: '/pages/components/jCropper?src=' + this.data.accountInfo.headimg
+    })
   },
   submit () {
     api.accountInfo({
@@ -192,291 +127,11 @@ export default {
         Tips.success("保存成功")
       }
     })
-  },
-  getImage: function () {
-    var _this = this
-    wx.chooseImage({
-      count: 1, // 默认1
-      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-      success: function (res) {
-        _this.setData({
-          imageSrc: res.tempFilePaths[0],
-        })
-        _this.loadImage();
-      },
-    })
-  },
-  loadImage: function () {
-    var _this = this
-    wx.showLoading({
-      title: '图片加载中...',
-    })
-
-    wx.getImageInfo({
-      src: _this.data.imageSrc,
-      // src:src,
-      success: function success(res) {
-        innerAspectRadio = res.width / res.height;
-        // 根据图片的宽高显示不同的效果   保证图片可以正常显示
-        if (innerAspectRadio >= 1) {
-          _this.setData({
-            cropperW: windowWRPX,
-            cropperH: windowWRPX / innerAspectRadio,
-            // 初始化left right
-            cropperL: Math.ceil((windowWRPX - windowWRPX) / 2),
-            cropperT: Math.ceil((windowWRPX - windowWRPX / innerAspectRadio) / 2),
-            // 裁剪框  宽高  
-            cutW: windowWRPX - 200,
-            cutH: windowWRPX / innerAspectRadio - 200,
-            cutL: Math.ceil((windowWRPX - windowWRPX + 200) / 2),
-            cutT: Math.ceil((windowWRPX / innerAspectRadio - (windowWRPX / innerAspectRadio - 200)) / 2),
-            // 图片缩放值
-            scaleP: res.width * pixelRatio / windowWRPX,
-            // 图片原始宽度 rpx
-            imageW: res.width * pixelRatio,
-            imageH: res.height * pixelRatio,
-
-            innerAspectRadio: innerAspectRadio
-          })
-        } else {
-          _this.setData({
-            cropperW: windowWRPX * innerAspectRadio,
-            cropperH: windowWRPX,
-            // 初始化left right
-            cropperL: Math.ceil((windowWRPX - windowWRPX * innerAspectRadio) / 2),
-            cropperT: Math.ceil((windowWRPX - windowWRPX) / 2),
-            // 裁剪框的宽高
-            cutW: windowWRPX * innerAspectRadio - 50,
-            cutH: 200,
-            cutL: Math.ceil((windowWRPX * innerAspectRadio - (windowWRPX * innerAspectRadio - 50)) / 2),
-            cutT: Math.ceil((windowWRPX - 200) / 2),
-            // 图片缩放值
-            scaleP: res.width * pixelRatio / windowWRPX,
-            // 图片原始宽度 rpx
-            imageW: res.width * pixelRatio,
-            imageH: res.height * pixelRatio,
-
-            innerAspectRadio: innerAspectRadio
-          })
-        }
-        _this.setData({
-          isShowImg: true
-        })
-        wx.hideLoading()
-      }
-    })
-  },
-  // 拖动时候触发的touchStart事件
-  contentStartMove(e) {
-    pageX = e.touches[0].pageX
-    pageY = e.touches[0].pageY
-  },
-  // 拖动时候触发的touchMove事件
-  contentMoveing(e) {
-    var _this = this
-    // _this.data.cutL + (e.touches[0].pageX - pageX)
-    // console.log(e.touches[0].pageX)
-    // console.log(e.touches[0].pageX - pageX)
-    var dragLengthX = (pageX - e.touches[0].pageX) * dragScaleP
-    var dragLengthY = (pageY - e.touches[0].pageY) * dragScaleP
-    var minX = Math.max(_this.data.cutL - (dragLengthX), 0)
-    var minY = Math.max(_this.data.cutT - (dragLengthY), 0)
-    var maxX = _this.data.cropperW - _this.data.cutW
-    var maxY = _this.data.cropperH - _this.data.cutH
-    this.setData({
-      cutL: Math.min(maxX, minX),
-      cutT: Math.min(maxY, minY),
-    })
-    console.log(`${maxX} ----- ${minX}`)
-    pageX = e.touches[0].pageX
-    pageY = e.touches[0].pageY
-  },
-  // 获取图片
-  getImageInfo() {
-
-    var _this = this
-
-    wx.showLoading({
-      title: '图片生成中...',
-    })
-    // 将图片写入画布
-    const ctx = wx.createCanvasContext('myCanvas')
-    ctx.drawImage(_this.data.imageSrc, 0, 0, qualityWidth, qualityWidth / innerAspectRadio);
-    ctx.draw(true, () => {
-      // 获取画布要裁剪的位置和宽度   均为百分比 * 画布中图片的宽度    保证了在微信小程序中裁剪的图片模糊  位置不对的问题 canvasT = (_this.data.cutT / _this.data.cropperH) * (_this.data.imageH / pixelRatio)
-      var canvasW = (_this.data.cutW / _this.data.cropperW) * qualityWidth
-      var canvasH = (_this.data.cutH / _this.data.cropperH) * qualityWidth / innerAspectRadio
-      var canvasL = (_this.data.cutL / _this.data.cropperW) * qualityWidth
-      var canvasT = (_this.data.cutT / _this.data.cropperH) * qualityWidth / innerAspectRadio
-      console.log(`canvasW:${canvasW} --- canvasH: ${canvasH} --- canvasL: ${canvasL} --- canvasT: ${canvasT} -------- _this.data.imageW: ${_this.data.imageW}  ------- _this.data.imageH: ${_this.data.imageH} ---- pixelRatio ${pixelRatio}`)
-      wx.canvasToTempFilePath({
-        x: canvasL,
-        y: canvasT,
-        width: canvasW,
-        height: canvasH,
-        destWidth: canvasW,
-        destHeight: canvasH,
-        quality:0.5,
-        canvasId: 'myCanvas',
-        success: function (res) {
-          wx.hideLoading()
-          // 成功获得地址的地方
-          console.log(res.tempFilePath)
-          wx.uploadFile({
-            url: 'https://www.jihui88.com/commonutil/uploadUtil2?username=' + getApp().globalData.user.username + '&replace=00&attId=&id=all',
-            filePath: res.tempFilePath,//临时路径
-            name: 'Filedata',
-            formData: {
-              skey: wx.getStorageSync('skey')
-            },
-            success: function (res) {
-              if (res.statusCode === 200) {
-                let src = res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
-                _this.setData({
-                  'accountInfo.headimg': src
-                })
-                _this.submit()
-              }
-              _this.setData({
-                isShowImg: false
-              })
-            }
-          })
-        }
-      })
-    })
-  },
-  // 设置大小的时候触发的touchStart事件
-  dragStart(e) {
-    var _this = this
-    sizeConfPageX = e.touches[0].pageX
-    sizeConfPageY = e.touches[0].pageY
-    initDragCutW = _this.data.cutW
-    initDragCutL = _this.data.cutL
-    initDragCutT = _this.data.cutT
-    initDragCutH = _this.data.cutH
-  },
-  // 设置大小的时候触发的touchMove事件
-  dragMove(e) {
-    var _this = this
-    var dragType = e.target.dataset.drag
-    switch (dragType) {
-      case 'right':
-        var dragLength = (sizeConfPageX - e.touches[0].pageX) * dragScaleP
-        if (initDragCutW >= dragLength) {
-          // 如果 移动小于0 说明是在往下啦  放大裁剪的高度  这样一来 图片的高度  最大 等于 图片的top值加 当前图片的高度  否则就说明超出界限
-          if (dragLength < 0 && _this.data.cropperW > initDragCutL + _this.data.cutW) {
-            this.setData({
-              cutW: initDragCutW - dragLength,
-              cutH: initDragCutW - dragLength
-            })
-          }
-          // 如果是移动 大于0  说明在缩小  只需要缩小的距离小于原本裁剪的高度就ok
-          if (dragLength > 0) {
-            this.setData({
-              cutW: initDragCutW - dragLength,
-              cutH: initDragCutW - dragLength
-            })
-          }
-          else {
-            return
-          }
-        } else {
-          return
-        }
-        break;
-      case 'left':
-        var dragLength = (dragLength = sizeConfPageX - e.touches[0].pageX) * dragScaleP
-        console.log(dragLength)
-        if (initDragCutW >= dragLength && initDragCutL > dragLength) {
-          if (dragLength < 0 && Math.abs(dragLength) >= initDragCutW) return
-          this.setData({
-            cutL: initDragCutL - dragLength,
-            cutH: initDragCutW + dragLength,
-            cutW: initDragCutW + dragLength
-          })
-        } else {
-          return;
-        }
-        break;
-      case 'top':
-        var dragLength = (sizeConfPageY - e.touches[0].pageY) * dragScaleP
-        if (initDragCutH >= dragLength && initDragCutT > dragLength) {
-          if (dragLength < 0 && Math.abs(dragLength) >= initDragCutH) return
-          this.setData({
-            cutT: initDragCutT - dragLength,
-            cutH: initDragCutH + dragLength,
-            cutW: initDragCutH + dragLength
-          })
-        } else {
-          return;
-        }
-        break;
-      case 'bottom':
-        var dragLength = (sizeConfPageY - e.touches[0].pageY) * dragScaleP
-        // console.log(_this.data.cropperH > _this.data.cutT + _this.data.cutH)
-        console.log(dragLength)
-        console.log(initDragCutH >= dragLength)
-        console.log(_this.data.cropperH > initDragCutT + _this.data.cutH)
-        // 必须是 dragLength 向上缩小的时候必须小于原本的高度
-        if (initDragCutH >= dragLength) {
-          // 如果 移动小于0 说明是在往下啦  放大裁剪的高度  这样一来 图片的高度  最大 等于 图片的top值加 当前图片的高度  否则就说明超出界限
-          if (dragLength < 0 && _this.data.cropperH > initDragCutT + _this.data.cutH) {
-            this.setData({
-              cutH: initDragCutH - dragLength,
-              cutW: initDragCutH - dragLength
-            })
-          }
-          // 如果是移动 大于0  说明在缩小  只需要缩小的距离小于原本裁剪的高度就ok
-          if (dragLength > 0) {
-            this.setData({
-              cutH: initDragCutH - dragLength,
-              cutW: initDragCutH - dragLength
-            })
-          }
-          else {
-            return
-          }
-        } else {
-          return
-        }
-        break;
-      case 'rightBottom':
-        var dragLengthX = (sizeConfPageX - e.touches[0].pageX) * dragScaleP
-        var dragLengthY = (sizeConfPageY - e.touches[0].pageY) * dragScaleP
-        if (initDragCutH >= dragLengthY && initDragCutW >= dragLengthX) {
-          // bottom 方向的变化
-          if ((dragLengthY < 0 && _this.data.cropperH > initDragCutT + _this.data.cutH) || (dragLengthY > 0)) {
-            this.setData({
-              cutH: initDragCutH - dragLengthY,
-              cutW: initDragCutH - dragLengthY
-            })
-          }
-
-          // right 方向的变化
-          if ((dragLengthX < 0 && _this.data.cropperW > initDragCutL + _this.data.cutW) || (dragLengthX > 0)) {
-            this.setData({
-              cutH: initDragCutW - dragLengthX,
-              cutW: initDragCutH - dragLengthX
-            })
-          }
-          else {
-            return
-          }
-        } else {
-          return
-        }
-        break;
-      default:
-        break;
-    }
   }
 }
 </script>
 
 <style lang="less">
-@import '../../static/styles/cropper';
 page{
   background: #f1f1f1
 }

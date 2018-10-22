@@ -1,7 +1,7 @@
 <template>
   <view class="j_detail">
     <cc-header title="员工详情"></cc-header>
-    <view class="j_tip">提示：登录页面打勾'使用员工账号登录'，即可绑定微信和QQ登录</view>
+    <view class="j_tip">温馨提醒：登录页面打勾'使用员工账号登录'，即可绑定微信和QQ登录</view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
