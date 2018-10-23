@@ -87,6 +87,10 @@ const seoTemplateDetail = (params) => http(params, host + 'seoTemplate/detail')
 const attachment = (params) => http(params, pcHost + 'third_app/attachment/list')
 const attachmentSave = (params) => http(params, pcHost + 'third_app/attachment/save/' + params.id)
 
+// seo管理
+const keywords = (params) => http(params, host + 'keywords/list')
+const keywordsDetail = (params) => http(params, host + 'keywords/detail' + (params ? '/' + params.id : ''))
+
 
 /***************** 公司信息 ************/
 const enterprise = (params) => http(params, host + 'enterprise/detail' + (params ? '/' + params.id : ''))
@@ -200,6 +204,8 @@ module.exports = {
   seoNav, seoNavDetail,
   seoDetail, seoSave, seoTemplate, seoTemplateDetail,
   attachment, attachmentSave,
+  // seo管理
+  keywords, keywordsDetail,
   /***************** 公司信息 ************/
   enterprise, 
   link, linkDetail,

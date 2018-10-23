@@ -1,0 +1,39 @@
+<template>
+  <view>
+    <cc-header title="{{title}}"></cc-header>
+    <view class="j_tip">温馨提醒：请到电脑端查看编辑</view>
+    <view class="j_editor">
+      <rich-text nodes="{{edesc}}"/>
+    </view>
+  </view>
+</template>
+
+<script>
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    title: '',
+    edesc: ''
+  },
+  onLoad (e) {
+    if (e.desc === 'null') e.desc = ''
+    this.setData({
+      title: e.title,
+      edesc: e.desc || ''
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.j_editor{
+  padding: 10px;background:#fff;
+}
+</style>

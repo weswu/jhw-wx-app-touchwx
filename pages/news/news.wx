@@ -12,7 +12,7 @@
     
     <!-- body -->
     <ui-row-list>
-      <ui-row height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
         <ui-col vertical-align="middle" align="center" width="123r" data-index="{{index}}" bindtap="toggle">
           <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="18" wx:if="{{item._checked}}"></icon>

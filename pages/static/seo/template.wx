@@ -1,0 +1,195 @@
+<template>
+  <view>
+    <cc-header title="SEO模板配置"></cc-header>
+
+    <cc-lan lan="{{true}}" bindchange="lanChante">
+      <view slot="category" style="color:#12bedb;font-size:12px;" bindtap="openPopup">
+        <text>{{category[active].text}}</text>
+        <i class="iconfont icon-xiangxiajiantoushixin {{show ? 'active' : ''}}" style="color:#12bedb;font-size:10px;"></i>
+      </view>
+    </cc-lan>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="85" vertical-align="middle">
+          SEO标题：
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="seoTitle" value="{{detail.seoTitle}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="85" vertical-align="middle">
+          SEO关键字：
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <input class="desc" placeholder="请填写" bindinput="input" id="seoKey" value="{{detail.seoKey}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104">
+        <ui-col width="80" vertical-align="middle">
+          SEO描述：
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea class="desc" placeholder="限250字符内，加联系电话或邮件" style="width:100%;height: 80px;margin-top:10px;"
+            bindinput="input" id="seoDescription" value="{{detail.seoDescription}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <button type="primary" bindtap="submit" style="margin: 35px 15px 15px 15px">提交</button>
+
+    <ui-popup cropout show="{{show }}" position="top" top="{{ top }}" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
+      <view class="top_pop">
+        <ui-row-list border-left-indent>
+          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="*this" data-index="{{index}}" bindtap="change">
+            <ui-col vertical-align="middle" class="{{index === active ? 'active' : ''}}">
+              {{item.text}}
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{active === index}}">
+              <i class="iconfont icon-gou"/>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+      </view>
+    </ui-popup>
+  </view>
+</template>
+
+<script>
+import api from '../../../static/utils/api'
+import Utils from '../../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header',
+      'cc-lan': '../../../packages/cc-lan'
+    }
+  },
+  data: {
+    detail: {},
+    list: [],
+    // lan
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    top: 66,
+    show: false,
+    active: 0,
+    category: [
+      { text: '基本栏目模板配置', value: '0' },
+      { text: '新闻分类页模板配置', value: '1' },
+      { text: '产品分类页模板配置', value: '2' },
+      { text: '新闻详细页模板配置', value: '3' },
+      { text: '产品详细页模板配置', value: '4' }
+    ],
+  },
+  onLoad () {
+    this.get()
+    this.setData({
+      top: this.data.popup_NAV_HEIGHT + 60/750*wx.WIN_WIDTH
+    })
+  },
+  get () {
+    api.seoTemplate().then(res => {
+      if (res.success) {
+        let data = res.attributes
+        if (!data.commonList.page) data.commonList.page = 'common'
+        if (!data.news_categoryList.page) data.news_categoryList.page = 'news_category'
+        if (!data.product_categoryList.page) data.product_categoryList.page = 'product_category'
+        if (!data.news_detailList.page) data.news_detailList.page = 'news_detail'
+        if (!data.product_detailList.page) data.product_detailList.page = 'product_detail'
+        let list = []
+        list.push(data.commonList)
+        list.push(data.news_categoryList)
+        list.push(data.product_categoryList)
+        list.push(data.news_detailList)
+        list.push(data.product_detailList)
+        this.setData({
+          list: list,
+          detail: list[0]
+        })
+      }
+    })
+  },
+  input (e) {
+    const fieldName = e.currentTarget.id;
+    var field = "detail." + fieldName
+    this.setData({
+      [field]: e.detail.value
+    })
+  },
+  submit () {
+    let detail = this.data.detail
+    let data = {
+      templatePage: detail.page,
+      seoTitle: detail.seoTitle,
+      seoKey: detail.seoKey,
+      seoDescription: detail.seoDescription
+    }
+    api.seoTemplateDetail({
+      data: data,
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('保存成功')
+      }
+    })
+  },
+  // 下拉
+  openPopup (e) {
+    this.setData({
+      show: !this.data.show
+    })
+  },
+  popHide () {
+    this.setData({
+      show:false
+    })
+  },
+  popShow () {
+    this.setData({
+      show:true
+    })
+  },
+  change (e) {
+    let index = e.currentTarget.dataset.index
+    this.setData({
+      active: index
+    })
+    this.popHide()
+    this.setData({
+      detail: this.data.list[index] || {
+        seoTitle: '',
+        seoKey: '',
+        seoDescription: ''
+      }
+    })
+  },
+  lanChante () {
+    this.get()
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.icon-xiangxiajiantoushixin{
+  font-size: 10px;
+  color: #686868;
+  display: inline-block;
+  transform:rotate(0deg);
+  transition: all .3s ease-in;
+  &.active{
+    transform:rotate(180deg);
+    color:#12bedb!important;
+  }
+}
+.icon-gou{
+  color:#12bedb;
+  font-size:12px;
+}
+.top_pop .active{
+  color:#12bedb;
+}
+</style>

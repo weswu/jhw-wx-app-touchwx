@@ -91,6 +91,14 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
+      <ui-row height="104r" url="/pages/components/jContent?title=新闻内容&desc={{detail.content}}" wx:if="{{detail.newsId}}" hover-class="none">
+        <ui-col width="60" vertical-align="middle">
+          新闻内容
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
+      </ui-row>
       <ui-row height="104r" url="/pages/components/jTag?type=news&id={{detail.newsId}}&tagMapStore={{detail.tagMap}}" wx:if="{{detail.newsId}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
           新闻标签
@@ -120,6 +128,7 @@
       </view>
     </ui-popup>
 
+    <view style="height:80px"></view>
     <ui-fixed-view bottom="0" left="0" right="0">
       <ui-row height="82r" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
@@ -130,7 +139,6 @@
         </ui-col>
       </ui-row>
     </ui-fixed-view>
-    <view style="height:80px"></view>
   </view>
  </template>
 
@@ -306,5 +314,8 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1;
+}
 </style>
 

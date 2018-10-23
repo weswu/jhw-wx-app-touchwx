@@ -1,73 +1,17 @@
 <template>
   <view>
-    <ui-nav-bar slot="nav-bar" class="nav_bar" custom-style="{{ navBarStyle }}">
-      <ui-row height="46">
-        <ui-col vertical-align="middle" align="center" width="35" bindtap="navigateBack">
-          <i class="iconfont icon-xiangzuo" style="font-size: 20px;"></i>
+    <cc-header title="SEO管理"></cc-header>
+    <ui-row-list border-left-indent>
+      <ui-row height="102r" border-bottom hover-class="none" url="seo/{{item.value}}"
+        wx:for="{{list}}" wx:key="*this">
+        <ui-col class="text" vertical-align="middle">
+          {{item.text}}
         </ui-col>
-        <ui-col vertical-align="middle">
-          <ui-tabs
-          ink-bar
-          ink-bar-style="{{ inkBarStyle }}"
-          tab-style="{{tabStyle}}"
-          width="{{ width-140 }}" index="{{ current }}" bindchange="handleChange">
-            <ui-tab>
-              <view class="">SEO基础设置</view>
-            </ui-tab>
-            <ui-tab>
-              <view class="">SEO模板配置</view>
-            </ui-tab>
-          </ui-tabs>
-        </ui-col>
-        <ui-col vertical-align="middle" align="center" width="100">
-          <!-- <ui-icon type="more" size="16" color="#fff"></ui-icon> -->
+        <ui-col width="30" vertical-align="middle">
+          <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-    </ui-nav-bar>
-    <view style="height:{{NAV_HEIGHT}}px"></view>
-
-    <cc-lan website="{{current === 0}}" lan="{{current === 1}}" bindlayout="layoutChante" bindchange="lanChante">
-      <view slot="category" style="color:#12bedb;font-size:12px;" bindtap="openPopup">
-        <text wx:if="{{current === 0}}">{{category[index1].text}}</text>
-        <text wx:if="{{current === 1}}">{{category2[index2].text}}</text>
-        <i class="iconfont icon-xiangxiajiantoushixin {{show ? 'active' : ''}}" style="color:#12bedb;font-size:10px;"></i>
-      </view>
-    </cc-lan>
-
-    <ui-popup cropout show="{{show }}" position="top" top="{{ top }}" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
-      <view class="top_pop">
-        <ui-row-list border-left-indent>
-          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="*this" data-index="{{index}}" bindtap="change" wx:if="{{current === 0}}">
-            <ui-col vertical-align="middle" class="{{index === index1 ? 'active' : ''}}">
-              {{item.text}}
-            </ui-col>
-            <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{index1 === index}}">
-              <i class="iconfont icon-gou"/>
-            </ui-col>
-          </ui-row>
-          <ui-row height="43" border-bottom wx:for="{{category2}}" wx:key="*this" data-index="{{index}}" bindtap="change" wx:if="{{current === 1}}">
-            <ui-col vertical-align="middle" class="{{index === index2 ? 'active' : ''}}">
-              {{item.text}}
-            </ui-col>
-            <ui-col vertical-align="middle" align="right" width="40" space-right="15">
-              <i class="iconfont icon-gou" wx:if="{{index1 === index && current === 0}}"></i>
-              <i class="iconfont icon-gou" wx:if="{{index2 === index && current === 1}}"></i>
-            </ui-col>
-          </ui-row>
-        </ui-row-list>
-      </view>
-    </ui-popup>
-
-    <swiper style="height:{{ contentHeight }}px" class="content" current="{{ current }}" bindchange="handleContentChange">
-      <swiper-item>
-        <scroll-view scroll-y style="height:{{DEFAULT_CONTENT_HEIGHT}}px" bindscrolltolower="loadmore">
-          <seo-base id="base" index="{{index1}}" type="{{category[index1].value}}"/>
-        </scroll-view>
-      </swiper-item>
-      <swiper-item>
-        <seo-template id="template" index="{{index2}}" type="{{category2[index2].value}}"/>
-      </swiper-item>
-    </swiper>
+    </ui-row-list>
   </view>
 </template>
 
@@ -75,138 +19,22 @@
 export default {
   config: {
     usingComponents: {
-      'seo-base': '../../packages/seo-base',
-      'seo-template': '../../packages/seo-template',
-      'cc-lan': '../../packages/cc-lan'
-    },
-    disableScroll: true
+      'cc-header': '../../packages/cc-header'
+    }
   },
   data : {
-    inkBarStyle:{
-      'border-bottom': '2px solid #fff', 
-      'width': '50%' ,
-      'top':'-4px'
-    },
-    tabStyle:{
-      'color':'#fff'
-    },
-    DEFAULT_CONTENT_HEIGHT:wx.DEFAULT_CONTENT_HEIGHT - 60/750*wx.WIN_WIDTH,
-    width:wx.WIN_WIDTH,
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
-    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
-    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
-    current: 0,
-    contentHeight: wx.DEFAULT_CONTENT_HEIGHT - 60/750*wx.WIN_WIDTH,
-    tabsWidth: wx.WIN_WIDTH - 70,
-    navBarStyle:{
-      'background-color':'#373d40',
-      'color':'#fff'
-    },
-    // 下拉
-    top: 66,
-    show: false,
-    index1: 0,
-    category: [
-      { text: '导航', value: 'pc' },
-      { text: '产品分类', value: 'category/product' },
-      { text: '产品', value: 'product/list' },
-      { text: '新闻分类', value: 'category/news' },
-      { text: '新闻', value: 'news/list' }
-    ],
-    index2: 0,
-    category2: [
-      { text: '基本栏目模板配置', value: '0' },
-      { text: '新闻分类页模板配置', value: '1' },
-      { text: '产品分类页模板配置', value: '2' },
-      { text: '新闻详细页模板配置', value: '3' },
-      { text: '产品详细页模板配置', value: '4' }
+    list: [
+      { text: 'SEO基础设置', value: 'base' },
+      { text: 'SEO模板配置', value: 'template' },
+      { text: '关键词管理', value: 'keyword' }
     ]
-  },
-  onLoad (){
-    this.setData({
-      top: this.data.popup_NAV_HEIGHT + 60/750*wx.WIN_WIDTH
-    })
-  },
-  navigateBack () {
-    wx.navigateBack()
-  },
-  handleChange (e) {
-    this.setData({
-      current:e.detail.index
-    })
-  },
-  handleContentChange (e) {
-    this.setData({
-      current:e.detail.current
-    })
-  },
-  // 下拉
-  openPopup (e) {
-    this.setData({
-      show: !this.data.show
-    })
-  },
-  popHide () {
-    this.setData({
-      show:false
-    })
-  },
-  popShow () {
-    this.setData({
-      show:true
-    })
-  },
-  change (e) {
-    let index = e.currentTarget.dataset.index
-    this.popHide()
-    if (this.data.current === 0) {
-      this.setData({
-        index1: index
-      })
-      this.selectComponent("#base").init()
-    } else {
-      this.setData({
-        index2: index
-      })
-      this.selectComponent("#template").init()
-    }
-  },
-  layoutChante () {
-    if (this.data.current === 0) {
-      this.selectComponent("#base").init()
-    }
-  },
-  lanChante () {
-    if (this.data.current === 1) {
-      this.selectComponent("#template").get()
-    }
-  },
-  // 加载更多
-  loadmore () {
-    this.selectComponent("#base").loadMore()
   }
 }
 
 </script>
 
 <style lang="less">
-
-.icon-xiangxiajiantoushixin{
-  font-size: 10px;
-  color: #686868;
-  display: inline-block;
-  transform:rotate(0deg);
-  transition: all .3s ease-in;
-  &.active{
-    transform:rotate(180deg);
-    color:#12bedb!important;
-  }
-}
-.icon-gou{
-  color:#12bedb;
-  font-size:12px;
-}
-.top_pop .active{
-  color:#12bedb;
+page{
+  background: #f1f1f1
 }
 </style>

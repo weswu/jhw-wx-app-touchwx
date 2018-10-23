@@ -9,9 +9,13 @@ export default {
   config: {
     usingComponents: {},
     pages: [
-      'pages/components/jCropper',
-      'pages/user/account',
       'pages/user/login',
+      'pages/static/seo/template',
+      'pages/static/seo/keyword',
+      'pages/static/seo/base',
+      'pages/static/seo',
+      'pages/user/account',
+      'pages/components/jCropper',
       'pages/user/enterprise',
       'pages/home/my',
       'pages/static/storageService',
@@ -32,8 +36,6 @@ export default {
       'pages/home/dataManagement',
       'pages/product/import',
       'pages/product/download',
-      'pages/static/seo',
-      'pages/static/seo/base',
       'pages/static/sitemap',
       'pages/static/convenient',
       'pages/static/bindDetail',
@@ -181,7 +183,7 @@ export default {
     //微信登录
     let that = this
     let code = ''
-    false && wx.login({
+    wx.login({
       success: function(res) {
         if (res.code) {
           code = res.code

@@ -1,89 +1,198 @@
 <template>
   <view>
-    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0" right="0">
-      <ui-tabs tab-style="{{ {width:width/3+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
-        <ui-tab>待缴费<text style="font-size:12px" wx:if="{{count0 !== 0}}">({{count0}})</text></ui-tab>
-        <ui-tab>消费记录<text style="font-size:12px" wx:if="{{count1 !== 0}}">({{count1}})</text></ui-tab>
-        <ui-tab>已购产品<text style="font-size:12px" wx:if="{{count2 !== 0}}">({{count2}})</text></ui-tab>
-      </ui-tabs>
-    </ui-fixed-view>
+    <cc-header title="SEO基础设置"></cc-header>
+
+    <cc-lan website="{{active !== 0}}" lan="{{active === 0}}" bindlayout="layoutChante" bindchange="lanChante">
+      <view slot="category" style="color:#12bedb;font-size:12px;" bindtap="openPopup">
+        <text>{{category[active].text}}</text>
+        <i class="iconfont icon-xiangxiajiantoushixin {{show ? 'active' : ''}}" style="color:#12bedb;font-size:10px;"></i>
+      </view>
+    </cc-lan>
+
     <ui-row-list border-left-indent>
-      <ui-row height="160r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
         <ui-col vertical-align="middle">
-            <view style="width: 100%;">
-              <ui-row height="60r">
-                <ui-col align="left" vertical-align="middle">
-                    <text>订单编号：{{item.outTradeNo}}</text>
-                </ui-col>
-                <ui-col align="right" width="100" vertical-align="middle" space-right="15">
-                    <text class="price">￥{{item.paidPrice | '-'}}</text>
-                </ui-col>
-              </ui-row>
-            </view>
-            <view class="desc">{{item.name}}</view>
-            <view class="desc">{{item.addTime}}</view>
+          <view style="width: 100%;">
+            <view class="name">{{item.name}}</view>
+            <view class="desc">{{item.page}}</view>
+          </view>
+        </ui-col>
+        <ui-col width="50" vertical-align="middle" class="info" data-item="{{item}}" bindtap="detail">
+          SEO
         </ui-col>
       </ui-row>
     </ui-row-list>
+
+    <ui-popup cropout show="{{show }}" position="top" top="{{ top }}" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
+      <view class="top_pop">
+        <ui-row-list border-left-indent>
+          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="*this" data-index="{{index}}" bindtap="change">
+            <ui-col vertical-align="middle" class="{{index === active ? 'active' : ''}}">
+              {{item.text}}
+            </ui-col>
+            <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{active === index}}">
+              <i class="iconfont icon-gou"/>
+            </ui-col>
+          </ui-row>
+        </ui-row-list>
+      </view>
+    </ui-popup>
   </view>
 </template>
 
 <script>
 import api from '../../../static/utils/api'
-import Tips from '../../../static/utils/tips'
 import Utils from '../../../static/utils/utils'
 export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header',
+      'cc-lan': '../../../packages/cc-lan'
+    }
+  },
   data: {
-    current1:0,
-    scrollTop:0,
-    width:wx.WIN_WIDTH,
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     list: [],
     params: {
-      size: 10,
-      page: 0,
-      sort: 'addTime,desc'
+      page: 1,
+      pageSize: 16
     },
-    count0: 0,
-    count1: 0,
-    count2: 0,
-    more: { loading: true }
-  },
-  onPageScroll (e) {
-    console.log(e)
-    this.setData({
-      scrollTop: e.scrollTop
-    })
+    count: 0,
+    more: {},
+    // lan
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    top: 66,
+    show: false,
+    active: 0,
+    category: [
+      { text: '导航', value: 'pc' },
+      { text: '产品分类', value: 'category/product' },
+      { text: '产品', value: 'product/list' },
+      { text: '新闻分类', value: 'category/news' },
+      { text: '新闻', value: 'news/list' }
+    ],
   },
   onLoad () {
     this.get()
+    this.setData({
+      top: this.data.popup_NAV_HEIGHT + 60/750*wx.WIN_WIDTH
+    })
   },
   get () {
-    api.costUnPaid({
-      data: this.data.params
-    }).then(res => {
-      this.init(res)
+    this.setData({
+      'params.layoutId': getApp().globalData.layoutId,
+      'more.loading': true,
+      'more.tip': ''
+    })
+    if (this.data.active === 0) {
+      api.seoNav({
+        data: this.data.params
+      }).then(res => {
+        Utils.scrollList(this, res)
+      })
+    } else {
+      api.api({
+        data: this.data.params,
+        url: this.data.category[this.data.active].value
+      }).then(res => {
+        this.data.active === 4 && res.attributes.data.forEach(item => {
+          item.name = item.title
+        });
+        Utils.scrollList(this, res)
+      })
+    }
+  },
+  // 下拉
+  openPopup (e) {
+    this.setData({
+      show: !this.data.show
     })
   },
-  //横屏竖屏切换
-  handleChange (e) {
+  popHide () {
     this.setData({
-      current1: e.detail.index,
-      'params.page': 0,
-      list: []
+      show:false
+    })
+  },
+  popShow () {
+    this.setData({
+      show:true
+    })
+  },
+  change (e) {
+    let index = e.currentTarget.dataset.index
+    this.setData({
+      list: [],
+      'params.page': 1,
+      active: index
+    })
+    this.popHide()
+    this.get()
+  },
+  layoutChante () {
+    this.setData({
+      list: [],
+      'params.page': 1
     })
     this.get()
+  },
+  lanChante () {
+    this.setData({
+      list: [],
+      'params.page': 1
+    })
+    this.get()
+  },
+  detail (e) {
+    let item = e.currentTarget.dataset.item
+    let active = this.data.active
+    let id = ''
+    let type = 'page'
+    if (active === '1') {
+      id = item.categoryId
+      type = 'cate_product'
+    } else if (active === '3') {
+      id = item.categoryId
+      type = 'cate_news'
+    } else if (active === '2') {
+      id = item.productId
+      type = 'product'
+    } else if (active === '4') {
+      id = item.newsId
+      type = 'news'
+    } else {
+      id = item.id
+    }
+    wx.navigateTo({
+      url: '/pages/static/seo/seoDetail?id=' + id + '&type=' + type
+    })
   },
   // 加载更多
   onReachBottom () {
-    this.setData({
-      'params.page': this.data.params.page+= 1
-    })
-    this.get()
+    Utils.loadMore(this)
   }
 }
 </script>
 
 <style lang="less">
-.price { color: #ff7e3e;font-size: 13px;}
+page{
+  background: #f1f1f1
+}
+.icon-xiangxiajiantoushixin{
+  font-size: 10px;
+  color: #686868;
+  display: inline-block;
+  transform:rotate(0deg);
+  transition: all .3s ease-in;
+  &.active{
+    transform:rotate(180deg);
+    color:#12bedb!important;
+  }
+}
+.icon-gou{
+  color:#12bedb;
+  font-size:12px;
+}
+.top_pop .active{
+  color:#12bedb;
+}
 </style>

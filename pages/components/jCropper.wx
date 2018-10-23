@@ -1,6 +1,6 @@
 <template>
   <view>
-    <cc-header title="图片截取"></cc-header>
+    <cc-header title="图片剪切"></cc-header>
     <view style="height:50px"></view>
   
     <view class="wx-content-info">
@@ -35,13 +35,13 @@
     </view>
     <!-- footer -->
     <ui-fixed-view bottom="0;z-index:700" left="0" right="0">
-      <ui-row height="60" border-top class="fixed_btn">
-        <ui-col vertical-align="middle" align="center" bindtap="getImageInfo">
-          <view class="desc">点击生成图片</view>
+      <ui-row height="110r" border-top>
+        <ui-col width="100" vertical-align="middle" align="center" bindtap="getImage">
+          <view style="color:#fff">重选</view>
         </ui-col>
         <ui-col vertical-align="middle" align="center"></ui-col>
-        <ui-col vertical-align="middle" align="center" bindtap="closeImage" >
-          <view class="desc">关闭</view>
+        <ui-col width="100" vertical-align="middle" align="center" bindtap="getImageInfo" >
+          <view style="color:#fff">完成</view>
         </ui-col>
       </ui-row>
     </ui-fixed-view>
@@ -110,7 +110,7 @@ export default {
   },
   onLoad (e) {
     this.setData({
-      imageSrc: e.src || 'upload/g/g2/ggggfj/picture/2018/10/18/06571c20-db27-452d-a991-cf06f671515c.png'
+      imageSrc: 'http://img.jihui88.com/' +  (e.src || 'upload/g/g2/ggggfj/picture/2018/10/18/06571c20-db27-452d-a991-cf06f671515c.png')
     })
     this.loadImage()
   },
@@ -236,7 +236,6 @@ export default {
         quality:0.5,
         canvasId: 'myCanvas',
         success: function (res) {
-          wx.hideLoading()
           // 成功获得地址的地方
           console.log(res.tempFilePath)
           wx.uploadFile({
@@ -247,12 +246,17 @@ export default {
               skey: wx.getStorageSync('skey')
             },
             success: function (res) {
+              wx.hideLoading()
               if (res.statusCode === 200) {
                 let src = res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
                 var pages = getCurrentPages()
                 var prevPage = pages[pages.length - 2];  //上个页面
                 prevPage.cropper(src)
+                wx.navigateBack()
               }
+            },
+            error: function (res) {
+              wx.hideLoading()
             }
           })
         }

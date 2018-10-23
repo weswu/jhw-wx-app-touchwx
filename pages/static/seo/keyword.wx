@@ -1,0 +1,59 @@
+<template>
+  <view>
+    <cc-header title="关键词管理" count="{{count}}"></cc-header>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col class="text" vertical-align="middle">
+          {{item.keywords}}
+        </ui-col>
+        <ui-col width="50" vertical-align="middle" data-index="{{index}}" data-id="{{item.keywordsId}}" bindtap="del">
+          删除
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+  </view>
+</template>
+
+<script>
+import api from '../../../static/utils/api'
+import Utils from '../../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 1000
+    },
+    count: 0
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.keywords({
+        data: this.data.params
+      }).then(res => {
+        this.setData({
+          list: res.attributes.data,
+          count: res.attributes.count
+        })
+      })
+  },
+  del (e) {
+    Utils.del(this, e, api.keywordsDetail)
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

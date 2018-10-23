@@ -108,6 +108,12 @@ export default {
     })
     this.submit()
   },
+  cropper (e) {
+    this.setData({
+      'accountInfo.headimg': e
+    })
+    this.submit()
+  },
   goToCropper () {
     wx.navigateTo({
       url: '/pages/components/jCropper?src=' + this.data.accountInfo.headimg
