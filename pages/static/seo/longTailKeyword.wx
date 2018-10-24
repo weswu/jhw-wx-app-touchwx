@@ -1,0 +1,22 @@
+<template>
+  <view>
+    <cc-header title="长尾关键词"></cc-header>
+    <view class="j_tip">温馨提醒：请到电脑端编辑</view>
+  </view>
+</template>
+
+<script>
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header'
+    }
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

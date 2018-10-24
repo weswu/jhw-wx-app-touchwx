@@ -106,8 +106,10 @@
       
     <cc-modal title="新建相册" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
       <view class="add-content">
-        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
-        <input type="text" value="{{name}}" bindinput="nameInput"/>
+        <view class="input">
+          <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
+          <input type="text" value="{{name}}" bindinput="nameInput"/>
+        </view>
       </view>
     </cc-modal>
   </view>

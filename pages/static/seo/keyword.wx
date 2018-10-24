@@ -13,6 +13,13 @@
       </ui-row>
     </ui-row-list>
 
+    <cc-modal title="添加关键词" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
+        <input type="text" value="{{name}}" bindinput="nameInput"/>
+      </view>
+    </cc-modal>
+    <navigator url="certDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
   </view>
 </template>
 
@@ -22,7 +29,8 @@ import Utils from '../../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-header': '../../../packages/cc-header'
+      'cc-header': '../../../packages/cc-header',
+      'cc-modal': '../../../packages/cc-modal'
     }
   },
   data: {
@@ -31,7 +39,9 @@ export default {
       page: 1,
       pageSize: 1000
     },
-    count: 0
+    count: 0,
+    name: '',
+    visible1: false
   },
   onLoad () {
     this.get()
@@ -48,6 +58,43 @@ export default {
   },
   del (e) {
     Utils.del(this, e, api.keywordsDetail)
+  },
+  // add 
+  nameInput (e) {
+    this.setData({
+      name: e.detail.value
+    })
+  },
+  clearinput () {
+    this.setData({
+      name: ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible1: false
+    })
+  },
+  // 添加相册
+  ok () {
+    api.albumDetail({
+      data: {
+        model: JSON.stringify({
+          name: this.data.name,
+          parentId: '',
+          blongType: 'AP',
+          state: '01'
+        })
+      },
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('添加成功')
+        this.cancel()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
   }
 }
 </script>

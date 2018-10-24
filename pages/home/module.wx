@@ -42,7 +42,7 @@
                 {{item.text}}
               </ui-col>
               <ui-col width="40" vertical-align="middle" align="center">
-                  <i class="iconfont icon-tuozhuaicaidandaohang"></i>
+                <i class="iconfont icon-tuozhuaicaidandaohang"></i>
               </ui-col>
             </ui-row>
           </label>

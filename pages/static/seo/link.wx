@@ -1,0 +1,280 @@
+<template>
+  <view>
+    <cc-header title="内部链接设置"></cc-header>
+    <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
+
+    <ui-row-list>
+      <ui-row height="100r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col width="100" class="desc" vertical-align="middle" align="left" space-left="10">
+          {{ item.keywords }}
+        </ui-col>
+        <ui-col class="text" vertical-align="middle" align="left" space-left="10" data-id="{{item.keywordsId}}" bindtap="selected">
+          {{ item.toReplace }}
+        </ui-col>
+        <ui-col width="80" class="desc" vertical-align="middle" align="center"
+          data-index="{{index}}" data-id="{{item.keywordsId}}" bindtap="del">
+          删除
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+
+    <cc-modal title="链接添加" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <view class="input">
+          <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
+          <input type="text" value="{{name}}" bindinput="nameInput" placeholder="关键字名称"/>
+        </view>
+        <view class="a_underline" wx:if="{{!innerLink}}" data-show="{{true}}" bindtap="toggle">使用内部链接</view>
+        <view class="a_underline" wx:if="{{innerLink}}" data-show="{{false}}" bindtap="toggle">使用外部链接</view>
+        <view class="input" wx:if="{{!innerLink}}">
+          <i class="iconfont icon-close-circle-fill" bindtap="clearinput2" wx:if="{{toReplace}}"></i>
+          <input type="text" value="{{toReplace}}" bindinput="nameInput2" placeholder="内部链接地址"/>
+        </view>
+        <view class="input" wx:if="{{innerLink}}" style="padding-left: 10px;" bindtap="open">
+          <text wx:for="{{navList}}" wx:key="*this" wx:if="{{toReplace === item.page}}">{{item.name}}</text>
+          <text wx:if="{{!toReplace}}">请选择</text>
+        </view>
+      </view>
+    </cc-modal>
+
+    <view class="j_add" bindtap="add"><i class="iconfont icon-jia"></i></view>
+
+    <ui-popup cropout show="{{show}}" position="top" top="{{ top }}px;z-index:10001" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
+      <view class="top_pop">
+        <scroll-view scroll-y="scroll-y" style="height: {{ scroHeight-50 }}px;">
+          <ui-row-list border-left-indent>
+            <ui-row height="43" border-bottom wx:for="{{navList}}" wx:key="*this" data-index="{{index}}" bindtap="change">
+              <ui-col vertical-align="middle" class="{{item.page === page ? 'active' : ''}}">
+                {{item.name}}
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{item.page === page}}">
+                <i class="iconfont icon-gou"/>
+              </ui-col>
+            </ui-row>
+          </ui-row-list>
+        </scroll-view>
+      </view>
+    </ui-popup>
+  </view>
+</template>
+
+<script>
+import api from '../../../static/utils/api'
+import Tips from '../../../static/utils/tips'
+import Utils from '../../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header',
+      'cc-lan': '../../../packages/cc-lan',
+      'cc-modal': '../../../packages/cc-modal'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 200,
+      layoutId: ''
+    },
+    navList: [],
+    // 添加
+    name: '',
+    visible1: false,
+    toReplace: '',
+    innerLink: true,
+    // lan
+    scroHeight: parseInt(wx.DEFAULT_CONTENT_HEIGHT * 0.8),
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    top: 66,
+    show: false,
+    page: '',
+    id: ''
+  }, 
+  onLoad () {
+    let layoutId = getApp().globalData.layoutId
+    if (layoutId) this.get()
+    this.setData({
+      top: this.data.popup_NAV_HEIGHT + 60/750*wx.WIN_WIDTH
+    })
+  },
+  get () {
+    this.getNav()
+    this.setData({
+      'params.layoutId': getApp().globalData.layoutId
+    })
+    api.innerLinks({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.innerLink = false
+        })
+        this.setData({
+          list: res.attributes.data
+        })
+        if (this.data.navList.length > 0) this.init()
+      }
+    })
+  },
+  getNav () {
+    let data = {
+      page: 1,
+      pageSize: 100,
+      layoutId: getApp().globalData.layoutId
+    }
+    api.seoNav({
+      data: data
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          navList: res.attributes.data
+        })
+        if (this.data.list.length > 0) this.init()
+      }
+    })
+  },
+  init () {
+    let data = this.data.list
+    data.forEach(item => {
+      if (item.toReplace.indexOf('http') === -1) {
+        this.data.navList.forEach(nav => {
+          if (item.toReplace === nav.page) {
+            item.toReplace = nav.name
+            item.innerLink = true
+          }
+        })
+      }
+    })
+    this.setData({
+      list: data
+    })
+  },
+  del (e) {
+    Utils.del(this, e, api.innerLinksDetail)
+  },
+  selected (e) {
+    this.setData({
+      show: true,
+      id: e.currentTarget.dataset.id
+    })
+  },
+  change (e) {
+    let index = e.currentTarget.dataset.index
+    if (this.data.visible1) {
+      this.setData({
+        toReplace: this.data.navList[index].page,
+        show: false
+      })
+    } else {
+      api.innerLinksDetail({
+        data: {
+          model: JSON.stringify({
+            id: this.data.id,
+            layoutId: getApp().globalData.layoutId,
+            toReplace: this.data.navList[index].page
+          }),
+          _method: 'put'
+        },
+        id: this.data.id,
+        method: 'POST'
+      }).then(res => {
+        if (res.success) {
+          Tips.success('修改成功')
+          this.get()
+          this.setData({
+            show: false
+          })
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
+  },
+  // add 
+  toggle (e) {
+    this.setData({
+      innerLink: e.currentTarget.dataset.show
+    })
+  },
+  open () {
+    this.setData({
+      show: true
+    })
+  },
+  add () {
+    this.setData({
+      visible1: true
+    })
+  },
+  nameInput (e) {
+    this.setData({
+      name: e.detail.value
+    })
+  },
+  nameInput2 (e) {
+    this.setData({
+      toReplace: e.detail.value
+    })
+  },
+  clearinput () {
+    this.setData({
+      name: ''
+    })
+  },
+  clearinput2 () {
+    this.setData({
+      toReplace: ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible1: false
+    })
+  },
+  ok () {
+    if (!this.data.name) {
+      Tips.toast('关键字名称不能为空')
+    } else {
+      api.innerLinksDetail({
+        data: {
+          keywords: this.data.name,
+          toReplace: this.data.toReplace,
+          layoutId: getApp().globalData.layoutId
+        },
+        method: 'POST'
+      }).then(res => {
+        if (res.success) {
+          Tips.success('添加成功')
+          this.cancel()
+          this.get()
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.a_underline {
+  color: #0366ce;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.a_underline{
+  padding: 0 0 0 10px;
+}
+.icon-gou{
+  color:#12bedb;
+  font-size:12px;
+}
+.top_pop .active{
+  color:#12bedb;
+}
+</style>

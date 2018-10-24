@@ -66,8 +66,10 @@
 
     <cc-modal title="添加分类" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
       <view class="add-content">
-        <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{detail.name}}"></i>
-        <input type="text" value="{{detail.name}}" bindinput="nameInput"/>
+        <view class="input">
+          <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{detail.name}}"></i>
+          <input type="text" value="{{detail.name}}" bindinput="nameInput"/>
+        </view>
       </view>
       <view class="add-category">
         <cc-category type="{{type}}" categoryList="{{list}}" bindchange="batchMove2">
@@ -420,30 +422,4 @@ export default {
   }
 }
 
-.add-content{
-  text-align:left;margin:5px 15px;background:#f6f6f6;
-  height: 64rpx;
-  line-height: 64rpx;    
-  position: relative;
-  .icon-close-circle-fill{
-    width: 64rpx;
-    height: 64rpx;
-    line-height: 64rpx;
-    font-size: 16px;
-    text-align: center;
-    color: #b5b3b6;
-    position: absolute;
-    right: 0;
-    z-index: 3;
-  }
-  input{
-    height: 64rpx;
-    line-height: 64rpx;
-    padding:0 15px;
-    color:#060407
-  }
-  .icon-gou{
-    color: #4c4c4c
-  }
-}
 </style>

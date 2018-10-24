@@ -9,11 +9,15 @@ export default {
   config: {
     usingComponents: {},
     pages: [
+      'pages/user/employee',
       'pages/user/login',
+      'pages/static/seo',
+      'pages/static/seo/link',
+      'pages/static/seo/paid',
+      'pages/static/seo/longTailKeyword',
       'pages/static/seo/template',
       'pages/static/seo/keyword',
       'pages/static/seo/base',
-      'pages/static/seo',
       'pages/user/account',
       'pages/components/jCropper',
       'pages/user/enterprise',
@@ -27,7 +31,6 @@ export default {
       'pages/user/recruit',
       'pages/user/recruitDetail',
       'pages/user/company',
-      'pages/user/employee',
       'pages/user/authority',
       'pages/user/employeeDetail',
       'pages/album/recycle',
@@ -563,6 +566,38 @@ export default {
   color:#12bedb;
   font-size: 13px;
 }
+// 添加表单
+.add-content{
+  text-align:left;margin:5px 15px;
+  min-height: 64rpx;
+  line-height: 64rpx;    
+  position: relative;
+  .icon-close-circle-fill{
+    width: 64rpx;
+    height: 64rpx;
+    line-height: 64rpx;
+    font-size: 16px;
+    text-align: center;
+    color: #b5b3b6;
+    position: absolute;
+    right: 0;
+    z-index: 3;
+  }
+  input{
+    height: 64rpx;
+    line-height: 64rpx;
+    padding:0 15px;
+    color:#060407
+  }
+  .icon-gou{
+    color: #4c4c4c
+  }
+  .input{
+    background:#f6f6f6;
+    margin-bottom: 10px
+  }
+}
+
 // 底部按钮
 .fixed_btn{
   color: #a8a9ae;

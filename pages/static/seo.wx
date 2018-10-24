@@ -26,7 +26,10 @@ export default {
     list: [
       { text: 'SEO基础设置', value: 'base' },
       { text: 'SEO模板配置', value: 'template' },
-      { text: '关键词管理', value: 'keyword' }
+      { text: '关键词管理', value: 'keyword' },
+      { text: '长尾关键词', value: 'longTailKeyword' },
+      { text: '内部链接设置', value: 'link' },
+      { text: '付费SEO推广', value: 'paid' }
     ]
   }
 }

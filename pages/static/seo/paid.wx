@@ -1,0 +1,119 @@
+<template>
+  <view>
+    <cc-header title="付费SEO推广"></cc-header>
+
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:700" right="0">
+      <ui-tabs tab-style="{{ {width:width/2+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/2+'px !important'} }}" bindchange="handleChange">
+        <ui-tab>什么是付费SEO推广</ui-tab>
+        <ui-tab>付费SEO推广登录</ui-tab>
+      </ui-tabs>
+    </ui-fixed-view>
+    <view style="height:50px"></view>
+
+    <view wx:if="{{current1 === 0}}">
+      <view class="j_table">
+        <ui-row class="th" border-bottom border-top height="35">
+          <ui-col border-right vertical-align="middle" space-left="5">
+            付费SEO推广的套餐
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="40"  wx:for="{{list}}" wx:key="*this">
+          <ui-col border-right vertical-align="middle" space-left="5">
+            {{item.text}}
+          </ui-col>
+          <ui-col border-right vertical-align="middle" space-left="5">
+            {{item.text1}}
+          </ui-col>
+          <ui-col border-right vertical-align="middle" space-left="5">
+            {{item.text2}}
+          </ui-col>
+          <ui-col vertical-align="middle" space-left="5">
+            {{item.text3}}
+          </ui-col>
+        </ui-row>
+      </view>
+
+      <view class="j_tip">
+        <ui-row height="140r">
+          <ui-col width="70" class="text" vertical-align="middle">
+            达标方案：
+          </ui-col>
+          <ui-col vertical-align="middle">
+            <view style="width:100%">
+              1、百度+百度移动累计50个关键词首页
+              <view>2、百度+百度移动+搜狗+360累计100个关键词首页</view>
+            </view>
+          </ui-col>
+        </ui-row>
+      </view>
+
+      <view style="color: #a7a7a7;padding:15px;font-size:12px;">
+        温馨提醒：客户选择的关键词必须符合机汇网普及版服务包综合指数150以内，套餐有多种达标方案，只要满足其中任意一种达标方案即视为达标，客户享受机汇网提供的关键词达标365天的服务，域名，空间到期后客户自行交费，SEO未达标365天，机汇网继续提供服务。如果规定时间内未达标，客户也不愿意继续等待，客户可以申请退款，机汇网根据提供服务关键词的达标比例为客户退款。
+      </view>
+
+      <ui-row-list border-left-indent>
+        <ui-row height="140r">
+          <ui-col width="120" class="text" vertical-align="middle" style="font-size:12px">
+            如有意向联系我们：
+          </ui-col>
+          <ui-col class="text" vertical-align="middle">
+            <view style="width:100%;font-size:12px">
+              电话：400-7111-011
+              <view>俞小姐：136-2679-9628</view>
+            </view>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+    </view>
+    
+    <view wx:if="{{current1 === 1}}" style="font-size:13px;color:#595959;padding:15px;line-height:3">
+      <view>登录网址：seo.jihui88.com</view>
+      温馨提示：登录账号和密码同机汇网后台
+    </view>
+    <view style="height:30px"></view>
+  </view>
+</template>
+
+<script>
+import api from '../../../static/utils/api'
+import Utils from '../../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header'
+    }
+  },
+  data: {
+    current1:0,
+    width:wx.WIN_WIDTH,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    list: [
+      { text: '套餐类型', text1: '普及版1年', text2: '普及版2年', text3: '普及版3年' },
+      { text: '产品长尾词', text1: '8+8', text2: '8+8', text3: '8+8' },
+      { text: '流量统计', text1: '√', text2: '√', text3: '√' },
+      { text: '智能监控', text1: '√', text2: '√', text3: '√' },
+      { text: '主词个数', text1: '10个', text2: '10个', text3: '10个' },
+      { text: '综合指数', text1: '150以内', text2: '150以内', text3: '150以内' },
+      { text: '完成时间', text1: '网站确认后3个月以内', text2: '网站确认后3个月以内', text3: '网站确认后3个月以内' },
+      { text: '合同金额', text1: '14800', text2: '19800', text3: '23800' }
+    ]
+  },
+  //横屏竖屏切换
+  handleChange (e) {
+    this.setData({
+      current1: e.detail.index
+    })
+  },
+}
+</script>
+
+<style lang="less">
+//表格
+.j_table{
+  color: #a0a0a0;
+  font-size: 12px;
+  .th{
+    background: #f7f7f7;
+  }
+}
+</style>

@@ -34,12 +34,40 @@
         <ui-col vertical-align="middle" align="center" data-index="{{index}}" data-id="{{item.memberId}}" bindtap="del">
           删除
         </ui-col>
-        <ui-col vertical-align="middle" align="center">推广</ui-col>
+        <ui-col vertical-align="middle" align="center" data-index="{{index}}" data-item="{{item}}" bindtap="tuiguang">推广</ui-col>
       </ui-row>
     </ui-row-list>
     <cc-loadmore more="{{more}}"></cc-loadmore>
 
     <navigator url="employeeDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+
+    <!-- 二维码 -->
+    <ui-mask show="{{selectStatic === 2}}" hide-on-tap="{{false}}" class="mask_wrap">
+      <view class="photo" style="width:{{width-50}}px">
+        <view class="top_view">
+          <i class="iconfont icon-quxiao icon_top" bindtap="handleSelectStatic"></i>
+        </view>
+        <image style="width:{{width-50}}px;height:{{width-50}}px" mode="aspectFit" src="http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text={{posterUrl}}"/>
+      </view>
+    </ui-mask>
+    <ui-popup show="{{ selectStatic === 1}}" height="270" position="bottom">
+      <ui-row height="45" border-bottom>
+        <ui-col class="text" vertical-align="middle" align="left" space-left="15">
+          请选择站点再生成二维码
+        </ui-col>
+        <ui-col width="100" vertical-align="middle" align="right" space-right="15" data-show="{{true}}" data-index="{{index}}" catchtap="generate">
+          <view class="view" style="color:#12bedb">完成</view>
+        </ui-col>
+      </ui-row>
+      <view class="j_picker">
+        <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;" style="width: 100%; height: 220px;" value="{{value}}" bindchange="layoutIdChange">
+          <picker-view-column>
+            <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
+          </picker-view-column>
+        </picker-view>
+      </view>
+    </ui-popup>
+  
   </view>
 </template>
 
@@ -62,11 +90,19 @@ export default {
     },
     count: 0,
     more: {},
-    height: 140/750*wx.WIN_WIDTH,
-    el: 'undefined'
+    // 推广
+    selectStatic: 0,
+    value: '',
+    staticList: [],
+    item: {},
+    index: '',
+    posterUrl: ''
   }, 
   onLoad () {
     this.get()
+    this.setData({
+      staticList: getApp().globalData.staticList
+    })
   },
   get () {
     Utils.loading(this)
@@ -109,6 +145,43 @@ export default {
   del (e) {
     Utils.del(this, e, api.employeeDetail)
   },
+  // 推广
+  tuiguang (e) {
+    this.setData({
+      staticList: getApp().globalData.staticList
+    })
+    let item = e.currentTarget.dataset.item
+    this.setData({
+      selectStatic: 1,
+      item: item,
+      index: e.currentTarget.dataset.index
+    })
+    if (item.layoutId) {
+      this.setData({
+        posterUrl: 'http://pc.jihui88.com/rest/site/' + item.layoutId + '/index?posterId=' + this.encodeId(item.memberId)
+      })
+      this.data.staticList.forEach((row, index) => {
+        if (row.id === item.layoutId) {
+          this.setData({
+            value: index
+          })
+        }
+      })
+    }
+  },
+  // 生成二级码
+  layoutIdChange (e) {
+    let layoutId = this.data.staticList[e.detail.value].id
+    this.setData({
+      posterUrl: 'http://pc.jihui88.com/rest/site/' + layoutId + '/index?posterId=' + this.encodeId(this.data.item.memberId)
+    })
+  },
+  generate () {
+    let num = this.data.selectStatic
+    this.setData({
+      selectStatic: 2
+    })
+  },
   // 加载更多
   onReachBottom () {
     Utils.loadMore(this)
@@ -119,5 +192,25 @@ export default {
 <style lang="less">
 page{
   background: #f1f1f1
+}
+.mask_wrap {
+  .photo {
+      padding: 0;
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 50%;
+      transform: translateY(-50%);
+      image {
+          display: block;
+          width: 100%;
+      }
+      .icon_top{
+        display: block;
+        text-align: right;
+        color: #fff;
+        font-size: 96rpx;
+      }
+  }
 }
 </style>

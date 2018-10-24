@@ -70,7 +70,7 @@ export default {
       { text: '产品', value: 'product/list' },
       { text: '新闻分类', value: 'category/news' },
       { text: '新闻', value: 'news/list' }
-    ],
+    ]
   },
   onLoad () {
     this.get()
