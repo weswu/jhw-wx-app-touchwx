@@ -18,7 +18,7 @@
         <ui-col vertical-align="middle">
           备用邮箱
         </ui-col>
-        <ui-col class="desc" width="100" vertical-align="middle" align="right" space-right="15">
+        <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="15">
           {{user.email}}
         </ui-col>
       </ui-row>
@@ -28,11 +28,11 @@
           <ui-col vertical-align="middle">
             微信
           </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right" space-right="15">
+          <ui-col class="desc" width="100" vertical-align="middle" align="right" space-right="15" bindtap="weixin">
             {{item.nickname}}
           </ui-col>
         </ui-row>
-        <ui-row height="102r" wx:if="{{item.type === 'cellphone'}}">
+        <ui-row url="/pages/setting/mobile" hover-class="none" height="102r" wx:if="{{item.type === 'cellphone'}}">
           <ui-col vertical-align="middle">
             手机
           </ui-col>
@@ -47,6 +47,7 @@
 
 <script>
 import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
 export default {
   config: {
     usingComponents: {
@@ -62,7 +63,9 @@ export default {
     ]
   },
   onLoad () {
-    this.user = getApp().globalData.user
+    this.setData({
+      user: getApp().globalData.user
+    })
     this.get()
   },
   get () {
@@ -71,6 +74,12 @@ export default {
         this.oauth = res.attributes.data
       }
     })
+  },
+  bindMobile () {
+
+  },
+  weixin () {
+    Tips.toast('功能完善中')
   }
 }
 </script>

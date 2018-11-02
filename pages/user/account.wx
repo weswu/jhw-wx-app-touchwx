@@ -79,23 +79,26 @@ export default {
   },
   onLoad () {
     let user = getApp().globalData.user
-    user.addTime = Utils.formatTime(user.addTime)
-    this.setData({
-      user: user,
-      accountInfo: getApp().globalData.accountInfo
-    })
-    
-    let that = this
-    getApp().getUser(res => {
-      that.setData({
-        user: res.user
-      })
-      getApp().getAccountInfo(res => {
+    if (!user) {
+      let that = this
+      getApp().getUser(res => {
+        res.user.addTime = Utils.formatTime(res.user.addTime)
         that.setData({
-          accountInfo: res
+          user: res.user
+        })
+        getApp().getAccountInfo(res => {
+          that.setData({
+            accountInfo: res
+          })
         })
       })
-    })
+    } else {
+      user.addTime = Utils.formatTime(user.addTime)
+      this.setData({
+        user: user,
+        accountInfo: getApp().globalData.accountInfo
+      })
+    }
   },
   error () {
     this.setData({

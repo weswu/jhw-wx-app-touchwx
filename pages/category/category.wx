@@ -1,13 +1,13 @@
 <template>
   <view>
-    <cc-header title="{{type === 'product' ? '产品' : '新闻'}}分类" back="{{!selected}}">
+    <cc-header title="{{type === 'product' ? '产品' : (type === 'news' ? '新闻' : '标签')}}分类" back="{{!selected}}">
       <view bindtap="toggleAll" wx:if="{{selected}}" style="width:100%">
         <text wx:if="{{!toggle}}">全选</text>
         <text wx:if="{{toggle}}">全不选</text>
       </view>
     </cc-header>
     <!-- head -->
-    <cc-lan lan="{{true}}" bindchange="get"></cc-lan>
+    <cc-lan lan="{{true}}" bindchange="get" wx:if="{{type !== 'tag'}}"></cc-lan>
 
     <ui-row-list class="category-list">
       <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="*this" wx:if="{{!item.hidden}}">
@@ -72,7 +72,7 @@
         </view>
       </view>
       <view class="add-category">
-        <cc-category type="{{type}}" categoryList="{{list}}" bindchange="batchMove2">
+        <cc-category type="{{type}}" categoryList="{{list}}" wx:key="*this" bindchange="batchMove2">
           <view style="display:inline-block">上级分类：</view>
         </cc-category>
       </view>
@@ -124,8 +124,12 @@ export default {
       getApp().getProductCategory(res => {
         that.setList(res)
       }) 
-    } else {
+    } else if (this.data.type === 'news') {
       getApp().getNewsCategory(res => {
+        that.setList(res)
+      })
+    } else {
+      getApp().getTagCategory(res => {
         that.setList(res)
       })
     }
@@ -148,29 +152,9 @@ export default {
     }
   },
   changeCateList (e) {
-    let data = e.currentTarget.dataset.item
-    data.expand = !data.expand
-    // 三角图标expand = false 关闭   hidden = true 隐藏
-    var ctx = this
-    this.data.list.forEach(item => {
-      if (item.categoryId === data.categoryId) {
-        item.expand = !item.expand
-      }
-      if (item.belongId === data.categoryId) {
-        item.hidden = !data.expand
-        ctx.data.list.forEach(row => {
-          if (row.belongId === item.categoryId) {
-            if (!data.expand) {
-              row.hidden = true
-            } else {
-              row.hidden = !item.expand
-            }
-          }
-        })
-      }
-    })
+    let list = Utils.fold(this.data.list, e)
     this.setData({
-      list: this.data.list
+      list: list
     })
   },
   // add

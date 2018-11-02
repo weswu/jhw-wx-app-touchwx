@@ -311,6 +311,30 @@ const switcher = (that, e) => {
     that.data.el = index;
   }
 }
+// 分类折叠
+const fold = (list, e) => {
+  let data = e.currentTarget.dataset.item
+  data.expand = !data.expand
+  // 三角图标expand = false 关闭   hidden = true 隐藏
+  list.forEach(item => {
+    if (item.categoryId === data.categoryId) {
+      item.expand = !item.expand
+    }
+    if (item.belongId === data.categoryId) {
+      item.hidden = !data.expand
+      list.forEach(row => {
+        if (row.belongId === item.categoryId) {
+          if (!data.expand) {
+            row.hidden = true
+          } else {
+            row.hidden = !item.expand
+          }
+        }
+      })
+    }
+  })
+  return list
+}
 
 module.exports = {
   del,
@@ -326,5 +350,6 @@ module.exports = {
   batchMove,
   upload,
   prev,
-  switcher
+  switcher,
+  fold
 };

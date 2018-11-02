@@ -33,6 +33,9 @@ const employeeDetail = (params) => http(params, host + 'submember/detail' + (par
 const employeeAnalysis = (params) => http(params, host + 'submember/statistical')
 const userprivilege = (params) => http(params, host + 'userprivilege/list?version=v4')
 const userprivDetail = (params) => http(params, host + 'userpriv/detail/' + params.id)
+const userOauth = (params) => http(params, host + 'user/oauth')
+const sendCellphone = (params) => http(params, host + 'user/sendCellphone')
+
 
 // 费用中心
 const costUnPaid = (params) => http(params, buyHost + 'order/listUnPaid')
@@ -73,9 +76,9 @@ const analysis = (params) => http(params, pcHost + 'analysis/detail')
 const analysisSave = (params) => http(params, pcHost + 'analysis/save')
 const authLogin = (params) => http(params, pcHost + 'authLogin/detail')
 // Sitemap生成
-const saveRobotsOrSitemap = (params) => http(params, host + 'seotools/saveRobotsOrSitemap')
-const seotoolsSave = (params) => http(params, host + 'seotools/save')
-const sitemapcap = (params) => http(params, host + 'seotools/sitemapcap')
+const sitemapBuild = (params) => http(params, pcHost + 'sitemap/build')
+const sitemap = (params) => http(params, pcHost + 'sitemap/detail')
+const sitemapSave = (params) => http(params, pcHost + 'sitemap/save')
 // seo
 const seoNav = (params) => http(params, pcHost + 'navigator/list')
 const seoNavDetail = (params) => http(params, pcHost + 'navigator/detail' + (params ? '/' + params.id : ''))
@@ -83,6 +86,7 @@ const seoDetail = (params) => http(params, host + 'seo/pc/detail' + (params ? '/
 const seoSave = (params) => http(params, host + 'seo/pc/save/' + params.id)
 const seoTemplate = (params) => http(params, host + 'seoTemplate/list')
 const seoTemplateDetail = (params) => http(params, host + 'seoTemplate/detail')
+const changeLayoutId = (params) => http(params, host + 'submember/changeLayoutId')
 // 附件
 const attachment = (params) => http(params, pcHost + 'third_app/attachment/list')
 const attachmentSave = (params) => http(params, pcHost + 'third_app/attachment/save/' + params.id)
@@ -127,7 +131,7 @@ const batchDisplay = (params) => http(params, host + params.url)
 const batchMarketable = (params) => http(params, host + 'product/' + params.url)
 // 标签
 const tag = (params) => http(params, host + 'tag/list?pageSize=1000')
-const tagDetail = (params) => http(params, host + 'tag/detail/' + params.id)
+const tagDetail = (params) => http(params, host + 'tag/detail' + (params.id ? '/' + params.id : ''))
 
 
 /***************** 相册 ************/
@@ -192,9 +196,10 @@ module.exports = {
   // 推广
   spread, spreadRank, posters,
   /***************** 账号信息 ************/
-  accountInfo, accountOauth, employee, employeeDetail, employeeAnalysis, userprivilege, userprivDetail,
+  accountInfo, accountOauth, employee, employeeDetail, employeeAnalysis, userprivilege, userprivDetail, changeLayoutId,
   costUnPaid, costOrder, costPaid, costDetail,
   point, pointProduct, pointRule, signIn,
+  userOauth, sendCellphone,
   /***************** 消息中心 ************/
   message, messageDetail,
   /***************** 站点 ************/
@@ -202,7 +207,7 @@ module.exports = {
   bind, bindDetail, bindAdd, bindEdit, bindDetail2, profile,
   analysis, analysisSave,
   authLogin,
-  saveRobotsOrSitemap, seotoolsSave, sitemapcap,
+  sitemapBuild, sitemap, sitemapSave,
   seoNav, seoNavDetail,
   seoDetail, seoSave, seoTemplate, seoTemplateDetail,
   attachment, attachmentSave,

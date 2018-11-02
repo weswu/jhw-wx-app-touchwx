@@ -9,12 +9,18 @@ export default {
   config: {
     usingComponents: {},
     pages: [
-      'pages/user/employee',
       'pages/user/login',
+      'pages/setting/sale',
+      'pages/setting/setting',
+      'pages/setting/webView',
+      'pages/setting/mobile',
+      'pages/static/seo/tag',
       'pages/static/seo',
+      'pages/static/seo/longTailKeyword',
+      'pages/static/sitemap',
+      'pages/user/employee',
       'pages/static/seo/link',
       'pages/static/seo/paid',
-      'pages/static/seo/longTailKeyword',
       'pages/static/seo/template',
       'pages/static/seo/keyword',
       'pages/static/seo/base',
@@ -39,7 +45,6 @@ export default {
       'pages/home/dataManagement',
       'pages/product/import',
       'pages/product/download',
-      'pages/static/sitemap',
       'pages/static/convenient',
       'pages/static/bindDetail',
       'pages/static/bind',
@@ -85,13 +90,10 @@ export default {
       'pages/pc/miniProgram',
       'pages/cost/point',
       'pages/cost/cost',
-      'pages/setting/setting',
-      'pages/setting/sale',
       'pages/service/faq',
       'pages/service/faq1',
       'pages/service/service',
       'pages/service/feedback',
-      'pages/setting/webView',
       'pages/static/seo/seoDetail',
       'pages/static/thirdPartyStatistics',
       'pages/components/jTag',
@@ -166,6 +168,7 @@ export default {
     staticList: [],
     productCategory: [],
     newsCategory: [],
+    tagCategory: [],
     albumCategory: [],
     tagList: [],
     memberRankList: [],
@@ -409,6 +412,9 @@ export default {
   getNewsCategory (cb) {
     this.getCategory(cb, 'news')
   },
+  getTagCategory (cb) {
+    this.getCategory(cb, 'tag')
+  },
   getCategory (cb, url) {
     api.category({
       url: url
@@ -463,9 +469,11 @@ export default {
         if (list.length > 0) {
           if (list[0].type === '10') this.globalData.productCategory = list
           if (list[0].type === '11') this.globalData.newsCategory = list
+          if (list[0].type === '13') this.globalData.tagCategory = list  
         } else {
           this.globalData.productCategory = []
           this.globalData.newsCategory = []
+          this.globalData.tagCategory = []
         }
         typeof cb == 'function' && cb(list)
       }

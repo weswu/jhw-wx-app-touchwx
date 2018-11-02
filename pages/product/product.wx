@@ -149,7 +149,7 @@
         <view class="top_view">
           <i class="iconfont icon-quxiao icon_top" bindtap="handleSelectStatic"></i>
         </view>
-        <image style="width:{{width-50}}px;height:{{width-50}}px" mode="aspectFit" src="http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/{{layoutId}}/pd?itemId={{item.productId2}}"/>
+        <image style="width:210px;height:210px" mode="aspectFit" src="http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/{{layoutId}}/pd?itemId={{item.productId2}}"  bindtap="download"/>
       </view>
     </ui-mask>
     <ui-popup show="{{ selectStatic === 1 || selectStatic === 2 }}" height="270" position="bottom">
@@ -392,6 +392,22 @@ export default {
       selectStatic: 0
     })
   },
+  download () {
+    // 下载图片
+    wx.downloadFile({
+      url: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=http://pc.jihui88.com/rest/site/'+this.data.layoutId+'/pd?itemId='+this.data.item.productId2,
+      success: function(res) {
+        if (res.statusCode === 200) {
+          wx.saveImageToPhotosAlbum({
+            filePath: res.tempFilePath,
+            success(res) {
+              Tips.success('下载成功')
+            }
+          })
+        }
+      }
+    })
+  },
   // 批量
   batchCopy () {
     Utils.batchCopy(this, 'product/copyProductByIds', {productIds: this.data.ids})
@@ -555,22 +571,23 @@ page{
 }
 .mask_wrap {
   .photo {
-      padding: 0;
-      position: absolute;
-      left: 10%;
-      right: 10%;
-      top: 50%;
-      transform: translateY(-50%);
-      image {
-          display: block;
-          width: 100%;
-      }
-      .icon_top{
-        display: block;
-        text-align: right;
-        color: #fff;
-        font-size: 96rpx;
-      }
+    padding: 0;
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    image {
+      display: block;
+      width: 100%;
+      margin:0 auto;
+    }
+    .icon_top{
+      display: block;
+      text-align: right;
+      color: #fff;
+      font-size: 96rpx;
+    }
   }
 }
 </style>

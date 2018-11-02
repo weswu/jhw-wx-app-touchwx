@@ -12,34 +12,22 @@
     
     <ui-row height="50" wx:if="{{!toggle}}">
       <ui-col vertical-align="middle">
-        <button type="primary" bindtap="toggleClick">开启自定义选项</button>
+        <button type="primary" bindtap="get">开启自定义选项</button>
       </ui-col>
       <ui-col vertical-align="middle">
         <button type="primary" plain bindtap="update">一键更新</button>
       </ui-col>
     </ui-row>
-    
 
     <ui-row-list border-left-indent wx:if="{{toggle}}">
       <ui-row height="104r">
-        <ui-col width="100" vertical-align="middle">
-          指定域名
-        </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <input placeholder="请填写" bindinput="input" id="domain" value="{{detail.domain}}"/>
-        </ui-col>
-      </ui-row>
-      <ui-row height="104r">
-        <ui-col width="80" vertical-align="middle">
+        <ui-col vertical-align="middle">
           robots.txt
         </ui-col>
-        <ui-col vertical-align="middle" align="right" space-right="15">
-          <text class="btn_info" bindtap="robots">生成</text>
-        </ui-col>
       </ui-row>
-      <ui-row height="100">
-        <ui-col vertical-align="middle" align="left">
-          <textarea bindinput="input" id="robots" value="{{detail.robots}}" placeholder="统计代码"/>
+      <ui-row height="140">
+        <ui-col align="left">
+          <textarea bindinput="input" id="robots" value="{{detail.robots}}" placeholder="请填写" style="height:120px"/>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -54,13 +42,10 @@
         <ui-col width="70" vertical-align="middle">
           修改频率
         </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="5">
-          <picker bindchange="picker" id="fdbk_type" value="{{index}}" range-key="text" range="{{category}}">
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="picker" id="freq" value="{{index}}" range-key="text" range="{{category}}">
             <view>{{category[index].text}}</view>
           </picker>
-        </ui-col>
-        <ui-col width="60" vertical-align="middle" align="right" space-right="15">
-          <text class="btn_info" bindtap="sitemap">生成</text>
         </ui-col>
       </ui-row>
       <ui-row height="200r">
@@ -68,46 +53,55 @@
           修改日期
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <radio-group bindchange="radio" id="lastmod">
+          <radio-group bindchange="radio" id="lastmodState">
             <view>
               <label>
-                <radio value="01" checked="{{detail.lastmod === '01'}}"></radio>使用原始信息
+                <radio value="01" checked="{{detail.lastmodState === '01'}}"></radio>使用原始信息
               </label>
             </view>
-            <view><label>
-              <radio value="02" checked="{{detail.lastmod === '02'}}"></radio>统一成当前日期
-            </label></view>
-            <view><label>
-              <radio value="03" checked="{{detail.lastmod === '03'}}"></radio>统一成指定日期
-            </label></view>
+            <view>
+              <label>
+                <radio value="02" checked="{{detail.lastmodState === '02'}}"></radio>统一成当前日期
+              </label>
+            </view>
+            <view>
+              <label>
+                <radio value="03" checked="{{detail.lastmodState === '03'}}"></radio>统一成指定日期
+              </label>
+            </view>
           </radio-group>
         </ui-col>
       </ui-row>
-      <ui-row height="104r" wx:if="{{detail.lastmod === '03'}}">
+      <ui-row height="104r" wx:if="{{detail.lastmodState === '03'}}">
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input placeholder="请填写" bindinput="input" id="lastmodTime" value="{{detail.lastmodTime}}"/>
+          <cc-date value="{{detail.lastmod}}" format="{{'yyyy-MM-dd'}}" bindchange="dateChange"></cc-date>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
-        <ui-col width="80" vertical-align="middle">
-          优先级
+        <ui-col width="100" vertical-align="middle">
+          自定义Sitemap
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <label>
-            <radio checked="{{true}}"></radio>自动调整
-          </label>
+          <radio-group bindchange="radio" id="contentState">
+            <label>
+              <radio value="01" checked="{{detail.contentState === '01'}}"></radio>开启
+            </label>
+            <label>
+              <radio value="00" checked="{{detail.contentState === '00'}}"></radio>关闭
+            </label>
+          </radio-group>
         </ui-col>
       </ui-row>
-      <ui-row height="100">
-        <ui-col vertical-align="middle" align="left">
-          <textarea bindinput="input" id="sitemap" value="{{detail.sitemap}}" placeholder="统计代码"/>
+      <ui-row height="180" wx:if="{{detail.contentState === '01'}}">
+        <ui-col vertical-align="top" align="left">
+          <textarea bindinput="input" id="content" value="{{detail.content}}" placeholder="请填写" style="height:160px"/>
         </ui-col>
       </ui-row>
     </ui-row-list>
 
-    <ui-row height="50" wx:if="{{toggle}}">
+    <ui-row height="50" wx:if="{{toggle}}" style="margin:10px 0">
       <ui-col vertical-align="middle">
-        <button type="primary" bindtap="submit">保存修改</button>
+        <button type="primary" bindtap="submit">保存并生成</button>
       </ui-col>
       <ui-col vertical-align="middle">
         <button plain bindtap="close">关闭</button>
@@ -125,19 +119,13 @@ let pageConf = {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
-      'cc-lan': '../../packages/cc-lan'
+      'cc-lan': '../../packages/cc-lan',
+      'cc-date': '../../packages/cc-date'
     }
   },
   data: {
     toggle: false,
-    detail: {
-      domain: '',
-      robots: '',
-      sitemap: '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>',
-      lastmod: '01',
-      priority: '01',
-      lastmodTime: '2015-11-04'
-    },
+    detail: {},
     index: 0,
     category: [
       { text: '经常', value: 'always' },
@@ -149,156 +137,75 @@ let pageConf = {
       { text: '从不', value: 'never' }
     ]
   },
-  onLoad () {
-    this.setData({
-      'detail.robots': '#Robots.txt automatically generated by' + getApp().globalData.user.username + '\n\n Sitemap: http://' + getApp().globalData.user.username + '/sitemap.xml'
-    })
-    this.layoutChange()
-  },
   layoutChange () {
-    let layoutId = getApp().globalData.layoutId
-    let domain = 'pc.jihui88.com/rest/site/' + layoutId + '/index'
-    var ctx = this
-    getApp().globalData.staticList.forEach(item => {
-      if (item.layoutId === layoutId && item.bind.address) {
-        domain = item.bind.address
-      }
-    })
-    this.setData({
-      'detail.domain': domain
-    })
+    if (this.data.toggle) this.get()
   },
-  toggleClick () {
-    this.setData({
-      toggle: true
-    })
-    this.layoutChange
+  get () {
+    let layoutId = getApp().globalData.layoutId
+    if (!layoutId) {
+      Tips.toast('请选择站点')
+    } else {
+      this.setData({
+        toggle: true
+      })
+      api.sitemap({
+        data: {
+          layoutId: layoutId
+        }
+      }).then(res => {
+        if (res.success) {
+          let data = res.attributes.data
+          this.data.category.forEach((item, index) => {
+            if (data.freq === item.value) {
+              this.setData({
+                index: index
+              })
+            }
+          })
+          this.setData({
+            detail: data
+          })
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
   },
   close () {
     this.setData({
       toggle: false
     })
   },
-  dateme (date, i) {
-    var dateme
-    if (this.data.detail.lastmod === '01') {
-      dateme = typeof data !== 'undefined' ? new Date(date[i]) : null
-    }
-    if (this.data.detail.lastmod === '02') {
-      dateme = new Date()
-    }
-    if (this.data.detail.lastmod === '03') {
-      dateme = new Date(this.data.detail.lastmodTime)
-    }
-    if (!dateme) {
-      return null
-    }
-    var month = dateme.getMonth() + 1
-    if (month < 10) { month = '0' + month }
-    var day = dateme.getDate()
-    if (day < 10) { day = '0' + day }
-    return dateme.getFullYear() + '-' + month + '-' + day
-  },
-  scaleme (i) {
-    if (i === 0) {
-      return '1.0000'
-    } else if (i === 1) {
-      return '0.5000'
-    } else if (i === 2) {
-      return '0.2500'
-    } else {
-      return '0.1000'
-    }
-  },
-  sitemap () {
-    var ctx = this
-    api.sitemapcap().then(res => {
-      var sitemap = ''
-      if (res !== null) {
-        var filename = res['filename']
-        var date = res['date']
-        var scale = res['scale']
-        let freq = ctx.data.category[ctx.data.index].value
-        sitemap = unescape('%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Curlset%20xmlns%3D%22http%3A//www.sitemaps.org/schemas/sitemap/0.9%22%3E%0A')
-        for (var i = 0; i < filename.length; i++) {
-          sitemap += '<url> \n'
-          sitemap += '\t<loc>http://' + ctx.data.detail.domain + '/' + filename[i] + '</loc> \n'
-          sitemap += '\t<lastmod>' + ctx.dateme(date, i) + '</lastmod> \n'
-          sitemap += '\t<changefreq>' + freq + '</changefreq> \n'
-          sitemap += '\t<priority>' + ctx.scaleme(scale[i]) + '</priority> \n'
-          sitemap += '</url> \n'
-        }
-        sitemap += unescape('%3C/urlset%3E%0A')
-        this.setData({
-          'detail.sitemap':sitemap
-        })
-      }
-      api.saveRobotsOrSitemap({
-        data: {
-          content: sitemap,
-          type: 'sitemap',
-          robotsurl: ctx.data.detail.domain,
-          robots: ctx.data.detail.robots,
-          domain: ctx.data.detail.domain.trim(),
-          freq: freq,
-          lastmod: ctx.dateme(null),
-          layoutId: getApp().globalData.layoutId
-        },
-        method: 'POST'
-      }).then(res => {
-        if (res.success) {
-          Tips.success("生成成功")
-        } else {
-          Tips.error(res.msg)
-        }
-      })
+  // 时间
+  dateChange (e) {
+    this.setData({
+      'detail.lastmod': e.detail
     })
+    this.get()
   },
   update () {
-    this.robots()
-    this.sitemap()
-    this.setData({
-      toggle: true
-    })
-  },
-  robots () {
-    let robots = ''
-    let domain = this.data.detail.domain
-    robots = '#Robots.txt automatically generated by\t' + domain + '\n'
-    robots += '\n'
-    robots += 'Sitemap: http://' + domain + '/sitemap.xml\n'
-    this.setData({
-      'detail.robots': robots
-    })
-    api.saveRobotsOrSitemap({
+    api.sitemapBuild({
       data: {
-        content: robots,
-        type: 'robots',
-        robotsurl: domain,
         layoutId: getApp().globalData.layoutId
       },
       method: 'POST'
     }).then(res => {
       if (res.success) {
-        Tips.success("生成成功")
+        Tips.success("更新成功")
       } else {
         Tips.error(res.msg)
       }
     })
   },
   submit () {
-    api.seotoolsSave({
-      data: {
-        robots: this.data.detail.robots,
-        sitemap: this.data.detail.sitemap,
-        domain: this.data.detail.domain.trim()
-      },
+    api.sitemapSave({
+      data: this.data.detail,
       method: 'POST'
     }).then(res => {
       if (res && res.success) {
-        Tips.success("保存成功")
+        Tips.success("生成成功")
       } else {
-        Tips.success("修改成功")
+        Tips.error(res.msg)
       }
     })
   }
@@ -307,6 +214,9 @@ export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
+page{
+  background: #f1f1f1
+}
 .j_a{
   color: #0366ce;
   display: inline-block;

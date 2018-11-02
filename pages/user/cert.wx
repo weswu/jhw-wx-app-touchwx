@@ -43,8 +43,8 @@ import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-loadmore': '../../packages/cc-loadmore',
       'cc-header': '../../packages/cc-header',
+      'cc-loadmore': '../../packages/cc-loadmore',
       'cc-lan': '../../packages/cc-lan'
     }
   },
@@ -52,7 +52,7 @@ export default {
     list: [],
     params: {
       page: 1,
-      pageSize: 8
+      pageSize: 10
     },
     count: 0,
     more: {},

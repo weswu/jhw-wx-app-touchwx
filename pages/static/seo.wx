@@ -29,6 +29,7 @@ export default {
       { text: '关键词管理', value: 'keyword' },
       { text: '长尾关键词', value: 'longTailKeyword' },
       { text: '内部链接设置', value: 'link' },
+      { text: 'Tag标签管理', value: 'tag' },
       { text: '付费SEO推广', value: 'paid' }
     ]
   }

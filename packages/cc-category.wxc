@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import Utils from '../static/utils/utils'
 export default {
   properties: {
     title: {
@@ -58,17 +59,20 @@ export default {
     scroHeight: parseInt(wx.DEFAULT_CONTENT_HEIGHT * 0.8)
   },
   ready () {
-    let name = ''
-    this.data.categoryList.forEach(item => {
-      if (item.categoryId === this.data.categoryId) {
-        name = item.name
-      }
-    })
-    this.setData({
-      name: name
-    })
+    this.init(this.data.categoryId)
   },
   methods: {
+    init (categoryId) {
+      let name = ''
+      this.data.categoryList.forEach(item => {
+        if (item.categoryId === categoryId) {
+          name = item.name
+        }
+      })
+      this.setData({
+        name: name
+      })
+    },
     // 下拉
     openPopup (e) {
       this.setData({
@@ -87,6 +91,12 @@ export default {
     },
     cateChange (e) {
       let item = e.currentTarget.dataset.item
+      if (!item) {
+        item = {
+          name: '',
+          categoryId: ''
+        }
+      }
       this.setData({
         categoryId: item.categoryId,
         name: item.name
@@ -95,28 +105,9 @@ export default {
       this.triggerEvent('change', item.categoryId)
     },
     changeCateList (e) {
-      let data = e.currentTarget.dataset.item
-      data.expand = !data.expand
-      var ctx = this
-      this.data.categoryList.forEach(item => {
-        if (item.categoryId === data.categoryId) {
-          item.expand = !item.expand
-        }
-        if (item.belongId === data.categoryId) {
-          item.hidden = data.expand
-          ctx.data.categoryList.forEach(row => {
-            if (row.belongId === item.categoryId) {
-              if (!data.expand) {
-                row.hidden = true
-              } else {
-                row.hidden = !item.expand
-              }
-            }
-          })
-        }
-      })
+      let list = Utils.fold(this.data.categoryList, e)
       this.setData({
-        categoryList: this.data.categoryList
+        categoryList: list
       })
     }
   }

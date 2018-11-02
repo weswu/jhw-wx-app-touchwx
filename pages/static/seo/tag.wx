@@ -1,0 +1,195 @@
+<template>
+  <view>
+    <cc-header title="Tag标签管理"></cc-header>
+    <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
+      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+      <view slot="content">
+        <ui-row height="65" class="j_row_list" border-bottom>
+          <ui-col vertical-align="middle" align="left" space-left="15">
+            <view class="text">{{ item.name }}</view>
+            <view class="desc">
+              <text wx:if="{{item.type === 'news'}}">新闻标签</text>
+              <text wx:if="{{item.type === 'product'}}">产品标签</text>
+            </view>
+          </ui-col>
+        </ui-row>
+      </view>
+      <view slot="operate">
+        <view class="j_operate" border-bottom>
+          <ui-row height="65">
+            <ui-col data-item="{{item}}" bindtap="detail" vertical-align="middle" align="center">
+              修改
+            </ui-col>
+            <ui-col data-index="{{index}}" data-id="{{item.tagId}}" bindtap="del" vertical-align="middle" align="center">
+              删除
+            </ui-col>
+          </ui-row>
+        </view>
+      </view>
+    </ui-swipe-out>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <cc-modal title="标签添加" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
+      <view class="add-content">
+        <view class="input">
+          <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{detail.name}}"></i>
+          <input type="text" value="{{detail.name}}" bindinput="nameInput" placeholder="请输入标签名称"/>
+        </view>
+        <view class="input" style="padding-left: 10px;">
+          <cc-category id="category" type="{{'tag'}}" categoryList="{{tagList}}" categoryId="detail.categoryId" wx:key="*this" bindchange="cateChange">
+            <view style="display:inline-block">上级分类：</view>
+          </cc-category>
+        </view>
+      </view>
+    </cc-modal>
+
+    <navigator url="/pages/category/category?type=tag"  class="j_add j_add_category">分类</navigator>
+
+    <view class="j_add" bindtap="add"><i class="iconfont icon-jia"></i></view>
+  </view>
+</template>
+
+<script>
+import api from '../../../static/utils/api'
+import Tips from '../../../static/utils/tips'
+import Utils from '../../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../../packages/cc-header',
+      'cc-loadmore': '../../../packages/cc-loadmore',
+      'cc-modal': '../../../packages/cc-modal',
+      'cc-category': '../../../packages/cc-category'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1
+    },
+    count: 0,
+    more: {},
+    el: 'undefined',
+    detail: {},
+    categoryId: '',
+    visible1: false,
+    tagList: []
+  }, 
+  onLoad () {
+    this.get()
+    let that = this
+    getApp().getTagCategory(res => {
+      that.setData({
+        tagList: res
+      })
+    })
+  },
+  get () {
+    api.tag({
+      data: this.data.params
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.switcher = 'off'
+        })
+        Utils.scrollList(this, res, '没有更多标签')
+      }
+    })
+  },
+  changeHandler (e) {
+    Utils.switcher(this, e)
+  },
+  add () {
+    this.setData({
+      visible1: true,
+      detail: {}
+    })
+    this.selectComponent("#category").init('')
+  },
+  nameInput (e) {
+    this.setData({
+      'detail.name': e.detail.value
+    })
+  },
+  clearinput () {
+    this.setData({
+      'detail.name': ''
+    })
+  },
+  cancel () {
+    this.setData({
+      visible1: false
+    })
+  },
+  cateChange (e) {
+    this.setData({
+      'detail.categoryId': e.detail
+    })
+  },
+  ok () {
+    if (!this.data.detail.name) {
+      Tips.toast('标签名称不能为空')
+    } else {
+      let detail = this.data.detail
+      let data = {
+        model: JSON.stringify(detail)
+      }
+      let url = ''
+      if (detail.tagId) {
+        url = '/' + detail.tagId
+        data._method = 'put'
+      }
+      api.tagDetail({
+        data: data,
+        method: 'POST',
+        id: detail.tagId
+      }).then(res => {
+        if (res.success) {
+          let data = res.attributes.data
+          if (!detail.tagId) {
+            this.data.list.splice(0, 0, res.attributes.data)
+            Tips.success('添加成功')
+          } else {
+            this.data.list.forEach(item => {
+              if (item.tagId === data.tagId) {
+                item.name = data.name
+                item.categoryId = data.categoryId
+              }
+            })
+            Tips.success('修改成功')
+          }
+          this.cancel()
+          this.setData({
+            list: this.data.list
+          })
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    }
+  },
+  detail (e) {
+    let item = e.currentTarget.dataset.item
+    this.setData({
+      visible1: true,
+      detail: item
+    })
+    this.selectComponent("#category").init(item.categoryId)
+  },
+  del (e) {
+    Utils.del(this, e, api.tagDetail)
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+.j_add_category{
+  bottom:160rpx;
+  color:#fff;
+  font-size: 12px;
+}
+</style>

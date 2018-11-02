@@ -1,0 +1,153 @@
+<template>
+  <view>
+    <cc-header title="绑定手机"></cc-header>
+   
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="80" vertical-align="middle">
+          手机号码
+        </ui-col>
+        <ui-col vertical-align="middle" space-right="15">
+          <input placeholder="请输入手机号码" type="number" bindinput="input" id="cellphone" value="{{detail.cellphone}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{!isCode}}">
+        <ui-col width="80" vertical-align="middle">
+          图片验证码
+        </ui-col>
+        <ui-col vertical-align="middle" space-right="15">
+          <input placeholder="请输入图片验证码" bindinput="input" id="randCode" value="{{detail.randCode}}"/>
+        </ui-col>
+        <ui-col width="80" vertical-align="middle" space-right="15">
+          <image mode="aspectFit" src="http://www.jihui88.com/alphveriImg{{time}}" bindtap="refresh"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r" wx:if="{{isCode}}">
+        <ui-col width="80" vertical-align="middle">
+          验证码
+        </ui-col>
+        <ui-col vertical-align="middle" space-right="5">
+          <input placeholder="请输入短信验证码" bindinput="input" id="code" value="{{detail.code}}"/>
+        </ui-col>
+        <ui-col class="desc" width="100" vertical-align="middle" space-right="15" bindtap="sendCellphone">
+          获取短信验证码
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <button type="primary" bindtap="sendCellphone" wx:if="{{!isCode}}">发送手机短信验证码</button>
+    <button type="primary" bindtap="submit" wx:if="{{isCode}}">确定绑定</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+let pageConf = {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {},
+    isCode: false,
+    time: ''
+  },
+  onLoad () {
+    this.get()
+    this.setData({
+      time: '?skey=' + wx.getStorageSync('skey')
+    })
+  },
+  get () {
+    api.userOauth({
+      data: {
+        requestType: 'state',
+        domain: 'wxapp.jihui88.com'
+      }
+    }).then(res => {
+      if (res.success) {
+        this.setData({
+          'detail.state': res.attributes.data + '_' + '0' + '_cellphone'
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.cellphone,
+        method: 'required',
+        message: '手机号码不能为空'
+      },
+      {
+        value: this.data.detail.randCode,
+        method: 'required',
+        message: '图片验证码不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  sendCellphone () {
+    if (!this.validate()) {
+      return;
+    }
+    this.setData({
+      isMessage: true
+    })
+    let detail = this.data.detail
+    api.sendCellphone({
+      data: {
+        cellphone: detail.cellphone,
+        randCode: detail.randCode,
+        state: detail.state
+      },
+      method: 'POST'
+    }).then(res => {
+      if (res.success) {
+        Tips.success("修改成功")
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  refresh () {
+    this.setData({
+      time: '?skey=' + wx.getStorageSync('skey') + '&time=' + new Date().getTime()
+    })
+  },
+  submit () {
+    let detail = this.data.detail
+    api.userOauth({
+      data: {
+        cellphone: detail.cellphone,
+        code: detail.code,
+        state: detail.state,
+        domain: 'wxapp.jihui88.com'
+      },
+    }).then(res => {
+      if (res.success) {
+        Tips.success('绑定成功')
+        var pages = getCurrentPages()
+        var prevPage = pages[pages.length - 2];  //上个页面
+        prevPage.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+export default Page(Object.assign(pageConf, Input))
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+button{
+  margin: 35px 15px 15px 15px
+}
+</style>
