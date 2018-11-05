@@ -1,15 +1,239 @@
 <template>
   <view>
     <cc-header title="长尾关键词"></cc-header>
-    <view class="j_tip">温馨提醒：请到电脑端编辑</view>
+    <ui-row height="50" class="btn-list">
+      <ui-col vertical-align="middle">
+        <button type="primary" plain bindtap="generate">快速生成</button>
+      </ui-col>
+      <ui-col vertical-align="middle">
+        <button type="primary" plain bindtap="add">增加一行</button>
+      </ui-col>
+      <ui-col vertical-align="middle">
+        <button type="primary" plain bindtap="del">删除一行</button>
+      </ui-col>
+      <ui-col vertical-align="middle">
+        <button type="primary" plain bindtap="viewData">查看示例</button>
+      </ui-col>
+    </ui-row>
+    <view class="j_tip">请列出相关关键词（每一个产品用一张表格）</view>
+    <scroll-view scroll-x scroll-left>
+      <view class="j_table">
+        <view class="th title">
+          <view class="td">品牌</view>
+          <view class="td">地区</view>
+          <view class="td">产品特性</view>
+          <view class="td">用途/应用</view>
+          <view class="td">产品/服务</view>
+          <view class="td">盈利模式</view>
+        </view>
+        <view class="th" wx:for="{{list}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="*this">
+          <view class="td" wx:for="{{row.children}}" wx:key="*this">
+            <input class="desc" bindinput="input" data-row="{{rowIndex}}" data-index="{{index}}" value="{{item.value}}"/>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <scroll-view scroll-x style="height: 200px;" scroll-left wx:if="{{view}}">
+      <view class="j_table">
+        <view class="th title">
+          <view class="td">品牌</view>
+          <view class="td">地区</view>
+          <view class="td">产品特性</view>
+          <view class="td">用途/应用</view>
+          <view class="td">产品/服务</view>
+          <view class="td">盈利模式</view>
+        </view>
+        <view class="th" wx:for="{{list2}}" wx:for-item="row" wx:key="*this">
+          <view class="td" wx:for="{{row.children}}" wx:key="*this">{{item.value}}</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <ui-popup cropout show="{{show }}" position="top" top="{{ top }}" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
+      <view class="top_pop">
+        <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
+          <ui-row-list border-left-indent>
+            <ui-row height="43" border-bottom wx:for="{{klist}}" wx:key="*this" data-index="{{index}}">
+              <ui-col vertical-align="middle">
+                {{item}}
+              </ui-col>
+              <ui-col vertical-align="middle" align="right" width="80" 
+                space-right="15" data-item="{{item}}" bindtap="select" style="color: #0366ce;">
+                选用
+              </ui-col>
+            </ui-row>
+          </ui-row-list>
+        </scroll-view>
+      </view>
+    </ui-popup>
+     
   </view>
 </template>
 
 <script>
+import api from '../../../static/utils/api'
+import Tips from '../../../static/utils/tips'
 export default {
   config: {
     usingComponents: {
       'cc-header': '../../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [
+      {
+        children: [
+          { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+        ]
+      },
+      {
+        children: [
+          { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+        ]
+      },
+      {
+        children: [
+          { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+        ]
+      },
+      {
+        children: [
+          { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+        ]
+      },
+      {
+        children: [
+          { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+        ]
+      }
+    ],
+    view: false,
+    list2: [
+      {
+        children: [
+          { value: '步阳' }, { value: '杭州' }, { value: '钢木' }, { value: '防盗' }, { value: '门' }, { value: '加盟' }
+        ]
+      },
+      {
+        children: [
+          { value: '忠恒' }, { value: '永康' }, { value: '不锈钢' }, { value: '室内' }, { value: '' }, { value: '代理' }
+        ]
+      },
+      {
+        children: [
+          { value: '王力' }, { value: '' }, { value: '木' }, { value: '室外' }, { value: '' }, { value: '合作' }
+        ]
+      },
+      {
+        children: [
+          { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '招商' }
+        ]
+      },
+      {
+        children: [
+          { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '厂家' }
+        ]
+      }
+    ],
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    top: 66,
+    show: false,
+    klist: []
+  },
+  viewData () {
+    this.setData({
+      view: !this.data.view
+    })
+  },
+  add () {
+    this.data.list.push({
+      children: [
+        { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }, { value: '' }
+      ]
+    })
+    this.setData({
+      list: this.data.list
+    })
+  },
+  del () {
+    this.data.list.splice(this.data.list.length - 1, 1)
+    this.setData({
+      list: this.data.list
+    })
+  },
+  input (e) {
+    let index = e.currentTarget.dataset.index
+    let row = e.currentTarget.dataset.row
+    this.data.list[row].children[index].value = e.detail.value
+    this.setData({
+      list: this.data.list
+    })
+  },
+  select (e) {
+    let item = e.currentTarget.dataset.item
+    
+    api.keywordsSave({
+      data: {keywords: item},
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('添加成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  generate () {
+    var ctx = this
+    let a = []
+    let b = []
+    let c = []
+    let d = []
+    let e = []
+    let f = []
+    this.data.list.forEach(row => {
+      row.children.forEach((item, i) => {
+        if (item.value) {
+          if (i === 0) { a.push(item.value) }
+          if (i === 1) { b.push(item.value) }
+          if (i === 2) { c.push(item.value) }
+          if (i === 3) { d.push(item.value) }
+          if (i === 4) { e.push(item.value) }
+          if (i === 5) { f.push(item.value) }
+        }
+      })
+    })
+    if (a.length === 0 && b.length === 0 && c.length === 0 && d.length === 0 && e.length === 0 && f.length === 0) {
+      Tips.toast('数据不能全空，请输入后再生成!')
+    } else {
+      if (a.length === 0) a.push('')
+      if (b.length === 0) b.push('')
+      if (c.length === 0) c.push('')
+      if (d.length === 0) d.push('')
+      if (e.length === 0) e.push('')
+      if (f.length === 0) f.push('')
+      var t = 0
+      this.data.klist = []
+      for (var i = 0; i < a.length; i++) {
+        for (var j = 0; j < b.length; j++) {
+          for (var k = 0; k < c.length; k++) {
+            for (var l = 0; l < d.length; l++) {
+              for (var m = 0; m < e.length; m++) {
+                for (var n = 0; n < f.length; n++) {
+                  ctx.data.klist.push(a[i].trim() + b[j].trim() + c[k].trim() + d[l].trim() + e[m].trim() + f[n].trim())
+                  t++
+                }
+              }
+            }
+          }
+        }
+      }
+      Tips.toast('此次共生成' + t + '个长尾关键词!点击选用可以添加至我的关键词中')
+      this.setData({
+        show: true,
+        klist :this.data.klist
+      })
     }
   }
 }
@@ -18,5 +242,48 @@ export default {
 <style lang="less">
 page{
   background: #f1f1f1
+}
+.btn-list{
+  background:#fff;
+  button{
+    font-size:12px;
+    padding: 0 10px;
+    line-height:2.3
+  }
+}
+//表格
+.j_table{
+  background: #fff;
+  color: #a0a0a0;
+  font-size: 12px;
+  overflow:scroll;
+  width: 600px;
+  .th{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    .td{
+      display: inline-block;
+      width: 100px;
+      padding:0 10px;
+      height:30px;
+      line-height: 30px;
+      border-right: 1px solid #eee;
+      float:left;
+      input{
+        height:26px;
+        line-height: 26px;
+        margin-top:2px;
+      }
+    }
+  }
+  .title{
+    height: 40px;
+    line-height: 40px;
+    .td{
+      height:40px;
+      line-height: 40px;
+    }
+  }
 }
 </style>
