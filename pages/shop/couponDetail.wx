@@ -138,7 +138,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-image': '../../packages/cc-image',
@@ -187,6 +187,9 @@ let pageConf = {
       {value: 10, text: '10'}
     ],
     memberRankList: []
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad ({id}) {
     if (id) {
@@ -237,13 +240,15 @@ let pageConf = {
   },
   // 时间
   date1 (e) {
+    var field = 'detail.beginTime'
     this.setData({
-      'detail.beginTime': e.detail
+      [field]: e.detail
     })
   },
   date2 (e) {
+    var field = 'detail.endTime'
     this.setData({
-      'detail.endTime': e.detail
+      [field]: e.detail
     })
   },
   // 图片
@@ -251,13 +256,15 @@ let pageConf = {
     this.selectComponent("#image").chooseImage();
   },
   clearPic () {
+    var field = 'detail.pic'
     this.setData({
-      'detail.pic': ''
+      [field]: ''
     })
   },
   changePic (e) {
+    var field = 'detail.pic'
     this.setData({
-      'detail.pic': e.detail.src
+      [field]: e.detail.src
     })
   },
   validate() {
@@ -294,7 +301,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

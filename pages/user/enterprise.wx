@@ -155,7 +155,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
@@ -172,6 +172,9 @@ let pageConf = {
       }
     }
   },
+  onReady () {
+    Object.assign(this, Input)
+  },
   onLoad () {
     this.setData({
       detail: getApp().globalData.user
@@ -179,16 +182,18 @@ let pageConf = {
     if (!getApp().globalData.enterprise.enterpriseId) {
       this.get()
     } else {
+      var field = 'detail.enterprise'
       this.setData({
-        'detail.enterprise': getApp().globalData.enterprise
+        [field]: getApp().globalData.enterprise
       })
     }
   },
   get () {
     api.enterprise().then(res => {
       if (res.success) {
+        var field = 'detail.enterprise'
         this.setData({
-          'detail.enterprise': res.attributes.data
+          [field]: res.attributes.data
         })
       } else {
         Tips.error(res.msg)
@@ -207,25 +212,29 @@ let pageConf = {
   // 图片
   error(e) {
     this.data.src = "upload/j/j2/jihui88/picture/2018/08/29/92f8cf7a-cf99-4308-9630-5ca0bceac29f.png";
+    var field = 'detail.enterprise.logo'
     this.setData({
-      'detail.enterprise.logo': this.data.src
+      [field]: this.data.src
     });
   },
   // 时间
   dateChange (e) {
+    var field = 'detail.enterprise.regTime'
     this.setData({
-      'detail.enterprise.regTime': e.detail
+      [field]: e.detail
     })
     this.get()
   },
   areaChange (e) {
+    var field = 'detail.enterprise.address'
     this.setData({
-      'detail.enterprise.address': e.detail
+      [field]: e.detail
     })
   },
   cropper (e) {
+    var field = 'detail.enterprise.logo'
     this.setData({
-      'detail.enterprise.logo': e
+      [field]: e
     })
     this.submit()
   },
@@ -301,7 +310,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

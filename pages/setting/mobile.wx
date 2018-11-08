@@ -43,16 +43,21 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
     }
   },
   data: {
-    detail: {},
+    detail: {
+      state: ''
+    },
     isCode: false,
     time: ''
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad () {
     this.get()
@@ -68,8 +73,9 @@ let pageConf = {
       }
     }).then(res => {
       if (res.success) {
+        var field = 'detail.state'
         this.setData({
-          'detail.state': res.attributes.data + '_' + '0' + '_cellphone'
+          [field]: res.attributes.data + '_0_cellphone'
         })
       } else {
         Tips.error(res.msg)
@@ -140,7 +146,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

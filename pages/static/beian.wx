@@ -323,7 +323,7 @@ import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
@@ -347,6 +347,9 @@ let pageConf = {
   },
   onLoad (e) {
     this.get()
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   get () {
     if (this.data.current1 === 0) {
@@ -453,7 +456,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

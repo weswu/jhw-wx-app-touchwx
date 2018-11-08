@@ -88,10 +88,12 @@ export default {
     var optionsList = this.optionsDataTranlate(getApp().globalData.customData.mobileSort,"");
     // 开始加载页面
     var scrollViewWidth = systemInfo.windowWidth;
+    var field = 'scrollPosition.scrollViewWidth'
+    var field1 = 'scrollPosition.windowViewHeight'
     this.setData({
       optionsListData:optionsList,
-      'scrollPosition.scrollViewWidth':scrollViewWidth,
-      'scrollPosition.windowViewHeight':systemInfo.windowHeight
+      [field]:scrollViewWidth,
+      [field1]:systemInfo.windowHeight
     });
   },
   save () {
@@ -169,10 +171,11 @@ export default {
     this.data.optionsListData[secInfo.selectIndex].selectClass = "dragSelected";
     var optionsListData = this.data.optionsListData;
 
+    var field = 'scrollPosition.selectIndex'
     this.setData({
       selectItemInfo:secInfo,
       optionsListData:optionsListData,
-      'scrollPosition.selectIndex':secInfo.selectIndex
+      [field]:secInfo.selectIndex
     })
   },
   scrollTouchMove (event) {
@@ -212,18 +215,20 @@ export default {
       }
     }
       
+    selectItemInfo.selectPosition = selectPosition
+    selectItemInfo.selectIndex = selectIndex
     this.setData({
-      'selectItemInfo.selectPosition': selectPosition,
-      'selectItemInfo.selectIndex': selectIndex,
+      selectItemInfo: selectItemInfo,
       optionsListData: optionsListData
     });
   },
   scrollTouchEnd (event) {
     console.log(event);
     var optionsListData = this.optionsDataTranlate(this.data.optionsListData,"")
+    var field = 'movableViewPosition.className'
     this.setData({
       optionsListData:optionsListData,
-      'movableViewPosition.className':"none",
+      [field]:"none",
       isBack: false
     })
   },

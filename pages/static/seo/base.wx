@@ -79,10 +79,12 @@ export default {
     })
   },
   get () {
+    this.data.more.loading = true
+    this.data.more.tip = ''
+    var field = 'params.layoutId'
     this.setData({
-      'params.layoutId': getApp().globalData.layoutId,
-      'more.loading': true,
-      'more.tip': ''
+      [field]: getApp().globalData.layoutId,
+      more: this.data.more
     })
     if (this.data.active === 0) {
       api.seoNav({
@@ -120,25 +122,28 @@ export default {
   },
   change (e) {
     let index = e.currentTarget.dataset.index
+    var field = 'params.page'
     this.setData({
       list: [],
-      'params.page': 1,
+      [field]: 1,
       active: index
     })
     this.popHide()
     this.get()
   },
   layoutChante () {
+    var field = 'params.page'
     this.setData({
       list: [],
-      'params.page': 1
+      [field]: 1
     })
     this.get()
   },
   lanChante () {
+    var field = 'params.page'
     this.setData({
       list: [],
-      'params.page': 1
+      [field]: 1
     })
     this.get()
   },

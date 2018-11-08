@@ -104,11 +104,13 @@ export default {
   },
   // 图片
   get () {
+    var field = 'params.endDate'
+    this.data.more.tip = ''
+    this.data.more.loading = true
     this.setData({
       ids: '',
       fileids: '',
-      'more.tip': '',
-      'more.loading': true
+      more: this.data.more
     })
     api.albumRecycle({
       data: {
@@ -146,9 +148,10 @@ export default {
     if (file.length > 1) {
       name = file[file.length-2].name
     }
+    var field = 'params.page'
     this.setData({
       list: [],
-      'params.page': 1,
+      [field]: 1,
       title: item.name,
       catelog: file,
       catelogName: name,
@@ -287,10 +290,11 @@ export default {
   },
   restore () {
     Tips.success('还原成功')
+    var field = 'params.page'
     this.setData({
       list: [],
       filelist: [],
-      'params.page': 1
+      [field]: 1
     })
     this.get()
   },
@@ -329,10 +333,11 @@ export default {
   },
   batchDel2 () {
     Tips.success('删除成功')
+    var field = 'params.page'
     this.setData({
       fileids: [],
       list: [],
-      'params.page': 1
+      [field]: 1
     })
     this.get()
   },
@@ -344,10 +349,11 @@ export default {
     }).then(res => {
       if (res.success) {
         Tips.success('清空回收站成功')
+        var field = 'params.page'
         this.setData({
           filelist: [],
           list: [],
-          'params.page': 1,
+          [field]: 1,
           catelog: [
             {name: '回收站', albumId: 'all'}
           ],

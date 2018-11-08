@@ -141,8 +141,9 @@ export default{
     })  
   },
   error () {
+    var field = 'accountInfo.headimg'
     this.setData({
-      'accountInfo.headimg': 'upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
+      [field]: 'upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
     })
   },
   onShow () {

@@ -72,9 +72,11 @@ export default {
     })
   },
   search(e) {
+    var params = this.data.params
+    params.page = 1
+    params.name = e.detail.value
     this.setData({
-      'params.page': 1,
-      'params.name': e.detail.value,
+      params: params,
       list: []
     })
     this.get()

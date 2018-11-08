@@ -125,7 +125,7 @@ import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-image': '../../packages/cc-image',
@@ -142,6 +142,9 @@ let pageConf = {
     rankIndex: 0,
     memberRankList: [],
     memberAttrList: []
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad (e) {
     if (e.id) {
@@ -176,8 +179,9 @@ let pageConf = {
       memberRankList: data
     })
     if (!this.data.detail.memberId) {
+      var field = 'detail.memberRank'
       this.setData({
-        'detail.memberRank': data[0].rankId
+        [field]: data[0].rankId
       })
     } else {
       this.initIndex()
@@ -253,16 +257,18 @@ let pageConf = {
         })
         items.push(item)
       })
+      var field = 'detail.items'
       that.setData({
-        'detail.items': items,
+        [field]: items,
         memberAttrList: res
       })
     })
   },
   categoryPicker (e) {
     var index = e.detail.value
+    var field = 'detail.memberRank'
     this.setData({
-      'detail.memberRank': this.data.memberRankList[index].rankId,
+      [field]: this.data.memberRankList[index].rankId,
       rankIndex: index
     })
   },
@@ -369,7 +375,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

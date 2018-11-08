@@ -101,8 +101,9 @@ export default {
   },
   get () {
     this.getNav()
+    var field = 'params.layoutId'
     this.setData({
-      'params.layoutId': getApp().globalData.layoutId
+      [field]: getApp().globalData.layoutId
     })
     api.innerLinks({
       data: this.data.params

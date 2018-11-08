@@ -116,9 +116,10 @@ export default {
     })
   },
   get() {
+    this.data.more.tip = ''
+    this.data.more.loading = true
     this.setData({
-      'more.tip': '',
-      'more.loading': true
+      more: this.data.more
     })
     api.staticList({
       data: this.data.params
@@ -195,8 +196,9 @@ export default {
   },
   radioChange (e) {
     let value = e.currentTarget.dataset.value
+    var field = 'detail.country'
     this.setData({
-      'detail.country': value
+      [field]: value
     })
   },
   view (e) {

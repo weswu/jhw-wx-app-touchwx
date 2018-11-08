@@ -43,7 +43,7 @@
       </view>
     </cc-modal>
 
-    <navigator url="/pages/category/category?type=tag"  class="j_add j_add_category">分类</navigator>
+    <navigator url="/pages/category/category?type=tag" class="j_add j_add_category">分类</navigator>
 
     <view class="j_add" bindtap="add"><i class="iconfont icon-jia"></i></view>
   </view>
@@ -107,13 +107,15 @@ export default {
     this.selectComponent("#category").init('')
   },
   nameInput (e) {
+    var field = 'detail.name'
     this.setData({
-      'detail.name': e.detail.value
+      [field]: e.detail.value
     })
   },
   clearinput () {
+    var field = 'detail.name'
     this.setData({
-      'detail.name': ''
+      [field]: ''
     })
   },
   cancel () {
@@ -122,8 +124,9 @@ export default {
     })
   },
   cateChange (e) {
+    var field = 'detail.categoryId'
     this.setData({
-      'detail.categoryId': e.detail
+      [field]: e.detail
     })
   },
   ok () {
