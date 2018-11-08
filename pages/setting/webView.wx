@@ -15,7 +15,7 @@ export default {
   data: {
     src: ''
   },
-  onLoad (option){
+  onLoad (option) {
     if (option.itemId) {
       option.src = option.src + '?itemId=' + option.itemId + '&isMobile=true'
     } else if (option.src.indexOf('pc.jihui88.com') > -1){

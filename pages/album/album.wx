@@ -259,11 +259,12 @@ export default {
   },
   // 图片
   get () {
+    this.data.more.tip = ''
+    this.data.more.loading = true
     this.setData({
       ids: '',
       fileids: '',
-      'more.tip': '',
-      'more.loading': true
+      more: this.data.more
     })
     api.albumAttr({
       data: this.data.params,
@@ -297,9 +298,10 @@ export default {
       if (file.length > 1) {
         name = file[file.length-2].name
       }
+      var field = 'params.page'
       this.setData({
         list: [],
-        'params.page': 1,
+        [field]: 1,
         title: item.name,
         catelog: file,
         catelogName: name,
@@ -657,9 +659,10 @@ export default {
       }).then(res => {
         if (res.success) {
           Tips.success('复制成功')
+          var field = 'params.page'
           this.setData({
             list: [],
-            'params.page': 1
+            [field]: 1
           })
           this.get()
         } else {
@@ -701,9 +704,10 @@ export default {
       }).then(res => {
         if (res.success) {
           Tips.success('图片移动成功')
+          var field = 'params.page'
           this.setData({
             list: [],
-            'params.page': 1
+            [field]: 1
           })
           this.get()
         } else {
@@ -832,9 +836,10 @@ export default {
       }).then(res => {
         if (res.success) {
           Tips.success('删除成功')
+          var field = 'params.page'
           this.setData({
             list: [],
-            'params.page': 1
+            [field]: 1,
           })
           this.get()
         } else {

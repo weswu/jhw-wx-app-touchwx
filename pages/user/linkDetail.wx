@@ -52,7 +52,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
@@ -62,6 +62,9 @@ let pageConf = {
   data: {
     title: '友情链接',
     detail: {}
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad ({id, type}) {
     if (id) {
@@ -94,13 +97,15 @@ let pageConf = {
     this.selectComponent("#image").chooseImage()
   },
   clearPic () {
+    var field = 'detail.image'
     this.setData({
-      'detail.image': ''
+      [field]: ''
     })
   },
   changePic (e) {
+    var field = 'detail.image'
     this.setData({
-      'detail.image': e.detail.src
+      [field]: e.detail.src
     })
   },
   validate() {
@@ -145,7 +150,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

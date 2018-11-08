@@ -211,36 +211,40 @@ export default {
       this.data.category1.forEach((item, index) => {
         item.checked = (item.value === e.paymentStatus)
       })
+      var field1 = 'params.paymentStatus'
       this.setData({
          category1: this.data.category1,
-        'params.paymentStatus': e.paymentStatus
+        [field1]: e.paymentStatus
       })
     }
     if (e.shippingStatus) {
       this.data.category2.forEach((item, index) => {
         item.checked = (item.value === e.shippingStatus)
       })
+      var field2 = 'params.shippingStatus'
       this.setData({
          category2: this.data.category2,
-        'params.shippingStatus': e.shippingStatus
+        [field2]: e.shippingStatus
       })
     }
     if (e.orderStatus) {
       this.data.category3.forEach((item, index) => {
         item.checked = (item.value === e.orderStatus)
       })
+      var field3 = 'params.orderStatus'
       this.setData({
          category3: this.data.category3,
-        'params.orderStatus': e.orderStatus
+        [field3]: e.orderStatus
       })
     }
     this.get()
   },
   get () {
+    this.data.more.tip = ''
+    this.data.more.loading = true
     this.setData({
       ids: '',
-      'more.tip': '',
-      'more.loading': true
+      more: this.data.more
     })
     api.order({
       data: this.data.params
@@ -318,11 +322,13 @@ export default {
         orderStatus = item.value
       }
     })
+    let params = this.data.params
+    params.page = 1
+    params.paymentStatus= paymentStatus
+    params.shippingStatus = shippingStatus
+    params.orderStatus = orderStatus
     this.setData({
-      'params.page': 1,
-      'params.paymentStatus': paymentStatus,
-      'params.shippingStatus': shippingStatus,
-      'params.orderStatus': orderStatus
+      params: params
     })
     this.get()
     this.popHide()

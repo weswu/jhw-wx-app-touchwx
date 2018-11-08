@@ -96,24 +96,28 @@ export default {
     more: {}
   },
   onLoad (e) {
+    var posterId = 'params.posterId'
+    var type = 'params.type'
+    var recvState = 'params.recvState'
     if (e.posterId) {
       this.setData({
         title: '员工消息',
-        'params.posterId': e.posterId
+        [posterId]: e.posterId
       })  
     } else {
       this.setData({
         title: e.title || '消息',
-        'params.type': e.type || '',
-        'params.recvState': e.recvState || ''
+        [type]: e.type || '',
+        [recvState]: e.recvState || ''
       })
     }
     this.get()
   },
   get () {
+    this.data.more.tip = ''
+    this.data.more.loading = true
     this.setData({
-      'more.tip': '',
-      'more.loading': true
+      more: this.data.more
     })
     api.message({
       data: this.data.params

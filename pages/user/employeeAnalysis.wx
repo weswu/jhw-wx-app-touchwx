@@ -93,14 +93,16 @@ export default {
   },
   // 时间
   dateChange (e) {
+    var field = 'params.startDate'
     this.setData({
-      'params.startDate': e.detail
+      [field]: e.detail
     })
     this.get()
   },
   dateChange2 (e) {
+    var field = 'params.endDate'
     this.setData({
-      'params.endDate': e.detail
+      [field]: e.detail
     })
     this.get()
   }

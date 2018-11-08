@@ -164,13 +164,15 @@ export default {
     })
   },
   nameInput (e) {
+    var field = 'detail.name'
     this.setData({
-      'detail.name': e.detail.value
+      [field]: e.detail.value
     })
   },
   clearinput () {
+    var field = 'detail.name'
     this.setData({
-      'detail.name': ''
+      [field]: ''
     })
   },
   cancel () {
@@ -179,8 +181,9 @@ export default {
     })
   },
   batchMove2 (e) {
+    var field = 'detail.belongId'
     this.setData({
-      'detail.belongId': e.detail
+      [field]: e.detail
     })
   },
   // 添加

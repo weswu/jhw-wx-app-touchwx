@@ -32,7 +32,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
@@ -45,6 +45,9 @@ let pageConf = {
       fr_time: '2015-11-27 13:45',
       sc_time: '2015-11-27 13:45'
     }
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad ({id}) {
     id && this.get(id)
@@ -91,7 +94,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

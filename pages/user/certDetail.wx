@@ -35,7 +35,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
@@ -44,6 +44,9 @@ let pageConf = {
   },
   data: {
     detail: {}
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad ({id}) {
     if (id) {
@@ -77,14 +80,17 @@ let pageConf = {
     this.selectComponent("#image").chooseImage()
   },
   clearPic () {
+    var field = 'detail.att.serverPath'
     this.setData({
-      'detail.att.serverPath': ''
+      [field]: ''
     })
   },
   changePic (e) {
+    var field = 'detail.att.serverPath'
+    var field1 = 'detail.attachmentId'
     this.setData({
-      'detail.att.serverPath': e.detail.src,
-      'detail.attachmentId': e.detail.id
+      [field]: e.detail.src,
+      [field1]: e.detail.id
     })
   },
   validate() {
@@ -129,7 +135,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

@@ -87,13 +87,13 @@ export default {
     }
     if (this.data.params.page === 0) {
       this.data.current1 === 0 && this.setData({
-        'count0': res.data.totalElements
+        count0: res.data.totalElements
       })
       this.data.current1 === 1 && this.setData({
-        'count1': res.data.totalElements
+        count1: res.data.totalElements
       })
       this.data.current1 === 2 && this.setData({
-        'count2': res.data.totalElements
+        count2: res.data.totalElements
       })
     }
     this.setData({
@@ -123,17 +123,19 @@ export default {
   },
   //横屏竖屏切换
   handleChange (e) {
+    var field = 'params.page'
     this.setData({
       current1: e.detail.index,
-      'params.page': 0,
+      [field]: 0,
       list: []
     })
     this.get()
   },
   // 加载更多
   onReachBottom () {
+    var field = 'params.page'
     this.setData({
-      'params.page': this.data.params.page+= 1
+      [field]: this.data.params.page+= 1
     })
     this.get()
   }

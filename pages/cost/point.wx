@@ -148,8 +148,9 @@ export default {
       api.signIn().then(res => {
         if (res.success) {
           getApp().globalData.integralCount.dailyPoint = 0
+          var field = 'integralCount.dailyPoint'
           this.setData({
-            'integralCount.dailyPoint': 0
+            [field]: 0
           })
           Tips.success('签到成功')
         } else {

@@ -181,9 +181,10 @@ export default {
     }).then(res => {
       if (res.success) {
         Tips.success('删除成功')
+        var field = 'params.page'
         this.setData({
           list: [],
-          'params.page': 1
+          [field]: 1
         })
         this.selectedBack()
         this.get()

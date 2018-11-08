@@ -45,7 +45,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
@@ -54,6 +54,9 @@ let pageConf = {
   },
   data: {
     detail: {}
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad ({id}) {
     if (id) {
@@ -118,7 +121,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">

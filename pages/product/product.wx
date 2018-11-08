@@ -236,10 +236,11 @@ export default {
     }
   },
   get () {
+    this.data.more.tip = ''
+    this.data.more.loading = true
     this.setData({
       ids: '',
-      'more.tip': '',
-      'more.loading': true
+      more: this.data.more
     })
     api.product({
       data: this.data.params
@@ -436,9 +437,10 @@ export default {
     }).then(res => {
       if (res.success) {
         Tips.success(url === '01' ? '上架成功' : '下架成功')
+        var field = 'params.page'
         this.setData({
           list: [],
-          'params.page': 1
+          [field]: 1
         })
         this.selectedBack()
         this.get()

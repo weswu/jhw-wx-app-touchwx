@@ -79,8 +79,9 @@ export default {
     })
   },
   lanChange () {
+    var field = 'params.page'
     this.setData({
-      'params.page': 1,
+      [field]: 1,
       list: []
     })
     this.get()

@@ -147,7 +147,7 @@ import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
 import Utils from '../../static/utils/utils'
-let pageConf = {
+export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
@@ -166,6 +166,9 @@ let pageConf = {
     staticList: [],
     layoutId: '',
     selectStatic: false
+  },
+  onReady () {
+    Object.assign(this, Input)
   },
   onLoad (e) {
     this.setData({
@@ -226,34 +229,41 @@ let pageConf = {
   },
   // 时间
   dateChange (e) {
+    var field = 'detail.addTime'
     this.setData({
-      'detail.addTime': e.detail
+      [field]: e.detail
     })
   },
   // 图片
   updatePic () {
     this.selectComponent("#image").chooseImage();
+    var field = 'detail.imagenews'
     this.setData({
-      'detail.imagenews': '01'
+      [field]: '01'
     })
   },
   clearPic () {
+    var detail = this.data.detail
+    detail.picPath = ''
+    detail.imagenews = '00'
     this.setData({
-      'detail.picPath': '',
-      'detail.imagenews': '00'
+      detail: detail
     })
   },
   changePic (e) {
+    var field = 'detail.picPath'
     this.setData({
-      'detail.picPath': e.detail.src
+      [field]: e.detail.src
     })
   },
   // seo
   seoChange (e) {
+    var detail = this.data.detail
+    detail.seoTitle = e.title
+    detail.nkey = e.keywords
+    detail.seoDescription = e.description
     this.setData({
-      'detail.seoTitle': e.title,
-      'detail.nkey': e.keywords,
-      'detail.seoDescription': e.description
+      detail: detail
     })
   },
   validate() {
@@ -310,7 +320,6 @@ let pageConf = {
     })
   }
 }
-export default Page(Object.assign(pageConf, Input))
 </script>
 
 <style lang="less">
