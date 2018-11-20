@@ -4,12 +4,14 @@ const host = 'https://www.jihui88.com/rest/api/'
 const pcHost = 'https://www.jihui88.com/rest/pc/api/'
 const buyHost = 'https://www.jihui88.com/rest/buy/api/'
 
-const wxHost = 'https://wx.jihui88.net'
+const wxHost = 'https://wx.jihui88.net/'
+
+const netHost = 'https://api.jihui88.net/'
 
 // 微信登录
-const wxapplogin = (params) => http(params, wxHost + "/rest/api/user/wxapplogin");
+const wxapplogin = (params) => http(params, wxHost + "rest/api/user/wxapplogin");
 // 账号登录
-const login = (params) => http(params, wxHost + '/rest/api/user/wxAppLoginByUsernameAndPassword')
+const login = (params) => http(params, wxHost + 'rest/api/user/wxAppLoginByUsernameAndPassword')
 const logout = (params) => http(params, host + 'user/logout')
 const api = (params) => http(params, host + params.url)
 /***************** 基本数据 ************/
@@ -22,8 +24,7 @@ const changeLan = (params) => http(params, host + 'user/changeLan?lanId=' + para
 const area = (params) => http(params, host + 'area/list')
 // 设置
 const password = (params) => http(params, host + 'user/detail/password')
-const feedback = (params) => http(params, 'https://api.jihui88.net/crm_api/index.php/jihui/jihuifeedback')
-
+const feedback = (params) => http(params, netHost + 'crm_api/index.php/jihui/jihuifeedback')
 
 /***************** 账号信息 ************/
 const accountInfo = (params) => http(params, host + 'user/accountInfo/' + params.id)
@@ -57,7 +58,7 @@ const messageDetail = (params) => http(params, host + 'message/detail' + (params
 /***************** 站点 ************/
 const staticList = (params) => http(params, pcHost + 'baseLayout/list')
 const staticDetail = (params) => http(params, pcHost + 'baseLayout/detail' + (params.id ? '/' + params.id : ''))
-const staticAdd = (params) => http(params, 'http://www.jihui88.com/rest/pc/index/list')
+
 // 域名绑定
 const bind = (params) => http(params, pcHost + 'bind/bindList')
 const bindDetail = (params) => http(params, pcHost + 'bind/bindDetail')
@@ -69,8 +70,8 @@ const profile = (params) => http(params, host + 'profile/detail/all')
 
 // 推广
 const spread = (params) => http(params, host + 'poster/list?pageSize=72')
-const spreadRank = (params) => http(params, wxHost + '/rest/api/comm/poster/userlist')
-const posters = (params) => http(params, 'https://api.jihui88.net/qrcode_poster/api/poster')
+const spreadRank = (params) => http(params, wxHost + 'rest/api/comm/poster/userlist')
+const posters = (params) => http(params, netHost + 'qrcode_poster/api/poster')
 
 const analysis = (params) => http(params, pcHost + 'analysis/detail')
 const analysisSave = (params) => http(params, pcHost + 'analysis/save')
@@ -188,12 +189,19 @@ const orderPayment = (params) => http(params, host + 'orderPayment/detail/' + pa
 const deliverySnEdit = (params) => http(params, host + 'orderPayment/deliverySnEdit')
 
 
+/***************** 首页 ************/
+// 案例
+const applet = (params) => http(params, netHost + 'jihuiapi/products/multi_category')
+const website = (params) => http(params, pcHost + 'comm/layout/listDemoByTagsJsonp')
+
 module.exports = {
   wxapplogin, login, logout, api,
   /***************** 基本数据 ************/
   user, userInfo, customData, customUpdate, changeLan,
   area,
   password, feedback,
+  /***************** 首页 ************/
+  applet, website,
   // 推广
   spread, spreadRank, posters,
   /***************** 账号信息 ************/
@@ -204,7 +212,7 @@ module.exports = {
   /***************** 消息中心 ************/
   message, messageDetail,
   /***************** 站点 ************/
-  staticList, staticDetail, staticAdd,
+  staticList, staticDetail,
   bind, bindDetail, bindAdd, bindEdit, bindDetail2, profile,
   analysis, analysisSave,
   authLogin,
@@ -215,7 +223,7 @@ module.exports = {
   // seo管理
   keywords, keywordsDetail, keywordsSave, innerLinks, innerLinksDetail,
   /***************** 公司信息 ************/
-  enterprise, 
+  enterprise,
   link, linkDetail,
   cert, certDetail,
   recruit, recruitDetail,

@@ -25,15 +25,15 @@
     </view>
     <ui-row-list border-left-indent>
       <ui-row height="102r" url="/pages/cost/cost" hover-class="none">
-          <ui-col width="40" vertical-align="middle" align="center" space-right="6">
-            <i class="iconfont icon-price" style="color:#f67d73"></i>
-          </ui-col>
-          <ui-col class="text" vertical-align="middle">
-              费用中心
-          </ui-col>
-          <ui-col width="30" vertical-align="middle">
-              <ui-icon type="arrow-right"></ui-icon>
-          </ui-col>
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
+          <i class="iconfont icon-price" style="color:#f67d73"></i>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+            费用中心
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+            <ui-icon type="arrow-right"></ui-icon>
+        </ui-col>
       </ui-row>
     </ui-row-list>
     <view class="hr"></view>
@@ -61,7 +61,7 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="102r" hover-class="none">
+      <ui-row height="102r" data-show="{{ true }}" bindtap="handleShowMask">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-web-icon-"></i>
         </ui-col>
@@ -73,6 +73,13 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
+    <ui-mask show="{{showMask}}" effect="scale-in" animation>
+      <view class="content" data-show="{{false}}" bindtap="handleShowMask">
+        <button open-type="share" style="margin-top:30vh">
+          <image src="http://buy.jihui88.com/static/points.png" style="width:288px;height:160px;" width="288" height="160"></image>
+        </button>
+      </view>
+    </ui-mask>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
       <ui-row height="102r" url="/pages/user/account" hover-class="none">
@@ -117,9 +124,13 @@ export default{
       username: ''
     },
     userInfo: {},
-    accountInfo: {}
+    accountInfo: {},
+    showMask: false
   },
-  onLoad () {
+  onLoad (e) {
+    if (e.posterId) {
+      wx.setStorageSync('posterId', e.posterId)
+    }
     this.get()
   },
   get () {
@@ -138,12 +149,18 @@ export default{
       that.setData({
         userInfo: res
       })
-    })  
+    })
   },
   error () {
     var field = 'accountInfo.headimg'
     this.setData({
       [field]: 'upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
+    })
+  },
+  handleShowMask (e) {
+    let show = e.currentTarget.dataset.show
+    this.setData({
+      showMask: show
     })
   },
   onShow () {
@@ -154,6 +171,16 @@ export default{
       accountInfo: getApp().globalData.accountInfo,
       userInfo: getApp().globalData.userInfo
     })
+    wx.showShareMenu({
+     withShareTicket: true
+    })
+  },
+  onShareAppMessage () {
+    let name = wx.getStorageSync('nickName') || this.data.user.username
+    return {
+      title: name + '邀你加入机汇网',
+      path: '/page/home/my?posterId=' + this.data.user.username
+    }
   }
 }
 </script>

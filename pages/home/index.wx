@@ -26,11 +26,11 @@
     <view class="swiper-container">
       <swiper class="swiper_box" bindchange="swiperChange" style="{{swiperHeight}}"
         autoplay circular interval="3000" duration="500">
-          <block wx:for="{{images}}" wx:key="*this">
-            <swiper-item>
-              <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}" bindload="imageLoad"/>
-            </swiper-item>
-          </block>
+        <block wx:for="{{images}}" wx:key="*this">
+          <swiper-item>
+            <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}" bindload="imageLoad"/>
+          </swiper-item>
+        </block>
       </swiper>
       <view class="dots" wx:if="{{images.length > 1}}">
         <block wx:for="{{images}}" wx:key="*this">
@@ -51,7 +51,7 @@
         <view class="label">认识机汇网</view>
       </ui-col>
       <ui-col border-right align="center" vertical-align="middle">
-        <navigator target="miniProgram" open-type="navigate" app-id="wx860be22a8b03bbd9" 
+        <navigator target="miniProgram" open-type="navigate" app-id="wx860be22a8b03bbd9"
         path="pages/index/index" extra-data="{{extra}}" version="release" style="width:100%;height:100%;flex-direction:column;justify-content:center;display:flex;">
           <view class="image images"><i class="iconfont icon-chanpin" style="color:{{item.color}}"></i></view>
           <view class="label">机汇网所有产品</view>
@@ -63,7 +63,7 @@
     <!-- 头条 -->
     <ui-row height="35" style="margin-top:16rpx">
       <ui-col class="j_banner" span="11" vertical-align="middle">
-          <view class="name">机汇头条</view> 
+        <view class="name">机汇头条</view>
       </ui-col>
     </ui-row>
     <ui-row height="166r" style="margin-bottom:36rpx">
@@ -112,10 +112,10 @@
       <ui-col width="20" vertical-align="middle" align="center">
       </ui-col>
       <ui-col class="text" vertical-align="middle">
-          <view class="title">服务市场</view> 
+        <view class="title">服务市场</view>
       </ui-col>
       <ui-col width="40" vertical-align="middle">
-          <ui-icon type="arrow-right"></ui-icon>
+        <ui-icon type="arrow-right"></ui-icon>
       </ui-col>
     </ui-row>
     <ui-row border-top border-bottom class="grids2 grids-service">
@@ -140,7 +140,7 @@
     <ui-row height="40">
       <ui-col width="20" vertical-align="middle"></ui-col>
       <ui-col class="text" vertical-align="middle">
-        <view class="title">玩转机汇网</view> 
+        <view class="title">玩转机汇网</view>
       </ui-col>
       <ui-col width="40" vertical-align="middle">
         <ui-icon type="arrow-right"></ui-icon>
@@ -172,7 +172,7 @@
         </view>
       </ui-col>
     </ui-row>
-    
+
     <!-- 精选 -->
     <view class="sample_content">
       <ui-row height="40">
@@ -224,9 +224,9 @@ export default {
       user_id: 'User_000000000000000000000065262'
     },
     market: [
-      {url: '', name: '全民建站', icon: 'icon-wangzhan', content: '海量模板供应'},
+      {url: '', name: '全民建站', icon: 'icon-wangzhan', content: '海量案例'},
       {url: '', name: '企业应用', icon: 'icon-qiye', content: '助力企业成长'},
-      {url: '', name: '微信端', icon: 'icon-weixin', content: '小程序海量模板'},
+      {url: '', name: '微信端', icon: 'icon-weixin', content: '小程序海量案例'},
       {url: '', name: '企业大脑', icon: 'icon-danao', content: '让企业智能办公'}
     ],
     grids: [

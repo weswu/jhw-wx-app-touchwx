@@ -1,0 +1,186 @@
+<template>
+  <view>
+    <cc-header title="小程序案例" count="{{count}}"></cc-header>
+    <!-- 下拉 -->
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:9;background:#fff" right="0">
+      <ui-row height="43" border-bottom bindtap="openPopup">
+        <ui-col vertical-align="middle" space-left="15">
+          {{name}}
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="40" space-right="15">
+          <i class="iconfont icon-angle-bottom {{show ? 'active' : ''}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:43px"></view>
+
+    <ui-row-list>
+      <ui-row class="row-border">
+        <ui-col border-right align="center" span="6" vertical-align="middle" wx:for="{{list}}" wx:key="*this">
+          <view class="content">
+            <image src="http://dfwjjingtai.b0.upaiyun.com/{{item.pic}}" style="width:300rpx;height:200rpx;" data-id="{{item.id}}" bindtap="view"></image>
+            <view class="p">{{item.seoTitle}}</view>
+            <view class="desc">{{item.tagName}}</view>
+            <view class="desc">网站编号：{{item.id}}</view>
+          </view>
+        </ui-col>
+      </ui-row>
+      <view class="hr"></view>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
+      <ui-row-list border-left-indent>
+        <ui-row height="43" border-bottom wx:for="{{selectList}}" wx:key="*this" data-item="{{item}}" bindtap="change">
+          <ui-col vertical-align="middle" class="{{params.recvState === item.key ? 'active' : ''}}">
+            {{item.value}}
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{params.recvState === item.key}}">
+            <i class="iconfont icon-gou" style="color:#3AC3B0;font-size:12px;"/>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+    </ui-popup>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    // 下拉
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    show: false,
+    selectList: [
+      { value: '全部案例', key: '95,96,97,98,200' },
+      { value: '营销', key: '95' },
+      { value: '电商', key: '96' },
+      { value: '品牌', key: '97' },
+      { value: '展示', key: '98' },
+      { value: '外贸', key: '200' }
+    ],
+    name: '全部案例',
+    // other
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 8,
+      tagIds: '95'
+    },
+    count: 0,
+    more: {}
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    this.data.more.tip = ''
+    this.data.more.loading = true
+    this.setData({
+      more: this.data.more
+    })
+    api.website({
+      data: this.data.params
+    }).then(res => {
+      let data = JSON.parse(res.substr(0, res.length-1).split('null(')[1]).attributes
+      let list = this.data.list
+      data.data.forEach(item => {
+        this.data.list.push(item)
+      })
+      this.setData({
+        list: list,
+        'params.page': this.data.params.page + 1,
+        count: data.total,
+        'more.loading': false
+      })
+    })
+  },
+  view (e) {
+    var id = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: '/pages/setting/webView?src=http://pc.jihui88.com/rest/site/'+id+'/index'
+    })
+  },
+  openPopup (e) {
+    this.setData({
+      show: !this.data.show
+    })
+  },
+  popHide () {
+    this.setData({
+      show:false
+    })
+  },
+  popShow () {
+    this.setData({
+      show:true
+    })
+  },
+  change (e) {
+    let item = e.currentTarget.dataset.item
+    this.data.params.tagIds = item.key
+    this.data.params.page = 1
+    this.setData({
+      name: item.value,
+      params: this.data.params,
+      list: [],
+      show:false
+    })
+    this.get()
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.icon-angle-bottom{
+  display: inline-block;
+  transform:rotate(0deg);
+  transition: all .3s ease-in;
+  color: #91929d;
+  &.active{
+    transform:rotate(180deg);
+  }
+}
+
+.ui-row{
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .ui-col-6{
+    height: 370rpx;
+    border-bottom: 1px solid #e4e4e4;
+  }
+  image{
+    margin:0 auto;
+  }
+  .p{
+    font-size: 12px;
+    padding-top: 3rpx;
+  }
+}
+
+.active{
+  color: #12bedb;
+}
+.text{
+  width: 100%;
+  border-bottom: 1px solid #dbdbdb;
+  margin:0 15px;
+}
+</style>

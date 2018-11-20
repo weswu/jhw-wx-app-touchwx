@@ -1,0 +1,180 @@
+<template>
+  <view>
+    <cc-header title="小程序案例" count="{{count}}"></cc-header>
+    <!-- 下拉 -->
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:9;background:#fff" right="0">
+      <ui-row height="43" border-bottom bindtap="openPopup">
+        <ui-col vertical-align="middle" space-left="15">
+          {{name}}
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" width="40" space-right="15">
+          <i class="iconfont icon-angle-bottom {{show ? 'active' : ''}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-fixed-view>
+    <view style="height:43px"></view>
+
+    <ui-row-list>
+      <ui-row class="row-border">
+        <ui-col border-right align="center" span="6" vertical-align="middle" wx:for="{{list}}" wx:key="*this">
+          <view class="content">
+            <image src="{{item.pic_path}}" style="width:280rpx;height:280rpx;" data-url="{{item.pic_path}}" bindtap="previewImageUrl"></image>
+            <view class="p">{{item.name}}</view>
+            <view class="desc" wx:for="{{selectList}}" wx:for-index="idx" wx:for-item="row" wx:key="idx" wx:if="{{item.category === row.key}}">{{item.value}}</view>
+          </view>
+        </ui-col>
+      </ui-row>
+      <view class="hr"></view>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
+      <ui-row-list border-left-indent>
+        <ui-row height="43" border-bottom wx:for="{{selectList}}" wx:key="*this" data-item="{{item}}" bindtap="change">
+          <ui-col vertical-align="middle" class="{{params.recvState === item.key ? 'active' : ''}}">
+            {{item.value}}
+          </ui-col>
+          <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{params.recvState === item.key}}">
+            <i class="iconfont icon-gou" style="color:#3AC3B0;font-size:12px;"/>
+          </ui-col>
+        </ui-row>
+      </ui-row-list>
+    </ui-popup>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    // 下拉
+    popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
+    show: false,
+    selectList: [
+      { value: '全部案例', key: '380563,380564,380565' },
+      { value: '展示型小程序', key: '380563' },
+      { value: '电商型小程序', key: '380564' },
+      { value: '小程序高级功能版', key: '380565' }
+    ],
+    name: '全部案例',
+    // other
+    list: [],
+    params: {
+      page: 1,
+      per_page: 8,
+      imagelist: 1,
+      lan_id: 1,
+      category_id: '380563,380564,380565'
+    },
+    count: 0,
+    more: {}
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    this.data.more.tip = ''
+    this.data.more.loading = true
+    this.setData({
+      more: this.data.more
+    })
+    api.applet({
+      data: this.data.params
+    }).then(res => {
+      let list = this.data.list
+      res.list.forEach(item => {
+        this.data.list.push(item)
+      })
+      this.setData({
+        list: list,
+        'params.page': this.data.params.page + 1,
+        count: res.total,
+        'more.loading': false
+      })
+    })
+  },
+  previewImageUrl (e) {
+    var url = e.currentTarget.dataset.url
+    var imgArr = [];
+    imgArr.push(url);
+    wx.previewImage({
+      current: imgArr[0], // 当前显示图片的http链接
+      urls: imgArr // 需要预览的图片http链接”列表“
+    });
+  },
+  openPopup (e) {
+    this.setData({
+      show: !this.data.show
+    })
+  },
+  popHide () {
+    this.setData({
+      show:false
+    })
+  },
+  popShow () {
+    this.setData({
+      show:true
+    })
+  },
+  change (e) {
+    let item = e.currentTarget.dataset.item
+    this.data.params.category_id = item.key
+    this.data.params.page = 1
+    this.setData({
+      name: item.value,
+      params: this.data.params,
+      list: [],
+      show:false
+    })
+    this.get()
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.icon-angle-bottom{
+  display: inline-block;
+  transform:rotate(0deg);
+  transition: all .3s ease-in;
+  color: #91929d;
+  &.active{
+    transform:rotate(180deg);
+  }
+}
+
+.ui-row{
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .ui-col-6{
+    height: 400rpx;
+    border-bottom: 1px solid #e4e4e4;
+  }
+}
+
+.active{
+  color: #12bedb;
+}
+.text{
+  width: 100%;
+  border-bottom: 1px solid #dbdbdb;
+  margin:0 15px;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <view style="background: #fff">
     <cc-header title="机汇网会员登录" back="{{back}}"></cc-header>
-   
+
     <view class="logo"><image src="http://www.jihui88.com/member/static/images/f-logo.png" alt=""></view>
     <view class="login">
       <view class="form">
@@ -26,7 +26,7 @@
       <button class="btn-weixin" type="primary" open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" hover-class="none">授权</button>
       <view>
     </view>
-  </view> 
+  </view>
  </template>
 
 <script>
@@ -130,7 +130,7 @@ export default {
   weixin () {
     wx.switchTab({
       url: '/pages/home/index'
-    })  
+    })
   }
 }
 </script>
@@ -138,15 +138,16 @@ export default {
 <style lang="less">
 .auth{
   position: fixed;
-  top:0;
+  top: 0;
   left: 0;
   right: 0;
   width: 100%;
   bottom: 0;
   z-index: 99;
   background: #fff;
+  padding-top:30vh;
   .j_auth{
-    margin: 150px 40px 0 40px;
+    margin: 0 40px 0 40px;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
     text-align: center;
     border-radius: 3px;
@@ -277,4 +278,3 @@ export default {
   margin: 0 5px;
 }
 </style>
-
