@@ -1,0 +1,57 @@
+<template>
+  <view>
+    <cc-header title="企业应用"></cc-header>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="102r" border-bottom hover-class="none"  wx:for="{{list}}" wx:key="*this">
+        <ui-col width="40" vertical-align="middle" align="center" space-right="6">
+          <i class="iconfont {{item.icon}}"></i>
+        </ui-col>
+        <ui-col class="text" vertical-align="middle">
+          {{item.text}}
+        </ui-col>
+        <ui-col width="30" vertical-align="middle">
+          
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+  </view>
+</template>
+
+<script>
+import tools from '../../static/data/tools'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-modal': '../../packages/cc-modal'
+    }
+  },
+  data: {
+    list: [
+      { url: '/pages/pc/website', text: '网站', icon: 'icon-shuju' },
+      { url: '/pages/static/seo', text: '小程序', icon: 'icon-SEO' },
+      { url: '/pages/static/beian', text: '微传单', icon: 'icon-yuming' },
+      { url: '/pages/static/bind', text: '机汇众筹', icon: 'icon-yuming' },
+      { url: '/pages/static/sitemap', text: '机汇名片', icon: 'icon-sitemap' },
+      { url: '/pages/static/batch', text: '机汇云企业大脑', icon: 'icon-tijiao' }
+    ]
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.ui-row-list{
+  .iconfont{
+    color: #12bedb;
+    font-size:20px;
+  }
+}
+.ui-row-list > .ui-row:not(:last-child):after {
+  left: 35px;
+}
+</style>

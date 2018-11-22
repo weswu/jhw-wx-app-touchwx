@@ -61,7 +61,7 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      <ui-row height="102r" data-show="{{ true }}" bindtap="handleShowMask">
+      <ui-row height="102r" url="/pages/home/casePoint" hover-class="none">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-web-icon-"></i>
         </ui-col>
@@ -178,8 +178,9 @@ export default{
   onShareAppMessage () {
     let name = wx.getStorageSync('nickName') || this.data.user.username
     return {
-      title: name + '邀你加入机汇网',
-      path: '/page/home/my?posterId=' + this.data.user.username
+      title: name + '邀请你加入机汇网，用全网营销给企业助力',
+      path: '/page/home/my?posterId=' + this.data.user.username,
+      imageUrl: 'http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/21/19ea52ec-a50d-4c77-99b7-4a1276a9f1ea.jpg'
     }
   }
 }

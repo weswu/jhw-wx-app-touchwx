@@ -1,0 +1,63 @@
+<template>
+  <view>
+    <cc-header title="{{title}}"></cc-header>
+
+    <view class="article">
+      <view class="title">{{detail.title}}</view>
+      <view class="time">{{detail.add_time}}</view>
+      <rich-text nodes="{{detail.content}}"/>
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    id:'',
+    detail: {},
+    title: ''
+  },
+  onLoad (e) {
+    this.setData({
+      id: e.id,
+      title: e.title || '新闻详情'
+    })
+    this.get()
+  },
+  get () {
+    api.newsSingle({
+      id: this.data.id
+    }).then(res => {
+      // res.content = res.content.replace(/<img /g, "<img width='100%' ").replace(/\"/g, "'")
+      this.setData({
+        detail: res
+      })
+    })
+  }
+}
+</script>
+
+<style lang="less">
+.article{
+  padding: 15px 15px;
+  margin-bottom:30px;
+  .title{
+    font-size: 38rpx;
+  }
+  .time{
+    font-size: 12px;
+    color: #a9aab2;
+    padding: 7px 0;
+  }
+  rich-text{
+    font-size: 13px;
+    color: #585858;
+  }
+}
+</style>

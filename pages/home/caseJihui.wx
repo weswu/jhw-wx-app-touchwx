@@ -1,0 +1,62 @@
+<template>
+  <view>
+    <cc-header title="认识机汇网"></cc-header>
+    <view class="content">
+      <text decode="{{true}}">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机汇网【浙江机汇网络科技有限公司】2009年创始于杭州，是国内营销型网站建设专家。\n
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机汇网将传统营销、互联网营销、移动互联网营销融合成三位一体的全网营销系统，为传统企业(特别是非零售企业)打造一个以自己为中心的、独立的电子商务平台。全网营销系统由营销型网站、手机网站、微传单、微网站、分销系统、二维码系统、CRM、SCM系统组成。\n
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机汇网立足于杭州，走向全国，目前我们服务着10000多家企业，大部分企业通过网络进行批发销售、网络招商、宣传品牌、稳定接单。随着市场强烈的需要和公司的飞速发展，目前机汇网在上海、广州、北京等地建立了分公司。
+        其中东方五金网先后荣获“中国电子商务服务机构百强企业”，“浙江省电子商务服务机构服务名录第一批”，“浙江省中小企业优秀服务机构”，“浙江省两化融合重点企业”，“金华市重点文化企业”，高新技术企业等荣誉。\n
+        \n
+        价值准则\n
+        我们的愿景：培养百位精英，服务千万会员\n
+        我们的使命：用网络事业造福人\n
+        我们的宗旨：为客户创造价值，为员工创造机会，为社会创造效益\n
+        我们的管理理念：标准化、科技化、人性化\n
+        我们的服务理念：心态决定行为，服务创造感动\n
+        我们的经营理念：快乐工作，开心赚钱\n
+        我们的价值观：客户第一，自我修炼，团队协作，推进变革\n
+        我们的精神：感恩、诚信、激情、敬业\n
+        我们的座右铭：谦卑学习，待人要宽\n
+        我们的信念：乐观向上，永不言弃\n
+        我们的市场观：把客户的建议和意见当作学习和研究的课题\n
+        我们的司训：员工自我修炼，领导育人为先\n
+        \n
+        联系我们
+      </text>
+      <text data-tel="057188223075" bindtap="tel">0571-88223075\n</text>
+      <text data-tel="8618072933115" bindtap="tel">+86-18072933115\n</text>
+      <text>滨江区阡陌路聚光物联网大楼C2-211\n</text>
+      <image mode="widthFix" src="http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/21/98ecddab-bc4f-4ad3-89d7-791704b46be3.jpg"/>
+      <image mode="widthFix" src="http://img.jihui88.com/upload/a/a1/about/picture/2017/08/02/ffa473b9-8d3e-42d9-9445-2267292baa18.jpg"/>
+    </view>
+  </view>
+</template>
+
+<script>
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  tel (e) {
+    wx.makePhoneCall({
+      phoneNumber: e.currentTarget.dataset.tel
+    })
+  }
+}
+</script>
+
+<style lang="less">
+.content{
+  padding: 0 20rpx 40rpx 20rpx;line-height:1.6;
+}
+text{
+  color: #777;
+  font-size: 12px;
+}
+image{
+  padding-top: 10px;
+}
+</style>

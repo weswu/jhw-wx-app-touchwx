@@ -1,0 +1,97 @@
+<template>
+  <view>
+    <cc-header title="常见问题" count="{{count}}"></cc-header>
+
+    <ui-row-list wx:for="{{list}}" wx:key="*this">
+      <view class="item">
+        <image mode="widthFix" src="{{item.pic_path}}"></image>
+       {{item.title}}
+      </view>
+      <ui-row height="95r" data-id="{{item.news_id}}" bindtap="detail">
+        <ui-col vertical-align="middle" style="color:#12bedb" space-left="15">
+          查看详情
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
+      </ui-row>
+      <view class="hr"></view>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      per_page: 8,
+      content: 1,
+      category_id: '344330'
+    },
+    count: 0,
+    more: {}
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    this.data.more.tip = ''
+    this.data.more.loading = true
+    this.setData({
+      more: this.data.more
+    })
+    api.question({
+      data: this.data.params,
+      id: 'Enterp_0000000000000000000062857'
+    }).then(res => {
+      let list = this.data.list
+      res.list.forEach(item => {
+        this.data.list.push(item)
+      })
+      this.setData({
+        list: list,
+        'params.page': this.data.params.page + 1,
+        count: res.total,
+        'more.loading': false
+      })
+    })
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'caseQuestionDetail?id=' + e.currentTarget.dataset.id + '&title=常见问题'
+    })
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+
+.item{
+  margin:0 30rpx;
+  width: 690rpx;
+  padding: 10px 0;
+  border-bottom: 1px solid #dbdbdb;
+  image{
+    padding-bottom: 10px;
+  }
+}
+
+</style>

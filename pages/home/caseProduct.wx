@@ -1,0 +1,157 @@
+<template>
+  <view>
+    <cc-header title="机汇网产品"></cc-header>
+
+    <ui-row-list wx:for="{{list}}" wx:for-item="row" wx:key="*this">
+      <view class="title">{{row.title}}</view>
+      <view class="content">{{row.desc}}</view>
+      <ui-row wx:for="{{row.proList}}" wx:key="*this">
+        <ui-col vertical-align="top" align="center">
+          <view class="item">
+            <image src="http://dfwjjingtai.b0.upaiyun.com/{{item.pic}}" style="width:650rpx;height:255rpx;"></image>
+            <view class="p">{{item.title}}</view>
+            <view class="desc"><text>{{item.desc}}</text></view>
+            <view class="desc desc2"><i class="iconfont icon-{{item.icon}}"></i>{{item.desc2}}</view>
+          </view>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+  </view>
+</template>
+
+<script>
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    list: [
+      {
+        title: '营销门户',
+        desc: '企业进行全网营销的基础',
+        proList: [
+          {
+            title: '网站／手机网站',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/c100884a-7c83-4885-aceb-0e9cfd1a7bf7-1541465172461_produce_pic_1_555x218.jpg',
+            desc: '企业在搜索引擎上的大本营，模板丰富、功能\n完善、优化轻松。\n毕业于中国美院的设计师，美日上线精美模\n板。',
+            desc2: '新手0经验也能快速建站',
+            icon: 'diannao'
+          },
+          {
+            title: '小程序',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/2b7503ba-61b9-43a4-91e4-c415faa26aa5-1541465192112_produce_pic_2_555x218.jpg',
+            desc: '企业在微信上营销的利器。\n电商功能、分销功能、拼团功能、积分换购、\n多店模式等，满足您的营销需求。',
+            desc2: '通过微信获得源源不断的生意',
+            icon: 'xiaochengxu'
+          }
+        ]
+      },
+      {
+        title: '营销推广',
+        desc: '在互联网上获得海量流量',
+        proList: [
+          {
+            title: 'SEO推广',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/71ae9177-188a-4506-b201-544896a7e158-1541484981427_produce_pic_1_555x218.jpg',
+            desc: '提升企业网站在搜索引擎上的排名，您只需要\n告诉我们需要优化哪些关键词、需要多少词排\n到前三页，剩下的都交给我们。',
+            desc2: '以结果说话，无排名不收费',
+            icon: 'huiyuan'
+          },
+          {
+            title: '机汇众筹',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/9734c320-8749-47ef-acf0-a34f73b91466-1541485004327_produce_pic_2_555x218.jpg',
+            desc: '企业在微信上开展众筹活动。目前为止，一场\n活动最高达成了385万的销售额，这可是在1个\n月内完成的。',
+            desc2: '让产品、活动形成病毒式营销！',
+            icon: 'sitemap'
+          },
+          {
+            title: '微传单',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/e37e5f63-1d45-43d3-9bdc-12c0ece401ac-1541485027716_produce_pic_3_555x218.jpg',
+            desc: '全方位覆盖企业宣传场景：招商加盟、店庆活\n动、招聘人才、新品推广、生日祝福、展会\n邀请函等等。',
+            desc2: '企业H5宣传工具',
+            icon: 'gongsi'
+          },
+          {
+            title: '机汇名片',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/baec6e24-e1bf-4852-8419-0677bf28e5b6-1541485046835_produce_pic_4_555x218.jpg',
+            desc: '移动端免费引流、快速裂变、全员营销。低\n成本实现业绩倍增。',
+            desc2: '员工、客户、合作伙伴全员推广',
+            icon: 'huodong'
+          }
+        ]
+      },
+      {
+        title: '营销管理',
+        desc: '客户管理、员工管理、营销仪表盘',
+        proList: [
+          {
+            title: '机汇云企业大脑',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/07158bc8-6df9-4c65-a669-1caae076ddb9-1541486209209_produce_pic_1_555x218.jpg',
+            desc: '降低成本，提高收入，提升工作效率，提升\n客户满意度',
+            desc2: '助力企业走向大数据时代',
+            icon: 'danao1'
+          },
+          {
+            title: '机汇云文件管理',
+            pic: 'upload//l//l3//llmtm//picture//2018//11//06/2cd82611-efec-43b1-8ef9-9db01d3370ff-1541486257069_produce_pic_2_555x218.jpg',
+            desc: '文件管理系统，设置访问权限；每个员工都可\n申请账号，单独管理文件；阿里云服务器，\n降低泄密风险。',
+            desc2: '文件管理不在凌乱不堪',
+            icon: 'folder-add'
+          }
+        ]
+      }
+    ]
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+.ui-row-list > .ui-row:not(:last-child):after {
+  border:none
+}
+.ui-row-list{
+  background: #f1f1f1;
+}
+.title{
+  text-align: center;
+  font-size: 16px;
+  margin-top:15px;
+}
+.content{
+  text-align: center;
+  font-size: 12px;
+  color: #9f9f9f;
+  margin-bottom: 15px;
+}
+.ui-row{
+  margin-bottom: 20px;
+  .item{
+    background: #fff;
+    width: 650rpx;
+    text-align: left;
+  }
+  .p{
+    font-size: 14px;
+    color: #4e4e4e;
+    padding: 10px 15px 3px 15px;
+  }
+  .desc{
+    font-size: 12px;
+    padding: 7px 0 15px 0;
+    margin: 0 15px;
+  }
+  .desc2{
+    border-top: 1px solid #eceff6;
+    color: #777;
+    i{
+      padding-right: 7px;
+      font-size: 14x;
+    }
+  }
+}
+</style>

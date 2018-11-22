@@ -1,0 +1,37 @@
+<template>
+  <view>
+    <cc-header title="推荐奖励"></cc-header>
+    <button open-type="share" style="margin-top:25vh;padding:0;">
+      <image mode="widthFix" src="http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/21/f0f09f2a-d748-4e02-83c3-787f9a8bee60.png"/>
+    </button>
+  </view>
+</template>
+
+<script>
+import tools from '../../static/data/tools'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-modal': '../../packages/cc-modal'
+    }
+  },
+  onShow () {
+    wx.showShareMenu({
+     withShareTicket: true
+    })
+  },
+  onShareAppMessage () {
+    let name = wx.getStorageSync('nickName')
+    return {
+      title: name + '邀请你加入机汇网，用全网营销给企业助力',
+      path: '/page/home/my?posterId=' + getApp().globalData.user.username,
+      imageUrl: 'http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/21/19ea52ec-a50d-4c77-99b7-4a1276a9f1ea.jpg'
+    }
+  }
+}
+</script>
+
+<style lang="less">
+</style>

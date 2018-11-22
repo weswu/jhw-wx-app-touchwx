@@ -1,7 +1,6 @@
 <template>
   <view>
     <cc-header title="账号信息"></cc-header>
-   
 
     <view class="header">
       <view class="logo" bindtap="goToCropper">
@@ -9,7 +8,6 @@
       </view>
     </view>
 
-    
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col vertical-align="middle">
@@ -59,7 +57,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    
+
   </view>
 </template>
 
@@ -107,7 +105,7 @@ export default {
     })
   },
   input (e) {
-    var field = 'accountInfo.headimg'
+    var field = 'accountInfo.nickName'
     this.setData({
       [field]: e.detail.value
     })
