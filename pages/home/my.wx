@@ -73,13 +73,6 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    <ui-mask show="{{showMask}}" effect="scale-in" animation>
-      <view class="content" data-show="{{false}}" bindtap="handleShowMask">
-        <button open-type="share" style="margin-top:30vh">
-          <image src="http://buy.jihui88.com/static/points.png" style="width:288px;height:160px;" width="288" height="160"></image>
-        </button>
-      </view>
-    </ui-mask>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
       <ui-row height="102r" url="/pages/user/account" hover-class="none">
@@ -124,8 +117,7 @@ export default{
       username: ''
     },
     userInfo: {},
-    accountInfo: {},
-    showMask: false
+    accountInfo: {}
   },
   onLoad (e) {
     if (e.posterId) {
@@ -155,12 +147,6 @@ export default{
     var field = 'accountInfo.headimg'
     this.setData({
       [field]: 'upload/j/j2/jihui/picture/2018/07/27/2242dbcc-9807-45a6-a080-c94b12c1bc82.jpg'
-    })
-  },
-  handleShowMask (e) {
-    let show = e.currentTarget.dataset.show
-    this.setData({
-      showMask: show
     })
   },
   onShow () {

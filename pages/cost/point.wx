@@ -103,7 +103,7 @@ export default {
     },
     count: 0,
     more: { loading: true },
-    point: 18,
+    point: 0,
     // 积分规则
     rule: [],
     integralCount: {}

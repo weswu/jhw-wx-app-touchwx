@@ -105,7 +105,7 @@ export default {
     })
   },
   input (e) {
-    var field = 'accountInfo.nickName'
+    var field = 'accountInfo.headimg'
     this.setData({
       [field]: e.detail.value
     })
