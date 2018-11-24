@@ -8,23 +8,58 @@
 
     <view class="j_tip">
       请到pc端提交网站地址
-      <view>百度提交入口：http://www.sousuoyinqingtijiao.com/baidu/tijiao/</view>
-      好搜提交入口：http://info.so.360.cn/site_submit.html
-      <view>搜搜/搜狗提交入口：http://fankui.help.sogou.com/index.php/web/web/index?type=1</view>
-      必应Bing提交入口：https://www.bing.com/toolbox/submit-site-url
     </view>
+
+    <ui-row-list border-left-indent>
+      <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="*this">
+        <ui-col class="text" vertical-align="middle">
+          {{item.name}}
+        </ui-col>
+        <ui-col width="80" vertical-align="middle" align="center" data-url="{{item.url}}" bindtap="copy" style="font-size:13px;color:#999">
+          <button type="primary" plain="true" size="mini">复制</button>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
 
   </view>
 </template>
 
 <script>
+import Tips from '../../static/utils/tips'
 export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
     }
   },
-  data: {}
+  data: {
+    list: [
+      {
+        name: '百度提交入口',
+        url: 'http://www.sousuoyinqingtijiao.com/baidu/tijiao/'
+      },
+      {
+        name: '好搜提交入口',
+        url: 'http://info.so.360.cn/site_submit.html'
+      },
+      {
+        name: '搜搜/搜狗提交入口',
+        url: 'http://fankui.help.sogou.com/index.php/web/web/index?type=1'
+      },
+      {
+        name: '必应Bing提交入口',
+        url: 'https://www.bing.com/toolbox/submit-site-url'
+      }
+    ]
+  },
+  copy (e) {
+    wx.setClipboardData({
+      data: e.currentTarget.dataset.url,
+      success: function(res) {
+        Tips.success('复制成功')
+      }
+    })
+  }
 }
 </script>
 

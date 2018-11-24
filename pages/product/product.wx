@@ -11,13 +11,13 @@
     <cc-lan lan="{{true}}" top="99" params="{{params}}" type="product" bindchange="lanChange" bindsort="sortChange">
       <i class="iconfont icon-{{chenlie === '0' ? 'danhangchenlie' : 'duohangchenlie'}}" bindtap="chenlie"></i>
     </cc-lan>
-    
+
     <!-- body -->
     <ui-row-list>
       <ui-row class="chenlie-row"  wx:if="{{chenlie === '1'}}">
-        <ui-col span="6" vertical-align="middle" 
-          align="{{index%2 === 0 ? 'left' : 'right'}}" 
-          space-right="{{index%2 === 0 ? '8r' : '0'}}" 
+        <ui-col span="6" vertical-align="middle"
+          align="{{index%2 === 0 ? 'left' : 'right'}}"
+          space-right="{{index%2 === 0 ? '8r' : '0'}}"
           space-left="{{index%2 === 1 ? '8r' : '0'}}"
           wx:for="{{list}}" wx:key="*this">
           <view class="image" data-item="{{item}}" bindtap="item">
@@ -26,7 +26,7 @@
           <view class="text" style="width:100%" wx:if="{{!item.switch}}">
             <view style="height:145rpx" data-item="{{item}}" bindtap="item">
               <view class="title"> {{item.name}} </view>
-              <view class="desc" wx:if="{{item.type}}"> 型号：{{item.type}} </view>
+              <view class="desc" wx:if="{{item.prodtype}}"> 型号：{{item.prodtype}} </view>
               <view class="price"> ￥{{item.price || 0.00}} </view>
             </view>
             <ui-row height="30rpx">
@@ -68,13 +68,13 @@
         </ui-col>
         <ui-col class="text" vertical-align="middle" space-right="15" wx:if="{{!item.switch}}">
           <view style="height:188rpx" data-item="{{item}}" bindtap="item">
-            <view class="title"> 
+            <view class="title">
               <text class="isNew" wx:if="{{item.isNew === '01'}}">新品</text>
               <text class="isBest" wx:if="{{item.isBest === '01'}}">精品</text>
               <text class="isHot" wx:if="{{item.isHot === '01'}}">热品</text>
-              {{item.name}} 
+              {{item.name}}
             </view>
-            <view class="desc" wx:if="{{item.type}}"> 型号：{{item.type}} </view>
+            <view class="desc" wx:if="{{item.prodtype}}"> 型号：{{item.prodtype}} </view>
             <view class="price"> ￥{{item.price || 0.00}} </view>
           </view>
           <ui-row height="30r">
@@ -87,7 +87,7 @@
           </ui-row>
         </ui-col>
         <ui-col class="switch" vertical-align="middle" wx:if="{{item.switch}}">
-          <view style="width:100%"> 
+          <view style="width:100%">
             <ui-row style="height:218rpx" data-show="{{false}}" data-index="{{index}}" catchtap="switch">
               <ui-col vertical-align="middle" class="desc">
                 <view> 显示/隐藏：{{item.isdisplay === '1' ? '显示' : '隐藏'}} </view>
@@ -128,7 +128,7 @@
         </ui-col>
       </ui-row>
     </ui-fixed-view>
-    
+
     <!-- 更多 -->
     <view style="height:70px" wx:if="{{selected}}"></view>
     <ui-mask show="{{showMask}}" hide-delay="500">
@@ -203,7 +203,7 @@ export default {
     cateList: [],
     selected: false, //选中状态
     ids: '', // 选中项
-    toggle: false, // 全选切换状态 
+    toggle: false, // 全选切换状态
     showMask: false, // 更多
     chenlie: '0', // 列表排序
     staticList: [],
@@ -357,7 +357,7 @@ export default {
   switch (e) {
     let index = e.currentTarget.dataset.index
     let show = e.currentTarget.dataset.show
-    this.data.list[index].switch = show 
+    this.data.list[index].switch = show
     this.setData({
       list: this.data.list
     })
@@ -524,6 +524,7 @@ page{
       view{
         line-height: 108rpx;
         display: block;
+        color:#fff;
       }
     }
     .qrcode{

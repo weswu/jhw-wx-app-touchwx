@@ -68,7 +68,7 @@
         </picker-view>
       </view>
     </ui-popup>
-  
+
   </view>
 </template>
 
@@ -99,7 +99,7 @@ export default {
     item: {},
     index: '',
     posterUrl: ''
-  }, 
+  },
   onLoad () {
     this.get()
     this.setData({

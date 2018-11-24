@@ -3,7 +3,7 @@
     <cc-header title="视频教程"></cc-header>
 
     <ui-row-list wx:for="{{list}}" wx:key="*this">
-      <view class="item">
+      <view class="item" wx:if="{{item.src}}">
         <video src="{{item.src}}"></video>
        {{item.text}}
       </view>
@@ -24,20 +24,71 @@ export default {
   },
   data: {
     list: [
-      { text: '机汇网-界面编辑视频教程', src: 'https://ugcws.video.gtimg.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/b0766xub26n.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=95652027A9D84B7A7AA88F7741F6E07295F97647620395CD366DD0A757AF768C18E9C8CB7A995AA8742C0B788B31A7CB81E3BE17352B768D3E7F8946896DC6DFBA5F671958939A5BB0DCFDC1A30F6ED979777C971248B9BA85A31F941481CF7E19E79B691FFC7E51CADB590DD8F37A80454B90BD9F9D2510' },
-      { text: '视频教程-安全设置', src: 'https://ugcbsy.qq.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/c0753vzonsm.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=ED760542D840E184550FB08C9C1F8C9E2BFD8F7679AF4D9290066424602C221CDB2645E0BA2E73CE225282719FBC6B787DB7D27380B2742C09A82E31AE73FEC09D98E991051088C4E0CCD641E098AD537C1B441E867BA7095E92322967639D06E6F1558276A7FEED280E11C7E09E39F55661E22368C52499' },
-      { text: '视频教程-产品列表', src: 'https://ugcydzd.qq.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/w0753bnm9kh.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=7D4A174289D9FBCDE19192A35AFB3D44FDF0C24A54FE62C875B21DE5A48B0912DD5E0AF2801B56832CDB58E0C479412812EC203E7413B72AFC5922BC523D26D4313EB7FA4229515E4DCFE0F2F9417D00D8FBB5457AA60AE748E33C19F15D9071389BE45ECBF28FBACD8B89E863F9E429A273FEC2CA79BE0D' },
-      { text: '视频教程-产品分类', src: 'https://ugcbsy.qq.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/e0753kcg4xb.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=60249E22757F101F2B986D8BCB272536E5A425A6CC9D4E36F8AA4B201F3432DFDC9E7BC0107C980D7D7651320B66D10A7E36EA92B2EB2A7A1D95E64B9D0C9E3EFFB539A93F84E22282B741C1844A83A385150FA77B5AC1F366EF15C221499698AA0B4E6216E8A204BBC27112A206F5B92E967BC4885A21B5' },
-      { text: '视频教程-下载', src: 'https://ugclx.video.gtimg.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/n0753o7p54m.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=1322121F8502596875B973A8059E9E1D060C2E2B7E952CD644DCACFCE7DCD1A91A72288F17603658DCF6F1CACDE4C3D296BAF2CEE156E2C35045B3C8A2A3AF6ADC17CEF5511C81391F10BC773451961A748FAD8BF7F63913EA82B241F3D5C62CA1D9FA657EBF34967F0DE8898BCB366BD192F77CCFAA8620' },
-      { text: '视频教程-导入', src: 'https://ugcsjy.qq.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/j0753rag7kr.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=FB66922088EB91FDE98877E53C7379C0038A2478E0A41C294E002486E42065E76693832FF90D08A44108256CBF38E7668D6AA6CF266624560937BF29533B5ADD0199AD36E2F57E25C287ADD716B61DB0F9F0EADC636CD127EC543662A49077434AF721FD721B8727B76918AEB54C89F3160D204BF5674DF6' },
-      { text: '视频教程-新闻列表', src: 'https://ugcydzd.qq.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/q0753wldx5d.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=46F46BC80988C5210B128166F2BFC0C3F9515F7239F76BBB8CB67CAA3899484A7B303D58E20017C390CE899609A9BE5B6700D4F9F2316F979233E6B4CCEF29EA18249607289D51A71F93615F2EC33206A0F99F801BC5A3FB742562870CC48F9C3E1427EEF5BCE746DAF0F517B0D0DC5DEE02F321D80A1CA0' },
-      { text: '视频教程-新闻分类', src: 'https://ugcws.video.gtimg.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/g075303kosj.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=AD7B86F9872512D246474514B1927AEEAB52F63BD13F1B16A0DF334E81C0C18597FD484BDFCA8421ADC29A2773765503B086AFAD7852A6720CAC935863A240D2095D2BED928C4FA370B94FD89D0F7AC4CE7A9D756944F2857DF998E1A789E2942E489D9F765C393D0F90F827302ECA7E48FA558C32211E81' },
-      { text: '视频教程-站点数据管理', src: 'https://ugcws.video.gtimg.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/f0753d6r4fb.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=91B0FE4E9C96A0FA511B621C4F1A9879526D9FBE37E615C0906A3F24A27CF938D09D2C542426504BE7F57EC96DCF7372F64C3046DF944F6C96AE0F270F03AB9AE29348C22D7F96EA2D7F32330CD65B2D5A02938F866EAD0B2A2BEC9526D58E9FD944CEAB0A9188225BF38B9D41A1367B8A9A132A6BE599B8' },
-      { text: '视频教程-SEO设置', src: 'https://ugcydzd.qq.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/u0753y5akkv.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=6C3C8ACF02EE332F47CB9C1A07CC3AFA9812CDC2398710D6A9D6E3093DCDBA09D85C884BF115EE23AAED03D3AD1813BD596B349A5E62BEB1A11FEDAECA3F95E44559E8BD21CF69E4BEB7B14C09DE4520300F7B16185F5AD1DC228FBF84FA1D352A517D9CB41254C0BF413EF0A0E2D9AF0216D2FF7300A1B0' },
-      { text: '视频教程-Sitemap生成', src: 'https://apd-05e0c8826b46432c332b215bc1798b92.v.smtcdns.com/vhot2.qqvideo.tc.qq.com/AUVWFnuYFxnJB6M7YYAcw0MO59awCEreVY62H0Owbmk4/l0753l1jw2c.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=6B9E719E5C6AE528C107FEA77ABB4F673614AD33281CBE683F32609BC52C626F9635FE0676B3878B4DE4F937F1C6C8F12C07B25B68BB6C9D0C9DEF77CB42CD87140822A1ADFB13B789474B57D774645E37BB5FB37ECF89C7F4097C84A5C46B7BDFA545529B5658FD19A289205711C4F2DA2502B2BE3C3B6C' },
-      { text: '视频教程-批量提交', src: 'https://apd-b7559ddfd27ca1dbf9560241f9135e1e.v.smtcdns.com/vhot2.qqvideo.tc.qq.com/A9MY84yZEozFWlNw3-1DgOPsH5ysmjdRXXbtQ5X1rznA/u0753ji3n5n.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=EEE13EB52C772B9ABFBC11763048383400C5EB63B8DC6A839B11124DFD0E7CDFE7385DD73C7FC6A529D5A5719F2FC6257CEEA6E9DF2758F9701F8B7645E27E20A19FA594A9C44E14847A08471FC14187ADE745CB1960B0C20A2F831A16304506FB5E1E36349C104C4DD26E8052641CC1A37C629AF9A69973' },
-      { text: '视频教程-第三方统计', src: 'https://ugcydzd.qq.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/j0753ycgfeh.mp4?sdtfrom=v1010&guid=03f122965fec4b84fe85e8f62ae59f1b&vkey=C892F5FB4885152F23DA48AA628E44BFA206A9D1C5A16624CDC6E4BF2F6A4870F32A0F7A8A3D9AE77FE69A7525CE8AB17492706187B7D388BBB7A1918852CFDA33806EF1919D9C974E2F68AD9DFE02C0F99A24D476DD90FBC67B8422F8D142649F458DD9661321A6E14753D3A0EE191E85F84A93C0067023' }
+      { text: '机汇网-界面编辑视频教程', vid: 'b0766xub26n', src: '' },
+      { text: '视频教程-安全设置', vid: 'c0753vzonsm', src: '' },
+      { text: '视频教程-产品列表', vid: 'w0753bnm9kh', src: '' },
+      { text: '视频教程-产品分类', vid: 'e0753kcg4xb', src: '' },
+      { text: '视频教程-下载', vid: 'n0753o7p54m', src: '' },
+      { text: '视频教程-导入', vid: 'j0753rag7kr', src: '' },
+      { text: '视频教程-新闻列表', vid: 'q0753wldx5d', src: '' },
+      { text: '视频教程-新闻分类', vid: 'g075303kosj', src: '' },
+      { text: '视频教程-站点数据管理', vid: 'f0753d6r4fb', src: '' },
+      { text: '视频教程-SEO设置', vid: 'u0753y5akkv', src: '' },
+      { text: '视频教程-Sitemap生成', vid: 'l0753l1jw2c', src: '' },
+      { text: '视频教程-批量提交', vid: 'u0753ji3n5n', src: '' },
+      { text: '视频教程-第三方统计', vid: 'j0753ycgfeh', src: '' }
     ]
+  },
+  onLoad () {
+    this.data.list.forEach((item, index) => {
+      this.getVideoInfo(item.vid, index)
+    })
+  },
+  getVideoInfo: function (vid, index) {
+    var that = this;
+    var urlString = 'https://vv.video.qq.com/getinfo?otype=json&appver=3.2.19.333&platform=11&defnpayver=1&vid=' + vid;
+    wx.request({
+      url: urlString,
+      success: function (res) {
+        var dataJson = res.data.replace(/QZOutputJson=/, '') + "qwe";
+        var dataJson1 = dataJson.replace(/;qwe/, '');
+        var data = JSON.parse(dataJson1);
+        var fn_pre = data.vl.vi[0].lnk
+        var host = data['vl']['vi'][0]['ul']['ui'][0]['url']
+        var streams = data['fl']['fi']
+        var seg_cnt = data['vl']['vi'][0]['cl']['fc']
+        if (parseInt(seg_cnt) == 0) {
+          seg_cnt = 1
+        }
+        var best_quality = streams[streams.length - 1]['name']
+        var part_format_id = streams[streams.length - 1]['id']
+        for (var i = 1; i < (seg_cnt + 1); i++) {
+          var filename = fn_pre + '.p' + (part_format_id % 10000) + '.' + i + '.mp4';
+          console.log(filename);
+          that.requestVideoUrls(part_format_id, vid, filename, index, host);
+        }
+      }
+    })
+  },
+  requestVideoUrls: function (part_format_id, vid, fileName, index, host) {
+    var keyApi = "https://vv.video.qq.com/getkey?otype=json&platform=11&format=" + part_format_id + "&vid=" + vid + "&filename=" + fileName + "&appver=3.2.19.333"
+    var that = this;
+    wx.request({
+      url: keyApi,
+      success: function (res) {
+        var dataJson = res.data.replace(/QZOutputJson=/, '') + "qwe";
+        var dataJson1 = dataJson.replace(/;qwe/, '');
+        var data = JSON.parse(dataJson1);
+        if (data.key != undefined) {
+          var vkey = data['key']
+          var url = host + fileName + '?vkey=' + vkey;
+          that.data.list[index].src = String(url)
+          that.setData({
+            list: that.data.list
+          })
+        }
+      }
+    })
   }
 }
 </script>

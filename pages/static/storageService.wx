@@ -9,7 +9,7 @@
     </view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
-        <ui-col width="70" vertical-align="middle">
+        <ui-col width="65" vertical-align="middle">
           可选方案
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15" style="font-size:12px;">
@@ -106,7 +106,7 @@ export default {
   },
   data: {
     detail: {
-      name: 'jhyun'
+      name: ''
     },
     category: [
       { text: '无', value: '' },
@@ -128,7 +128,9 @@ export default {
     api.attachment().then(res => {
       if (res.success) {
         let data = res.attributes.data
-        let detail = {}
+        let detail = {
+          name: ''
+        }
         data.forEach(item => {
           if (item.state === '01') {
             detail = JSON.parse(JSON.stringify(item))

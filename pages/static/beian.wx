@@ -1,11 +1,9 @@
 <template>
   <view class="j_detail">
     <cc-header title="域名备案"></cc-header>
-    <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
-    
+
     <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:999" right="0">
-      <ui-tabs tab-style="{{ {width:width/3+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/3+'px !important'} }}" bindchange="handleChange">
-        <ui-tab>基本信息</ui-tab>
+      <ui-tabs tab-style="{{ {width:width/2+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/2+'px !important'} }}" bindchange="handleChange">
         <ui-tab>自助备案</ui-tab>
         <ui-tab>代理备案</ui-tab>
       </ui-tabs>
@@ -15,37 +13,6 @@
     <view class="hr"></view>
 
     <view wx:if="{{current1 === 0}}">
-      <view class="j_tip">温馨提醒： 请完善备案信息，方便网站“界面编辑”调取。备案主要是为了规范网络安全化，维护网站经营者的合法权益，保障网民的合法利益。</view>
-      <ui-row-list border-left-indent>
-        <ui-row height="104r">
-          <ui-col width="80" vertical-align="middle">
-            ICP备案号
-          </ui-col>
-          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            <input placeholder="公信备案" bindinput="input" id="icp" value="{{detail.icp}}"/>
-          </ui-col>
-        </ui-row>
-        <ui-row height="104r">
-          <ui-col width="80" vertical-align="middle">
-            网安备案号
-          </ui-col>
-          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            <input placeholder="公安备案" bindinput="input" id="psr" value="{{detail.psr}}"/>
-          </ui-col>
-        </ui-row>
-        <ui-row height="104r">
-          <ui-col width="80" vertical-align="middle">
-            网安备案链接地址
-          </ui-col>
-          <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            <input placeholder="公安备案" bindinput="input" id="seccurityLink" value="{{detail.seccurityLink}}"/>
-          </ui-col>
-        </ui-row>
-      </ui-row-list>
-      <button type="primary" bindtap="bindSubmit" class="fixed">提交</button>
-    </view>
-    
-    <view wx:if="{{current1 === 1}}">
       <view class="j_tip">
         温馨提醒： 备案只针对国内的空间，放国外不需要备案。如有问题，请咨询：QQ：260404208
         <view>
@@ -54,8 +21,8 @@
         https://beian.aliyun.com/?utm_content=se_1351982
       </view>
     </view>
-    
-    <view wx:if="{{current1 === 2}}">
+
+    <view wx:if="{{current1 === 1}}">
       <view class="j_tip">
         温馨提醒： 为了更好的帮您备案，请提交以下相关资料（备案只针对国内的空间，放国外不需要备案。）如有问题，请咨询：QQ：260404208
         <view>
@@ -88,7 +55,7 @@
             域名
           </ui-col>
           <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-            <input placeholder="例如：abc.com" bindinput="input" id="address" value="{{detail.address}}"/>
+            <input placeholder="例如：abc.com" bindinput="input" id="bind.address" value="{{detail.bind.address}}"/>
           </ui-col>
         </ui-row>
         <ui-row height="90r">
@@ -309,9 +276,9 @@
           </ui-col>
           <ui-col vertical-align="middle"></ui-col>
         </ui-row>
-       
+
       </ui-row-list>
-      
+
       <view style="height:80px;"></view>
       <button type="primary" bindtap="submit" class="fixed">提交</button>
     </view>
@@ -327,15 +294,14 @@ export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
-      'cc-image': '../../packages/cc-image',
-      'cc-lan': '../../packages/cc-lan'
+      'cc-image': '../../packages/cc-image'
     }
   },
   data: {
     width:wx.WIN_WIDTH,
-    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT + 59/750*wx.WIN_WIDTH,
-    detail:{},
-    bindDetail: {},
+    detail:{
+      type: '00'
+    },
     current1: 0,
     imgList: [
       {src: 'http://img.jihui88.com/wcd/upload//j//j2//jihui//picture//2018//05//22/f35c8add-c844-4019-b506-d6c6c8c6038b.jpg'},
@@ -352,24 +318,11 @@ export default {
     Object.assign(this, Input)
   },
   get () {
-    if (this.data.current1 === 0) {
-      api.bindDetail2({
-        id: getApp().globalData.layoutId
-      }).then(res => {
-        if (res.success) {
-          this.setData({
-            detail: res.attributes.data,
-            bindDetail: res.attributes.data
-          })
-        }
-      })
-    }
-    if (this.data.current1 === 2) {
+    if (this.data.current1 === 1) {
       api.profile().then(res => {
         if (res.success) {
           let data = res.attributes.data
           data.type = '00'
-          data.address = this.data.bindDetail.address
           this.setData({
             detail: data
           })
@@ -408,34 +361,6 @@ export default {
       urls: [this.data.imgList[index].src]
     })
   },
-  bindSubmit (e) {
-    let detail = this.data.detail
-    if (detail.id || detail.profileId === 'all') {
-      if (detail.profileId === 'all') {
-        detail = this.data.bindDetail
-        detail.address = this.data.detail.address
-      }
-      let data = {
-        model: JSON.stringify(detail),
-        _method: 'put'
-      }
-      Tips.loading()
-      api.bindDetail2({
-        data: data,
-        method: 'post',
-        id: detail.id
-      }).then(res => {
-        Tips.loaded()
-        if (res.success) {
-          if (e !== 'tip') Tips.success('保存成功')
-        } else {
-          Tips.error(res.msg)
-        }
-      })
-    } else {
-      if (e !== 'tip') Tips.toast('请选择站点')
-    }
-  },
   submit () {
     this.bindSubmit('tip')
     let data = {
@@ -466,4 +391,3 @@ page{
   margin-top:10px;
 }
 </style>
-

@@ -40,7 +40,7 @@
         <ui-icon type="arrow-right"></ui-icon>
       </ui-col>
     </ui-row>
-    
+
     <view class="hr"></view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
@@ -54,7 +54,7 @@
           <ui-icon type="arrow-right"></ui-icon>
         </ui-col>
       </ui-row>
-      
+
       <ui-row height="104r" url="/pages/components/jManyCategory?type=product&category={{detail.category}}" hover-class="none">
         <ui-col width="60" vertical-align="middle">
           产品分类
@@ -75,7 +75,7 @@
           <input placeholder="请填写" bindinput="input" id="prodtype" value="{{detail.prodtype}}"/>
         </ui-col>
       </ui-row>
-    </ui-row-list>  
+    </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
@@ -220,7 +220,7 @@
 
     <view style="height:80px"></view>
     <ui-fixed-view bottom="0" left="0" right="0">
-      <ui-row height="82r" border-top style="background: #fff">
+      <ui-row height="88r" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
           保存
         </ui-col>
@@ -516,4 +516,3 @@ swiper-item image{width:750rpx;}
 .swiper-container .dots .dot{margin:0 8rpx;width:22rpx;height:22rpx;background: none;border-radius: 22rpx;border:1px solid #d8d8d8;transition:all .6s}
 .swiper-container .dots .dot.active{background:#d8d8d8;}
 </style>
-

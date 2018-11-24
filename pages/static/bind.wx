@@ -2,15 +2,23 @@
   <view>
     <cc-header title="域名绑定"></cc-header>
     <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
-  
+
+    <view class="j_tip">
+      温馨提醒：
+      <view>1、一个网站编号只支持一个机房。如果您变更机房，之前绑定的域名会被清除，请慎重选择。</view>
+      <view>2、为了在搜索引擎上有更好的排名，这些简单的事情别忘了：</view>
+      （1）网站上线前，<navigator url="seo" hover-class="none">设置SEO</navigator>（网站标题、关键词、描述）。
+      <view>（2）网站上线后，<navigator url="sitemap" hover-class="none">生成Sitemap</navigator>；<navigator url="batch" hover-class="none">批量提交</navigator>；接入<navigator url="thirdPartyStatistics" hover-class="none">第三方统计</navigator>。</view>
+    </view>
+
     <ui-row-list border-left-indent>
       <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
         bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
         <view slot="content">
-        <ui-row height="120r" border-bottom class="j_row_list">
+        <ui-row height="128r" border-bottom class="j_row_list">
           <ui-col vertical-align="middle">
             <view style="width: 100%;">
-              <ui-row height="60r">
+              <ui-row height="64r">
                 <ui-col align="left" vertical-align="middle">
                     <text>{{ item.address }}</text>
                 </ui-col>
@@ -35,7 +43,7 @@
         </view>
         <view slot="operate">
           <view class="j_operate" border-bottom>
-            <ui-row height="120r">
+            <ui-row height="128r">
               <ui-col data-id="{{item.id}}" bindtap="detail" vertical-align="middle" align="center">
                 修改
               </ui-col>
@@ -49,11 +57,11 @@
     </ui-row-list>
 
     <view bindtap="add" class="j_add"><i class="iconfont icon-jia"></i></view>
-    
-    <cc-modal title="新建绑定域名" visible="{{ visible }}" bind:ok="ok" bind:cancel="cancel">
+
+    <cc-modal title="新建域名" okText="提交" visible="{{ visible }}" bind:ok="ok" bind:cancel="cancel">
       <view class="add-content">
         <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
-        <input type="text" value="{{name}}" bindinput="nameInput" placeholder="baidu"/>
+        <input type="text" value="{{name}}" bindinput="nameInput" placeholder="输入新域名"/>
       </view>
     </cc-modal>
   </view>
@@ -78,7 +86,7 @@ export default {
       pageSize: 100
     },
     el: 'undefined',
-    height: 120/750*wx.WIN_WIDTH,
+    height: 128/750*wx.WIN_WIDTH,
     visible: false,
     name: ''
   },
@@ -170,5 +178,11 @@ page{
 }
 .red{
   color: #d0021b
+}
+.j_tip{
+  navigator{
+    display: inline-block;
+    color: #0366ce;
+  }
 }
 </style>

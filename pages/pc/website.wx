@@ -3,8 +3,8 @@
     <cc-header title="我的网站" count="{{count}}"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-swipe-out operate-width="180" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}" 
-      bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="90">
+      <ui-swipe-out operate-width="90" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}"
+        bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="90">
         <view slot="content">
           <ui-row height="90" class="j_row_list" border-bottom>
             <ui-col class="text" vertical-align="middle">
@@ -40,37 +40,42 @@
         <view slot="operate">
           <ui-row class="j_operate" height="90">
             <ui-col vertical-align="middle" align="center">
-              <view data-item='{{item}}' bindtap="view">查看</view>
-            </ui-col>
-            <ui-col vertical-align="middle" align="center">
-              <view data-item='{{item}}' data-index='{{index}}' bindtap="copy">复制</view>
-            </ui-col>
-            <ui-col vertical-align="middle" align="center">
-              <view data-id='{{item.id}}' data-index='{{index}}' bindtap="del">删除</view>
+              <view data-url='{{item.url}}' bindtap="copyLink">复制链接</view>
             </ui-col>
           </ui-row>
         </view>
       </ui-swipe-out>
     </ui-row-list>
+    <!--
+      <ui-col vertical-align="middle" align="center">
+        <view data-item='{{item}}' bindtap="view">查看</view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="center">
+        <view data-item='{{item}}' data-index='{{index}}' bindtap="copyLink">复制链接</view>
+      </ui-col>
+      <ui-col vertical-align="middle" align="center">
+        <view data-id='{{item.id}}' data-index='{{index}}' bindtap="del">删除</view>
+      </ui-col>
+    -->
     <cc-loadmore more="{{more}}"></cc-loadmore>
-    
+
     <view class="j_add" data-show="{{ true }}" bindtap="openPopup" style="background:#ff6700;"><i class="iconfont icon-jia"></i></view>
 
     <ui-popup show="{{ show }}" position="bottom" height="300">
       <view style="padding: 15px;">
         <radio-group class="website_add_select">
-        <ui-row height="200">
-          <ui-col vertical-align="middle" align="center" wx:for="{{countryType}}" wx:key="*this" 
-            data-value='{{item.value}}' bindtap="radioChange" >
-            <label>
-              <radio value="{{item.value}}" checked="{{detail.country === item.value}}"></radio>
-            </label>
-            <image mode="aspectFit" src="http://www.jihui88.com/manage_v4/platform/img/country{{item.value}}.png"/>
-            <view>{{item.text}}</view>
-            <view class="content">{{item.content}}</view>
-          </ui-col>
-        </ui-row>
-      </radio-group>
+          <ui-row height="200">
+            <ui-col vertical-align="middle" align="center" wx:for="{{countryType}}" wx:key="*this"
+              data-value='{{item.value}}' bindtap="radioChange" >
+              <label>
+                <radio value="{{item.value}}" checked="{{detail.country === item.value}}"></radio>
+              </label>
+              <image mode="aspectFit" src="http://www.jihui88.com/manage_v4/platform/img/country{{item.value}}.png"/>
+              <view>{{item.text}}</view>
+              <view class="content">{{item.content}}</view>
+            </ui-col>
+          </ui-row>
+        </radio-group>
         <button bindtap="add" class="origin" type="primary">现在创建网站</button>
       </view>
     </ui-popup>
@@ -244,6 +249,14 @@ export default {
         getApp().globalData.staticList.splice(0, 0, data)
       } else {
         Tips.error(res.msg)
+      }
+    })
+  },
+  copyLink (e) {
+    wx.setClipboardData({
+      data: e.currentTarget.dataset.url,
+      success: function(res) {
+        Tips.success('复制链接成功')
       }
     })
   },

@@ -31,7 +31,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    <button type="primary" bindtap="submit" style="margin: 35px 0 15px 0;font-size:15px;">提交</button>
+    <button type="primary" bindtap="submit" style="margin: 35px 15px 15px 15px;font-size:15px;">提交</button>
   </view>
 </template>
 

@@ -2,7 +2,7 @@
   <view>
     <cc-header title="图片剪切"></cc-header>
     <view style="height:50px"></view>
-  
+
     <view class="wx-content-info">
       <view class="wx-corpper" style="width:{{cropperInitW}}rpx;height:{{cropperInitH}}rpx;background:#000">
         <view class="wx-corpper-content" style="width:{{cropperW}}rpx;height:{{cropperH}}rpx;left:{{cropperL}}rpx;top:{{cropperT}}rpx">
@@ -35,7 +35,7 @@
     </view>
     <!-- footer -->
     <ui-fixed-view bottom="0;z-index:700" left="0" right="0">
-      <ui-row height="110r" border-top>
+      <ui-row height="110r" style="border-top: 1px solid #222">
         <ui-col width="100" vertical-align="middle" align="center" bindtap="getImage">
           <view style="color:#fff">重选</view>
         </ui-col>
@@ -45,7 +45,7 @@
         </ui-col>
       </ui-row>
     </ui-fixed-view>
-   
+
   </view>
 </template>
 
@@ -147,7 +147,7 @@ export default {
             // 初始化left right
             cropperL: Math.ceil((windowWRPX - windowWRPX) / 2),
             cropperT: Math.ceil((windowWRPX - windowWRPX / innerAspectRadio) / 2),
-            // 裁剪框  宽高  
+            // 裁剪框  宽高
             cutW: windowWRPX - 200,
             cutH: windowWRPX / innerAspectRadio - 200,
             cutL: Math.ceil((windowWRPX - windowWRPX + 200) / 2),

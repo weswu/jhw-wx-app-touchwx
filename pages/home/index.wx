@@ -3,25 +3,25 @@
     <!-- 自定义导航 -->
     <cc-header title="机汇网" back="{{false}}" custom-style="{{ {backgroundColor:'#22252a',color:'#fff'} }}"></cc-header>
 
-    <ui-row height="80r" style="background: #22252a;position: fixed;width:100%;z-index:99;top:{{NAV_HEIGHT}}">
-      <ui-col width="40" vertical-align="top" align="center">
+    <ui-row height="90r" style="background: #22252a;position: fixed;width:100%;z-index:99;top:{{NAV_HEIGHT}}">
+      <ui-col width="40" vertical-align="middle" align="center">
         <i class="iconfont icon-saoyisao" bindtap="saoyisao" style="color:#fff"></i>
       </ui-col>
-      <ui-col class="text" vertical-align="top">
+      <ui-col class="text" vertical-align="middle">
         <navigator url="/pages/product/product" class="search-btn" style="background: rgba(255,255,255,0.5);border-radius: 3px">
           <view style="background: rgba(34,37,42,0.8);width:100%;height:100%">
             <i class="iconfont icon-sousuo" style="margin-left:18rpx;padding-top:3px;color:#fff"></i>
           </view>
         </navigator>
       </ui-col>
-      <ui-col width="55" vertical-align="top" align="center">
-        <navigator url="/pages/message/messageList?title=未读消息&recvState=00" style='position: relative;right: 5px;color:#fff;line-height:60rpx;'>
+      <ui-col width="55" vertical-align="middle" align="center">
+        <navigator url="/pages/message/messageList?title=未读消息&recvState=02" style='position: relative;right: 5px;color:#fff;'>
           <i class="iconfont icon-mail" style="color:#fff;font-size:20px"></i>
           <ui-badge text="{{userInfo.noReaderMsg}}" custom-style="{{ {position: 'absolute', top: '0rpx', right: '-30rpx'} }}" wx:if="{{userInfo.noReaderMsg > 0}}"></ui-badge>
         </navigator>
       </ui-col>
     </ui-row>
-    <view style="height:80rpx;"></view>
+    <view style="height:90rpx;"></view>
     <!-- 轮播 -->
     <view class="swiper-container">
       <swiper class="swiper_box" bindchange="swiperChange" style="{{swiperHeight}}"
@@ -165,14 +165,14 @@
 
     <!-- 精选 -->
     <view class="sample_content" wx:if="{{hotList.length>0}}">
-      <ui-row height="40">
+      <ui-row height="30">
         <ui-col span="11">
-          <ui-roller autoplay="5000" height=60>
-            <ui-roller-item wx:for="{{hotList}}" wx:for-item="row" wx:key="*this">
-              <view class="item"wx:for="{{row.children}}" wx:key="*this">
-                <ui-row>
+          <ui-roller autoplay="5000" height=30>
+            <ui-roller-item wx:for="{{hotList}}" wx:key="*this" style="width:0">
+              <view style="line-height:30px;">
+                <ui-row data-id="{{item.news_id}}" bindtap="newsDetail">
                   <ui-col span="2" width="35"><text style="color:#F00;font-size:12px;">精选</text></ui-col>
-                  <ui-col span="10">
+                  <ui-col span="9">
                     <text block class="roller-text">{{item.title}}</text>
                   </ui-col>
                 </ui-row>
@@ -355,20 +355,14 @@ export default {
       },
       id: 'Enterp_0000000000000000000062857'
     }).then(res => {
-      let list = []
-      let data = []
-      res.list.forEach((item, index) => {
-        if (index % 2 === 0) {
-          data = []
-          data.push(item)
-        } else {
-          data.push(item)
-          list.push({children: data})
-        }
-      })
       this.setData({
-        hotList: list
+        hotList: res.list
       })
+    })
+  },
+  newsDetail (e) {
+    wx.navigateTo({
+      url: 'caseQuestionDetail?id=' + e.currentTarget.dataset.id + '&title=精选'
     })
   }
 }
@@ -426,6 +420,9 @@ swiper-item image{width:750rpx;}
   .roller-text{
     font-size: 12px;
     color:#4e4e4e;
+  }
+  .item{
+    line-height: 20px;
   }
 }
 .j_banner{

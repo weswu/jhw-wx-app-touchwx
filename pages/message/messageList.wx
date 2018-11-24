@@ -78,7 +78,7 @@ export default {
     show: false,
     selectList: [
       { value: '全部消息', key: '' },
-      { value: '未读消息', key: '00' },
+      { value: '未读消息', key: '02' },
       { value: '已读消息', key: '01' }
     ],
     countryList: ['中国', '香港', '澳大利亚'],
@@ -103,10 +103,11 @@ export default {
       this.setData({
         title: '员工消息',
         [posterId]: e.posterId
-      })  
+      })
     } else {
       this.setData({
         title: e.title || '消息',
+        name: e.name || '全部消息',
         [type]: e.type || '',
         [recvState]: e.recvState || ''
       })
@@ -132,17 +133,21 @@ export default {
   },
   detail (e) {
     let item = e.currentTarget.dataset.item
-    if (item.recvState === '01') {
+    // 未读 上个页面数量-1
+    if (item.recvState === '02') {
       let prev = Utils.prev()
-      let list = prev.data.list
-      list.forEach(row => {
-        if (row.type === item.type){
-          row.count -= 1
-        }
-      })
-      prev.setData({
-        list: list
-      })
+      if (prev.route === 'pages/message/message') {
+        let list = prev.data.list
+        list.forEach(row => {
+         if (row.type === item.type){
+           row.count -= 1
+         }
+       })
+       prev.setData({
+         list: list
+       })
+       getApp().globalData.userInfo.noReaderMsg = getApp().globalData.userInfo.noReaderMsg-1
+      }
     }
     wx.navigateTo({
       url: 'messageDetail?id=' + item.messageId

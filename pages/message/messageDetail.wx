@@ -21,7 +21,7 @@
 
       <rich-text nodes="{{detail.content}}"/>
     </view>
-    <button type="primary" bindtap="reply" wx:if="{{detail.type === '03'}}" style="font-size:15px;">回复</button>
+    <button type="primary" bindtap="reply" wx:if="{{detail.type === '03'}}" style="font-size:15px;margin: 0 15px">回复</button>
   </view>
 </template>
 
@@ -112,7 +112,7 @@ page{
 }
 .btn-defalut{
   background:#f5f4f4;color:#02c1df;
-  height: 82rpx;
-  line-height: 82rpx;
+  height: 88rpx;
+  line-height: 88rpx;
 }
 </style>

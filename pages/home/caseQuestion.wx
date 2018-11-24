@@ -2,6 +2,7 @@
   <view>
     <cc-header title="常见问题" count="{{count}}"></cc-header>
 
+    <view class="hr"></view>
     <ui-row-list wx:for="{{list}}" wx:key="*this">
       <view class="item">
         <image mode="widthFix" src="{{item.pic_path}}"></image>
@@ -27,8 +28,8 @@ import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-loadmore': '../../packages/cc-loadmore',
-      'cc-header': '../../packages/cc-header'
+      'cc-header': '../../packages/cc-header',
+      'cc-loadmore': '../../packages/cc-loadmore'
     }
   },
   data: {

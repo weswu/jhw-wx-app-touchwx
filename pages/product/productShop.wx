@@ -68,7 +68,7 @@
           <input placeholder="请填写" bindinput="input" id="point" value="{{detail.point}}"/>
         </ui-col>
       </ui-row>
-    </ui-row-list>  
+    </ui-row-list>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
@@ -119,7 +119,7 @@
     </ui-row-list>
 
     <ui-fixed-view bottom="0" left="0" right="0">
-      <ui-row height="82r" border-top style="background: #fff">
+      <ui-row height="88r" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
           保存
         </ui-col>
@@ -170,4 +170,3 @@ page{
 }
 
 </style>
-

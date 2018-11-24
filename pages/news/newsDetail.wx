@@ -130,7 +130,7 @@
 
     <view style="height:80px"></view>
     <ui-fixed-view bottom="0" left="0" right="0">
-      <ui-row height="82r" border-top style="background: #fff">
+      <ui-row height="88r" border-top style="background: #fff">
         <ui-col vertical-align="middle" align="center" bindtap="submit" style="background: #12bedb;color:#fff">
           保存
         </ui-col>
@@ -327,4 +327,3 @@ page{
   background: #f1f1f1;
 }
 </style>
-

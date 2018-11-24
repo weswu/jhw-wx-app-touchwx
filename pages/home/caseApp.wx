@@ -45,10 +45,11 @@ export default {
       { url: '', text: '机汇云企业大脑', icon: 'icon-tijiao' }
     ],
     list1: [
-      { url: 'caseWebsite', text: '全民建站', icon: 'icon-wangzhan' },
       { url: 'caseApp', text: '企业应用', icon: 'icon-qiye' },
-      { url: 'caseApplet', text: '微信端', icon: 'icon-weixin' },
-      { url: 'caseDanao', text: '企业大脑', icon: 'icon-danao' }
+      { url: 'caseDanao', text: '企业大脑', icon: 'icon-danao' },
+      { url: 'caseWebsite', text: '网站案例', icon: 'icon-wangzhan' },
+      { url: 'caseApplet', text: '小程序案例', icon: 'icon-weixin' },
+      { url: 'caseTemplate', text: '网站模板', icon: 'icon-ziliao' }
     ],
     list2: [
       { url: 'caseVideo', text: '建站快速入门', icon: 'icon-beginnerguide' },

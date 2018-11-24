@@ -1,7 +1,7 @@
 <template>
   <view>
     <cc-header title="SEO设置"></cc-header>
-    
+
     <ui-row-list border-left-indent>
       <ui-row height="104r">
         <ui-col width="85" vertical-align="middle">

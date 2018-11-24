@@ -36,7 +36,7 @@
       </ui-row>
     </view>
     <view style="height:100rpx"></view>
-    
+
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show ? 'show' : '' }}">
         <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import Utils from '../static/utils/utils'
 export default {
   options: {
     multipleSlots: true // 在组件定义时的选项中启用多slot支持

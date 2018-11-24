@@ -18,7 +18,7 @@
           <view class="weui-media-box__desc">{{user.username}}</view>
         </view>
       </view>
-      <navigator url="/pages/message/messageList?title=未读消息&recvState=00" style='position: absolute;top: 170rpx;right: 30px;color:#fff'>
+      <navigator url="/pages/message/messageList?title=未读消息&name=未读消息&recvState=02" style='position: absolute;top: 170rpx;right: 30px;color:#fff'>
         <i class="iconfont icon-mail" style="color:#fff;font-size:20px"></i>
         <ui-badge text="{{userInfo.noReaderMsg}}" custom-style="{{ {position: 'absolute', top: '0rpx', right: '-30rpx'} }}" wx:if="{{userInfo.noReaderMsg > 0}}"></ui-badge>
       </navigator>
