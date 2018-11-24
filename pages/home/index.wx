@@ -1,27 +1,27 @@
 <template>
   <view>
     <!-- 自定义导航 -->
-    <ui-nav-bar slot="nav-bar" custom-style="{{ {backgroundColor:'#22252a',color:'#fff'} }}">
-      <ui-row height="80" style="background: #22252a;padding-bottom:10px">
-        <ui-col width="40" vertical-align="bottom" align="center">
-          <i class="iconfont icon-saoyisao" bindtap="saoyisao"></i>
-        </ui-col>
-        <ui-col class="text" vertical-align="bottom">
-          <navigator url="/pages/product/product" class="search-btn" style="background: rgba(255,255,255,0.5);border-radius: 3px">
-            <view style="background: rgba(34,37,42,0.8);width:100%;height:100%">
-              <i class="iconfont icon-sousuo" style="margin-left:18rpx;padding-top:2px;"></i>
-            </view>
-          </navigator>
-        </ui-col>
-        <ui-col width="55" vertical-align="bottom" align="center">
-          <navigator url="/pages/message/messageList?title=未读消息&recvState=00" style='position: relative;right: 5px;color:#fff'>
-            <i class="iconfont icon-mail" style="color:#fff;font-size:20px"></i>
-            <ui-badge text="{{userInfo.noReaderMsg}}" custom-style="{{ {position: 'absolute', top: '0rpx', right: '-30rpx'} }}" wx:if="{{userInfo.noReaderMsg > 0}}"></ui-badge>
-          </navigator>
-        </ui-col>
-      </ui-row>
-    </ui-nav-bar>
-    <view style="height:100px;"></view>
+    <cc-header title="机汇网" back="{{false}}" custom-style="{{ {backgroundColor:'#22252a',color:'#fff'} }}"></cc-header>
+
+    <ui-row height="80r" style="background: #22252a;position: fixed;width:100%;z-index:99;top:{{NAV_HEIGHT}}">
+      <ui-col width="40" vertical-align="top" align="center">
+        <i class="iconfont icon-saoyisao" bindtap="saoyisao" style="color:#fff"></i>
+      </ui-col>
+      <ui-col class="text" vertical-align="top">
+        <navigator url="/pages/product/product" class="search-btn" style="background: rgba(255,255,255,0.5);border-radius: 3px">
+          <view style="background: rgba(34,37,42,0.8);width:100%;height:100%">
+            <i class="iconfont icon-sousuo" style="margin-left:18rpx;padding-top:3px;color:#fff"></i>
+          </view>
+        </navigator>
+      </ui-col>
+      <ui-col width="55" vertical-align="top" align="center">
+        <navigator url="/pages/message/messageList?title=未读消息&recvState=00" style='position: relative;right: 5px;color:#fff;line-height:60rpx;'>
+          <i class="iconfont icon-mail" style="color:#fff;font-size:20px"></i>
+          <ui-badge text="{{userInfo.noReaderMsg}}" custom-style="{{ {position: 'absolute', top: '0rpx', right: '-30rpx'} }}" wx:if="{{userInfo.noReaderMsg > 0}}"></ui-badge>
+        </navigator>
+      </ui-col>
+    </ui-row>
+    <view style="height:80rpx;"></view>
     <!-- 轮播 -->
     <view class="swiper-container">
       <swiper class="swiper_box" bindchange="swiperChange" style="{{swiperHeight}}"
@@ -54,15 +54,6 @@
         <view class="image images"><i class="iconfont icon-chanpin"></i></view>
         <view class="label">机汇网所有产品</view>
       </ui-col>
-      <!--
-      <ui-col border-right align="center" vertical-align="middle">
-        <navigator target="miniProgram" open-type="navigate" app-id="wx860be22a8b03bbd9"
-        path="pages/index/index" extra-data="{{extra}}" version="release" style="width:100%;height:100%;flex-direction:column;justify-content:center;display:flex;">
-          <view class="image images"><i class="iconfont icon-chanpin"></i></view>
-          <view class="label">机汇网所有产品</view>
-        </navigator>
-      </ui-col>
-      -->
     </ui-row>
     <view class="hr"></view>
 
@@ -86,23 +77,16 @@
     <view class="sample_content">
      <ui-row height="40">
         <ui-col span="0"></ui-col>
-        <ui-col span="2" vertical-align="middle">
+        <ui-col span="2" width="45" vertical-align="middle">
           <image style="width:35px;height:30px;" src="../../images/index/gonggao.png" mode="aspectFill"/>
         </ui-col>
         <ui-col span="9" vertical-align="middle">
-          <ui-roller autoplay="5000" height=60>
-            <ui-roller-item>
-              <view class="item">
+          <ui-roller autoplay="5000" height=40>
+            <ui-roller-item wx:for="{{gonggaoList}}" wx:for-item="row" wx:key="*this">
+              <view class="item" wx:for="{{row.children}}" wx:key="*this">
                 <ui-row>
                   <ui-col>
-                    <text block class="roller-text">机汇网后台界面全新改版上线，敬请期待！</text>
-                  </ui-col>
-                </ui-row>
-              </view>
-              <view class="item">
-                <ui-row>
-                  <ui-col>
-                    <text block class="roller-text">机汇网小程序后台界面全新改版上线，敬请期待！</text>
+                    <text block class="roller-text">{{item.title}}</text>
                   </ui-col>
                 </ui-row>
               </view>
@@ -114,7 +98,7 @@
     <view class="hr"></view>
 
     <!-- 服务市场 -->
-    <ui-row height="40">
+    <ui-row height="40" url="caseApp?current=1&title=服务市场" hover-class="none">
       <ui-col width="20" vertical-align="middle" align="center">
       </ui-col>
       <ui-col class="text" vertical-align="middle">
@@ -126,7 +110,7 @@
     </ui-row>
     <ui-row border-top border-bottom class="grids2 grids-service">
       <ui-col span="6" border-right align="center" vertical-align="middle" wx:for="{{market}}" wx:key="*this">
-        <ui-row url="{{item.url}}">
+        <ui-row url="{{item.url}}" hover-class="none">
           <ui-col width="10"></ui-col>
           <ui-col span="4" vertical-align="middle">
             <i class="iconfont {{item.icon}}"></i>
@@ -143,7 +127,7 @@
     <view class="hr"></view>
 
     <!-- 玩转机汇网 -->
-    <ui-row height="40">
+    <ui-row height="40" url="caseApp?current=2&title=玩转机汇网" hover-class="none">
       <ui-col width="20" vertical-align="middle"></ui-col>
       <ui-col class="text" vertical-align="middle">
         <view class="title">玩转机汇网</view>
@@ -154,7 +138,7 @@
     </ui-row>
     <ui-row border-top class="grids2">
       <ui-col span="6" align="center" vertical-align="middle" wx:for="{{grids}}" wx:key="*this">
-        <ui-row url="{{item.url}}">
+        <ui-row url="{{item.url}}" hover-class="none">
           <ui-col width="10"></ui-col>
           <ui-col span="4" vertical-align="middle">
             <i class="iconfont {{item.icon}}"></i>
@@ -171,33 +155,25 @@
     <ui-row height="138r">
       <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
         <view class="banner">
-          <view class="title" style="padding-top:28rpx;">建站教程</view>
+          <view class="title" style="padding-top:28rpx;">海量自适应模板网站</view>
           <view class="content">
-            轻松搭建网站
+            一键套用
           </view>
         </view>
       </ui-col>
     </ui-row>
 
     <!-- 精选 -->
-    <view class="sample_content">
+    <view class="sample_content" wx:if="{{hotList.length>0}}">
       <ui-row height="40">
         <ui-col span="11">
           <ui-roller autoplay="5000" height=60>
-            <ui-roller-item>
-              <view class="item">
+            <ui-roller-item wx:for="{{hotList}}" wx:for-item="row" wx:key="*this">
+              <view class="item"wx:for="{{row.children}}" wx:key="*this">
                 <ui-row>
-                  <ui-col span="2"><text style="color:#F00;font-size:12px;">精选</text></ui-col>
+                  <ui-col span="2" width="35"><text style="color:#F00;font-size:12px;">精选</text></ui-col>
                   <ui-col span="10">
-                    <text block class="roller-text">机汇网后台界面全新改版上线，敬请期待！</text>
-                  </ui-col>
-                </ui-row>
-              </view>
-              <view class="item">
-                <ui-row>
-                  <ui-col span="2"><text style="color:#F00;font-size:12px;">精选</text></ui-col>
-                  <ui-col span="10">
-                    <text block class="roller-text">机汇网小程序后台界面全新改版上线，敬请期待！</text>
+                    <text block class="roller-text">{{item.title}}</text>
                   </ui-col>
                 </ui-row>
               </view>
@@ -216,6 +192,9 @@ import Tips from '../../static/utils/tips'
 export default {
   config: {
     enablePullDownRefresh: false,
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
   },
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
@@ -244,11 +223,57 @@ export default {
       {url: 'caseDanao', name: '企业大脑', icon: 'icon-danao', content: '让企业智能办公'}
     ],
     grids: [
-      {url: '', name: '建站快速入门', icon: 'icon-beginnerguide', content: '按步骤指导操作'},
+      {url: 'caseVideo', name: '建站快速入门', icon: 'icon-beginnerguide', content: '按步骤指导操作'},
       {url: 'caseQuestion', name: '常见问题', icon: 'icon-kuaisurumen', content: '自助排除故障'}
     ],
     userInfo: {},
-    integralCount: {}
+    integralCount: {},
+    // news
+    gonggaoList: [
+      {
+        children: [
+          { title: '恭喜[浙江四方股份有限公司]开通手机网站' },
+          { title: '恭喜[永康龙川家医院]开通手机网站' }
+        ]
+      },
+      {
+        children: [
+          { title: '恭喜[永康市博联企业管理咨询有限公司]开通展示版网站' },
+          { title: '恭喜[永康市荣勒健身器材有限公司]开通手机网站' }
+        ]
+      },
+      {
+        children: [
+          { title: '恭喜[武义县三昌文具用品厂]开通展示版网站' },
+          { title: '恭喜[武义华得润日用品有限公司]开通展示版网站' }
+        ]
+      },
+      {
+        children: [
+          { title: '恭喜[武义欧亚旅游休闲用品有限公司]开通展示版网站' },
+          { title: '恭喜[武义宏马文化发展有限公司]开通品牌版网站' }
+        ]
+      },
+      {
+        children: [
+          { title: '恭喜[永康市聚能财务咨询有限公司]开通展示版网站' },
+          { title: '恭喜[浙江和利制冷设备有限公司]开通手机网站' }
+        ]
+      },
+      {
+        children: [
+          { title: '恭喜[浙江盈汇多工贸有限公司]开通展示版网站' },
+          { title: '恭喜[浙江盈汇多工贸有限公司]开通手机网站' }
+        ]
+      },
+      {
+        children: [
+          { title: '恭喜[浙江衢州星月神电动车有限公司]开通展示版网站' },
+          { title: '恭喜[浙江衢州星月神电动车有限公司司]开通手机网站' }
+        ]
+      }
+    ],
+    hotList: []
   },
   onLoad () {
     let that = this
@@ -262,6 +287,7 @@ export default {
         integralCount: res.integralCount
       })
     })
+    this.hot()
   },
   // 扫一扫
   saoyisao () {
@@ -317,6 +343,32 @@ export default {
   jihuiProduct () {
     wx.navigateTo({
       url: '/pages/home/caseProduct'
+    })
+  },
+  hot () {
+    api.newsCategoryChild({
+      data: {
+        page: 1,
+        per_page: 8,
+        content: 1,
+        category_id: '344139'
+      },
+      id: 'Enterp_0000000000000000000062857'
+    }).then(res => {
+      let list = []
+      let data = []
+      res.list.forEach((item, index) => {
+        if (index % 2 === 0) {
+          data = []
+          data.push(item)
+        } else {
+          data.push(item)
+          list.push({children: data})
+        }
+      })
+      this.setData({
+        hotList: list
+      })
     })
   }
 }

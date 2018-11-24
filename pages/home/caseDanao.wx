@@ -1,13 +1,13 @@
 <template>
   <view>
-    <cc-header title="什么是企业大脑？"></cc-header>
+    <cc-header title="企业大脑"></cc-header>
     <view class="content">
-      <text decode="{{true}}">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;随着大数据、云、移动互联网、人工智能的蓬勃发展，精细化管理、精细化营销、客户管理、移动协同办公都发生了巨大的变化，企业对智能化的管理、办公需求越来越迫切，利用云计算使销售在线、员工在线、客户在线、供应商在线、数据在线，大大提高了企业运营效率。由CRM、SCM、SCRM、DSS、DI、KM、智能客服、机器人、实验室、云通信、大数据可视化等组成的企业大脑应运而生!
-      </text>
-      <image mode="widthFix" src="http://dfwjjingtai.b0.upaiyun.com/upload//u//u1//ueap1//picture//2018//11//07/a1564017-9161-4ac2-ac96-f8aae21a036d.jpg"/>
-      <image mode="widthFix" src="http://dfwjjingtai.b0.upaiyun.com/upload//u//u1//ueap1//picture//2018//11//19/21841ca4-2b43-4e60-ab43-dfd297f57528.jpg"/>
-      <image mode="widthFix" src="http://dfwjjingtai.b0.upaiyun.com/upload//u//u1//ueap1//picture//2018//11//19/798b803a-6823-47ad-a1d8-8909c8c0fe32.jpg"/>
+      <image class="logo" mode="widthFix" src="http://dfwjjingtai.b0.upaiyun.com/upload//u//u1//ueap1//picture//2018//11//19/c4547ae7-c3b2-4b96-b57a-822cba72e5a9.jpg"/>
+      <image mode="widthFix" src="http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/23/af4220ac-ba33-42c7-9082-94e7babc6025.png"/>
+      <view class="title">什么是企业大脑？</view>
+      <text decode="{{true}}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;随着大数据、云、移动互联网、人工智能的蓬勃发展，精细化管理、精细化营销、客户管理、移动协同办公都发生了巨大的变化，企业对智能化的管理、办公需求越来越迫切，利用云计算使销售在线、员工在线、客户在线、供应商在线、数据在线，大大提高了企业运营效率。由CRM、SCM、SCRM、DSS、DI、KM、智能客服、机器人、实验室、云通信、大数据可视化等组成的企业大脑应运而生!</text>
+      <image class="banner" mode="widthFix" src="http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/23/353968d2-e62c-425a-8f48-5b9b4a7d64f6.png"/>
+      <image mode="widthFix" src="http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/23/535640fc-84a5-4543-a856-c507e7cf4c7b1542953609484.jpg" style="padding-bottom:10px;"/>
       <text decode="{{true}}" data-tel="13957163075" bindtap="tel">了解更多详情，请咨询&nbsp;&nbsp;13957163075</text>
     </view>
   </view>
@@ -30,13 +30,20 @@ export default {
 
 <style lang="less">
 .content{
-  padding: 0 20rpx 40rpx 20rpx;line-height:1.6;
+  padding: 50rpx 20rpx 40rpx 20rpx;
+}
+.logo{
+  width: 360rpx;
+}
+.title{
+  padding: 20px 0 10px 0;
+  font-size: 16px;
 }
 text{
-  color: #777;
+  color: #070707;
   font-size: 12px;
 }
-image{
-  padding-top: 10px;
+.banner{
+  padding: 70rpx 0 100rpx 0;
 }
 </style>

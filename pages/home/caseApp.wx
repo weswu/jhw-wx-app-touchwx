@@ -1,9 +1,9 @@
 <template>
   <view>
-    <cc-header title="企业应用"></cc-header>
+    <cc-header title="{{title}}"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row height="102r" border-bottom hover-class="none"  wx:for="{{list}}" wx:key="*this">
+      <ui-row url="{{item.url}}" height="102r" border-bottom hover-class="none"  wx:for="{{list}}" wx:key="*this">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont {{item.icon}}"></i>
         </ui-col>
@@ -11,16 +11,22 @@
           {{item.text}}
         </ui-col>
         <ui-col width="30" vertical-align="middle">
-          
+          <ui-icon type="arrow-right" wx:if="{{current === '1' || current === '2'}}"></ui-icon>
         </ui-col>
       </ui-row>
     </ui-row-list>
+    <view class="hr" wx:if="{{current === 0}}"></view>
+    <view class="content" wx:if="{{current === 0}}">
+      <text>联系我们\n</text>
+      <text data-tel="057188223075" bindtap="tel">0571-88223075\n</text>
+      <text data-tel="13957163075" bindtap="tel">13957163075\n</text>
+      <text>滨江区阡陌路聚光物联网大楼C2-205\n</text>
+      <image mode="widthFix" src="http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/23/b3e84789-22d7-41b2-9fd9-4e7dba8e4af6.jpg"/>
+    </view>
   </view>
 </template>
 
 <script>
-import tools from '../../static/data/tools'
-import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
@@ -29,14 +35,39 @@ export default {
     }
   },
   data: {
-    list: [
-      { url: '/pages/pc/website', text: '网站', icon: 'icon-shuju' },
-      { url: '/pages/static/seo', text: '小程序', icon: 'icon-SEO' },
-      { url: '/pages/static/beian', text: '微传单', icon: 'icon-yuming' },
-      { url: '/pages/static/bind', text: '机汇众筹', icon: 'icon-yuming' },
-      { url: '/pages/static/sitemap', text: '机汇名片', icon: 'icon-sitemap' },
-      { url: '/pages/static/batch', text: '机汇云企业大脑', icon: 'icon-tijiao' }
-    ]
+    list: [],
+    list0: [
+      { url: '', text: '网站', icon: 'icon-shuju' },
+      { url: '', text: '小程序', icon: 'icon-SEO' },
+      { url: '', text: '微传单', icon: 'icon-yuming' },
+      { url: '', text: '机汇众筹', icon: 'icon-yuming' },
+      { url: '', text: '机汇名片', icon: 'icon-sitemap' },
+      { url: '', text: '机汇云企业大脑', icon: 'icon-tijiao' }
+    ],
+    list1: [
+      { url: 'caseWebsite', text: '全民建站', icon: 'icon-wangzhan' },
+      { url: 'caseApp', text: '企业应用', icon: 'icon-qiye' },
+      { url: 'caseApplet', text: '微信端', icon: 'icon-weixin' },
+      { url: 'caseDanao', text: '企业大脑', icon: 'icon-danao' }
+    ],
+    list2: [
+      { url: 'caseVideo', text: '建站快速入门', icon: 'icon-beginnerguide' },
+      { url: 'caseQuestion', text: '常见问题', icon: 'icon-kuaisurumen' }
+    ],
+    current: '',
+    title: ''
+  },
+  onLoad (e) {
+    this.setData({
+      current: e.current || 0,
+      list: this.data['list'+(e.current || 0)],
+      title: e.title || '企业应用'
+    })
+  },
+  tel (e) {
+    wx.makePhoneCall({
+      phoneNumber: e.currentTarget.dataset.tel
+    })
   }
 }
 </script>
@@ -53,5 +84,16 @@ page{
 }
 .ui-row-list > .ui-row:not(:last-child):after {
   left: 35px;
+}
+.content{
+  padding: 30rpx 40rpx 40rpx 40rpx;line-height:1.6;
+  background: #fff;
+  text{
+    color: #777;
+    font-size: 12px;
+  }
+  image{
+    padding-top: 10px;
+  }
 }
 </style>

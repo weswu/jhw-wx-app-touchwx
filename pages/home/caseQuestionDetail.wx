@@ -34,7 +34,7 @@ export default {
     api.newsSingle({
       id: this.data.id
     }).then(res => {
-      // res.content = res.content.replace(/<img /g, "<img width='100%' ").replace(/\"/g, "'")
+      // res.content = res.content.replace(/width: 558px /g, "width: 100%").replace(/\"/g, "'")
       this.setData({
         detail: res
       })

@@ -51,7 +51,7 @@ export default {
     this.setData({
       more: this.data.more
     })
-    api.question({
+    api.newsCategoryChild({
       data: this.data.params,
       id: 'Enterp_0000000000000000000062857'
     }).then(res => {

@@ -25,8 +25,8 @@
         联系我们
       </text>
       <text data-tel="057188223075" bindtap="tel">0571-88223075\n</text>
-      <text data-tel="8618072933115" bindtap="tel">+86-18072933115\n</text>
-      <text>滨江区阡陌路聚光物联网大楼C2-211\n</text>
+      <text data-tel="13957163075" bindtap="tel">13957163075\n</text>
+      <text>滨江区阡陌路聚光物联网大楼C2-205\n</text>
       <image mode="widthFix" src="http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/21/98ecddab-bc4f-4ad3-89d7-791704b46be3.jpg"/>
       <image mode="widthFix" src="http://img.jihui88.com/upload/a/a1/about/picture/2017/08/02/ffa473b9-8d3e-42d9-9445-2267292baa18.jpg"/>
     </view>
@@ -51,12 +51,12 @@ export default {
 <style lang="less">
 .content{
   padding: 0 20rpx 40rpx 20rpx;line-height:1.6;
-}
-text{
-  color: #777;
-  font-size: 12px;
-}
-image{
-  padding-top: 10px;
+  text{
+    color: #777;
+    font-size: 12px;
+  }
+  image{
+    padding-top: 10px;
+  }
 }
 </style>

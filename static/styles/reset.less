@@ -36,6 +36,9 @@ button {
 }
 
 button[type="primary"] {
+  height: 102rpx;
+  line-height: 102rpx;
+  font-size: 15px;
   background-color: @theme-color;
   &[loading] {
     background-color: @theme-color;
@@ -57,6 +60,8 @@ button[type="primary"] {
   &[size="mini"] {
     font-size: 12px;
     border-radius:5px;
+    line-height:2.4;
+    height:auto;
     &.button-hover {
       border-color: @theme-color !important;
     }

@@ -193,7 +193,7 @@ const deliverySnEdit = (params) => http(params, host + 'orderPayment/deliverySnE
 // 案例
 const applet = (params) => http(params, netHost + 'jihuiapi/products/multi_category')
 const website = (params) => http(params, pcHost + 'comm/layout/listDemoByTagsJsonp')
-const question = (params) => http(params, netHost + 'jihuiapi/news/category_child/' + params.id)
+const newsCategoryChild = (params) => http(params, netHost + 'jihuiapi/news/category_child/' + params.id)
 const newsSingle = (params) => http(params, netHost + 'jihuiapi/news/single/' + params.id)
 
 module.exports = {
@@ -203,7 +203,7 @@ module.exports = {
   area,
   password, feedback,
   /***************** 首页 ************/
-  applet, website, question, newsSingle,
+  applet, website, newsCategoryChild, newsSingle,
   // 推广
   spread, spreadRank, posters,
   /***************** 账号信息 ************/

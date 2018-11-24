@@ -16,6 +16,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
+    <view style="height:20px"></view>
   </view>
 </template>
 
