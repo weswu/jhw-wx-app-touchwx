@@ -33,7 +33,7 @@ const http = async (params = {}, url) => {
   }).catch(res => {
     return res
   })
-  if (res.data.msg === '未登陆1') {
+  if (res.data && res.data.msg === '未登陆') {
     wx.navigateTo({
       url: '/pages/user/login'
     })

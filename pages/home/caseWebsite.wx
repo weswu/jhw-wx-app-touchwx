@@ -35,7 +35,7 @@
           <ui-col vertical-align="middle" class="{{params.recvState === item.key ? 'active' : ''}}">
             {{item.value}}
           </ui-col>
-          <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{params.recvState === item.key}}">
+          <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{params.tagIds === item.key}}">
             <i class="iconfont icon-gou" style="color:#3AC3B0;font-size:12px;"/>
           </ui-col>
         </ui-row>

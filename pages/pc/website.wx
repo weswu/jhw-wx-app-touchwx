@@ -1,7 +1,6 @@
 <template>
   <view>
     <cc-header title="我的网站" count="{{count}}"></cc-header>
-
     <ui-row-list border-left-indent>
       <ui-swipe-out operate-width="90" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}"
         bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="90">
@@ -47,6 +46,7 @@
       </ui-swipe-out>
     </ui-row-list>
     <!--
+    <button data-show="{{ true }}" bindtap="openPopup5">自定义内容区域</button>
       <ui-col vertical-align="middle" align="center">
         <view data-item='{{item}}' bindtap="view">查看</view>
       </ui-col>
@@ -77,6 +77,24 @@
           </ui-row>
         </radio-group>
         <button bindtap="add" class="origin" type="primary">现在创建网站</button>
+      </view>
+    </ui-popup>
+
+    <ui-popup show="{{ show5 }}" height="350" background="transparent">
+      <view class="popup5">
+        <ui-row height="40" border-bottom>
+          <ui-col vertical-align="middle" space-left="20">提示</ui-col>
+          <ui-col width="40" vertical-align="middle" align="center" bindtap="handleShow5">
+            <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
+          </ui-col>
+        </ui-row>
+        <view class="title">网站创建成功{{id}}！您可以免费试用1个月，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。当然也可以联系我们，为您量身定制设计。</view>
+        <view class="title" style="padding-top:0">温馨提示：请在电脑端进行“界面编辑”操作。</view>
+        <ui-row height="50">
+          <ui-col space-left="20" space-right="10" vertical-align="middle">
+            <button data-show="{{ false }}" bindtap="openPopup5">关闭</button>
+          </ui-col>
+        </ui-row>
       </view>
     </ui-popup>
   </view>
@@ -112,6 +130,8 @@ export default {
       { text: '美国', value: 'en', content: '免备案' },
       { text: '中国大陆', value: 'cn', content: '阿里云主机，需备案' }
     ],
+    show5: false,
+    id: '',
     ids: '' // 复制小红点
   },
   onLoad() {
@@ -143,11 +163,27 @@ export default {
           } else {
             item.url = "http://pc.jihui88.com/rest/site/" + item.id + "/index";
           }
+          this.data.ids && this.data.ids.split(',').forEach(id => {
+            if (id === item.id) {
+              item.count = 1
+            }
+          })
           item.endTime = Utils.formatTime(item.endTime);
         });
         Utils.scrollList(this, res);
       }
     });
+  },
+  openPopup5 (e) {
+    let show = e.currentTarget.dataset.show
+    this.setData({
+      show5: show
+    })
+  },
+  handleShow5 () {
+    this.setData({
+      show5:false
+    })
   },
   del(e) {
     Utils.del(this, e, api.staticDetail, '请谨慎！站点（网站编号：'+e.target.dataset.id+'）将会被彻底删除!')
@@ -235,16 +271,33 @@ export default {
       Tips.loaded()
       if (res.success) {
         let data = res.attributes.data
-        wx.showToast({
-          title: "网站创建成功（网站编号："+data.id+"）！您可以免费试用1个月，您在这期间可以编辑成您想要的网站，内有很多免费的网站模板和版块。当然也可以联系我们，为您量身定制设计。",
-          icon: 'none',
-          mask: true,
-          duration: 8000
-        });
+        this.setData({
+          show5: true,
+          show: false,
+          id: data.id
+        })
+        // ITEM处理
+        data.count = 1
+        this.data.lanList.forEach(row => {
+          if (data.language === row.value) {
+            data.lan = row.text
+          }
+        })
+        if (data.bind && data.bind.address) {
+          let src = data.bind.address;
+          data.url = src.indexOf("http") > -1 ? src : "http://" + src;
+        } else {
+          data.url = "http://pc.jihui88.com/rest/site/" + data.id + "/index";
+        }
+        data.endTime = Utils.formatTime(data.endTime);
         this.data.list.splice(0, 0, data)
+        this.data.list.forEach(item => {
+          item.switcher = 'off'
+        })
         this.setData({
           list: this.data.list,
-          show: false
+          ids: this.data.ids ? (this.data.ids + ',' + data.id) : data.id,
+          el: "undefined"
         })
         getApp().globalData.staticList.splice(0, 0, data)
       } else {
@@ -310,5 +363,19 @@ button[type="primary"].origin{
   position:absolute;
   top:-1px;
   margin-left:-1px;
+}
+.popup5{
+  width: 95%;
+  background-color:#fff;
+  height:250px;
+  margin:0 auto;
+  border-radius:5px;
+  overflow:hidden;
+  .title{
+    line-height: 22px;
+    padding: 10px 20px;
+    font-size: 12px;
+    color: #666;
+  }
 }
 </style>

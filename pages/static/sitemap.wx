@@ -9,15 +9,11 @@
       <view>2、一个能引导搜索引擎蜘蛛（Spider）发现网站地图的robots.txt文件</view>
       <view>3、向各大搜索引擎提交Sitemap的快捷入口</view>
     </view>
-    
-    <ui-row height="50" wx:if="{{!toggle}}">
-      <ui-col vertical-align="middle">
-        <button type="primary" bindtap="get">开启自定义选项</button>
-      </ui-col>
-      <ui-col vertical-align="middle">
-        <button type="primary" plain bindtap="update">一键更新</button>
-      </ui-col>
-    </ui-row>
+
+    <view wx:if="{{!toggle}}" style="margin:30px 15px;">
+      <button type="primary" bindtap="get">开启自定义选项</button>
+      <button type="primary" plain bindtap="update" style="margin-top:15px;">一键更新</button>
+    </view>
 
     <ui-row-list border-left-indent wx:if="{{toggle}}">
       <ui-row height="104r">

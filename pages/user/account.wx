@@ -33,7 +33,7 @@
           注册时间
         </ui-col>
         <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="20">
-          {{user.addTime}}
+          {{user.addTime2}}
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -80,7 +80,7 @@ export default {
     if (!user) {
       let that = this
       getApp().getUser(res => {
-        res.user.addTime = Utils.formatTime(res.user.addTime)
+        res.user.addTime2 = Utils.formatTime(res.user.addTime)
         that.setData({
           user: res.user
         })
@@ -91,7 +91,7 @@ export default {
         })
       })
     } else {
-      user.addTime = Utils.formatTime(user.addTime)
+      user.addTime2 = Utils.formatTime(user.addTime)
       this.setData({
         user: user,
         accountInfo: getApp().globalData.accountInfo

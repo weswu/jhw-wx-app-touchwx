@@ -49,7 +49,7 @@ export default {
       { url: 'caseDanao', text: '企业大脑', icon: 'icon-danao' },
       { url: 'caseWebsite', text: '网站案例', icon: 'icon-wangzhan' },
       { url: 'caseApplet', text: '小程序案例', icon: 'icon-weixin' },
-      { url: 'caseTemplate', text: '网站模板', icon: 'icon-ziliao' }
+      { url: 'caseTemplate', text: '网站模板', icon: 'icon-moban' }
     ],
     list2: [
       { url: 'caseVideo', text: '建站快速入门', icon: 'icon-beginnerguide' },

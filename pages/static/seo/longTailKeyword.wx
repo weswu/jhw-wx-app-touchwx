@@ -57,7 +57,7 @@
               <ui-col vertical-align="middle">
                 {{item}}
               </ui-col>
-              <ui-col vertical-align="middle" align="right" width="80" 
+              <ui-col vertical-align="middle" align="right" width="80"
                 space-right="15" data-item="{{item}}" bindtap="select" style="color: #0366ce;">
                 选用
               </ui-col>
@@ -66,7 +66,7 @@
         </scroll-view>
       </view>
     </ui-popup>
-     
+
   </view>
 </template>
 
@@ -172,7 +172,7 @@ export default {
   },
   select (e) {
     let item = e.currentTarget.dataset.item
-    
+
     api.keywordsSave({
       data: {keywords: item},
       method: 'post'
@@ -248,7 +248,8 @@ page{
   button{
     font-size:12px;
     padding: 0 10px;
-    line-height:2.3
+    line-height:72rpx;
+    height: 72rpx;
   }
 }
 //表格

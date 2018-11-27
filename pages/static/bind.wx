@@ -58,7 +58,7 @@
 
     <view bindtap="add" class="j_add"><i class="iconfont icon-jia"></i></view>
 
-    <cc-modal title="新建域名" okText="提交" visible="{{ visible }}" bind:ok="ok" bind:cancel="cancel">
+    <cc-modal title="绑定域名" okText="提交" visible="{{ visible }}" bind:ok="ok" bind:cancel="cancel">
       <view class="add-content">
         <i class="iconfont icon-close-circle-fill" bindtap="clearinput" wx:if="{{name}}"></i>
         <input type="text" value="{{name}}" bindinput="nameInput" placeholder="输入新域名"/>
@@ -70,6 +70,7 @@
 <script>
 import api from '../../static/utils/api'
 import Utils from '../../static/utils/utils'
+import Tips from '../../static/utils/tips'
 export default {
   config: {
     usingComponents: {
@@ -151,12 +152,17 @@ export default {
       address: this.data.name,
       country: 'cn'
     }
+    Tips.loading()
     api.bindAdd({
       data: data,
       method: 'POST'
     }).then(res => {
+      Tips.loaded()
       if (res.success) {
         Tips.success('添加成功')
+        this.setData({
+          visible: false
+        })
         this.get()
       } else {
         Tips.error(res.msg)

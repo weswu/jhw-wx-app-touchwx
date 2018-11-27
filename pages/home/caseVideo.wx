@@ -4,10 +4,10 @@
 
     <ui-row-list wx:for="{{list}}" wx:key="*this">
       <view class="item" wx:if="{{item.src}}">
-        <video src="{{item.src}}"></video>
-       {{item.text}}
+        <video src="{{item.src}}" controls="{{false}}"></video>
+        {{item.text}}
       </view>
-      <view class="hr"></view>
+      <view class="hr" wx:if="{{item.src}}"></view>
     </ui-row-list>
   </view>
 </template>
