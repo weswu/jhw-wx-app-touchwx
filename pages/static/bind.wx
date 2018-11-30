@@ -145,7 +145,7 @@ export default {
   ok () {
     let layoutId = getApp().globalData.layoutId
     if (!layoutId) {
-      return Utils.toast('请选择右上角站点')
+      return Tips.toast('请选择右上角站点')
     }
     let data = {
       layoutId: layoutId,

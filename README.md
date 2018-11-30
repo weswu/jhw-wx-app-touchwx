@@ -31,7 +31,6 @@ tui transform --type wx2ui --src jhw-wx-app-touchwx --dest jhw-wx-app-touchui
 ```
 
 
-
 <!--
 <ui-col border-right align="center" vertical-align="middle">
   <navigator target="miniProgram" open-type="navigate" app-id="wx860be22a8b03bbd9"

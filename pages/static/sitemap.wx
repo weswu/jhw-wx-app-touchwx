@@ -10,10 +10,14 @@
       <view>3、向各大搜索引擎提交Sitemap的快捷入口</view>
     </view>
 
-    <view wx:if="{{!toggle}}" style="margin:30px 15px;">
-      <button type="primary" bindtap="get">开启自定义选项</button>
-      <button type="primary" plain bindtap="update" style="margin-top:15px;">一键更新</button>
-    </view>
+    <ui-row height="50" wx:if="{{!toggle}}" style="margin:10px 0">
+      <ui-col vertical-align="middle">
+        <button type="primary" bindtap="get">开启自定义选项</button>
+      </ui-col>
+      <ui-col vertical-align="middle">
+        <button plain bindtap="update">一键更新</button>
+      </ui-col>
+    </ui-row>
 
     <ui-row-list border-left-indent wx:if="{{toggle}}">
       <ui-row height="104r">
@@ -222,5 +226,8 @@ page{
 }
 .j_detail .ui-row-list .ui-row .desc {
   font-size:12px;
+}
+button{
+  width: 300rpx;
 }
 </style>

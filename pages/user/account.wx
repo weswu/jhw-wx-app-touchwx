@@ -120,7 +120,7 @@ export default {
   },
   goToCropper () {
     wx.navigateTo({
-      url: '/pages/components/jCropper?src=' + this.data.accountInfo.headimg
+      url: '/pages/components/jCropper2?src=' + this.data.accountInfo.headimg
     })
   },
   submit () {

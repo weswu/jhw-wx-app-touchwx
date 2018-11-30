@@ -1,27 +1,29 @@
 <template>
   <view>
-    <cc-header title="网站案例" count="{{count}}"></cc-header>
+    <cc-header title="网站模板" count="{{count}}"></cc-header>
     <!-- 下拉 -->
     <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:9;background:#fff" right="0">
       <ui-row height="43" border-bottom bindtap="openPopup">
         <ui-col vertical-align="middle" space-left="15">
           {{name}}
         </ui-col>
-        <ui-col vertical-align="middle" align="right" width="40" space-right="8">
+        <ui-col vertical-align="middle" align="right" width="40" space-right="20">
           <i class="iconfont icon-angle-bottom {{show ? 'active' : ''}}"/>
         </ui-col>
       </ui-row>
     </ui-fixed-view>
     <view style="height:43px"></view>
-    <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px;" hidden="{{!show}}">
-      <ui-row-list border-left-indent wx:if="{{category.length > 0}}">
+
+    <!-- 与小程序组件scroll-view冲突 会不能显示二级分类 -->
+    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
+      <ui-row-list border-left-indent wx:if="{{category.length > 0}}" style="height:{{scroHeight}}px;overflow-y: scroll;" wx:if="{{category.length > 1}}">
         <ui-row height="50" border-bottom catchtap="change">
           <ui-col class="text" vertical-align="middle" align="left" data-item="{{item}}" catchtap="change">
             <view class="{{id === '' ? 'active' : ''}}">所有行业</view>
           </ui-col>
           <ui-col vertical-align="middle" align="center" width="30"></ui-col>
         </ui-row>
-        <ui-accordion bindchange="slide" wx:for="{{ category }}" wx:key="{{index}}" header-height="50">
+        <cc-accordion bindchange="slide" wx:for="{{ category }}" wx:key="{{index}}" header-height="50" number="{{ item.tagList.length }}">
           <view slot="header">
             <ui-row height="50" border-bottom class="title">
               <ui-col class="text" vertical-align="middle" align="left" data-item="{{item}}" catchtap="change">
@@ -38,10 +40,9 @@
               <ui-col vertical-align="middle" align="center" width="50"></ui-col>
             </ui-row>
           </view>
-        </ui-accordion>
+        </cc-accordion>
       </ui-row-list>
-    </scroll-view>
-
+    </ui-popup>
 
     <ui-row-list>
       <ui-row class="row-border" height="600r" wx:for="{{list}}" wx:key="{{index}}">
@@ -57,38 +58,6 @@
       <view class="hr"></view>
     </ui-row-list>
     <cc-loadmore more="{{more}}"></cc-loadmore>
-<!--
-    <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
-      <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px;">
-        <ui-row-list border-left-indent wx:if="{{category.length > 0}}">
-          <ui-row height="50" border-bottom catchtap="change">
-            <ui-col class="text" vertical-align="middle" align="left" data-item="{{item}}" catchtap="change">
-              <view class="{{id === '' ? 'active' : ''}}">所有行业</view>
-            </ui-col>
-            <ui-col vertical-align="middle" align="center" width="30"></ui-col>
-          </ui-row>
-          <ui-accordion bindchange="slide" wx:for="{{ category }}" wx:key="{{index}}" header-height="50">
-            <view slot="header">
-              <ui-row height="50" border-bottom class="title">
-                <ui-col class="text" vertical-align="middle" align="left" data-item="{{item}}" catchtap="change">
-                  <view class="{{id === item.id ? 'active' : ''}}">{{ item.name }}</view>
-                </ui-col>
-                <ui-col vertical-align="middle" align="center" width="60"></ui-col>
-              </ui-row>
-            </view>
-            <view slot="content">
-              <ui-row height="40" wx:for="{{ item.tagList }}" wx:for-item="item2" wx:for-index="idx" wx:key="{{idx}}" class='content'>
-                <ui-col vertical-align="middle" align="left" space-left="15" data-item="{{item2}}" bindtap="change">
-                  <view class="{{params.industryTagIds === item2.id ? 'active' : ''}}">{{ item2.name }}</view>
-                </ui-col>
-                <ui-col vertical-align="middle" align="center" width="50"></ui-col>
-              </ui-row>
-            </view>
-          </ui-accordion>
-        </ui-row-list>
-      </scroll-view>
-    </ui-popup>
-  -->
   </view>
 </template>
 
@@ -100,6 +69,7 @@ export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header',
+      'cc-accordion': '../../packages/cc-accordion',
       'cc-loadmore': '../../packages/cc-loadmore'
     }
   },
@@ -143,7 +113,6 @@ export default {
       })
       this.setData({
         list: list,
-        'params.page': this.data.params.page + 1,
         count: data.count,
         'more.loading': false
       })

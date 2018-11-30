@@ -1,0 +1,167 @@
+<template>
+  <view class="cropper-wrapper">
+    <cc-header title="图片剪切"></cc-header>
+
+    <canvas bindtouchend="touchEnd" bindtouchmove="touchMove" bindtouchstart="touchStart" canvasId="{{cropperOpt.id}}" class="cropper" disableScroll="true"
+      style="top:{{NAV_HEIGHT}}px;width:{{cropperOpt.width}}px;height:{{cropperOpt.height}}px;background-color: rgba(0, 0, 0, 0.8)"></canvas>
+
+    <view class="cropper-buttons">
+      <view bindtap="uploadTap" class="upload">
+        重新选择
+      </view>
+      <view bindtap="getCropperImage" class="getCropperImage">
+        确定
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+var o = function(o) {
+    return o && o.__esModule ? o : {
+      default: o
+    };
+  }(require("../../static/utils/weCropper.js")),
+  e = wx.getSystemInfoSync(),
+  t = e.windowWidth,
+  r = e.windowHeight - 50;
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
+    cropperOpt: {
+      id: "cropper",
+      width: t, // 画布宽度
+      height: r - wx.STATUS_BAR_HEIGHT-wx.DEFAULT_HEADER_HEIGHT, // 画布高度
+      scale: 2.5, // 最大缩放倍数
+      zoom: 8, // 缩放系数
+      cut: {
+        x: 0, // 裁剪框的坐标
+        y: 80,
+        width: t, //裁剪框的大小
+        height: t
+      }
+    }
+  },
+  onLoad (e) {
+    var t = this.data.cropperOpt
+    var r = 'https://img.jihui88.com/' +  (e.src || 'upload/g/g2/ggggfj/picture/2018/10/18/06571c20-db27-452d-a991-cf06f671515c.png');
+    r && (Object.assign(t, {
+      src: r
+    }), new o.default(t).on("ready", function(o) {
+      console.log("wecropper is ready for work!");
+    }).on("beforeImageLoad", function(o) {
+      console.log("before picture loaded, i can do something"), console.log("current canvas context:", o),
+      wx.showToast({
+        title: "上传中",
+        icon: "loading",
+        duration: 2e4
+      });
+    }).on("imageLoad", function(o) {
+      console.log("picture loaded"), console.log("current canvas context:", o.canvasId), wx.hideToast();
+    }));
+  },
+  touchStart: function(o) {
+    this.wecropper.touchStart(o);
+  },
+  touchMove: function(o) {
+    this.wecropper.touchMove(o);
+  },
+  touchEnd: function(o) {
+    this.wecropper.touchEnd(o);
+  },
+  getCropperImage: function() {
+    let that = this
+    wx.showToast({
+      title: "上传中",
+      icon: "loading",
+      duration: 2e4
+    });
+    this.wecropper.getCropperImage(function(src) {
+      wx.uploadFile({
+        url: 'https://www.jihui88.com/commonutil/uploadUtil2?username=' + getApp().globalData.user.username + '&replace=00&attId=&id=all',
+        filePath: src,//临时路径
+        name: 'Filedata',
+        formData: {
+          skey: wx.getStorageSync('skey')
+        },
+        success: function (res) {
+          wx.hideLoading()
+          if (res.statusCode === 200) {
+            let src = res.data.split(',')[0].replace(/\\/g, '').split('http://img.jihui88.com/')[1].replace(/_5/g, '')
+            var pages = getCurrentPages()
+            var prevPage = pages[pages.length - 2];  //上个页面
+            prevPage.cropper(src)
+            wx.navigateBack()
+          }
+        },
+        error: function (res) {
+          wx.hideLoading()
+        }
+      })
+    });
+  },
+  uploadTap: function() {
+    var o = this;
+    wx.chooseImage({
+      count: 1,
+      sizeType: ["original", "compressed"],
+      sourceType: ['camera', 'album'],
+      success: function(e) {
+        var t = e.tempFilePaths[0];
+        o.wecropper.pushOrign(t);
+      }
+    });
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #000;
+}
+.cropper {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.cropper-buttons {
+    background-color: rgba(0,0,0,0.95);
+    color: #04b00f;
+}
+
+.cropper-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: #e5e5e5;
+}
+
+.cropper-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+}
+
+.cropper-buttons .upload,.cropper-buttons .getCropperImage {
+    width: 50%;
+    text-align: center;
+}
+</style>

@@ -99,7 +99,6 @@ export default {
       })
       this.setData({
         list: list,
-        'params.page': this.data.params.page + 1,
         count: data.count,
         'more.loading': false
       })
