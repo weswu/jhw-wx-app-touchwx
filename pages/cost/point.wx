@@ -34,7 +34,6 @@
       </ui-sticky>
     </view>
 
-
     <!-- 内容 -->
     <view class="content_list">
       <ui-row-list wx:if="{{index === 0}}" border-left-indent>
@@ -152,9 +151,25 @@ export default {
         if (res.success) {
           getApp().globalData.integralCount.dailyPoint = 0
           var field = 'integralCount.dailyPoint'
+          let data = {
+            out: 0,
+            state: 'init',
+            desc: '每日签到2',
+            productId: null,
+            memberId: null,
+            orderId: null,
+            addTime: Utils.formatTime(new Date().getTime()),
+            updateTime: null,
+            useable: 444,
+            auditId: null,
+            income: 1,
+            integralRuleType: 'dailyPoint'
+          }
+          this.data.list.splice(0, 0, data)
           this.setData({
             [field]: 0,
-            point: this.data.point + 1
+            point: this.data.point + 1,
+            list: this.data.list
           })
           Tips.success('签到成功')
         } else {

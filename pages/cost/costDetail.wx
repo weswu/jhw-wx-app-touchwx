@@ -1,0 +1,242 @@
+<template>
+  <view>
+    <cc-header title="{{title}}"></cc-header>
+
+    <view class="cost_detail">
+      <ui-row height="72r" space-bottom="20" class="c_header">
+        <ui-col class="text" vertical-align="middle">
+          <view><text wx:if="{{type === '1'}}">订单</text>状态：
+            <text class="red" wx:if="{{detail.paymentType === 'UN_PAY'}}">未支付</text>
+            <text class="green" wx:if="{{detail.paymentType === 'PAID'}}">已支付</text>
+            <text wx:if="{{detail.paymentType === 'PART_PAY'}}">部分支付</text>
+          </view>
+        </ui-col>
+      </ui-row>
+      <ui-row border-top border-bottom height="84r" class="c_bg">
+        <ui-col class="text" border-left border-right vertical-align="middle" space-left="10">
+          <view><text wx:if="{{type === '0' || type === '2'}}">产品</text><text wx:if="{{type === '1'}}">订单</text>摘要</view>
+        </ui-col>
+      </ui-row>
+      <view wx:if="{{type === '1'}}">
+        <ui-row border-bottom height="84r">
+          <ui-col span="8" class="desc" border-left border-right vertical-align="middle" space-left="10">
+            订单编号：￥{{detail.outTradeNo}}
+          </ui-col>
+          <ui-col span="4" class="desc" border-right vertical-align="middle" space-left="10">
+            <view>标记：
+              <text wx:if="{{!detail.agentId}}">
+                <text wx:if="{{detail.paymentType === 'UN_PAY'}}">待付款</text>
+                <text wx:else>线上订单</text>
+              </text>
+              <text wx:if="{{detail.agentId}}">线下订单</text>
+            </view>
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            订单创建时间：{{detail.addTime}}
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            使用年限：{{detail.year}}年
+          </ui-col>
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            <view>支付来源：
+              <text wx:if="{{detail.payType === 'WX'}}">微信支付</text>
+              <text wx:elif="{{detail.payType === 'ALI'}}">支付宝支付</text>
+              <text wx:elif="{{detail.payType === 'BANK'}}">银行卡支付</text>
+              <text wx:elif="{{detail.payType === 'PFA'}}">代付</text>
+              <text wx:elif="{{detail.payType === 'OFFLINE'}}">线下支付</text>
+              <text wx:else>-</text>
+            </view>
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            到期时间：{{detail.endTime}}
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            总计：￥{{detail.totalPrice || '-'}}
+          </ui-col>
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            <view>客户应付金额：<text class="price">￥{{detail.paidPrice || '-'}}</text></view>
+          </ui-col>
+        </ui-row>
+      </view>
+
+      <view wx:if="{{type === '0' || type === '2'}}">
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            <view>原价：<text class="price">￥{{detail.totalPrice || '-'}}</text></view>
+          </ui-col>
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            <view>应付金额：<text class="price">￥{{detail.paidPrice || '-'}}</text></view>
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            数量：1
+          </ui-col>
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            使用年限：{{detail.year}}年
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            购买时间：{{detail.addTime}}
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            到期时间：{{detail.endTime}}
+          </ui-col>
+        </ui-row>
+      </view>
+      <ui-row border-bottom height="84r" class="c_bg">
+        <ui-col class="text" border-left border-right vertical-align="middle" space-left="10">
+          <view><text wx:if="{{type === '0' || type === '2'}}">产品</text><text wx:if="{{type === '1'}}">订单</text>明细</view>
+        </ui-col>
+      </ui-row>
+      <view wx:for="{{detail.orderItemList}}" wx:key="{{index}}">
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            {{item.name}}
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            数量：1个
+          </ui-col>
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            使用年限：{{item.year}}年
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            原价：￥{{item.price}}x{{item.year}}
+          </ui-col>
+          <ui-col class="desc" border-right vertical-align="middle" space-left="10">
+            网站编号：{{detail.layoutId || '-'}}
+          </ui-col>
+        </ui-row>
+        <ui-row border-bottom height="84r">
+          <ui-col class="desc" border-left border-right vertical-align="middle" space-left="10">
+            小计：￥{{item.totalPrice}}
+          </ui-col>
+        </ui-row>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header'
+    }
+  },
+  data: {
+    detail: {
+      orderId: "8a9e457e6348a2f801634959e98a0005",
+      outTradeNo: "10001104815188",
+      paymentType: "PAID",
+      name: "展示型网站,中文",
+      addTime: 1525944019000,
+      agentId: "Admin_00000000000000000000000037",
+      totalPrice: 6800,
+      paidPrice: 6800,
+      username: "ggggfj",
+      userEntName: "1234e",
+      userLegalPre: "fhffhhhvvbbb",
+      userCellphone: "13868184604",
+      agentPrice: null,
+      agentEntName: null,
+      agentName: null,
+      agentCellphone: null,
+      year: 1,
+      endTime: 1557338667215,
+      payType: "OFFLINE",
+      comment: null,
+      auditId: "Admin_00000000000000000000000037",
+      orderItemList: [
+      {
+      name: "展示型网站,中文",
+      price: 6800,
+      year: 1,
+      totalPrice: 6800
+      }
+      ],
+      layoutId: "625 "
+    },
+    type: '',
+    title: ''
+  },
+  onLoad (e) {
+    let title = '产品详情'
+    if (e.type === '2') {
+      title = '产品续费'
+    }
+    this.setData({
+      'detail.orderId': e.id,
+      type: e.type,
+      title: title
+    })
+    this.get()
+  },
+  get () {
+    api.costDetail({
+      data: {
+        orderId: this.data.detail.orderId
+      }
+    }).then(res => {
+      if (res.code === 0) {
+        res.data.addTime = Utils.formatTime(res.data.addTime)
+        res.data.endTime = Utils.formatTime(res.data.endTime)
+        if (this.data.type === '1') {
+          this.setData({
+            title: '订单编号：' + res.data.outTradeNo
+          })
+        }
+        this.setData({
+          detail: res.data
+        })
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+}
+.cost_detail{
+  padding: 30rpx;
+  .c_header{
+    padding: 7px 10px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-size: 12px;
+  }
+  .c_bg{
+    border-left: 2px solid #778;font-size: 14px;
+  }
+  .red{
+    color: #ff0800;
+  }
+  .green{
+    color: #417505;
+  }
+  .price {
+    color: #ff7e3e;
+  }
+}
+</style>

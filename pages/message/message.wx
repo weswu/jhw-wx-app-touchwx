@@ -42,7 +42,7 @@ export default {
   },
   data: {
     list: [
-      { name: '客户消息', count: 0, icon: 'icon-kehu', color: '59b5f9', content: '', time: '', type: '03' },
+      { name: '客户留言', count: 0, icon: 'icon-kehu', color: '59b5f9', content: '', time: '', type: '03' },
       { name: '产品消息', count: 0, icon: 'icon-product', color: 'a3d253', content: '', time: '', type: '10' },
       { name: '安全消息', count: 0, icon: 'icon-anquan', color: 'ff8902', content: '', time: '', type: '11' },
       { name: '服务消息', count: 0, icon: 'icon-fuwu', color: '7d65f6', content: '', time: '', type: '12' },

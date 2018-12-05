@@ -10,6 +10,8 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/home/my',
+      'pages/cost/costDetail',
       'pages/components/jCropper2',
       'pages/components/jCropper',
       'pages/user/account',
@@ -57,7 +59,6 @@ export default {
       'pages/user/authority',
       'pages/user/employeeDetail',
       'pages/album/recycle',
-      'pages/home/my',
       'pages/home/console',
       'pages/home/dataManagement',
       'pages/home/module',
