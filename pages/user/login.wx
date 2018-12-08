@@ -48,6 +48,9 @@ export default {
     Object.assign(this, Input)
   },
   onLoad (e) {
+    if (e.posterId) {
+      wx.setStorageSync('posterId', e.posterId)
+    }
     if (e.back === '1') {
       this.setData({
         back: true
