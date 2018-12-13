@@ -40,3 +40,10 @@ tui transform --type wx2ui --src jhw-wx-app-touchwx --dest jhw-wx-app-touchui
   </navigator>
 </ui-col>
 -->
+
+
+// 导入ext.JSON(自定义)
+let extFile = fs.readFileSync('./ext.json', 'utf-8');
+let extConfigPath = util_1.config.getPath('dest', 'ext.json');
+util_1.log.msg(util_1.LogType.GENERATE, path.relative(util_1.config.cwd, extFile));
+fs.writeFileSync(extConfigPath, extFile, 'utf8');

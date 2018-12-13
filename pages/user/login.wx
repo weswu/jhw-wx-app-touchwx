@@ -1,11 +1,11 @@
 <template>
   <view style="background: #fff">
-    <cc-header title="机汇网会员登录" back="{{back}}"></cc-header>
+    <cc-header title="{{agent.agentId ? agent.user.enterprise.name : '机汇网'}}会员登录" back="{{back}}"></cc-header>
 
-    <view class="logo"><image src="http://www.jihui88.com/member/static/images/f-logo.png" alt=""></view>
+    <view class="logo"><image src="{{agent.loginLogo3}}" alt=""></view>
     <view class="login">
       <view class="form">
-        <input class="username" placeholder="手机号/帐号" bindinput="input" id="username" value="{{detail.username}}"/>
+        <input class="username" placeholder="手机号/帐号" bindinput="input" bindfocus="inputFocus" id="username" value="{{detail.username}}"/>
         <input class="password" placeholder="请输入密码" bindinput="input" id="password" value="{{detail.password}}" type="password"/>
       </view>
       <button class="submit" type="primary" bindtap="submit" hover-class="none">登录</button>
@@ -42,14 +42,18 @@ export default {
   data: {
     detail:{},
     back: false,
-    authorize: false
+    authorize: false,
+    goLogin: false,
+    agent: {
+      loginLogo3: 'http://www.jihui88.com/member/static/images/f-logo.png'
+    }
   },
   onReady () {
     Object.assign(this, Input)
   },
   onLoad (e) {
-    if (e.posterId) {
-      wx.setStorageSync('posterId', e.posterId)
+    if (e.poster) {
+      wx.setStorageSync('poster', e.poster)
     }
     if (e.back === '1') {
       this.setData({
@@ -60,23 +64,41 @@ export default {
       'detail.username': wx.getStorageSync('username'),
       'detail.password': wx.getStorageSync('password')
     })
-    let that = this
-    getApp().userInfoReadyCallback = res =>{
-      that.setData({
-        authorize: true
-      })
+    if (wx.getStorageSync('username')) {
+      this.weixin('focus')
     }
+    this.init()
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
   },
   bindGetUserInfo (e) {
     getApp().onLaunch()
+    wx.setStorageSync('nickName', e.detail.userInfo.nickName)
+    wx.setStorageSync('headimgurl', e.detail.userInfo.avatarUrl)
+    wx.setStorageSync('encryptedData', e.detail.encryptedData)
+    wx.setStorageSync('iv', e.detail.iv)
     this.setData({
       authorize: false
     })
-    wx.showToast({
-      title: '授权成功',
-      icon: 'none',
-      mask: true,
-      duration: 2000
+    Tips.toast('授权成功')
+  },
+  init () {
+    let that = this
+    //发起网络请求
+    wx.getUserInfo({
+      success: function(u) {
+        wx.setStorageSync('nickName', u.userInfo.nickName)
+        wx.setStorageSync('headimgurl', u.userInfo.avatarUrl)
+        wx.setStorageSync('encryptedData', u.encryptedData)
+        wx.setStorageSync('iv', u.iv)
+      },
+      fail: function(e) {
+        that.setData({
+          authorize: true
+        })
+      }
     })
   },
   validate() {
@@ -100,6 +122,13 @@ export default {
     }
     wx.setStorageSync('username', this.data.detail.username)
     wx.setStorageSync('password', this.data.detail.password)
+    if (this.data.goLogin) {
+      this.accountLogin()
+    } else {
+      this.weixin('account')
+    }
+  },
+  accountLogin () {
     let that = this
     wx.login({
       success: function(login) {
@@ -121,8 +150,10 @@ export default {
           Tips.loaded()
           if (res.success) {
             wx.switchTab({
-              url: '/pages/home/my'
+              url: '/pages/home/index'
             })
+            getApp().getStaticList()
+            getApp().getCustomDate()
           } else {
             Tips.error(res.msg)
           }
@@ -130,9 +161,53 @@ export default {
       }
     })
   },
-  weixin () {
-    wx.switchTab({
-      url: '/pages/home/index'
+  inputFocus () {
+    // 用于减少请求skey时间
+    if (!this.data.goLogin) this.weixin('focus')
+  },
+  weixin (e) {
+    let that = this
+    //微信登录
+    if (e !== 'focus') Tips.loading()
+    wx.login({
+      success: function(login) {
+        api.wxapplogin({
+          data: {
+            code: login.code,
+            encryptedData: wx.getStorageSync('encryptedData'),
+            iv: wx.getStorageSync('iv'),
+            nickName: wx.getStorageSync('nickName'),
+            headimgurl: wx.getStorageSync('headimgurl'),
+            appid: getApp().globalData.appid,
+            appsecret: getApp().globalData.appsecret,
+            skey: wx.getStorageSync('skey'),
+            poster: wx.getStorageSync('poster')
+          },
+          method: 'POST'
+        }).then(resp => {
+          if (e !== 'focus') Tips.loaded()
+          if (resp.success) {
+            var data = resp.attributes.data
+            wx.setStorageSync('skey', data.skey)
+            if (e === 'account') {
+              that.accountLogin()
+            } else if (e === 'focus') {
+              that.setData({
+                goLogin: true
+              })
+            } else {
+              wx.switchTab({
+                url: '/pages/home/index'
+              })
+              getApp().getStaticList()
+              getApp().getCustomDate()
+            }
+          } else {
+            Tips.toast(resp.msg || 'skey获取失败')
+            console.log(resp.msg || 'skey获取失败')
+          }
+        })
+      }
     })
   }
 }

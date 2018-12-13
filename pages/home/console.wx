@@ -8,7 +8,7 @@
         <button type="primary" plain="true" size="mini">模块编辑</button>
       </navigator>
     </view>
-    
+
     <view class="hr" style="heigh:16rpx;"></view>
     <view wx:for="{{mobileSort}}" wx:key="row.value" wx:for-item="row">
       <view wx:if="{{row.value === 'product' && row.checked}}">
@@ -16,14 +16,14 @@
           <ui-row height="40">
             <ui-col width="20" vertical-align="middle"></ui-col>
             <ui-col class="text" vertical-align="middle">
-               <view class="title">我的产品</view> 
+               <view class="title">我的产品</view>
             </ui-col>
           </ui-row>
           <ui-row border-bottom height="85">
-            <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this">
+            <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this" wx:if="{{!agent.agentId || index === 0}}">
               <navigator url="{{item.url}}" class="content">
-                  <i class="iconfont {{item.icon}}"></i>
-                <view class="p">{{item.text}}</view> 
+                <i class="iconfont {{item.icon}}"></i>
+                <view class="p">{{item.text}}</view>
               </navigator>
             </ui-col>
           </ui-row>
@@ -36,7 +36,7 @@
           <ui-row height="40">
             <ui-col width="20" vertical-align="middle"></ui-col>
             <ui-col class="text" vertical-align="middle">
-              <view class="title">订单管理</view> 
+              <view class="title">订单管理</view>
             </ui-col>
             <ui-col width="70" vertical-align="middle">
               <navigator url="/pages/shop/shop" class="weui-cell__ft"><text class="info">我的订单</text></navigator>
@@ -46,7 +46,7 @@
             <ui-col border-right align="center" vertical-align="middle" wx:for="{{orders}}" wx:key="*this">
               <navigator url="{{item.url}}" class="content">
                 <i class="iconfont {{item.icon}}"></i>
-                <view class="p">{{item.text}}</view> 
+                <view class="p">{{item.text}}</view>
               </navigator>
             </ui-col>
           </ui-row>
@@ -59,7 +59,7 @@
           <ui-row height="40">
             <ui-col width="20" vertical-align="middle"></ui-col>
             <ui-col class="text" vertical-align="middle">
-               <view class="title">常用工具</view> 
+               <view class="title">常用工具</view>
             </ui-col>
             <ui-col width="40" vertical-align="middle">
               <text class="info" bindtap="editTool" wx:if="{{!toggleTools}}">编辑</text>
@@ -70,7 +70,7 @@
             <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{tools}}" wx:key="*this">
               <view class="content" wx:if="{{!item.editting || item.icon === 'icon-jia'}}" data-item="{{item}}" bindtap="href">
                 <i class="iconfont {{item.icon}}"></i>
-                <view class="p">{{item.text}}</view> 
+                <view class="p">{{item.text}}</view>
               </view>
               <view class="weui-grid {{!item.url ? 'opacity' : ''}}" wx:if="{{item.editting && item.icon !== 'icon-jia'}}">
                 <i class="iconfont icon-jianhao" bindtap="jian" data-idx="{{index}}"></i>
@@ -88,14 +88,14 @@
           <ui-row height="40">
             <ui-col width="20" vertical-align="middle"></ui-col>
             <ui-col class="text" vertical-align="middle">
-               <view class="title">数据管理中心</view> 
+               <view class="title">数据管理中心</view>
             </ui-col>
           </ui-row>
           <ui-row border-bottom class="row-border">
             <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{dataManageCenter}}" wx:key="*this">
               <navigator url="dataManagement?active={{index}}" class="content">
                 <i class="iconfont {{item.icon}}"></i>
-                <view class="p">{{item.text}}</view> 
+                <view class="p">{{item.text}}</view>
               </navigator>
             </ui-col>
           </ui-row>
@@ -103,7 +103,7 @@
         <view class="hr"></view>
       </view>
     </view>
-      
+
     <cc-modal title="新建相册" visible="{{ visible1 }}" bind:ok="ok" bind:cancel="cancel">
       <view class="add-content">
         <view class="input">
@@ -160,7 +160,14 @@ export default {
     ],
     // 新增文件夹
     visible1: false,
-    name: ''
+    name: '',
+    agent: {}
+  },
+  onLoad () {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
   },
   onShow () {
     this.get()
@@ -203,7 +210,7 @@ export default {
       tools.splice(tools.length - 1, 1)
       tools.splice(tools.length - 1, 1)
       tools.splice(tools.length - 1, 1)
-    }  
+    }
     this.setData({
       tools: tools
     })
@@ -240,7 +247,7 @@ export default {
       })
     }
   },
-  // add 
+  // add
   nameInput (e) {
     this.setData({
       name: e.detail.value
@@ -333,7 +340,7 @@ page{
       }
     }
   }
-  
+
   .weui-grid{
     text-align:center;
     i{
@@ -385,7 +392,7 @@ page{
 .add-content{
   text-align:left;margin:5px 15px;background:#f6f6f6;
   height: 64rpx;
-  line-height: 64rpx;    
+  line-height: 64rpx;
   position: relative;
   .icon-close-circle-fill{
     width: 64rpx;

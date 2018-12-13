@@ -23,7 +23,7 @@
         <ui-badge text="{{userInfo.noReaderMsg}}" custom-style="{{ {position: 'absolute', top: '0rpx', right: '-30rpx'} }}" wx:if="{{userInfo.noReaderMsg > 0}}"></ui-badge>
       </navigator>
     </view>
-    <ui-row-list border-left-indent>
+    <ui-row-list border-left-indent wx:if="{{!agent.agentId}}">
       <ui-row height="102r" url="/pages/cost/cost" hover-class="none">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-price" style="color:#f67d73"></i>
@@ -36,9 +36,9 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    <view class="hr"></view>
+    <view class="hr" wx:if="{{!agent.agentId}}"></view>
 
-    <ui-row-list border-left-indent>
+    <ui-row-list border-left-indent wx:if="{{!agent.agentId}}">
       <ui-row height="102r" border-bottom url="/pages/cost/point" hover-class="none">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont icon-qiandao"></i>
@@ -73,7 +73,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    <view class="hr"></view>
+    <view class="hr" wx:if="{{!agent.agentId}}"></view>
     <ui-row-list border-left-indent>
       <ui-row height="102r" url="/pages/user/account" hover-class="none">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
@@ -101,7 +101,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    <view class="crpt">技术支持：机汇网</view>
+    <view class="crpt">技术支持：{{agent.user.enterprise.name || '机汇网'}}</view>
   </view>
 </template>
 
@@ -117,13 +117,15 @@ export default{
       username: ''
     },
     userInfo: {},
-    accountInfo: {}
+    accountInfo: {},
+    agent: {}
   },
-  onLoad (e) {
-    if (e.posterId) {
-      wx.setStorageSync('posterId', e.posterId)
-    }
+  onLoad () {
     this.get()
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
   },
   get () {
     let that = this
@@ -165,7 +167,7 @@ export default{
     let name = wx.getStorageSync('nickName') || this.data.user.username
     return {
       title: name + '邀请你加入机汇网，用全网营销给企业助力',
-      path: '/pages/user/login?posterId=' + this.data.user.username,
+      path: '/pages/user/login?poster=' + this.data.user.username,
       imageUrl: 'http://img.jihui88.com/upload/j/j2/jihui/picture/2018/11/21/19ea52ec-a50d-4c77-99b7-4a1276a9f1ea.jpg'
     }
   }

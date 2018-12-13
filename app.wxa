@@ -195,57 +195,37 @@ export default {
     ],
     userprivilege: [], // 员工权限
     appid: 'wx2aba9d238ba02a76',
-    appsecret: 'c7131553b820b07e778d763bac18e259'
+    appsecret: 'c7131553b820b07e778d763bac18e259',
+    agent: { // 经销商
+      // agentId: 'cc',
+      bindUrl: 'www.jihui88.com',
+      manageLogo1: '',
+      vManage: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk',
+      vAccount: 'https://v.qq.com/x/page/c0753vzonsm.html',
+      vProduct: 'https://v.qq.com/x/page/w0753bnm9kh.html',
+      vProductCategory: 'https://v.qq.com/x/page/e0753kcg4xb.html',
+      vImport: 'https://v.qq.com/x/page/j0753rag7kr.html',
+      vDownload: 'https://v.qq.com/x/page/n0753o7p54m.html',
+      vNews: 'https://v.qq.com/x/page/q0753wldx5d.html',
+      vNewsCategory: 'https://v.qq.com/x/page/g075303kosj.html',
+      vWebsite: 'https://v.qq.com/x/page/f0753d6r4fb.html',
+      vSeo: 'https://v.qq.com/x/page/u0753y5akkv.html',
+      vSitemap: 'https://v.qq.com/x/page/l0753l1jw2c.html',
+      vSeoBatch: 'https://v.qq.com/x/page/u0753ji3n5n.html',
+      vAnalysis: 'https://v.qq.com/x/page/j0753ycgfeh.html',
+      dNews: 'http://xueyuan.jihui88.com/news.html',
+      dLog: '#/update',
+      user: {
+        qq: '1550676880',
+        cellphone: '13967938189',
+        enterprise: {
+          name: '机汇网公司'
+        }
+      }
+    }
   },
   onLaunch() {
     system.attachInfo()
-    //微信登录
-    let that = this
-    let code = ''
-    wx.login({
-      success: function(res) {
-        if (res.code) {
-          code = res.code
-          //发起网络请求
-          wx.getUserInfo({
-            success: function(u) {
-              wx.setStorageSync('nickName', u.userInfo.nickName)
-              wx.setStorageSync('headimgurl', u.userInfo.avatarUrl)
-              wx.setStorageSync('encryptedData', u.encryptedData)
-              wx.setStorageSync('iv', u.iv)
-              api.wxapplogin({
-                data: {
-                  code: code,
-                  encryptedData: u.encryptedData,
-                  iv: u.iv,
-                  nickName: u.userInfo.nickName,
-                  headimgurl: u.userInfo.avatarUrl,
-                  appid: that.globalData.appid,
-                  appsecret: that.globalData.appsecret
-                },
-                method: 'POST'
-              }).then(resp => {
-                if (resp.success) {
-                  var data = resp.attributes.data
-                  wx.setStorageSync('skey', data.skey)
-                } else {
-                  console.log(resp.msg || 'skey获取失败')
-                }
-              })
-            },
-            fail: function(e) {
-              if (that.userInfoReadyCallback) {
-                that.userInfoReadyCallback(e)
-              }
-            }
-          })
-        } else {
-          console.log('登录失败！' + res.errMsg)
-        }
-      }
-    })
-    this.getStaticList()
-    this.getCustomDate()
   },
   getUser (cb) {
     //用户信息

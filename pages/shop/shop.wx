@@ -130,7 +130,8 @@ export default {
   config: {
     usingComponents: {
       'cc-search': '../../packages/cc-search',
-      'cc-header': '../../packages/cc-header'
+      'cc-header': '../../packages/cc-header',
+      'cc-loadmore': '../../packages/cc-loadmore'
     }
   },
   data :{
@@ -148,7 +149,8 @@ export default {
       { text: '部分发贫', value: 'partShipped', style: '#ff7e3e' },
       { text: '已发货', value: 'shipped', style: '#417505' },
       { text: '部分退货', value: 'partReshiped', html: '' },
-      { text: '已退货', value: 'reshiped', html: '' }
+      { text: '无配送', value: 'none', html: '' },
+      { text: '已收货', value: 'recive', html: '' }
     ],
     // 订单状态
     orderStatus: [
@@ -169,8 +171,8 @@ export default {
     // 选择
     selected: false, //选中状态
     ids: '', // 选中项
-    toggle: false, // 全选切换状态 
-    //下拉 
+    toggle: false, // 全选切换状态
+    //下拉
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT + 100/750*wx.WIN_WIDTH,
     popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
@@ -473,7 +475,7 @@ page{
 }
 
 .time_content{
-  padding:0 10px 10px 10px; 
+  padding:0 10px 10px 10px;
   text{
     color: #AFAFAF;
     font-size: 12px;
