@@ -29,7 +29,7 @@ export default {
     usingComponents: { }
   },
   behaviors: [ ],
-  properties: { 
+  properties: {
     customStyle: {
       type: Object,
       value: {
@@ -121,7 +121,7 @@ export default {
     font-size: 34rpx;
   }
   .icon-xiangzuo{
-    font-size: 20px;
+    font-size: 40rpx;
     padding: 0 3px;
   }
 }

@@ -50,11 +50,17 @@ export default {
   },
   onReady () {
     Object.assign(this, Input)
+    let that = this
+    wx.getExtConfig({
+      success: function (res) {
+        that.setData({
+          'detail.appid': res.extConfig.appid
+        })
+      }
+    })
   },
   onLoad (e) {
-    if (e.poster) {
-      wx.setStorageSync('poster', e.poster)
-    }
+    this.init() // 是否授权
     if (e.back === '1') {
       this.setData({
         back: true
@@ -67,8 +73,10 @@ export default {
     if (wx.getStorageSync('username')) {
       this.weixin('focus')
     }
-    this.init()
     // 经销商
+    if (e.poster) {
+      wx.setStorageSync('poster', e.poster)
+    }
     this.setData({
       agent: getApp().globalData.agent
     })
@@ -135,8 +143,6 @@ export default {
         that.setData({
           'detail.code': login.code,
           'detail.skey': wx.getStorageSync('skey'),
-          'detail.appid': getApp().globalData.appid,
-          'detail.appsecret': getApp().globalData.appsecret,
           'detail.nickName': wx.getStorageSync('nickName'),
           'detail.headimgurl': wx.getStorageSync('headimgurl'),
           'detail.encryptedData': wx.getStorageSync('encryptedData'),
@@ -174,12 +180,11 @@ export default {
         api.wxapplogin({
           data: {
             code: login.code,
+            appid: that.data.detail.appid,
             encryptedData: wx.getStorageSync('encryptedData'),
             iv: wx.getStorageSync('iv'),
             nickName: wx.getStorageSync('nickName'),
             headimgurl: wx.getStorageSync('headimgurl'),
-            appid: getApp().globalData.appid,
-            appsecret: getApp().globalData.appsecret,
             skey: wx.getStorageSync('skey'),
             poster: wx.getStorageSync('poster')
           },

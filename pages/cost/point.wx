@@ -154,7 +154,7 @@ export default {
           let data = {
             out: 0,
             state: 'init',
-            desc: '每日签到2',
+            desc: '每日签到',
             productId: null,
             memberId: null,
             orderId: null,

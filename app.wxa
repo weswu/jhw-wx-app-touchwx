@@ -194,12 +194,11 @@ export default {
       { value: '2', text: '英文', type: 'en' }
     ],
     userprivilege: [], // 员工权限
-    appid: 'wx2aba9d238ba02a76',
-    appsecret: 'c7131553b820b07e778d763bac18e259',
     agent: { // 经销商
       // agentId: 'cc',
       bindUrl: 'www.jihui88.com',
       manageLogo1: '',
+      loginLogo3: 'http://www.jihui88.com/member/static/images/f-logo.png',
       vManage: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk',
       vAccount: 'https://v.qq.com/x/page/c0753vzonsm.html',
       vProduct: 'https://v.qq.com/x/page/w0753bnm9kh.html',
@@ -219,7 +218,7 @@ export default {
         qq: '1550676880',
         cellphone: '13967938189',
         enterprise: {
-          name: '机汇网公司'
+          name: '机汇网'
         }
       }
     }

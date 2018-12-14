@@ -40,6 +40,11 @@ tui transform --type wx2ui --src jhw-wx-app-touchwx --dest jhw-wx-app-touchui
   </navigator>
 </ui-col>
 -->
+extAppid  wx031271ed9d1f909f
+
+模板    wx5979261410e2ae66
+
+机汇云  wx2aba9d238ba02a76
 
 
 // 导入ext.JSON(自定义)
@@ -47,3 +52,16 @@ let extFile = fs.readFileSync('./ext.json', 'utf-8');
 let extConfigPath = util_1.config.getPath('dest', 'ext.json');
 util_1.log.msg(util_1.LogType.GENERATE, path.relative(util_1.config.cwd, extFile));
 fs.writeFileSync(extConfigPath, extFile, 'utf8');
+
+### 微信配置
+
+| request 合法域名 | uploadFile合法域名 | downloadFile合法域名 |
+| --- | :---: | --- |
+| `api.jihui88.net` | `www.jihui88.com` | `www.jihui88.com` |
+| `wx.jihui88.net` | - | `img.jihui88.com` |
+| `www.jihui88.com` | - | - |
+| `vv.video.qq.com` | - | - |
+
+### 业务域名
+
+`www.jihui88.com`
