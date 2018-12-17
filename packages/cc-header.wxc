@@ -121,7 +121,7 @@ export default {
     font-size: 34rpx;
   }
   .icon-xiangzuo{
-    font-size: 40rpx;
+    font-size: 42rpx;
     padding: 0 3px;
   }
 }

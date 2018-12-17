@@ -40,7 +40,7 @@
     </view>
 
     <!-- 签到 -->
-    <view class="signIn" bindtap="signIn">
+    <view class="signIn" bindtap="signIn" wx:if="{{!agent.agentId}}">
       <i class="iconfont icon-qiandao"></i>
       <button type="primary" plain="true" size="mini"><text wx:if="{{integralCount.dailyPoint === 0}}">已</text>签到</button>
     </view>
@@ -326,7 +326,9 @@ export default {
   // 签到
   signIn () {
     if (this.data.integralCount.dailyPoint === 1) {
+      Tips.loading()
       api.signIn().then(res => {
+        Tips.loaded()
         if (res.success) {
           getApp().globalData.integralCount.dailyPoint = 0
           var field = 'integralCount.dailyPoint'

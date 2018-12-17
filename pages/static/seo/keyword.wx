@@ -19,13 +19,14 @@
         <input type="text" value="{{name}}" bindinput="nameInput"/>
       </view>
     </cc-modal>
-    <navigator url="certDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+    <navigator class="j_add" bindtap="add"><i class="iconfont icon-jia"></i></navigator>
   </view>
 </template>
 
 <script>
 import api from '../../../static/utils/api'
 import Utils from '../../../static/utils/utils'
+import Tips from '../../../static/utils/tips'
 export default {
   config: {
     usingComponents: {
@@ -59,7 +60,7 @@ export default {
   del (e) {
     Utils.del(this, e, api.keywordsDetail)
   },
-  // add 
+  // add
   nameInput (e) {
     this.setData({
       name: e.detail.value
@@ -75,21 +76,25 @@ export default {
       visible1: false
     })
   },
+  add () {
+    this.setData({
+      visible1: true
+    })
+  },
   // 添加相册
   ok () {
-    api.albumDetail({
+    api.keywordsDetail({
       data: {
-        model: JSON.stringify({
-          name: this.data.name,
-          parentId: '',
-          blongType: 'AP',
-          state: '01'
-        })
+        keywords: this.data.name
       },
       method: 'POST'
     }).then(res => {
       if (res.success) {
         Tips.success('添加成功')
+        this.data.list.splice(0, 0, res.attributes.data[0])
+        this.setData({
+          list: this.data.list
+        })
         this.cancel()
       } else {
         Tips.error(res.msg)

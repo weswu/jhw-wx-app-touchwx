@@ -25,7 +25,7 @@
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
           <textarea class="desc" placeholder="限250字符内，加联系电话或邮件"
-    bindinput="input" id="description" value="{{detail.description}}" style="width:100%;height: 80px;margin-top:10px;"/>
+            bindinput="input" id="description" value="{{detail.description}}" style="width:100%;height: 80px;margin-top:10px;"/>
         </ui-col>
       </ui-row>
     </ui-row-list>

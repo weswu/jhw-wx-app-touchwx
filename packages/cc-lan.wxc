@@ -51,7 +51,7 @@
         </ui-col>
       </ui-row>
     </view>
-    
+
     <!-- lan -->
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show ? 'show' : '' }}">
@@ -68,7 +68,7 @@
       </view>
       <view style="top: {{ popup_NAV_HEIGHT }}px;" class="ui-popup-mask {{ show ? 'show' : '' }}" bindtap="popHide"></view>
     </view>
-    
+
     <!-- sort -->
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show1 ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show1 ? 'show' : '' }}">
@@ -179,7 +179,8 @@ export default {
       popupHeight: this.data.popupHeight + height,
       layoutId: getApp().globalData.layoutId,
       staticList: getApp().globalData.staticList,
-      lanList: getApp().globalData.lanList
+      lanList: getApp().globalData.lanList,
+      lanId: (wx.getStorageSync('lanId') || '1')
     })
   },
   methods: {

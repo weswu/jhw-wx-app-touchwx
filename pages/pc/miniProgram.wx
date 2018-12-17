@@ -58,11 +58,11 @@
               <ui-col vertical-align="middle" align="left">
                <radio-group class="radio-group" bindchange="radio2">
                   <label>
-                    <radio value="00" checked="{{state === '00'}}"></radio>
+                    <radio value="00" checked="{{state2 === '00'}}"></radio>
                     无
                   </label>
                   <label>
-                    <radio value="01" checked="{{state === '01'}}"></radio>
+                    <radio value="01" checked="{{state2 === '01'}}"></radio>
                     微信小程序（高级功能版）
                   </label>
                 </radio-group>
@@ -79,7 +79,7 @@
         </view>
       </swiper-item>
     </swiper>
-    
+
     <ui-fixed-view top="{{NAV_HEIGHT}}" left="0" right="0">
       <ui-tabs index="{{ current1 }}" bindchange="handleChange1" tab-style="{{ {background: '#f1f1f1'} }}" ink-bar ink-bar-style="{{ {width: '60%'} }}">
         <ui-tab>基础版</ui-tab>

@@ -2,7 +2,7 @@
   <view>
     <cc-header title="SEO基础设置"></cc-header>
 
-    <cc-lan website="{{active !== 0}}" lan="{{active === 0}}" bindlayout="layoutChante" bindchange="lanChante">
+    <cc-lan website="{{active === 0}}" lan="{{active !== 0}}" bindlayout="layoutChante" bindchange="lanChante">
       <view slot="category" style="color:#12bedb;font-size:12px;" bindtap="openPopup">
         <text>{{category[active].text}}</text>
         <i class="iconfont icon-xiangxiajiantoushixin {{show ? 'active' : ''}}" style="color:#12bedb;font-size:10px;"></i>

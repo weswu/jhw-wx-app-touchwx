@@ -94,7 +94,7 @@ const attachmentSave = (params) => http(params, pcHost + 'third_app/attachment/s
 
 // seo管理
 const keywords = (params) => http(params, host + 'keywords/list')
-const keywordsDetail = (params) => http(params, host + 'keywords/detail' + (params ? '/' + params.id : ''))
+const keywordsDetail = (params) => http(params, host + 'keywords/detail' + (params.id ? '/' + params.id : ''))
 const keywordsSave = (params) => http(params, host + 'keywords/savaName')
 const innerLinks = (params) => http(params, host + 'keywords/innerLinks/list')
 const innerLinksDetail = (params) => http(params, host + 'keywords/innerLinks/detail' + (params && params.id ? '/' + params.id : ''))

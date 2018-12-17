@@ -147,7 +147,9 @@ export default {
   },
   signIn () {
     if (this.data.integralCount.dailyPoint === 1) {
+      Tips.loading()
       api.signIn().then(res => {
+        Tips.loaded()
         if (res.success) {
           getApp().globalData.integralCount.dailyPoint = 0
           var field = 'integralCount.dailyPoint'

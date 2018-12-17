@@ -31,7 +31,7 @@
           SEO描述：
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <textarea class="desc" placeholder="限250字符内，加联系电话或邮件" style="width:100%;height: 80px;margin-top:10px;"
+          <textarea class="desc" placeholder="限250字符内，加联系电话或邮件" style="width:100%;height: 80px;margin-top:10px;" wx:if="{{!show}}"
             bindinput="input" id="seoDescription" value="{{detail.seoDescription}}"/>
         </ui-col>
       </ui-row>
@@ -41,7 +41,7 @@
     <ui-popup cropout show="{{show }}" position="top" top="{{ top }}" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
       <view class="top_pop">
         <ui-row-list border-left-indent>
-          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="*this" data-index="{{index}}" bindtap="change">
+          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="{{index}}" data-index="{{index}}" bindtap="change">
             <ui-col vertical-align="middle" class="{{index === active ? 'active' : ''}}">
               {{item.text}}
             </ui-col>
@@ -58,6 +58,7 @@
 <script>
 import api from '../../../static/utils/api'
 import Utils from '../../../static/utils/utils'
+import Tips from '../../../static/utils/tips'
 export default {
   config: {
     usingComponents: {
@@ -189,7 +190,9 @@ page{
   color:#12bedb;
   font-size:12px;
 }
-.top_pop .active{
-  color:#12bedb;
+.top_pop {
+  .active{
+    color:#12bedb;
+  }
 }
 </style>

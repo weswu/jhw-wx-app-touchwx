@@ -39,7 +39,7 @@ const http = async (params = {}, url) => {
     })
   } else {
     if (url === 'https://www.jihui88.com/rest/api/user/detail') {
-      if (res.data.attributes.data) {
+      if (res.data.attributes) {
         wx.setStorageSync('token', res.header['X-CSRF-Token'])
       }
     }

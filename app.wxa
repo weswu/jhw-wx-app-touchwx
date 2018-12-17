@@ -12,8 +12,6 @@ export default {
       'pages/user/login',
       'pages/home/my',
       'pages/cost/costDetail',
-      'pages/components/jCropper2',
-      'pages/components/jCropper',
       'pages/user/account',
       'pages/home/caseTemplate',
       'pages/static/sitemap',
@@ -24,7 +22,6 @@ export default {
       'pages/static/storageService',
       'pages/static/batch',
       'pages/static/beian',
-      'pages/product/product',
       'pages/home/caseDanao',
       'pages/home/caseQuestion',
       'pages/home/caseQuestionDetail',
@@ -40,11 +37,11 @@ export default {
       'pages/setting/mobile',
       'pages/static/convenient',
       'pages/static/bindDetail',
+      'pages/static/seo/template',
       'pages/static/seo/tag',
       'pages/static/seo',
       'pages/static/seo/link',
       'pages/static/seo/paid',
-      'pages/static/seo/template',
       'pages/static/seo/keyword',
       'pages/static/seo/base',
       'pages/static/seo/longTailKeyword',
@@ -63,6 +60,7 @@ export default {
       'pages/home/dataManagement',
       'pages/home/module',
       'pages/home/tools',
+      'pages/product/product',
       'pages/product/import',
       'pages/product/download',
       'pages/album/album',
@@ -109,6 +107,8 @@ export default {
       'pages/service/feedback',
       'pages/static/seo/seoDetail',
       'pages/static/thirdPartyStatistics',
+      'pages/components/jCropper2',
+      'pages/components/jContent',
       'pages/components/jTag',
       'pages/components/jManyCategory'
     ],
@@ -167,8 +167,8 @@ export default {
     accountInfo: {},
     customData: {
       mobileLink: [
-        {url: '/pages/shop/shop', text: '订单管理', icon: 'icon-dingdandaifukuan'},
-        {url: '/pages/member/member', text: '会员管理', icon: 'icon-Group'}
+        {url: '/pages/member/member', text: '会员管理', icon: 'icon-Group'},
+        {url: '/pages/shop/shop', text: '订单管理', icon: 'icon-dingdandaifukuan'}
       ],
       mobileSort: [
         {text: '我的产品', value:'product', checked: true},
@@ -188,7 +188,6 @@ export default {
     memberAttrList: [],
     // 其它
     layoutId: '',
-    lanId: '1',
     lanList: [
       { value: '1', text: '中文', type: 'cn' },
       { value: '2', text: '英文', type: 'en' }
@@ -322,7 +321,7 @@ export default {
             })
             this.globalData.lanList = list
             if (content.lanList.indexOf('1') === -1) {
-              this.globalData.lanId = lans[0]
+              wx.setStorageSync('lanId', lans[0])
             }
           }
           this.globalData.customData = content
