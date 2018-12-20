@@ -16,9 +16,8 @@
       <view class="j_tip">
         温馨提醒： 备案只针对国内的空间，放国外不需要备案。如有问题，请咨询：QQ：260404208
         <view>
-          备案在阿里云,教程地址
+          备案在阿里云,教程地址<button type="primary" plain="true" size="mini" data-url="https://beian.aliyun.com/?utm_content=se_1351982" bindtap="copyLink" style="margin-left:15px">复制链接</button>
         </view>
-        https://beian.aliyun.com/?utm_content=se_1351982
       </view>
     </view>
 
@@ -164,7 +163,7 @@
       </ui-row-list>
       <!-- 幕布照 -->
       <view class="j_tip">
-        幕布照示例地址：https://help.aliyun.com/knowledge_detail/36968.html
+        幕布照示例地址： <button type="primary" plain="true" size="mini" data-url="https://help.aliyun.com/knowledge_detail/36968.html" bindtap="copyLink" style="margin-left:15px">复制链接</button>
       </view>
       <ui-row-list border-left-indent>
         <ui-row height="240r">
@@ -329,6 +328,14 @@ export default {
         }
       })
     }
+  },
+  copyLink (e) {
+    wx.setClipboardData({
+      data: e.currentTarget.dataset.url,
+      success: function(res) {
+        Tips.success('复制链接成功')
+      }
+    })
   },
   //横屏竖屏切换
   handleChange (e) {

@@ -1,19 +1,22 @@
 <template>
   <view>
     <cc-header title="营销管理"></cc-header>
-    <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
+    <ui-swipe-out height="85" data-index="{{index}}" operate-width="150"
       bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
       <view slot="content">
-        <ui-row height="65" class="j_row_list" border-bottom>
+        <ui-row height="85" class="j_row_list" border-bottom>
           <ui-col vertical-align="middle" align="left" space-left="15">
             <view class="text">{{ item.name }}</view>
-            <view class="desc">有效期至: {{ item.endTime }} <text class="price">￥{{item.amount}}</text></view>
+            <view class="desc">库存: {{item.count - item.gainCount}}<text>领取人/次: {{item.gainCount}}/{{item.gainCount}}</text><text>已使用: {{item.gainUseCount}}</text><text class="price">￥{{item.amount}}</text><text wx:if="{{item.threshold}}">最低消费: {{item.threshold}}</text></view>
+            <view class="desc">
+              有效期: {{ item.beginTime }}至{{ item.endTime }}
+            </view>
           </ui-col>
         </ui-row>
       </view>
       <view slot="operate">
         <view class="j_operate" border-bottom>
-          <ui-row height="65">
+          <ui-row height="85">
             <ui-col data-id="{{item.couponId}}" bindtap="detail" vertical-align="middle" align="center">
               修改
             </ui-col>
@@ -46,7 +49,7 @@ export default {
       pageSize: 200,
     },
     el: 'undefined'
-  }, 
+  },
   onLoad () {
     this.get()
   },
@@ -56,6 +59,7 @@ export default {
     }).then(res => {
       if (res.success) {
         res.attributes.data.forEach(item => {
+          item.beginTime = Utils.formatTime(item.beginTime)
           item.endTime = Utils.formatTime(item.endTime)
           item.switcher = 'off'
         })
@@ -101,6 +105,8 @@ export default {
 <style lang="less">
 .price{
   color: rgb(255, 126, 62);
-  padding-left: 5px;
+}
+.desc text{
+  padding-left: 10px;
 }
 </style>

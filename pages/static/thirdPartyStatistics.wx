@@ -18,7 +18,7 @@
       </ui-row>
       <ui-row height="100" wx:if="{{detail.analysisHeadState === '01'}}">
         <ui-col vertical-align="middle" align="left" space-right="15">
-          <textarea bindinput="input" id="analysisHeadContent" value="{{detail.analysisHeadContent}}" placeholder="统计代码"/>
+          <textarea bindinput="input" id="analysisHeadContent" value="{{detail.analysisHeadContent}}" placeholder="统计代码,请填写"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -35,7 +35,7 @@
       </ui-row>
       <ui-row height="100" wx:if="{{detail.analysisTailState === '01'}}">
         <ui-col vertical-align="middle" align="left" space-right="15">
-          <textarea bindinput="input" id="analysisTailContent" value="{{detail.analysisTailContent}}" placeholder="统计代码"/>
+          <textarea bindinput="input" id="analysisTailContent" value="{{detail.analysisTailContent}}" placeholder="统计代码,请填写"/>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -56,7 +56,10 @@ export default {
     }
   },
   data: {
-    detail: {},
+    detail: {
+      analysisHeadState: '00',
+      analysisTailState: '00'
+    },
     typelist: [
       { text: '启用', value: '01' },
       { text: '关闭', value: '00' }

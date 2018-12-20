@@ -8,8 +8,8 @@
         <ui-col width="90" vertical-align="middle">
           机房
         </ui-col>
-        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
-          {{category[index].text}}
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <view style="color:#aaa;">{{category[index].text}}</view>
         </ui-col>
       </ui-row>
       <ui-row height="104r" wx:if="{{detail.country === 'cn'}}">
@@ -21,7 +21,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    
+
     <view class="j_tip"><text class="red">第2步：</text>请在此输入您已经拥有的自定义域名。审核(或清除)周期大概2个工作日。</view>
     <ui-row-list border-left-indent>
       <ui-row height="104r">
@@ -60,7 +60,7 @@
       </ui-row>
       <ui-row border-bottom height="50" space-bottom="10" wx:if="{{!isTwoDomain}}">
         <ui-col border-right vertical-align="middle" align="center" span="5">
-          
+
         </ui-col>
         <ui-col border-right vertical-align="middle" align="center" span="3">
           CNAME
@@ -71,6 +71,7 @@
       </ui-row>
     </view>
 
+    <view class="j_tip" wx:if="{{detail.country === 'cn'}}"><text class="red">第4步：</text>网安备案配置</view>
     <ui-row-list border-left-indent wx:if="{{detail.country === 'cn'}}">
       <ui-row height="104r">
         <ui-col width="70" vertical-align="middle">
@@ -150,7 +151,7 @@ export default {
   },
   isDonain () {
     let bol = false
-    if (this.detail.address.split('.').length > 3) {
+    if (this.data.detail.address.split('.').length > 3) {
       bol = true
     } else {
       bol = false

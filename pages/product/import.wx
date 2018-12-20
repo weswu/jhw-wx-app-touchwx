@@ -19,7 +19,7 @@
     </checkbox-group>
     <button type="primary" bindtap="downExcel">生成产品表格模板</button>
     <view class="j_tip">
-      <text class="red">步骤二：</text>进行批量上传产品表格前，请先把产品图片上传好 
+      <text class="red">步骤二：</text>进行批量上传产品表格前，请先把产品图片上传好
     </view>
     <button type="primary" bindtap="importImg">上传产品图片</button>
     <view class="j_tip">
@@ -37,7 +37,7 @@ export default {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
     }
-  }, 
+  },
   data :{
     col: [],
     list: [
@@ -75,7 +75,7 @@ export default {
     }).then(res => {
       if (res.success) {
         wx.downloadFile({
-          url: res.attributes.data,
+          url: 'https://' + res.attributes.data.split('http://')[1],
           success (res) {
             Tips.success('下载Excel成功')
           }
@@ -99,7 +99,7 @@ export default {
       })
     })
     Utils.upload(data, 9).then(res => {
-      Tips.error('上传成功')
+      Tips.success('上传成功')
     })
   },
   importExcel () {

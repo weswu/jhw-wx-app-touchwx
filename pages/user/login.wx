@@ -60,6 +60,7 @@ export default {
     })
   },
   onLoad (e) {
+    let that = this
     this.init() // 是否授权
     if (e.back === '1') {
       this.setData({

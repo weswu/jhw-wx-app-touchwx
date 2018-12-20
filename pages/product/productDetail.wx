@@ -240,7 +240,6 @@ import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
-      'cc-image': '../../packages/cc-image',
       'cc-header': '../../packages/cc-header'
     }
   },

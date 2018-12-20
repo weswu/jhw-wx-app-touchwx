@@ -13,7 +13,7 @@
           可选方案
         </ui-col>
         <ui-col class="form_content" vertical-align="middle" align="right" space-right="15" style="font-size:12px;">
-          <radio-group bindchange="radio" id="name">
+          <radio-group bindchange="radioValue" id="name">
             <label wx:for="{{category}}" wx:key="item.value">
               <radio value="{{item.value}}" checked="{{detail.name === item.value}}"></radio>{{item.text}}
             </label>
@@ -145,7 +145,7 @@ export default {
       }
     })
   },
-  radio (e) {
+  radioValue (e) {
     this.data.list.forEach(item => {
       if (item.name === e.detail.value) {
         this.setData({

@@ -98,6 +98,9 @@ export default {
       { text: '日期', value: 'date' }
     ]
   },
+  onReady () {
+    Object.assign(this, Input)
+  },
   onLoad (e) {
     if (e.id) {
       this.setData({
@@ -181,7 +184,7 @@ export default {
   submit () {
     if (!this.validate()) {
       return;
-    }  
+    }
     // 属性
     let detail = this.data.detail
     if (detail.attributeType === 'select' || detail.attributeType === 'checkbox') {
@@ -222,4 +225,3 @@ checkbox{
   transform:scale(.7);
 }
 </style>
-

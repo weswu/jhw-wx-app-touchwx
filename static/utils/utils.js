@@ -7,10 +7,10 @@ import regeneratorRuntime from 'regenerator-runtime'
  * @date: 2018-1-17
  * @desc: 删除单个数组
 */
-const del = async (that, e, http, tip) => {
+const del = async (that, e, http, tip, data) => {
   await Tips.confirm(tip || '确认删除吗？')
   Tips.loading()
-  const res = await http({
+  const res = await http(data || {
     method: 'DELETE',
     id: e.currentTarget.dataset.id
   })
@@ -57,7 +57,7 @@ const scrollList = (that, res, text) => {
     }
   }
   ctx.more.loading = false
-  
+
   that.setData({
     list: ctx.list,
     params: ctx.params,
@@ -86,6 +86,9 @@ const price = (v) => {
 */
 function formatTime(date, format, week) {
   if (!date) return ''
+  if (typeof(date) === 'string' && date.split('-').length > 1) {
+    return date
+  }
   date = new Date(parseInt(date))
   format = format || 'yyyy-MM-dd hh:mm'
   var weekday = new Date(new Date() - 1000 * 60 * 60 * 24 * 6)
@@ -144,7 +147,7 @@ const loading = (that) => {
   that.setData({
     'more.tip': '',
     'more.loading': true
-  }) 
+  })
 }
 const loadMore = (that) => {
   let ctx = that.data
@@ -155,7 +158,7 @@ const loadMore = (that) => {
     more: ctx.more,
     params: ctx.params
   })
-  that.get()  
+  that.get()
 }
 
 // 批量操作
@@ -290,7 +293,7 @@ const upload = (option, number) => {
         })
       }
     })
-  }) 
+  })
 }
 
 const prev = () => {

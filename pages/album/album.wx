@@ -7,7 +7,7 @@
         <text wx:if="{{toggle}}">全不选</text>
       </view>
     </cc-header>
-    <cc-search type="album" 
+    <cc-search type="album"
       value="{{params.filename}}"
       id="{{albumId}}"
       bindinput="search"
@@ -81,7 +81,7 @@
         </ui-row>
       </ui-row-list>
     </ui-popup>
-    
+
     <!-- 批量操作 -->
     <ui-fixed-view bottom="0;z-index:700" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
@@ -310,7 +310,7 @@ export default {
       this.get()
     }
   },
-  // add 
+  // add
   add () {
     this.setData({
       visible1: true
@@ -522,7 +522,7 @@ export default {
   downloadPic () {
     // 下载图片
     wx.downloadFile({
-      url: 'http://img.jihui88.com/' + this.data.item.serverPath, //仅为示例，并非真实的资源
+      url: 'https://img.jihui88.com/' + this.data.item.serverPath, //仅为示例，并非真实的资源
       success: function(res) {
         // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
         if (res.statusCode === 200) {
@@ -605,7 +605,7 @@ export default {
     })
   },
   editPic () {
-    
+
   },
   copyImg1 () {
     let img = this.data.list[this.data.swiperCurrent]
@@ -916,7 +916,7 @@ page{
 .add-content{
   text-align:left;margin:5px 15px;background:#f6f6f6;
   height: 64rpx;
-  line-height: 64rpx;    
+  line-height: 64rpx;
   position: relative;
   .icon-close-circle-fill{
     width: 64rpx;

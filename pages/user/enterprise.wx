@@ -22,7 +22,7 @@
         <ui-col width="70" vertical-align="middle">
           公司名称
         </ui-col>
-        <ui-col class="desc" vertical-align="middle" align="right" space-right="15">
+        <ui-col vertical-align="middle" align="right" space-right="15">
           <input placeholder="请填写" bindinput="input" id="enterprise.name" value="{{detail.enterprise.name}}"/>
         </ui-col>
       </ui-row>
@@ -31,7 +31,7 @@
           法人
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="enterprise.legalPre" value="{{detail.enterprise.legalPre}}"/>
+          <input placeholder="请填写" bindinput="input" id="enterprise.legalPre" value="{{detail.enterprise.legalPre}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -39,7 +39,7 @@
           成立时间
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <cc-date value="{{detail.enterprise.regTime}}" format="{{'yyyy-MM-dd'}}" bindchange="dateChange"></cc-date>
+          <cc-date id="date"  value="{{detail.enterprise.regTime}}" format="{{'yyyy-MM-dd'}}" bindchange="dateChange"></cc-date>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -59,7 +59,7 @@
           详细地址
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="address" value="{{detail.address}}"/>
+          <input placeholder="请填写" bindinput="input" id="address" value="{{detail.address}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -67,7 +67,7 @@
           邮编
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="zipcode" value="{{detail.zipcode}}"/>
+          <input placeholder="请填写" bindinput="input" id="zipcode" value="{{detail.zipcode}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -75,7 +75,7 @@
           联系电话
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="phone" value="{{detail.phone}}"/>
+          <input placeholder="请填写" bindinput="input" id="phone" value="{{detail.phone}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -83,7 +83,7 @@
           法人手机
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="enterprise.legalPersonCellphone" value="{{detail.enterprise.legalPersonCellphone}}"/>
+          <input placeholder="请填写" bindinput="input" id="enterprise.legalPersonCellphone" value="{{detail.enterprise.legalPersonCellphone}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -91,7 +91,7 @@
           传真
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="fax" value="{{detail.fax}}"/>
+          <input placeholder="请填写" bindinput="input" id="fax" value="{{detail.fax}}"/>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -103,7 +103,7 @@
           姓名
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
+          <input placeholder="请填写" bindinput="input" id="name" value="{{detail.name}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -111,7 +111,7 @@
           手机
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="cellphone" value="{{detail.cellphone}}"/>
+          <input placeholder="请填写" bindinput="input" id="cellphone" value="{{detail.cellphone}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -119,7 +119,7 @@
           Email
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="email" value="{{detail.email}}"/>
+          <input placeholder="请填写" bindinput="input" id="email" value="{{detail.email}}"/>
         </ui-col>
       </ui-row>
       <ui-row height="104r">
@@ -142,7 +142,7 @@
           职务
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">
-          <input class="desc" placeholder="请填写" bindinput="input" id="position" value="{{detail.position}}"/>
+          <input placeholder="请填写" bindinput="input" id="position" value="{{detail.position}}"/>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -223,7 +223,6 @@ export default {
     this.setData({
       [field]: e.detail
     })
-    this.get()
   },
   areaChange (e) {
     var field = 'detail.enterprise.address'

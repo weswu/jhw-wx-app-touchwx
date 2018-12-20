@@ -13,7 +13,7 @@
 
     <ui-row-list border-left-indent>
       <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
-        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="{{index}}">
         <view slot="content">
         <ui-row height="128r" border-bottom class="j_row_list">
           <ui-col vertical-align="middle">
@@ -56,7 +56,7 @@
       </ui-swipe-out>
     </ui-row-list>
 
-    <view bindtap="add" class="j_add"><i class="iconfont icon-jia"></i></view>
+    <view bindtap="add" class="j_add" style="right:100rpx;"><i class="iconfont icon-jia"></i></view>
 
     <cc-modal title="绑定域名" okText="提交" visible="{{ visible }}" bind:ok="ok" bind:cancel="cancel">
       <view class="add-content">
@@ -119,7 +119,12 @@ export default {
     })
   },
   del (e) {
-    Utils.del(this, e, api.bindDetail)
+    Utils.del(this, e, api.bindDel, '', {
+      method: 'POST',
+      data: {
+        bindId: e.currentTarget.dataset.id
+      }
+    })
   },
   add () {
     this.setData({

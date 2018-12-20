@@ -194,6 +194,18 @@ export default {
       })
     })
   },
+  // 保存我的工具
+  editTool () {
+    let tools = this.data.tools
+    let bol = !this.data.toggleTools
+    tools.forEach(item => {
+      item.editting = bol
+    })
+    this.setData({
+      toggleTools: bol,
+      tools: tools
+    })
+  },
   jian (e) {
     let idx = e.currentTarget.dataset.idx
     let tools = this.data.tools
@@ -215,15 +227,28 @@ export default {
       tools: tools
     })
   },
-  editTool () {
-    let tools = this.data.tools
-    let bol = !this.data.toggleTools
-    tools.forEach(item => {
-      item.editting = bol
+  save () {
+    this.editTool()
+    let customData = getApp().globalData.customData
+    let tools = []
+    this.data.tools.forEach(item => {
+      if (item.icon && item.icon !== 'icon-jia') {
+        tools.push({url: item.url, text: item.text, icon: item.icon})
+      }
     })
-    this.setData({
-      toggleTools: bol,
-      tools: tools
+    customData.mobileLink = tools
+    api.customUpdate({
+      data: {
+        content: JSON.stringify(customData)
+      },
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        getApp().globalData.customData = customData
+        Tips.success("保存成功")
+      } else {
+        Tips.error(res.msg)
+      }
     })
   },
   href (e) {
@@ -239,7 +264,7 @@ export default {
       })
     } else if (item.text === '上传图片') {
       Utils.upload(data, 9).then(res => {
-        Tips.error('上传成功')
+        Tips.success('上传成功')
       })
     } else {
       wx.navigateTo({
@@ -279,30 +304,6 @@ export default {
       if (res.success) {
         Tips.success('添加成功')
         this.cancel()
-      } else {
-        Tips.error(res.msg)
-      }
-    })
-  },
-  save () {
-    this.editTool()
-    let customData = getApp().globalData.customData
-    let tools = []
-    this.data.tools.forEach(item => {
-      if (item.icon && item.icon !== 'icon-jia') {
-        tools.push({url: item.url, text: item.text, icon: item.icon})
-      }
-    })
-    customData.tools = tools
-    api.customUpdate({
-      data: {
-        content: JSON.stringify(customData)
-      },
-      method: 'post'
-    }).then(res => {
-      if (res.success) {
-        getApp().globalData.customData = customData
-        Tips.success("保存成功")
       } else {
         Tips.error(res.msg)
       }

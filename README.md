@@ -52,6 +52,8 @@ let extConfigPath = util_1.config.getPath('dest', 'ext.json');
 util_1.log.msg(util_1.LogType.GENERATE, path.relative(util_1.config.cwd, extFile));
 fs.writeFileSync(extConfigPath, extFile, 'utf8');
 
+下载二维码  http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=
+
 ### 微信配置
 
 | request 合法域名 | uploadFile合法域名 | downloadFile合法域名 |

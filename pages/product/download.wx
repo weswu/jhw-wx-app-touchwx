@@ -6,10 +6,10 @@
       <view style="width:240px;margin:0 auto">
         <ui-tabs width="240" tab-style="{{tabStyle}}" auto-width="{{false}}" index="{{ current3 }}"  bindchange="handleChange3">
             <ui-tab>
-                <view class="item item-right">产品表格下载</view>
+              <view class="item item-right">产品表格下载</view>
             </ui-tab>
             <ui-tab>
-                <view class="item item-left">产品相册下载</view>
+              <view class="item item-left">产品相册下载</view>
             </ui-tab>
         </ui-tabs>
       </view>
@@ -32,7 +32,7 @@
           </ui-row-list>
         </checkbox-group>
         <view class="j_tip">
-          温馨提醒（如需下载下面的内容，请先选择好所属的网站编号） 
+          温馨提醒（如需下载下面的内容，请先选择好所属的网站编号）
         </view>
         <ui-row height="104r">
           <ui-col class="text" width="80" vertical-align="middle" space-left="15">
@@ -73,7 +73,7 @@ export default {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
     }
-  }, 
+  },
   data :{
     current3: 0,
     tabStyle:{
@@ -160,7 +160,7 @@ export default {
     }).then(res => {
       if (res.success) {
         wx.downloadFile({
-          url: res.attributes.data,
+          url: 'https://' + res.attributes.data.split('http://')[1],
           success (res) {
             Tips.success('下载成功')
           }
@@ -176,7 +176,7 @@ export default {
       if (res.success) {
         Tips.loaded()
         wx.downloadFile({
-          url: res.attributes.data,
+          url: 'https://' + res.attributes.data.split('http://')[1],
           success (res) {
             Tips.success('下载成功')
           }

@@ -1,7 +1,7 @@
 <template>
   <view>
     <cc-header title="{{list[active].title}}"></cc-header>
-   
+
     <ui-row-list border-left-indent>
       <ui-row height="102r" border-bottom hover-class="none" data-item="{{item}}" bindtap="href"
         wx:for="{{list[active].children}}" wx:key="*this" wx:if="{{item.text !== 'text'}}">
@@ -61,7 +61,7 @@ export default {
       })
     } else if (item.text === '上传图片') {
       Utils.upload(data, 9).then(res => {
-        Tips.error('上传成功')
+        Tips.success('上传成功')
       })
     } else {
       wx.navigateTo({
@@ -69,7 +69,7 @@ export default {
       })
     }
   },
-  // add 
+  // add
   nameInput (e) {
     this.setData({
       name: e.detail.value

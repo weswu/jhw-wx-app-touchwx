@@ -61,8 +61,10 @@ const staticDetail = (params) => http(params, pcHost + 'baseLayout/detail' + (pa
 
 // 域名绑定
 const bind = (params) => http(params, pcHost + 'bind/bindList')
-const bindDetail = (params) => http(params, pcHost + 'bind/bindDetail')
 const bindAdd = (params) => http(params, pcHost + 'bind/bindAdd')
+const bindDel = (params) => http(params, pcHost + 'bind/bindDel')
+const bindDetail = (params) => http(params, pcHost + 'bind/bindDetail')
+
 const bindEdit = (params) => http(params, pcHost + 'bind/bindEdit')
 const bindDetail2 = (params) => http(params, pcHost + 'bind/detail/' + params.id)
 const profile = (params) => http(params, host + 'profile/detail/all')
@@ -217,7 +219,7 @@ module.exports = {
   message, messageDetail,
   /***************** 站点 ************/
   staticList, staticDetail,
-  bind, bindDetail, bindAdd, bindEdit, bindDetail2, profile,
+  bind, bindDel, bindAdd, bindDetail, bindEdit, bindDetail2, profile,
   analysis, analysisSave,
   authLogin,
   sitemapBuild, sitemap, sitemapSave,

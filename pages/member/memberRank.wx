@@ -1,7 +1,7 @@
 <template>
   <view>
     <cc-header title="会员等级配置"></cc-header>
-    
+
     <ui-row-list border-left-indent>
       <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
         bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
