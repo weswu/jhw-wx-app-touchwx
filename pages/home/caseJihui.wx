@@ -1,7 +1,12 @@
 <template>
   <view>
     <cc-header title="认识机汇网"></cc-header>
-    <view class="content">
+
+    <view class="content" wx:if="{{agent.agentId}}">
+      <rich-text nodes="{{agent.enterprise.edesc}}"/>
+    </view>
+
+    <view class="content" wx:if="{{!agent.agentId}}">
       <text decode="{{true}}">
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机汇网【浙江机汇网络科技有限公司】2009年创始于杭州，是国内营销型网站建设专家。\n
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机汇网将传统营销、互联网营销、移动互联网营销融合成三位一体的全网营销系统，为传统企业(特别是非零售企业)打造一个以自己为中心的、独立的电子商务平台。全网营销系统由营销型网站、手机网站、微传单、微网站、分销系统、二维码系统、CRM、SCM系统组成。\n
@@ -39,6 +44,15 @@ export default {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
     }
+  },
+  data: {
+    agent: {}
+  },
+  onLoad () {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
   },
   tel (e) {
     wx.makePhoneCall({

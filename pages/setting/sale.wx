@@ -19,10 +19,10 @@
           备用邮箱
         </ui-col>
         <ui-col class="desc" width="200" vertical-align="middle" align="right" space-right="15">
-          {{user.email}}
+          {{user.email || ''}}
         </ui-col>
       </ui-row>
-      
+
       <view wx:for="{{oauth}}" wx:key="*this">
         <ui-row height="102r" border-bottom wx:if="{{item.type === 'weixin'}}">
           <ui-col vertical-align="middle">
@@ -32,7 +32,8 @@
             {{item.nickname}}
           </ui-col>
         </ui-row>
-        <ui-row url="/pages/setting/mobile" hover-class="none" height="102r" wx:if="{{item.type === 'cellphone'}}">
+        <!-- url="/pages/setting/mobile" hover-class="none" -->
+        <ui-row height="102r" wx:if="{{item.type === 'cellphone'}}">
           <ui-col vertical-align="middle">
             手机
           </ui-col>

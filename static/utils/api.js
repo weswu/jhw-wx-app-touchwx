@@ -198,7 +198,8 @@ const website = (params) => http(params, pcHost + 'comm/layout/listDemoByTagsJso
 const newsCategoryChild = (params) => http(params, netHost + 'jihuiapi/news/category_child/' + params.id)
 const newsSingle = (params) => http(params, netHost + 'jihuiapi/news/single/' + params.id)
 const listLayoutByTagsJsonp = (params) => http(params, pcHost + 'layout/listLayoutByTagsJsonp')
-const listTagCategory = (params) => http(params, pcHost + 'tag/listTagCategory ')
+const listTagCategory = (params) => http(params, pcHost + 'tag/listTagCategory')
+const gonggao = (params) => http(params, pcHost + 'comm/layout/getBindLayoutJsonp')
 
 module.exports = {
   wxapplogin, login, logout, api,
@@ -207,7 +208,7 @@ module.exports = {
   area,
   password, feedback,
   /***************** 首页 ************/
-  applet, website, newsCategoryChild, newsSingle, listLayoutByTagsJsonp, listTagCategory,
+  applet, website, newsCategoryChild, newsSingle, listLayoutByTagsJsonp, listTagCategory, gonggao,
   // 推广
   spread, spreadRank, posters,
   /***************** 账号信息 ************/

@@ -1,7 +1,7 @@
 <template>
   <view>
     <!-- 自定义导航 -->
-    <cc-header title="{{agent.user.enterprise.name || '机汇网'}}" back="{{false}}" custom-style="{{ {backgroundColor:'#22252a',color:'#fff'} }}"></cc-header>
+    <cc-header title="{{agent.user.enterprise.name}}" back="{{false}}" custom-style="{{ {backgroundColor:'#22252a',color:'#fff'} }}"></cc-header>
 
     <ui-row height="90r" style="background: #22252a;position: fixed;width:100%;z-index:99;top:{{NAV_HEIGHT}}">
       <ui-col width="40" vertical-align="middle" align="center">
@@ -45,36 +45,36 @@
       <button type="primary" plain="true" size="mini"><text wx:if="{{integralCount.dailyPoint === 0}}">已</text>签到</button>
     </view>
 
-    <ui-row border-top border-bottom class="grids1" height="105" wx:if="{{!agent.agentId}}">
+    <ui-row border-top border-bottom class="grids1" height="105">
       <ui-col border-right align="center" vertical-align="middle" bindtap="jihui">
         <view class="image"><image mode="widthFix" src="../../images/index/logo.png"/></view>
-        <view class="label">认识机汇网</view>
+        <view class="label">认识{{agent.user.enterprise.name}}</view>
       </ui-col>
       <ui-col align="center" vertical-align="middle" bindtap="jihuiProduct">
         <view class="image images"><i class="iconfont icon-chanpin"></i></view>
-        <view class="label">机汇网所有产品</view>
+        <view class="label"><text wx:if="{{!agent.agentId}}">机汇网</text>所有产品</view>
       </ui-col>
     </ui-row>
     <view class="hr" wx:if="{{!agent.agentId}}"></view>
 
     <!-- 头条 -->
-    <ui-row height="35" style="margin-top:16rpx" wx:if="{{!agent.agentId}}">
+    <ui-row height="35" style="margin-top:16rpx">
       <ui-col class="j_banner" span="11" vertical-align="middle">
-        <view class="name">机汇头条</view>
+        <view class="name">{{agent.user.enterprise.name || '机汇'}}头条</view>
       </ui-col>
     </ui-row>
-    <ui-row height="166r" style="margin-bottom:36rpx" wx:if="{{!agent.agentId}}">
+    <ui-row height="166r" style="margin-bottom:36rpx">
       <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
         <view class="banner">
           <view class="title">10分钟入门</view>
           <view class="content">
-            快速了解机汇网产品
+            快速了解{{agent.user.enterprise.name}}产品
           </view>
         </view>
       </ui-col>
     </ui-row>
-    <view class="hr" wx:if="{{!agent.agentId}}"></view>
-    <view class="sample_content" wx:if="{{!agent.agentId}}">
+    <view class="hr"></view>
+    <view class="sample_content">
      <ui-row height="40">
         <ui-col span="0"></ui-col>
         <ui-col span="2" width="45" vertical-align="middle">
@@ -182,7 +182,7 @@
         </ui-col>
       </ui-row>
     </view>
-    <view class="crpt">技术支持：{{agent.user.enterprise.name || '机汇网'}}</view>
+    <view class="crpt">技术支持：{{agent.user.enterprise.name}}</view>
   </view>
 </template>
 
@@ -229,50 +229,7 @@ export default {
     userInfo: {},
     integralCount: {},
     // news
-    gonggaoList: [
-      {
-        children: [
-          { title: '恭喜[浙江四方股份有限公司]开通手机网站' },
-          { title: '恭喜[永康龙川家医院]开通手机网站' }
-        ]
-      },
-      {
-        children: [
-          { title: '恭喜[永康市博联企业管理咨询有限公司]开通展示版网站' },
-          { title: '恭喜[永康市荣勒健身器材有限公司]开通手机网站' }
-        ]
-      },
-      {
-        children: [
-          { title: '恭喜[武义县三昌文具用品厂]开通展示版网站' },
-          { title: '恭喜[武义华得润日用品有限公司]开通展示版网站' }
-        ]
-      },
-      {
-        children: [
-          { title: '恭喜[武义欧亚旅游休闲用品有限公司]开通展示版网站' },
-          { title: '恭喜[武义宏马文化发展有限公司]开通品牌版网站' }
-        ]
-      },
-      {
-        children: [
-          { title: '恭喜[永康市聚能财务咨询有限公司]开通展示版网站' },
-          { title: '恭喜[浙江和利制冷设备有限公司]开通手机网站' }
-        ]
-      },
-      {
-        children: [
-          { title: '恭喜[浙江盈汇多工贸有限公司]开通展示版网站' },
-          { title: '恭喜[浙江盈汇多工贸有限公司]开通手机网站' }
-        ]
-      },
-      {
-        children: [
-          { title: '恭喜[浙江衢州星月神电动车有限公司]开通展示版网站' },
-          { title: '恭喜[浙江衢州星月神电动车有限公司司]开通手机网站' }
-        ]
-      }
-    ],
+    gonggaoList: [],
     hotList: [],
     agent: {}
   },
@@ -289,6 +246,7 @@ export default {
       })
     })
     this.hot()
+    this.getGonggao()
     // 经销商
     this.setData({
       agent: getApp().globalData.agent
@@ -303,6 +261,25 @@ export default {
             url: '/pages/setting/webView?src=' + res.result
           })
         }
+      }
+    })
+  },
+  /*  轮播 */
+  getBanner () {
+    var that = this
+    wx.request({
+      url: 'https://wx.jihui88.net/rest/api/comm/album/wxappbanner?enterpriseId=' + getApp().globalData.agent.enterpriseId,
+      success: function (res) {
+        var data = res.data.attributes.data
+        let images = []
+        for (var i = 0; i < data.length; i++) {
+          images.push({
+            src: utils.picUrl(data[i].serverPath, 3)
+          })
+        }
+        that.setData({
+          images: data
+        })
       }
     })
   },
@@ -364,6 +341,33 @@ export default {
     }).then(res => {
       this.setData({
         hotList: res.list
+      })
+    })
+  },
+  getGonggao () {
+    api.gonggao({
+      data: {
+        page: 1,
+        pageSize: 8,
+        callback: 'callback'
+      }
+    }).then(res => {
+      let data = JSON.parse(res.substring(9, res.length-1))
+      let list = []
+      let row = []
+      data.attributes.data.forEach((item, index) => {
+        row.push({
+          title: '恭喜' + item.enterpriseName + '网站上线！'
+        })
+        if (index % 2 === 0) {
+          list.push({
+            children: row
+          })
+          row = []
+        }
+      })
+      this.setData({
+        gonggaoList: list
       })
     })
   },

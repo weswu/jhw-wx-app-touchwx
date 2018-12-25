@@ -1,6 +1,6 @@
 <template>
   <view>
-    <cc-header title="机汇网产品"></cc-header>
+    <cc-header title="{{agent.user.enterprise.name}}产品"></cc-header>
 
     <ui-row-list wx:for="{{list}}" wx:for-item="row" wx:key="*this">
       <view class="title">{{row.title}}</view>
@@ -36,8 +36,8 @@ export default {
           {
             title: '网站／手机网站',
             pic: 'upload//l//l3//llmtm//picture//2018//11//06/c100884a-7c83-4885-aceb-0e9cfd1a7bf7-1541465172461_produce_pic_1_555x218.jpg',
-            desc: '企业在搜索引擎上的大本营，模板丰富、功能\n完善、优化轻松。\n毕业于中国美院的设计师，美日上线精美模\n板。',
-            desc2: '新手0经验也能快速建站',
+            desc: '企业在搜索引擎上的大本营，案例丰富、功能\n完善、优化轻松。\n毕业于中国美院的设计师，大量案例供参考。',
+            desc2: '定制pc＋手机＋流量统计＋备案＋5对1服务',
             icon: 'diannao'
           },
           {
@@ -103,7 +103,19 @@ export default {
           }
         ]
       }
-    ]
+    ],
+    agent: {}
+  },
+  onLoad () {
+    // 经销商
+    let agent = getApp().globalData.agent
+    this.setData({
+      agent: agent
+    })
+    if (agent.agentId) {
+      this.list[1].proList[1].title = '众筹'
+      this.list[1].proList[3].title = '名片'
+    }
   }
 }
 </script>
