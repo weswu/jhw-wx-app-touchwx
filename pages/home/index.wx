@@ -28,7 +28,7 @@
         autoplay circular interval="3000" duration="500">
         <block wx:for="{{images}}" wx:key="{{index}}">
           <swiper-item>
-            <image mode="widthFix" src="http://dfwjjingtai.b0.upaiyun.com/{{item.src}}" bindload="imageLoad"/>
+            <image mode="widthFix" src="http://img.jihui88.com/{{item.src}}" bindload="imageLoad"/>
           </swiper-item>
         </block>
       </swiper>
@@ -47,7 +47,7 @@
 
     <ui-row border-top border-bottom class="grids1" height="105">
       <ui-col border-right align="center" vertical-align="middle" bindtap="jihui">
-        <view class="image"><image mode="widthFix" src="../../images/index/logo.png"/></view>
+        <view class="image"><image mode="widthFix" src="{{agent.wxappLogo}}"/></view>
         <view class="label">认识{{agent.user.enterprise.name}}</view>
       </ui-col>
       <ui-col align="center" vertical-align="middle" bindtap="jihuiProduct">
@@ -55,7 +55,7 @@
         <view class="label"><text wx:if="{{!agent.agentId}}">机汇网</text>所有产品</view>
       </ui-col>
     </ui-row>
-    <view class="hr" wx:if="{{!agent.agentId}}"></view>
+    <view class="hr"></view>
 
     <!-- 头条 -->
     <ui-row height="35" style="margin-top:16rpx">
@@ -63,7 +63,7 @@
         <view class="name">{{agent.user.enterprise.name || '机汇'}}头条</view>
       </ui-col>
     </ui-row>
-    <ui-row height="166r" style="margin-bottom:36rpx">
+    <ui-row height="166r" style="margin-bottom:36rpx" bindtap="tenVideo">
       <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
         <view class="banner">
           <view class="title">10分钟入门</view>
@@ -109,7 +109,7 @@
       </ui-col>
     </ui-row>
     <ui-row border-top border-bottom class="grids2 grids-service">
-      <ui-col span="6" border-right align="center" vertical-align="middle" wx:for="{{market}}" wx:key="{{index}}" wx:if="{{!agent.agentId || (agent.agentId && item.agent)}}">
+      <ui-col span="6" border-right align="center" vertical-align="middle" wx:for="{{market}}" wx:key="{{index}}" wx:if="{{!agent.agentId || (agent.agentId && !item.agent)}}">
         <ui-row url="{{item.url}}" hover-class="none">
           <ui-col width="10"></ui-col>
           <ui-col span="4" vertical-align="middle">
@@ -127,16 +127,16 @@
     <view class="hr"></view>
 
     <!-- 玩转机汇网 -->
-    <ui-row height="40" url="caseApp?current=2&title=玩转机汇网" hover-class="none" wx:if="{{!agent.agentId}}">
+    <ui-row height="40" url="caseApp?current=2&title=玩转{{agent.user.enterprise.name}}" hover-class="none">
       <ui-col width="20" vertical-align="middle"></ui-col>
       <ui-col class="text" vertical-align="middle">
-        <view class="title">玩转机汇网</view>
+        <view class="title">玩转{{agent.user.enterprise.name}}</view>
       </ui-col>
       <ui-col width="40" vertical-align="middle">
         <ui-icon type="arrow-right"></ui-icon>
       </ui-col>
     </ui-row>
-    <ui-row border-top class="grids2" wx:if="{{!agent.agentId}}">
+    <ui-row border-top class="grids2">
       <ui-col span="6" align="center" vertical-align="middle" wx:for="{{grids}}" wx:key="{{index}}">
         <ui-row url="{{item.url}}" hover-class="none">
           <ui-col width="10"></ui-col>
@@ -189,6 +189,7 @@
 <script>
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
 export default {
   config: {
     enablePullDownRefresh: false,
@@ -201,21 +202,17 @@ export default {
     // 轮播
     images: [
       {
-        src: 'upload//l//l3//llmtm//picture//2018//11//10/3cb7a574-50ed-41af-955f-d89e9d3ba8aa-1541814291954_banner_pc_img_1_848x473.jpg'
+        src: 'upload/j/j2/jihui/picture/2018/12/26/9a36aaa8-7e6e-4ce9-834e-701931883bae.jpg'
       },
       {
-        src: 'upload//l//l3//llmtm//picture//2018//11//10/75f15168-203e-4d4d-8353-a542bcbd68ee-1541820111545_banner_pc_img_2_848x473.jpg'
+        src: 'upload/j/j2/jihui/picture/2018/12/26/106c1f15-35f3-4277-a967-4da488b314f8.jpg'
       },
       {
-        src: 'upload//l//l3//llmtm//picture//2018//11//10/10f64c21-88ba-4bf1-a33e-c9a99c2d4c2e-1541839806823_banner_pc_img_3_848x473.jpg'
+        src: 'upload/j/j2/jihui/picture/2018/12/26/d43e7eab-8302-4c46-a9ad-9792bb3661cf.jpg'
       }
     ],
     swiperHeight: 0,
     swiperCurrent: 0,
-    extra: {
-      enterprise_id: 'Enterp_0000000000000000000049341',
-      user_id: 'User_000000000000000000000065262'
-    },
     market: [
       {url: 'caseWebsite', name: '全民建站', icon: 'icon-wangzhan', content: '海量案例'},
       {url: 'caseApp', name: '企业应用', icon: 'icon-qiye', content: '助力企业成长', agent: true},
@@ -231,6 +228,7 @@ export default {
     // news
     gonggaoList: [],
     hotList: [],
+    // 经销商
     agent: {}
   },
   onLoad () {
@@ -248,9 +246,13 @@ export default {
     this.hot()
     this.getGonggao()
     // 经销商
+    let agent = getApp().globalData.agent
     this.setData({
-      agent: getApp().globalData.agent
+      agent: agent
     })
+    if (agent.agentId) {
+      this.getBanner()
+    }
   },
   // 扫一扫
   saoyisao () {
@@ -267,20 +269,23 @@ export default {
   /*  轮播 */
   getBanner () {
     var that = this
-    wx.request({
-      url: 'https://wx.jihui88.net/rest/api/comm/album/wxappbanner?enterpriseId=' + getApp().globalData.agent.enterpriseId,
-      success: function (res) {
-        var data = res.data.attributes.data
-        let images = []
-        for (var i = 0; i < data.length; i++) {
+    api.wxappbanner({
+      data: {
+        enterpriseId: this.data.agent.user.enterpriseId
+      }
+    }).then(res => {
+      var data = res.attributes.data
+      let images = []
+      if (data.length > 0) {
+        data.forEach(item => {
           images.push({
-            src: utils.picUrl(data[i].serverPath, 3)
+            src: Utils.picUrl(item.serverPath, 3)
           })
-        }
-        that.setData({
-          images: data
         })
       }
+      that.setData({
+        images: images
+      })
     })
   },
   // 轮播
@@ -319,6 +324,18 @@ export default {
       })
     }
   },
+  // 十分钟
+  tenVideo () {
+    if (this.data.agent.agentId) {
+      let video = this.data.agent.vTen
+      let src = video.substring(24, video.length-5)
+      if (src) {
+        wx.navigateTo({
+          url: '/pages/home/caseVideo?title=入门介绍&vid=' + src
+        })
+      }
+    }
+  },
   jihui () {
     wx.navigateTo({
       url: '/pages/home/caseJihui'
@@ -335,9 +352,9 @@ export default {
         page: 1,
         per_page: 8,
         content: 1,
-        category_id: '344139'
+        category_id: parseInt(agent.questionCateId.substring(9))
       },
-      id: 'Enterp_0000000000000000000062857'
+      id: this.data.agent.user.enterpriseId
     }).then(res => {
       this.setData({
         hotList: res.list
@@ -412,6 +429,7 @@ swiper-item image{width:750rpx;}
   image,.image{
     width: 94rpx;
     height: 94rpx;
+    border-radius: 94rpx;
     margin: 0 auto;
     margin-bottom: 5px;
   }

@@ -2,7 +2,8 @@
   "extEnable": true,
   "extAppid": "wx2aba9d238ba02a76",
   "ext": {
-    "appid": "wx2aba9d238ba02a76"
+    "appid": "wx2aba9d238ba02a76",
+    "domain": "admin.ykyh.com"
   },
   "tabBar": {
     "list": [{

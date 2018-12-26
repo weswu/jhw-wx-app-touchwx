@@ -38,12 +38,21 @@ export default {
       page: 1,
       per_page: 8,
       content: 1,
-      category_id: '344330'
+      category_id: ''
     },
     count: 0,
-    more: {}
+    more: {},
+    agent: {}
   },
   onLoad () {
+    // 经销商
+    let agent = getApp().globalData.agent
+    this.setData({
+      agent: agent
+    })
+    this.setData({
+      'params.category_id': parseInt(agent.questionCateId.substring(9))
+    })
     this.get()
   },
   get () {
@@ -54,17 +63,24 @@ export default {
     })
     api.newsCategoryChild({
       data: this.data.params,
-      id: 'Enterp_0000000000000000000062857'
+      id: this.data.agent.user.enterpriseId
     }).then(res => {
-      let list = this.data.list
-      res.list.forEach(item => {
-        this.data.list.push(item)
-      })
-      this.setData({
-        list: list,
-        count: res.total,
-        'more.loading': false
-      })
+      if (res.error === '查询为空') {
+        this.setData({
+          'more.tip': '加载完毕',
+          'more.loading': false
+        })
+      } else {
+        let list = this.data.list
+        res.list.forEach(item => {
+          this.data.list.push(item)
+        })
+        this.setData({
+          list: list,
+          count: res.total,
+          'more.loading': false
+        })
+      }
     })
   },
   detail (e) {

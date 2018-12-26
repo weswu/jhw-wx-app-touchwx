@@ -4,14 +4,14 @@ const host = 'https://www.jihui88.com/rest/api/'
 const pcHost = 'https://www.jihui88.com/rest/pc/api/'
 const buyHost = 'https://www.jihui88.com/rest/buy/api/'
 
-const wxHost = 'https://wx.jihui88.net/'
+const wxHost = 'https://wx.jihui88.net/rest/api/'
 
 const netHost = 'https://api.jihui88.net/'
 
 // 微信登录
-const wxapplogin = (params) => http(params, wxHost + "rest/api/user/wxapplogin");
+const wxapplogin = (params) => http(params, wxHost + "user/wxapplogin");
 // 账号登录
-const login = (params) => http(params, wxHost + 'rest/api/user/wxAppLoginByUsernameAndPassword')
+const login = (params) => http(params, wxHost + 'user/wxAppLoginByUsernameAndPassword')
 const logout = (params) => http(params, host + 'user/logout')
 const api = (params) => http(params, host + params.url)
 /***************** 基本数据 ************/
@@ -72,7 +72,7 @@ const profile = (params) => http(params, host + 'profile/detail/all')
 
 // 推广
 const spread = (params) => http(params, host + 'poster/list?pageSize=72')
-const spreadRank = (params) => http(params, wxHost + 'rest/api/comm/poster/userlist')
+const spreadRank = (params) => http(params, wxHost + 'comm/poster/userlist')
 const posters = (params) => http(params, netHost + 'qrcode_poster/api/poster')
 
 const analysis = (params) => http(params, pcHost + 'analysis/detail')
@@ -200,6 +200,9 @@ const newsSingle = (params) => http(params, netHost + 'jihuiapi/news/single/' + 
 const listLayoutByTagsJsonp = (params) => http(params, pcHost + 'layout/listLayoutByTagsJsonp')
 const listTagCategory = (params) => http(params, pcHost + 'tag/listTagCategory')
 const gonggao = (params) => http(params, pcHost + 'comm/layout/getBindLayoutJsonp')
+const agent = (params) => http(params, host + 'agent/config/getConfigByDomain')
+const wxappbanner = (params) => http(params, wxHost + 'comm/album/wxappbanner')
+
 
 module.exports = {
   wxapplogin, login, logout, api,
@@ -209,6 +212,7 @@ module.exports = {
   password, feedback,
   /***************** 首页 ************/
   applet, website, newsCategoryChild, newsSingle, listLayoutByTagsJsonp, listTagCategory, gonggao,
+  agent, wxappbanner,
   // 推广
   spread, spreadRank, posters,
   /***************** 账号信息 ************/

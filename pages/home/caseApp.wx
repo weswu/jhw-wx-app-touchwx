@@ -3,7 +3,8 @@
     <cc-header title="{{title}}"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row url="{{item.url}}" height="102r" border-bottom hover-class="none"  wx:for="{{list}}" wx:key="*this">
+      <ui-row url="{{item.url}}" height="102r" border-bottom hover-class="none"  wx:for="{{list}}" wx:key="*this"
+        wx:if="{{!agent.agentId || (agent.agentId && !item.agent)}}">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont {{item.icon}}"></i>
         </ui-col>
@@ -45,8 +46,8 @@ export default {
       { url: '', text: '机汇云企业大脑', icon: 'icon-tijiao' }
     ],
     list1: [
-      { url: 'caseApp', text: '企业应用', icon: 'icon-qiye' },
-      { url: 'caseDanao', text: '企业大脑', icon: 'icon-danao' },
+      { url: 'caseApp', text: '企业应用', icon: 'icon-qiye', agent: true },
+      { url: 'caseDanao', text: '企业大脑', icon: 'icon-danao', agent: true },
       { url: 'caseWebsite', text: '网站案例', icon: 'icon-wangzhan' },
       { url: 'caseApplet', text: '小程序案例', icon: 'icon-weixin' },
       { url: 'caseTemplate', text: '网站模板', icon: 'icon-moban' }
@@ -56,14 +57,21 @@ export default {
       { url: 'caseQuestion', text: '常见问题', icon: 'icon-kuaisurumen' }
     ],
     current: '',
-    title: ''
+    title: '',
+    agent: {}
   },
   onLoad (e) {
+    // 经销商
+    let agent = getApp().globalData.agent
+    this.setData({
+      agent: agent
+    })
     this.setData({
       current: e.current || 0,
       list: this.data['list'+(e.current || 0)],
       title: e.title || '企业应用'
     })
+
   },
   tel (e) {
     wx.makePhoneCall({

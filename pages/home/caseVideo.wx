@@ -1,6 +1,6 @@
 <template>
   <view>
-    <cc-header title="视频教程"></cc-header>
+    <cc-header title="{{title}}"></cc-header>
 
     <ui-row-list wx:for="{{list}}" wx:key="*this">
       <view class="item" wx:if="{{item.src}}">
@@ -23,6 +23,7 @@ export default {
     }
   },
   data: {
+    title: '视频教程',
     list: [
       { text: '机汇网-界面编辑视频教程', vid: 'b0766xub26n', src: '' },
       { text: '视频教程-安全设置', vid: 'c0753vzonsm', src: '' },
@@ -37,9 +38,46 @@ export default {
       { text: '视频教程-Sitemap生成', vid: 'l0753l1jw2c', src: '' },
       { text: '视频教程-批量提交', vid: 'u0753ji3n5n', src: '' },
       { text: '视频教程-第三方统计', vid: 'j0753ycgfeh', src: '' }
-    ]
+    ],
+    agent: {}
   },
-  onLoad () {
+  onLoad (e) {
+    // 经销商
+    let agent = getApp().globalData.agent
+    this.setData({
+      agent: agent
+    })
+    if (e && e.title) {
+      this.setData({
+        title: e.title
+      })
+    }
+    if (e && e.vid) {
+      this.setData({
+        list: [
+          { text: '10分钟入门', vid: e.vid, src: '' }
+        ]
+      })
+    } else {
+      if (agent.agentId) {
+        let list = []
+        agent.vAccount && list.push({ text: '视频教程-安全设置', vid: agent.vAccount.substring(24, agent.vAccount.length-5), src: '' })
+        agent.vProduct && list.push({ text: '视频教程-产品列表', vid: agent.vProduct.substring(24, agent.vProduct.length-5), src: '' })
+        agent.vProductCategory && list.push({ text: '视频教程-产品分类', vid: agent.vProductCategory.substring(24, agent.vProductCategory.length-5), src: '' })
+        agent.vDownload && list.push({ text: '视频教程-下载', vid: agent.vDownload.substring(24, agent.vDownload.length-5), src: '' })
+        agent.vImport && list.push({ text: '视频教程-导入', vid: agent.vImport.substring(24, agent.vImport.length-5), src: '' })
+        agent.vNews && list.push({ text: '视频教程-新闻列表', vid: agent.vNews.substring(24, agent.vNews.length-5), src: '' })
+        agent.vNewsCategory && list.push({ text: '视频教程-新闻分类', vid: agent.vNewsCategory.substring(24, agent.vNewsCategory.length-5), src: '' })
+        agent.vWebsite && list.push({ text: '视频教程-站点数据管理', vid: agent.vWebsite.substring(24, agent.vWebsite.length-5), src: '' })
+        agent.vSeo && list.push({ text: '视频教程-SEO设置', vid: agent.vSeo.substring(24, agent.vSeo.length-5), src: '' })
+        agent.vSitemap && list.push({ text: '视频教程-Sitemap生成', vid: agent.vSitemap.substring(24, agent.vSitemap.length-5), src: '' })
+        agent.vSeoBatch && list.push({ text: '视频教程-批量提交', vid: agent.vSeoBatch.substring(24, agent.vSeoBatch.length-5), src: '' })
+        agent.vAnalysis && list.push({ text: '视频教程-第三方统计', vid: agent.vAnalysis.substring(24, agent.vAnalysis.length-5), src: '' })
+        this.setData({
+          list: list
+        })
+      }
+    }
     this.data.list.forEach((item, index) => {
       this.getVideoInfo(item.vid, index)
     })

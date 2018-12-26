@@ -113,8 +113,11 @@ export default {
       agent: agent
     })
     if (agent.agentId) {
-      this.list[1].proList[1].title = '众筹'
-      this.list[1].proList[3].title = '名片'
+      this.data.list[1].proList[1].title = '众筹'
+      this.data.list[1].proList[3].title = '名片'
+      this.setData({
+        list: this.data.list
+      })
     }
   }
 }

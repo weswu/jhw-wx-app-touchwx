@@ -2,7 +2,7 @@
   <view style="background: #fff">
     <cc-header title="{{agent.agentId ? agent.user.enterprise.name : '机汇网'}}会员登录" back="{{back}}"></cc-header>
 
-    <view class="logo"><image src="{{agent.loginLogo3}}" alt=""></view>
+    <view class="logo"><image mode="widthFix" src="{{agent.loginLogo3}}" alt="logo"></view>
     <view class="login">
       <view class="form">
         <input class="username" placeholder="手机号/帐号" bindinput="input" bindfocus="inputFocus" id="username" value="{{detail.username}}"/>
@@ -44,9 +44,11 @@ export default {
     back: false,
     authorize: false,
     goLogin: false,
+    // 经销商
     agent: {
       loginLogo3: 'http://www.jihui88.com/member/static/images/f-logo.png'
-    }
+    },
+    domain: ''
   },
   onReady () {
     Object.assign(this, Input)
@@ -56,6 +58,12 @@ export default {
         that.setData({
           'detail.appid': res.extConfig.appid
         })
+        if (res.extConfig.domain) {
+          that.setData({
+            domain: res.extConfig.domain
+          })
+          that.getAgent()
+        }
       }
     })
   },
@@ -74,13 +82,10 @@ export default {
     if (wx.getStorageSync('username')) {
       this.weixin('focus')
     }
-    // 经销商
+    // 推广积分
     if (e.poster) {
       wx.setStorageSync('poster', e.poster)
     }
-    this.setData({
-      agent: getApp().globalData.agent
-    })
   },
   bindGetUserInfo (e) {
     getApp().onLaunch()
@@ -107,6 +112,31 @@ export default {
         that.setData({
           authorize: true
         })
+      }
+    })
+  },
+  getAgent () {
+    let that = this
+    api.agent({
+      data: {
+        domain: this.data.domain
+      }
+    }).then(res => {
+      if (res.success) {
+        let data = res.attributes.data
+        if (data) {
+          let video = {}
+          if (data.manageVideoLink) {
+            video = JSON.parse(data.manageVideoLink)
+          }
+          data = Object.assign(data, video)
+          data.loginLogo3 = 'http://img.jihui88.com/' + data.loginLogo3
+          data.wxappLogo = 'http://img.jihui88.com/' + data.wxappLogo
+          getApp().globalData.agent = data
+          that.setData({
+            agent: data
+          })
+        }
       }
     })
   },
@@ -258,8 +288,7 @@ export default {
   text-align:center;
   image{
     margin: 60px auto 28px;
-    width: 80px;
-    height: 80px;
+    width: 90px;
   }
   .weui-cell_inpu{
     border-left: 1px solid #ccc;

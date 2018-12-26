@@ -9,8 +9,8 @@ export default {
   config: {
     usingComponents: {},
     pages: [
-    'pages/home/index',
       'pages/user/login',
+      'pages/home/index',
       'pages/user/enterprise',
       'pages/home/console',
       'pages/home/my',
@@ -199,6 +199,7 @@ export default {
       // agentId: 'cc',
       bindUrl: 'www.jihui88.com',
       manageLogo1: '',
+      wxappLogo: '../../images/index/logo.png',
       loginLogo3: 'http://www.jihui88.com/member/static/images/f-logo.png',
       vManage: 'http://v.qq.com/vplus/4aa13bffe0e2662991069f1800862a96/foldervideos/gr2002901enccnk',
       vAccount: 'https://v.qq.com/x/page/c0753vzonsm.html',
@@ -214,13 +215,15 @@ export default {
       vSeoBatch: 'https://v.qq.com/x/page/u0753ji3n5n.html',
       vAnalysis: 'https://v.qq.com/x/page/j0753ycgfeh.html',
       dNews: 'http://xueyuan.jihui88.com/news.html',
-      dLog: '#/update',
+      qualityCateId: 'Category_00000000000000000344139',
+      questionCateId: 'Category_00000000000000000344330',
       user: {
         qq: '1550676880',
         cellphone: '13967938189',
         enterprise: {
           name: '机汇网'
-        }
+        },
+        enterpriseId: 'Enterp_0000000000000000000062857'
       }
     }
   },
