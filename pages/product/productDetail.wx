@@ -6,7 +6,7 @@
     <view class="swiper-container">
       <swiper class="swiper_box" bindchange="swiperChange" current="{{swiperCurrent}}"
         autoplay="{{false}}" circular interval="3000" duration="500">
-        <block wx:for="{{imgList}}" wx:key="*this">
+        <block wx:for="{{imgList}}" wx:key="{{index}}">
           <swiper-item>
             <image mode="aspectFit" src="http://img.jihui88.com/{{item.src}}"/>
           </swiper-item>
@@ -17,7 +17,7 @@
         <view class="btn_gray" bindtap="delPic">删除</view>
       </view>
       <view class="dots" wx:if="{{imgList.length > 1}}">
-        <block wx:for="{{imgList}}" wx:key="*this">
+        <block wx:for="{{imgList}}" wx:key="{{index}}">
           <view class="dot{{index  == swiperCurrent ? ' active' : ''}}"></view>
         </block>
       </view>
@@ -25,10 +25,10 @@
     <ui-row height="218r" class="tabs">
       <ui-col vertical-align="middle" space-left="15">
         <ui-tabs index="{{ swiperCurrent }}" width="{{ width-140 }}" bounce="{{false}}" wx:if="{{imgList.length > 0}}"
-          tab-style="{{ {width: '112rpx !important', padding: '0px !important', marginRight: '24rpx', background: '#f5f6fa', border: '1px solid transparent'} }}"
+          tab-style="{{ {maxWidth: '116rpx', padding: '0px !important', marginRight: '24rpx', background: '#f5f6fa', border: '1px solid transparent'} }}"
           active-tab-style="{{ {border: '1px solid #12bedb'} }}"
           bindchange="handleChange">
-          <ui-tab  wx:for="{{imgList}}" wx:key="*this" wx:index="idx" >
+          <ui-tab  wx:for="{{imgList}}" wx:key="{{index}}">
             <image mode="aspectFit" src="http://img.jihui88.com/{{item.src}}"/>
           </ui-tab>
         </ui-tabs>
@@ -212,7 +212,7 @@
       <view class="j_picker">
         <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;" style="width: 100%; height: 220px;" value="{{value}}" bindchange="layoutIdChange">
           <picker-view-column>
-            <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
+            <view wx:for="{{staticList}}" wx:key="{{index}}" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
           </picker-view-column>
         </picker-view>
       </view>
@@ -254,12 +254,17 @@ export default {
     // 预览
     staticList: [],
     layoutId: '',
-    selectStatic: false
+    selectStatic: false,
+    agent: {}
   },
   onReady () {
     Object.assign(this, Input)
   },
   onLoad (e) {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
     this.setData({
       staticList: getApp().globalData.staticList,
       layoutId: getApp().globalData.layoutId
@@ -287,10 +292,17 @@ export default {
           limitState: '00',
           integralState: '00',
           attrState: '00', // 关闭属性价格
+          attrItems: [], // 属性内容
           customAttrMapStore: [],
           productAttributeMapStore: []
         }
       })
+      let cateList = getApp().globalData.productCategory[0]
+      if (cateList) {
+        this.setData({
+          'detail.category': cateList.categoryId
+        })
+      }
     }
   },
   get () {
@@ -419,7 +431,7 @@ export default {
       return;
     }
     var ctx = this
-    this.data.detail.purchaseNum = this.data.detail.purchaseNum + ''
+    this.detail.purchaseNum = this.detail.purchaseNum ? (this.detail.purchaseNum + '') : ''
     // 图片
     if (this.data.imgList.length === 0) return Tips.info('请上传图片')
     this.data.detail.picPath = this.data.imgList[0].src
@@ -436,7 +448,6 @@ export default {
       }
     })
     this.data.detail.photo2 = JSON.stringify(imageListStore)
-    this.data.detail.productImageListStore = JSON.stringify(imageListStore)
 
     let data = {
       model: JSON.stringify(this.data.detail),
@@ -469,7 +480,7 @@ export default {
   },
   generate () {
     wx.navigateTo({
-      url: '/pages/setting/webView?src=http://pc.jihui88.com/rest/site/'+this.data.layoutId+'/pd&itemId='+this.data.detail.productId2
+      url: '/pages/setting/webView?src=http://pc.' + this.data.agent.bindUrl + '/rest/site/'+this.data.layoutId+'/pd&itemId='+this.data.detail.productId2
     })
   }
 }

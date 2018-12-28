@@ -182,6 +182,13 @@ export default {
         }
       })
       this.get()
+    } else {
+      let cateList = getApp().globalData.newsCategory[0]
+      if (cateList) {
+        this.setData({
+          'detail.category': cateList.categoryId
+        })
+      }
     }
   },
   get () {

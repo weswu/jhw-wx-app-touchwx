@@ -3,14 +3,6 @@
     <cc-header title="设置"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row height="102r" url="/pages/service/feedback" hover-class="none">
-        <ui-col vertical-align="middle">
-          服务反馈
-        </ui-col>
-        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-          <ui-icon type="arrow-right" size="14"></ui-icon>
-        </ui-col>
-      </ui-row>
       <ui-row height="102r" url="/pages/service/service" hover-class="none">
         <ui-col vertical-align="middle">
           咨询与建议

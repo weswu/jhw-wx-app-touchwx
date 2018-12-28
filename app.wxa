@@ -10,6 +10,7 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/product/product',
       'pages/home/index',
       'pages/user/enterprise',
       'pages/home/console',
@@ -60,7 +61,6 @@ export default {
       'pages/home/dataManagement',
       'pages/home/module',
       'pages/home/tools',
-      'pages/product/product',
       'pages/product/import',
       'pages/product/download',
       'pages/album/album',
@@ -197,7 +197,7 @@ export default {
     userprivilege: [], // 员工权限
     agent: { // 经销商
       // agentId: 'cc',
-      bindUrl: 'www.jihui88.com',
+      bindUrl: 'jihui88.com',
       manageLogo1: '',
       wxappLogo: '../../images/index/logo.png',
       loginLogo3: 'http://www.jihui88.com/member/static/images/f-logo.png',

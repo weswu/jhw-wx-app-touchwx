@@ -20,7 +20,7 @@
           <view class="content">
             <image src="{{item.pic_path}}" style="width:280rpx;height:280rpx;" data-url="{{item.pic_path}}" bindtap="previewImageUrl"></image>
             <view class="p">{{item.name}}</view>
-            <view class="desc" wx:for="{{selectList}}" wx:for-index="idx" wx:for-item="row" wx:key="idx" wx:if="{{item.category === row.key}}">{{item.value}}</view>
+            <view class="desc" wx:for="{{selectList}}" wx:for-index="idx" wx:for-item="row" wx:key="{{idx}}" wx:if="{{item.category === row.key}}">{{item.value}}</view>
           </view>
         </ui-col>
       </ui-row>

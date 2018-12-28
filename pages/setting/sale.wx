@@ -23,7 +23,7 @@
         </ui-col>
       </ui-row>
 
-      <view wx:for="{{oauth}}" wx:key="*this">
+      <view wx:for="{{oauth}}" wx:key="{{index}}">
         <ui-row height="102r" border-bottom wx:if="{{item.type === 'weixin'}}">
           <ui-col vertical-align="middle">
             微信
@@ -75,12 +75,6 @@ export default {
         this.oauth = res.attributes.data
       }
     })
-  },
-  bindMobile () {
-
-  },
-  weixin () {
-    Tips.toast('功能完善中')
   }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
   <view>
     <cc-header title="{{title}}"></cc-header>
-
-    <ui-row-list wx:for="{{list}}" wx:key="*this">
+    <view style="margin: 15px auto; color:#999; text-align:center;" wx:if="{{list.length===0}}">{{tip}}</view>
+    <ui-row-list wx:for="{{list}}" wx:key="{{index}}">
       <view class="item" wx:if="{{item.src}}">
         <video src="{{item.src}}" controls="{{false}}"></video>
         {{item.text}}
@@ -39,7 +39,8 @@ export default {
       { text: '视频教程-批量提交', vid: 'u0753ji3n5n', src: '' },
       { text: '视频教程-第三方统计', vid: 'j0753ycgfeh', src: '' }
     ],
-    agent: {}
+    agent: {},
+    tip: '加载中'
   },
   onLoad (e) {
     // 经销商
@@ -74,7 +75,8 @@ export default {
         agent.vSeoBatch && list.push({ text: '视频教程-批量提交', vid: agent.vSeoBatch.substring(24, agent.vSeoBatch.length-5), src: '' })
         agent.vAnalysis && list.push({ text: '视频教程-第三方统计', vid: agent.vAnalysis.substring(24, agent.vAnalysis.length-5), src: '' })
         this.setData({
-          list: list
+          list: list,
+          tip: '暂无数据'
         })
       }
     }

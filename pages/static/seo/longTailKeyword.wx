@@ -26,7 +26,7 @@
           <view class="td">产品/服务</view>
           <view class="td">盈利模式</view>
         </view>
-        <view class="th" wx:for="{{list}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="*this">
+        <view class="th" wx:for="{{list}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
           <view class="td" wx:for="{{row.children}}" wx:key="*this">
             <input class="desc" bindinput="input" data-row="{{rowIndex}}" data-index="{{index}}" value="{{item.value}}"/>
           </view>

@@ -51,7 +51,7 @@
                 </navigator>
               </ui-col>
             </ui-row>
-            <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="*this" wx:if="{{!item.hidden}}">
+            <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="{{index}}" wx:if="{{!item.hidden}}">
               <ui-col class="text {{item.categoryId === categoryId ? 'active' : ''}}" vertical-align="middle" space-left="{{item.grade === '2' ? '20' : item.grade === '3' ? '40' : ''}}" data-item="{{item}}" bindtap="cateChange">
                 {{item.name}}
               </ui-col>

@@ -6,7 +6,7 @@
     <view class="j_tip">开放平台设置：以下为开放平台申请时需所填写的数据</view>
     <ui-row height="104r">
       <ui-col class="desc" vertical-align="middle" space-left="15">
-        网站地址：http://pc.jihui88.com/rest/site/{{layoutId}}/index
+        网站地址：http://pc.{{agent.bindUrl}}/rest/site/{{layoutId}}/index
       </ui-col>
     </ui-row>
     <ui-row height="104r">
@@ -136,12 +136,17 @@ export default {
       { text: '是', value: '01' },
       { text: '否', value: '00' }
     ],
-    layoutId: ''
+    layoutId: '',
+    agent: {}
   },
   onReady () {
     Object.assign(this, Input)
   },
   onLoad () {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
     this.layoutChange()
   },
   get () {

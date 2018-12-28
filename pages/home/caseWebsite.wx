@@ -16,7 +16,7 @@
 
     <ui-row-list>
       <ui-row class="row-border">
-        <ui-col border-right align="center" span="6" vertical-align="middle" wx:for="{{list}}" wx:key="*this">
+        <ui-col border-right align="center" span="6" vertical-align="middle" wx:for="{{list}}" wx:key="{{index}}">
           <view class="content">
             <image src="http://dfwjjingtai.b0.upaiyun.com/{{item.pic}}" style="width:300rpx;height:200rpx;" data-id="{{item.id}}" bindtap="view"></image>
             <view class="p">{{item.seoTitle}}</view>
@@ -31,7 +31,7 @@
 
     <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
       <ui-row-list border-left-indent>
-        <ui-row height="43" border-bottom wx:for="{{selectList}}" wx:key="*this" data-item="{{item}}" bindtap="change">
+        <ui-row height="43" border-bottom wx:for="{{selectList}}" wx:key="{{index}}" data-item="{{item}}" bindtap="change">
           <ui-col vertical-align="middle" class="{{params.recvState === item.key ? 'active' : ''}}">
             {{item.value}}
           </ui-col>
@@ -78,9 +78,14 @@ export default {
       tagIds: '95,96,97,98,200'
     },
     count: 0,
-    more: {}
+    more: {},
+    agent: {}
   },
   onLoad () {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
     this.get()
   },
   get () {
@@ -106,8 +111,15 @@ export default {
   },
   view (e) {
     var id = e.currentTarget.dataset.id
+    /**
     wx.navigateTo({
       url: '/pages/setting/webView?src=http://pc.jihui88.com/rest/site/'+id+'/index'
+    })**/
+    wx.setClipboardData({
+      data: 'http://pc.' + this.data.agent.bindUrl + '/rest/site/'+id+'/index',
+      success: function(res) {
+        Tips.success('复制链接成功')
+      }
     })
   },
   openPopup (e) {

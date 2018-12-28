@@ -56,7 +56,7 @@
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show ? 'show' : '' }}">
         <ui-row-list border-left-indent>
-          <ui-row height="43" border-bottom wx:for="{{lanList}}" wx:key="*this" data-item="{{item}}" bindtap="lanChange">
+          <ui-row height="43" border-bottom wx:for="{{lanList}}" wx:key="{{index}}" data-item="{{item}}" bindtap="lanChange">
             <ui-col vertical-align="middle">
               {{item.text}}
             </ui-col>
@@ -73,7 +73,7 @@
     <view style="top: {{ popup_NAV_HEIGHT }}px;height: {{popupHeight}}px;" class="ui-popup {{ show1 ? 'show' : '' }}">
       <view class="ui-popup-content top {{ show1 ? 'show' : '' }}">
         <ui-row-list border-left-indent class="sort-list">
-          <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="*this" data-item="{{item}}" bindtap="sortChange" wx:if="{{item.type === type}}">
+          <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="{{index}}" data-item="{{item}}" bindtap="sortChange" wx:if="{{item.type === type}}">
             <ui-col vertical-align="middle" class="{{params.sortName === item.value ? 'active' : ''}}">
               {{item.text}}
             </ui-col>
@@ -94,7 +94,7 @@
       <view class="ui-popup-content top {{ show2 ? 'show' : '' }}">
         <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
           <ui-row-list border-left-indent>
-            <ui-row height="43" border-bottom wx:for="{{staticList}}" wx:key="*this" data-id="{{item.id}}" bindtap="layoutChange">
+            <ui-row height="43" border-bottom wx:for="{{staticList}}" wx:key="{{index}}" data-id="{{item.id}}" bindtap="layoutChange">
               <ui-col vertical-align="middle">
                 网站编号：{{item.id}}
               </ui-col>

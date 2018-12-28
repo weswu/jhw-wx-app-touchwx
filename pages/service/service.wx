@@ -3,50 +3,73 @@
     <cc-header title="咨询与建议"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row height="102r" url="faq" hover-class="none">
-          <ui-col vertical-align="middle">
-              常见问题
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14"></ui-icon>
-          </ui-col>
+      <ui-row height="102r" bindtap="goto">
+        <ui-col vertical-align="middle">
+          常见问题
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
       </ui-row>
       <ui-row height="102r" bindtap="tel">
-          <ui-col vertical-align="middle">
-              我的客服
-          </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right">
-              400-7111-011
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14"></ui-icon>
-          </ui-col>
+        <ui-col vertical-align="middle">
+          我的客服
+        </ui-col>
+        <ui-col class="desc" width="100" vertical-align="middle" align="right">
+          {{agent.user.phone || agent.user.cellphone}}
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
       </ui-row>
       <ui-row height="102r">
-          <ui-col vertical-align="middle">
-              咨询QQ
-          </ui-col>
-          <ui-col class="desc" width="100" vertical-align="middle" align="right">
-              2594969476
-          </ui-col>
-          <ui-col width="35" vertical-align="middle" align="right" space-right="15">
-              <ui-icon type="arrow-right" size="14"></ui-icon>
-          </ui-col>
+        <ui-col vertical-align="middle">
+          咨询QQ
+        </ui-col>
+        <ui-col class="desc" width="100" vertical-align="middle" align="right" data-url="{{agent.user.qq}}" bindtap="copy">
+          {{agent.user.qq}}
+        </ui-col>
+        <ui-col width="35" vertical-align="middle" align="right" space-right="15">
+          <ui-icon type="arrow-right" size="14"></ui-icon>
+        </ui-col>
       </ui-row>
     </ui-row-list>
   </view>
 </template>
 
 <script>
+import Tips from '../../static/utils/tips'
 export default {
   config: {
     usingComponents: {
       'cc-header': '../../packages/cc-header'
     }
   },
+  data: {
+    agent: {}
+  },
+  onLoad () {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
+  },
   tel () {
     wx.makePhoneCall({
-      phoneNumber: '400-7111-011'
+      phoneNumber: (this.data.agent.user.phone || this.data.agent.user.cellphone)
+    })
+  },
+  copy (e) {
+    wx.setClipboardData({
+      data: e.currentTarget.dataset.url,
+      success: function(res) {
+        Tips.success('复制成功')
+      }
+    })
+  },
+  goto () {
+    wx.navigateTo({
+      url: '/pages/setting/webView?src=https://docs.qq.com/doc/B3DcZh3LYq1T0nH23W15cjOF4HCYjk0Il6ZP1'
     })
   }
 }

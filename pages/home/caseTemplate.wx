@@ -91,9 +91,14 @@ export default {
     },
     count: 0,
     more: {},
-    id: ''
+    id: '',
+    agent: {}
   },
   onLoad () {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
     this.get()
     this.getCate()
   },
@@ -133,8 +138,15 @@ export default {
   },
   view (e) {
     var id = e.currentTarget.dataset.id
+    /**
     wx.navigateTo({
       url: '/pages/setting/webView?src=http://pc.jihui88.com/rest/site/'+id+'/index'
+    })**/
+    wx.setClipboardData({
+      data: 'http://pc.' + this.data.agent.bindUrl + '/rest/site/'+id+'/index',
+      success: function(res) {
+        Tips.success('复制链接成功')
+      }
     })
   },
   openPopup (e) {

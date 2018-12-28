@@ -57,15 +57,23 @@
             如有意向联系我们：
           </ui-col>
           <ui-col class="text" vertical-align="middle">
-            <view style="width:100%;font-size:12px">
+            <view style="width:100%;font-size:12px" wx:if="{{!agent.agentId}}">
               电话：400-7111-011
               <view>俞小姐：136-2679-9628</view>
+            </view>
+            <view style="width:100%;font-size:12px" wx:if="{{agent.agentId}}">
+              电话：{{agent.user.phone || '400-7111-011'}}
+              <view>
+                <text wx:if="{{agent.user.name}}">
+                  {{agent.user.name}}：
+                </text>{{agent.user.cellphone}}
+              </view>
             </view>
           </ui-col>
         </ui-row>
       </ui-row-list>
     </view>
-    
+
     <view wx:if="{{current1 === 1}}" style="font-size:13px;color:#595959;padding:15px;line-height:3">
       <view>登录网址：seo.jihui88.com</view>
       温馨提示：登录账号和密码同机汇网后台
@@ -96,7 +104,14 @@ export default {
       { text: '综合指数', text1: '150以内', text2: '150以内', text3: '150以内' },
       { text: '完成时间', text1: '网站确认后3个月以内', text2: '网站确认后3个月以内', text3: '网站确认后3个月以内' },
       { text: '合同金额', text1: '14800', text2: '19800', text3: '23800' }
-    ]
+    ],
+    agent: {}
+  },
+  onLoad () {
+    // 经销商
+    this.setData({
+      agent: getApp().globalData.agent
+    })
   },
   //横屏竖屏切换
   handleChange (e) {

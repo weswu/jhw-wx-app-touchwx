@@ -16,13 +16,21 @@ export default {
     src: ''
   },
   onLoad (option) {
+    let agent = getApp().globalData.agent
+    let src = ''
     if (option.itemId) {
-      option.src = option.src + '?itemId=' + option.itemId + '&isMobile=true'
+      src = option.src + '?itemId=' + option.itemId + '&isMobile=true'
     } else if (option.src.indexOf('pc.jihui88.com') > -1){
-      option.src = option.src + '?isMobile=true'
+      if (agent.agentId) {
+        src = 'http://pc.' + agent.bindUrl + option.src.split('pc.jihui88.com')[1] + '?isMobile=true'
+      } else {
+        src = option.src + '?isMobile=true'
+      }
+    } else {
+      src = option.src
     }
     this.setData({
-      src: 'https://www.jihui88.com/webview.html?src=' + option.src
+      src: 'https://www.jihui88.com/webview.html?src=' + src
     })
   }
 }

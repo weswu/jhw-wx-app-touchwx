@@ -114,9 +114,9 @@ const recruitDetail = (params) => http(params, host + 'job/detail' + (params.id 
 
 /***************** 新闻*产品 ************/
 const news = (params) => http(params, host + 'news/list')
-const newsDetail = (params) => http(params, host + 'news/detail/' + params.id)
+const newsDetail = (params) => http(params, host + 'news/detail' + (params.id ? '/' + params.id : ''))
 const product = (params) => http(params, host + 'product/list')
-const productDetail = (params) => http(params, host + 'product/detail/' + params.id)
+const productDetail = (params) => http(params, host + 'product/detail' + (params.id ? '/' + params.id : ''))
 const exportProductsToExcel = (params) => http(params, host + 'product/exportProductsToExcel')
 const exportProductImg = (params) => http(params, host + 'product/exportProductImg')
 const downloadProductExcel = (params) => http(params, host + 'product/downloadProductExcel')
@@ -199,7 +199,7 @@ const newsCategoryChild = (params) => http(params, netHost + 'jihuiapi/news/cate
 const newsSingle = (params) => http(params, netHost + 'jihuiapi/news/single/' + params.id)
 const listLayoutByTagsJsonp = (params) => http(params, pcHost + 'layout/listLayoutByTagsJsonp')
 const listTagCategory = (params) => http(params, pcHost + 'tag/listTagCategory')
-const gonggao = (params) => http(params, pcHost + 'comm/layout/getBindLayoutJsonp')
+const gonggao = (params) => http(params, pcHost + 'comm/layout/getBindLayout')
 const agent = (params) => http(params, host + 'agent/config/getConfigByDomain')
 const wxappbanner = (params) => http(params, wxHost + 'comm/album/wxappbanner')
 

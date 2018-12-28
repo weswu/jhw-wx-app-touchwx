@@ -71,7 +71,6 @@ export default {
       list: this.data['list'+(e.current || 0)],
       title: e.title || '企业应用'
     })
-
   },
   tel (e) {
     wx.makePhoneCall({

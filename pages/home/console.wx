@@ -20,8 +20,8 @@
             </ui-col>
           </ui-row>
           <ui-row border-bottom height="85">
-            <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this" wx:if="{{!agent.agentId || index === 0}}">
-              <navigator url="{{item.url}}" class="content">
+            <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this">
+              <navigator url="{{item.url}}" class="content" wx:if="{{!agent.agentId || index === 0}}">
                 <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view>
               </navigator>

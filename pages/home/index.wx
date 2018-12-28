@@ -74,7 +74,7 @@
       </ui-col>
     </ui-row>
     <view class="hr"></view>
-    <view class="sample_content">
+    <view class="sample_content" wx:if="{{gonggaoList.length>0}}">
      <ui-row height="40">
         <ui-col span="0"></ui-col>
         <ui-col span="2" width="45" vertical-align="middle">
@@ -95,7 +95,7 @@
         </ui-col>
       </ui-row>
     </view>
-    <view class="hr"></view>
+    <view class="hr" wx:if="{{gonggaoList.length>0}}"></view>
 
     <!-- 服务市场 -->
     <ui-row height="40" url="caseApp?current=1&title=服务市场" hover-class="none">
@@ -243,8 +243,6 @@ export default {
         integralCount: res.integralCount
       })
     })
-    this.hot()
-    this.getGonggao()
     // 经销商
     let agent = getApp().globalData.agent
     this.setData({
@@ -253,6 +251,8 @@ export default {
     if (agent.agentId) {
       this.getBanner()
     }
+    this.getGonggao()
+    this.getHot()
   },
   // 扫一扫
   saoyisao () {
@@ -346,13 +346,13 @@ export default {
       url: '/pages/home/caseProduct'
     })
   },
-  hot () {
+  getHot () {
     api.newsCategoryChild({
       data: {
         page: 1,
         per_page: 8,
         content: 1,
-        category_id: parseInt(agent.questionCateId.substring(9))
+        category_id: parseInt(this.data.agent.questionCateId.substring(9))
       },
       id: this.data.agent.user.enterpriseId
     }).then(res => {
@@ -365,14 +365,14 @@ export default {
     api.gonggao({
       data: {
         page: 1,
-        pageSize: 8,
-        callback: 'callback'
+        pageSize: 9,
+        agentId: this.data.agent.agentId
       }
     }).then(res => {
-      let data = JSON.parse(res.substring(9, res.length-1))
+      let data = res.attributes.data
       let list = []
       let row = []
-      data.attributes.data.forEach((item, index) => {
+      data.forEach((item, index) => {
         row.push({
           title: '恭喜' + item.enterpriseName + '网站上线！'
         })

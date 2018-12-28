@@ -45,9 +45,7 @@ export default {
     authorize: false,
     goLogin: false,
     // 经销商
-    agent: {
-      loginLogo3: 'http://www.jihui88.com/member/static/images/f-logo.png'
-    },
+    agent: {},
     domain: ''
   },
   onReady () {
@@ -63,6 +61,10 @@ export default {
             domain: res.extConfig.domain
           })
           that.getAgent()
+        } else {
+          that.setData({
+            'agent.loginLogo3': 'http://www.jihui88.com/member/static/images/f-logo.png'
+          })
         }
       }
     })
@@ -130,7 +132,11 @@ export default {
             video = JSON.parse(data.manageVideoLink)
           }
           data = Object.assign(data, video)
-          data.loginLogo3 = 'http://img.jihui88.com/' + data.loginLogo3
+          if (data.loginLogo3) {
+            data.loginLogo3 = 'http://img.jihui88.com/' + data.loginLogo3
+          } else {
+            data.loginLogo3 = 'http://www.jihui88.com/member/static/images/f-logo.png'
+          }
           data.wxappLogo = 'http://img.jihui88.com/' + data.wxappLogo
           getApp().globalData.agent = data
           that.setData({
@@ -161,7 +167,7 @@ export default {
     }
     wx.setStorageSync('username', this.data.detail.username)
     wx.setStorageSync('password', this.data.detail.password)
-    if (this.data.goLogin) {
+    if (this.data.goLogin && wx.getStorageSync('skey')) {
       this.accountLogin()
     } else {
       this.weixin('account')
