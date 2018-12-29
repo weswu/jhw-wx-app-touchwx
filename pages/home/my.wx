@@ -159,9 +159,13 @@ export default{
       accountInfo: getApp().globalData.accountInfo,
       userInfo: getApp().globalData.userInfo
     })
-    wx.showShareMenu({
-     withShareTicket: !!getApp().globalData.agent.agentId
-    })
+    if (!getApp().globalData.agent.agentId) {
+      wx.showShareMenu({
+        withShareTicket: true
+      })
+    } else {
+      wx.hideShareMenu()
+    }
   },
   onShareAppMessage () {
     let name = wx.getStorageSync('nickName') || this.data.user.username

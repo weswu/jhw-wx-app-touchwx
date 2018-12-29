@@ -7,8 +7,9 @@
       </view>
     </cc-header>
     <!-- head -->
+    <view style="position:fixed;left:0;top:{{NAV_HEIGHT}}px;background:#fff;width:100%;z-index:1;height:120rpx;"></view>
     <cc-search value="{{params.name}}" type="product" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
-    <cc-lan lan="{{true}}" top="99" params="{{params}}" type="product" bindchange="lanChange" bindsort="sortChange">
+    <cc-lan lan="{{true}}" top="100" params="{{params}}" type="product" bindchange="lanChange" bindsort="sortChange">
       <i class="iconfont icon-{{chenlie === '0' ? 'danhangchenlie' : 'duohangchenlie'}}" bindtap="chenlie"></i>
     </cc-lan>
 
@@ -189,6 +190,7 @@ export default {
   },
   data: {
     width:wx.WIN_WIDTH,
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     title: '产品管理',
     list: [],
     params: {

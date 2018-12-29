@@ -16,9 +16,9 @@
 
     <ui-row-list>
       <ui-row class="row-border">
-        <ui-col border-right align="center" span="6" vertical-align="middle" wx:for="{{list}}" wx:key="{{index}}">
+        <ui-col border-right align="center" span="6" vertical-align="middle" wx:for="{{list}}" wx:key="{{index}}" bindtap="view">
           <view class="content">
-            <image src="http://dfwjjingtai.b0.upaiyun.com/{{item.pic}}" style="width:300rpx;height:200rpx;" data-id="{{item.id}}" bindtap="view"></image>
+            <image src="http://dfwjjingtai.b0.upaiyun.com/{{item.pic}}" style="width:300rpx;height:200rpx;" data-id="{{item.id}}"></image>
             <view class="p">{{item.seoTitle}}</view>
             <view class="desc">{{item.tagName}}</view>
             <view class="desc">网站编号：{{item.id}}</view>

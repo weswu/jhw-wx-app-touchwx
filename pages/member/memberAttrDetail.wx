@@ -22,7 +22,7 @@
         </ui-col>
       </ui-row>
 
-      <ui-row height="104r" wx:for="{{detail.items}}" wx:key="*this" wx:if="{{detail.attributeType === 'select' || detail.attributeType === 'checkbox'}}">
+      <ui-row height="104r" wx:for="{{detail.items}}" wx:key="{{index}}" wx:if="{{detail.attributeType === 'select' || detail.attributeType === 'checkbox'}}">
         <ui-col width="60" vertical-align="middle">
           选项{{index+1}}
         </ui-col>

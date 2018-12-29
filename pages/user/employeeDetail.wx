@@ -194,10 +194,8 @@ export default {
     }).then(res => {
       Tips.loaded()
       if (res.success) {
+        Utils.prevAdd(detail.memberId, res.attributes.data)
         Tips.success('保存成功')
-        var pages = getCurrentPages()
-        var prevPage = pages[pages.length - 2];  //上个页面
-        prevPage.get()
       } else {
         Tips.error(res.msg)
       }

@@ -88,17 +88,20 @@ export default {
     isday: false
   },
   ready () {
-    let date = Utils.formatTime(this.data.value || new Date().getTime(), this.data.format).split('-')
-    let val = Utils.formatTime(this.data.value, this.data.format) || '请选择'
-    this.initDay(date[0], date[1])
+    let value = (this.data.value || new Date().getTime())
+    let date = Utils.formatTime(value, this.data.format).split(' ')
+    let date1 = date[0].split('-')
+    let date2 = date[1].split(':')
+    let val = Utils.formatTime(value, this.data.format) || '请选择'
+    this.initDay(date1[0], date1[1])
     let year = 0
     years.forEach((item, index) => {
-      if (item === parseInt(date[0])) {
+      if (item === parseInt(date1[0])) {
         year = index
       }
     })
     this.setData({
-      time: [year, date[1]-1, date[2]-1, date[3], date[4], date[5]],
+      time: [year, date1[1]-1, date1[2]-1, date2[0], date2[1], date2[2]],
       val: val
     })
     this.triggerEvent('change', val)

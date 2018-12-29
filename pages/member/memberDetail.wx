@@ -90,7 +90,7 @@
 
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="104r" wx:for="{{detail.items}}" wx:key="*this">
+      <ui-row height="104r" wx:for="{{detail.items}}" wx:key="{{index}}" wx:if="{{item.isEnabled === '01'}}">
         <ui-col width="60" vertical-align="middle">
           {{item.name}}
         </ui-col>
@@ -343,7 +343,7 @@ export default {
           let val = ''
           item.value.forEach(row => {
             if (row.checked === 'true') {
-              val = val ? (',' + item.value)  : item.value
+              val = val ? (val + ',' + row.value) : row.value
             }
           })
           detail[item.attId] = val
@@ -368,6 +368,7 @@ export default {
     }).then(res => {
       Tips.loaded()
       if (res.success) {
+        Utils.prevAdd(detail.memberId, res.attributes.data)
         Tips.success('保存成功')
       } else {
         Tips.error(res.msg)
@@ -385,4 +386,3 @@ checkbox{
   transform:scale(.7);
 }
 </style>
-

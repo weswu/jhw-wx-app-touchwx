@@ -35,6 +35,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
@@ -125,10 +126,8 @@ export default {
     }).then(res => {
       Tips.loaded()
       if (res.success) {
+        Utils.prevAdd(detail.certificateId, res.attributes.data)
         Tips.success('保存成功')
-        var pages = getCurrentPages()
-        var prevPage = pages[pages.length - 2];  //上个页面
-        prevPage.get()
       } else {
         Tips.error(res.msg)
       }

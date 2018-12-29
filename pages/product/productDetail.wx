@@ -291,10 +291,14 @@ export default {
           priceState: '00',
           limitState: '00',
           integralState: '00',
+          publishTime: '',
+          unpublishTime: '',
+          taglist: '',
           attrState: '00', // 关闭属性价格
-          attrItems: [], // 属性内容
+          attrItems: [], // 属性价格
+          productAttributeMapStore: [],
           customAttrMapStore: [],
-          productAttributeMapStore: []
+          customAttr: [] // 定制规格
         }
       })
       let cateList = getApp().globalData.productCategory[0]
@@ -431,15 +435,16 @@ export default {
       return;
     }
     var ctx = this
-    this.detail.purchaseNum = this.detail.purchaseNum ? (this.detail.purchaseNum + '') : ''
+    var detail = this.data.detail
+    detail.purchaseNum = detail.purchaseNum ? (detail.purchaseNum + '') : ''
     // 图片
     if (this.data.imgList.length === 0) return Tips.info('请上传图片')
-    this.data.detail.picPath = this.data.imgList[0].src
+    detail.picPath = this.data.imgList[0].src
     let imageListStore = []
     this.data.imgList.forEach((item, index) => {
       if (index === 0) {
-        ctx.data.detail.photo = item.src
-        ctx.data.detail.photoId = item.id
+        detail.photo = item.src
+        detail.photoId = item.id
       } else {
         imageListStore.push({
           id: item.id,
@@ -447,20 +452,21 @@ export default {
         })
       }
     })
-    this.data.detail.photo2 = JSON.stringify(imageListStore)
+    detail.photo2 = JSON.stringify(imageListStore)
 
     let data = {
-      model: JSON.stringify(this.data.detail),
-      _method: this.data.detail.productId ? 'put' : 'post',
+      model: JSON.stringify(detail),
+      _method: detail.productId ? 'put' : 'post',
     }
     Tips.loading()
     api.productDetail({
       data: data,
       method: 'post',
-      id: this.data.detail.productId
+      id: detail.productId
     }).then(res => {
       Tips.loaded()
       if (res.success) {
+        Utils.prevAdd(detail.productId, res.attributes.data)
         Tips.success('保存成功')
       } else {
         Tips.error(res.msg)

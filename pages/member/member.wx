@@ -10,10 +10,10 @@
     <cc-search value="{{params.name}}" type="member" list="{{cateList}}" bindinput="search" bindchange="cateChange">
       <navigator slot="right" url="memberDetail" class="iconfont icon-jia1" hover-class="none"></navigator>
     </cc-search>
-    
+
     <!-- body -->
     <ui-row-list>
-      <ui-row height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="114r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle" align="center" width="123r" data-index="{{index}}" bindtap="toggle">
           <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
@@ -35,7 +35,7 @@
         </ui-col>
       </ui-row>
     </ui-fixed-view>
-    
+
   </view>
 </template>
 
@@ -64,7 +64,7 @@ export default {
     cateList: [],
     selected: false, //选中状态
     ids: '', // 选中项
-    toggle: false // 全选切换状态 
+    toggle: false // 全选切换状态
   },
   onLoad () {
     this.get()

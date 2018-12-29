@@ -156,10 +156,7 @@ export default {
     }
   },
   data: {
-    detail:{
-      addTime: new Date(),
-      topnews: '00'
-    },
+    detail: {},
     name: '',
     categoryList: [],
     // 预览
@@ -183,6 +180,9 @@ export default {
       })
       this.get()
     } else {
+      this.setData({
+        topnews: '00'
+      })
       let cateList = getApp().globalData.newsCategory[0]
       if (cateList) {
         this.setData({
@@ -304,6 +304,7 @@ export default {
     }).then(res => {
       Tips.loaded()
       if (res.success) {
+        Utils.prevAdd(this.data.detail.newsId, res.attributes.data)
         Tips.success('保存成功')
       } else {
         Tips.error(res.msg)

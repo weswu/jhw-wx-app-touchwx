@@ -7,12 +7,13 @@
       </view>
     </cc-header>
     <!-- head -->
+    <view style="position:fixed;left:0;top:{{NAV_HEIGHT}}px;background:#fff;width:100%;z-index:1;height:120rpx;"></view>
     <cc-search value="{{params.title}}" type="news" list="{{cateList}}" bindinput="search" bindchange="cateChange"></cc-search>
-    <cc-lan lan="{{true}}" top="99" params="{{params}}" type="news" bindchange="lanChange" bindsort="sortChange"></cc-lan>
-    
+    <cc-lan lan="{{true}}" top="100" params="{{params}}" type="news" bindchange="lanChange" bindsort="sortChange"></cc-lan>
+
     <!-- body -->
     <ui-row-list>
-      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle" align="center" width="123r" data-index="{{index}}" bindtap="toggle">
           <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
@@ -48,7 +49,7 @@
         </ui-col>
       </ui-row>
     </ui-fixed-view>
-    
+
     <view style="height:70px" wx:if="{{selected}}"></view>
     <ui-mask show="{{showMask}}" hide-delay="500">
       <view class="mask_btn">
@@ -77,6 +78,7 @@ export default {
     }
   },
   data: {
+    NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     title: '新闻管理',
     list: [],
     params: {
@@ -91,7 +93,7 @@ export default {
     cateList: [],
     selected: false, //选中状态
     ids: '', // 选中项
-    toggle: false, // 全选切换状态 
+    toggle: false, // 全选切换状态
     showMask: false // 更多
   },
   onLoad () {

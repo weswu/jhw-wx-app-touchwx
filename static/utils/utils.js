@@ -27,7 +27,6 @@ const del = async (that, e, http, tip, data) => {
   }
 };
 
-
 /*
  * @author: wes
  * @date: 2018-1-17
@@ -39,6 +38,7 @@ const addAll = (a, b) => {
     a.push(b[i])
   }
 }
+
 /*
  * @author: wes
  * @date: 2018-1-17
@@ -79,6 +79,7 @@ const price = (v) => {
   f = Math.round(v * 100) / 100
   return f
 }
+
 /*
  * @author: wes
  * @date: 2017-7-28
@@ -161,7 +162,11 @@ const loadMore = (that) => {
   that.get()
 }
 
-// 批量操作
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 批量操作-删除
+*/
 const batchDel = async (that, type) => {
   if (!that.data.ids) {
     return Tips.toast('未选择')
@@ -180,10 +185,17 @@ const batchDel = async (that, type) => {
         selected: false
       })
       that.get()
+    } else {
+      Tips.error(res.msg)
     }
   })
 }
 
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 批量操作-移动
+*/
 const batchMove = (that, type, categoryId) => {
   if (!that.data.ids) {
     return Tips.toast('未选择')
@@ -209,10 +221,17 @@ const batchMove = (that, type, categoryId) => {
       that.setData({
         selected: false
       })
+    } else {
+      Tips.error(res.msg)
     }
   })
 }
 
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 批量操作-显示隐藏
+*/
 const batchDisplay = (that, url, data, display) => {
   if (!that.data.ids) {
     return Tips.toast('未选择')
@@ -230,10 +249,17 @@ const batchDisplay = (that, url, data, display) => {
         selected: false
       })
       that.get()
+    } else {
+      Tips.error(res.msg)
     }
   })
 }
 
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 批量操作-复制
+*/
 const batchCopy = (that, url, data) => {
   if (!that.data.ids) {
     return Tips.toast('未选择')
@@ -251,11 +277,17 @@ const batchCopy = (that, url, data) => {
         selected: false
       })
       that.get()
+    } else {
+      Tips.error(res.msg)
     }
   })
 }
 
-
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 上传图片
+*/
 const upload = (option, number) => {
   var that = this;
   option = Object.assign({
@@ -296,11 +328,33 @@ const upload = (option, number) => {
   })
 }
 
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 操作上个页面
+*/
 const prev = () => {
   var pages = getCurrentPages()
   return pages[pages.length - 2];  //上个页面
 }
 
+const prevAdd = (id, data) => {
+  var pages = getCurrentPages()
+  var prevPage = pages[pages.length - 2];
+  if (!id) {
+    let list = prevPage.data.list
+    list.splice(0, 0, data)
+    prevPage.setData({
+      list: list
+    })
+  }
+}
+
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 列表左移功能
+*/
 const switcher = (that, e) => {
   let index = e.currentTarget.dataset.index;
   if (that.data.el !== index) {
@@ -314,7 +368,12 @@ const switcher = (that, e) => {
     that.data.el = index;
   }
 }
-// 分类折叠
+
+/*
+ * @author: wes
+ * @date: 2018-8-8
+ * @desc: 分类折叠
+*/
 const fold = (list, e) => {
   let data = e.currentTarget.dataset.item
   data.expand = !data.expand
@@ -353,6 +412,7 @@ module.exports = {
   batchMove,
   upload,
   prev,
+  prevAdd,
   switcher,
   fold
 };

@@ -1,10 +1,10 @@
 <template>
   <view>
     <cc-header title="会员属性配置"></cc-header>
-    
+
     <ui-row-list border-left-indent>
       <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
-        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="{{index}}">
         <view slot="content">
           <ui-row height="65" class="j_row_list" border-bottom>
             <ui-col vertical-align="middle" align="left">
@@ -79,7 +79,7 @@ export default {
       this.setData({
         list:this.data.list
       })
-      this.data.el = index  
+      this.data.el = index
     }
   },
   detail (e) {
