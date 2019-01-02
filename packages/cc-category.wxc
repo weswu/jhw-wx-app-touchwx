@@ -17,9 +17,9 @@
             <ui-col class="text {{item.categoryId === categoryId ? 'active' : ''}}" vertical-align="middle" align="left" space-left="{{item.grade === '2' ? '20' : item.grade === '3' ? '40' : ''}}" data-item="{{item}}" bindtap="cateChange">
               {{item.name}}
             </ui-col>
-            <ui-col vertical-align="middle" align="right" width="40" space-right="15">
-              <i class="iconfont icon-jianquminus25" wx:if="{{item.isroot && item.expand}}" data-item="{{item}}" bindtap="changeCateList"></i>
-              <i class="iconfont icon-jia1" wx:if="{{item.isroot && !item.expand}}" data-item="{{item}}" bindtap="changeCateList"></i>
+            <ui-col vertical-align="middle" align="right" width="40" space-right="15" data-item="{{item}}" bindtap="changeCateList">
+              <i class="iconfont icon-jianquminus25" wx:if="{{item.isroot && item.expand}}"></i>
+              <i class="iconfont icon-jia1" wx:if="{{item.isroot && !item.expand}}"></i>
             </ui-col>
           </ui-row>
         </ui-row-list>

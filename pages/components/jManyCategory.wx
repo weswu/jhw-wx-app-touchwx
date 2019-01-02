@@ -3,7 +3,7 @@
     <cc-header title="多分类选择"></cc-header>
     <view class="hr"></view>
     <ui-row-list border-left-indent>
-      <ui-row height="104r" wx:for="{{list}}" wx:key="*this">
+      <ui-row height="104r" wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle">
           <cc-category type="{{type}}" categoryId="{{item}}" categoryList="{{categoryList}}" data-index="{{index}}" bindchange="change"></cc-category>
         </ui-col>

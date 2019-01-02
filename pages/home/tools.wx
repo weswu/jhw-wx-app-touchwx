@@ -6,7 +6,7 @@
 
     <checkbox-group bindchange="checkboxChange">
       <ui-row-list>
-      <view wx:for="{{list}}" wx:key="*this" wx:for-item="row">
+      <view wx:for="{{list}}" wx:key="{{index}}" wx:for-item="row">
         <ui-row height="40">
           <ui-col width="20" vertical-align="middle"></ui-col>
           <ui-col class="text" vertical-align="middle">

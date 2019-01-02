@@ -10,7 +10,7 @@
     </cc-lan>
 
     <ui-row-list border-left-indent>
-      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle">
           <view style="width: 100%;">
             <view class="name">{{item.name}}</view>
@@ -26,7 +26,7 @@
     <ui-popup cropout show="{{show }}" position="top" top="{{ top }}" height="{{ popupHeight }}" mask-style="{{ { top: top +'px' } }}" bindhide="popHide" bindshow="popShow">
       <view class="top_pop">
         <ui-row-list border-left-indent>
-          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="*this" data-index="{{index}}" bindtap="change">
+          <ui-row height="43" border-bottom wx:for="{{category}}" wx:key="{{index}}" data-index="{{index}}" bindtap="change">
             <ui-col vertical-align="middle" class="{{index === active ? 'active' : ''}}">
               {{item.text}}
             </ui-col>

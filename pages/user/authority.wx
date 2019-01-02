@@ -9,7 +9,7 @@
     <checkbox-group bindchange="checkboxChange">
       <ui-row-list>
         <ui-row border-top border-bottom class="row-border">
-          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list}}" wx:key="*this">
+          <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list}}" wx:key="{{index}}">
             <label>
               <checkbox value="{{item.userprivilegeId}}" checked="{{item._checked}}"></checkbox>
               <view wx:if="{{item.sort === 4}}">网站界面管理</view>

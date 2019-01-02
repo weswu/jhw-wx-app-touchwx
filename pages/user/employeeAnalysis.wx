@@ -25,8 +25,9 @@
       </ui-row-list>
     </ui-fixed-view>
     <view style="height:200rpx;"></view>
-
-    <ui-row-list wx:for="{{list}}" wx:key="*this" border-left-indent>
+    <view class="hr"></view>
+    <view style="margin: 15px auto; color:#999; text-align:center;" wx:if="{{list.length===0}}">{{tip}}</view>
+    <ui-row-list wx:for="{{list}}" wx:key="{{index}}" border-left-indent>
       <ui-row class="text" height="110r" border-bottom>
         <ui-col vertical-align="middle" align="left">
           {{index+1}}、{{item.name}}
@@ -71,22 +72,24 @@ export default {
   data: {
     list: [],
     params: {
-      startDate: '',
+      startDate: '2015-05-05',
       endDate: ''
     },
     count: 0,
-    height: 140/750*wx.WIN_WIDTH
-  }, 
-  onLoad () {
-    this.get()
+    height: 140/750*wx.WIN_WIDTH,
+    tip: '加载中'
   },
   get () {
+    this.setData({
+      tip: '加载中'
+    })
     api.employeeAnalysis({
       data: this.data.params
     }).then(res => {
       if (res.success) {
         this.setData({
-          list: res.attributes.data
+          list: res.attributes.data,
+          tip: ''
         })
       }
     })
@@ -95,14 +98,16 @@ export default {
   dateChange (e) {
     var field = 'params.startDate'
     this.setData({
-      [field]: e.detail
+      [field]: e.detail,
+      list: []
     })
-    this.get()
+    if (e.detail !== '2015-05-05') this.get()
   },
   dateChange2 (e) {
     var field = 'params.endDate'
     this.setData({
-      [field]: e.detail
+      [field]: e.detail,
+      list: []
     })
     this.get()
   }

@@ -3,7 +3,7 @@
     <cc-header title="{{title}}"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row url="{{item.url}}" height="102r" border-bottom hover-class="none"  wx:for="{{list}}" wx:key="*this"
+      <ui-row url="{{item.url}}" height="102r" border-bottom hover-class="none" wx:for="{{list}}" wx:key="{{index}}"
         wx:if="{{!agent.agentId || (agent.agentId && !item.agent)}}">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont {{item.icon}}"></i>

@@ -10,7 +10,7 @@
     <cc-lan lan="{{true}}" bindchange="get" wx:if="{{type !== 'tag'}}"></cc-lan>
 
     <ui-row-list class="category-list">
-      <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="*this" wx:if="{{!item.hidden}}">
+      <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="{{index}}" wx:if="{{!item.hidden}}">
         <ui-col vertical-align="middle" align="center" width="123r" data-index="{{index}}" bindtap="toggle">
           <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
           <icon type="success" size="18" wx:if="{{item._checked}}"></icon>
@@ -72,7 +72,7 @@
         </view>
       </view>
       <view class="add-category">
-        <cc-category type="{{type}}" categoryList="{{list}}" wx:key="*this" bindchange="batchMove2">
+        <cc-category type="{{type}}" categoryList="{{list}}" wx:key="{{index}}" bindchange="batchMove2">
           <view style="display:inline-block">上级分类：</view>
         </cc-category>
       </view>
@@ -104,7 +104,7 @@ export default {
     type: 'product',
     selected: false, //选中状态
     ids: '', // 选中项
-    toggle: false, // 全选切换状态 
+    toggle: false, // 全选切换状态
     showMask: false // 更多
   },
   onLoad (e) {
@@ -123,7 +123,7 @@ export default {
     if (this.data.type === 'product') {
       getApp().getProductCategory(res => {
         that.setList(res)
-      }) 
+      })
     } else if (this.data.type === 'news') {
       getApp().getNewsCategory(res => {
         that.setList(res)
@@ -141,7 +141,7 @@ export default {
     })
     this.setData({
       list: res
-    }) 
+    })
   },
   item (e) {
     let item = e.currentTarget.dataset.item
@@ -258,7 +258,9 @@ export default {
   },
   // 批量
   batchMove (e) {
-    Utils.batchMove(this, 'category' + this.data.type, e.detail)
+    Utils.batchMove(this, 'category/' + this.data.type, e.detail).then(res => {
+      this.get()
+    })
   },
   async batchDel () {
     if (!this.data.ids) {

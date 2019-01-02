@@ -83,7 +83,7 @@ export default {
       type: String,
       value: ""
     },
-    id: {
+    albumId: {
       type: String,
       value: "all"
     },
@@ -130,7 +130,7 @@ export default {
           // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
           wx.showLoading({ title: '正在上传', mask: true})
           wx.uploadFile({
-            url: 'https://www.jihui88.com/commonutil/uploadUtil2?username=' + getApp().globalData.user.username + '&replace=00&attId=&id=' + that.data.id,
+            url: 'https://www.jihui88.com/commonutil/uploadUtil2?username=' + getApp().globalData.user.username + '&replace=00&attId=&id=' + that.data.albumId,
             filePath: res.tempFilePaths[0],//临时路径
             name: 'Filedata',
             formData: {

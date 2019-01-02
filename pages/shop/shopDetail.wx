@@ -33,7 +33,7 @@
           商品信息
         </ui-col>
       </ui-row>
-      <ui-row height="200r" wx:for="{{detail.orderItemSet}}" wx:key="*this">
+      <ui-row height="200r" wx:for="{{detail.orderItemSet}}" wx:key="{{index}}">
         <ui-col width="200r" vertical-align="middle">
           <image mode="aspectFit" src="http://img.jihui88.com/{{item.product.picPath}}"/>
         </ui-col>

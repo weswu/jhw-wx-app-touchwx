@@ -3,7 +3,7 @@
     <cc-header title="关键词管理" count="{{count}}"></cc-header>
 
     <ui-row-list border-left-indent>
-      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col class="text" vertical-align="middle">
           {{item.keywords}}
         </ui-col>

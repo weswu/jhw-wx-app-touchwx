@@ -4,7 +4,7 @@
 
     <ui-row-list border-left-indent>
       <ui-row height="102r" border-bottom hover-class="none" data-item="{{item}}" bindtap="href"
-        wx:for="{{list[active].children}}" wx:key="*this" wx:if="{{item.text !== 'text'}}">
+        wx:for="{{list[active].children}}" wx:key="{{index}}" wx:if="{{item.text !== 'text'}}">
         <ui-col width="40" vertical-align="middle" align="center" space-right="6">
           <i class="iconfont {{item.icon}}"></i>
         </ui-col>

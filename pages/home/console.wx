@@ -20,7 +20,7 @@
             </ui-col>
           </ui-row>
           <ui-row border-bottom height="85">
-            <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="*this">
+            <ui-col border-right align="center" vertical-align="middle" wx:for="{{product}}" wx:key="{{index}}">
               <navigator url="{{item.url}}" class="content" wx:if="{{!agent.agentId || index === 0}}">
                 <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view>
@@ -43,7 +43,7 @@
             </ui-col>
           </ui-row>
           <ui-row border-bottom height="85">
-            <ui-col border-right align="center" vertical-align="middle" wx:for="{{orders}}" wx:key="*this">
+            <ui-col border-right align="center" vertical-align="middle" wx:for="{{orders}}" wx:key="{{index}}">
               <navigator url="{{item.url}}" class="content">
                 <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view>
@@ -67,7 +67,7 @@
             </ui-col>
           </ui-row>
           <ui-row border-bottom class="row-border">
-            <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{tools}}" wx:key="*this">
+            <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{tools}}" wx:key="{{index}}">
               <view class="content" wx:if="{{!item.editting || item.icon === 'icon-jia'}}" data-item="{{item}}" bindtap="href">
                 <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view>
@@ -92,7 +92,7 @@
             </ui-col>
           </ui-row>
           <ui-row border-bottom class="row-border">
-            <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{dataManageCenter}}" wx:key="*this">
+            <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{dataManageCenter}}" wx:key="{{index}}">
               <navigator url="dataManagement?active={{index}}" class="content">
                 <i class="iconfont {{item.icon}}"></i>
                 <view class="p">{{item.text}}</view>

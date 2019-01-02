@@ -36,7 +36,7 @@
 
     <!-- body -->
     <ui-row-list>
-      <ui-row height="258r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="258r" border-bottom wx:for="{{list}}" wx:for-index="idx" wx:key="{{idx}}">
         <ui-col vertical-align="middle" align="center" width="90r" data-index="{{index}}" bindtap="toggle"
           wx:if="{{item.orderStatus === 'invalid' || item.orderStatus === 'cancel'}}">
           <icon type="circle" size="18" wx:if="{{!item._checked}}"></icon>
@@ -54,9 +54,9 @@
             <view class="price"> ￥{{item.totalAmount || 0.00}} </view>
             <view class="status">
               <!-- 订单状态 -->
-              <text style="background:{{row.style}}" wx:if="{{item.orderStatus === row.value}}" wx:for="{{orderStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
-              <text style="background:{{row.style}}" wx:if="{{item.paymentStatus === row.value}}" wx:for="{{paymentStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
-              <text style="background:{{row.style}}" wx:if="{{item.shippingStatus === row.value}}" wx:for="{{shippingStatus}}" wx:key="*this" wx:for-item="row">{{row.text}}</text>
+              <text style="background:{{row.style}}" wx:if="{{item.orderStatus === row.value}}" wx:for="{{orderStatus}}" wx:key="{{index}}" wx:for-item="row">{{row.text}}</text>
+              <text style="background:{{row.style}}" wx:if="{{item.paymentStatus === row.value}}" wx:for="{{paymentStatus}}" wx:key="{{index}}" wx:for-item="row">{{row.text}}</text>
+              <text style="background:{{row.style}}" wx:if="{{item.shippingStatus === row.value}}" wx:for="{{shippingStatus}}" wx:key="{{index}}" wx:for-item="row">{{row.text}}</text>
             </view>
           </view>
          </ui-col>

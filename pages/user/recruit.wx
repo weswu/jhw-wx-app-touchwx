@@ -5,7 +5,7 @@
 
     <ui-row-list border-left-indent>
       <ui-swipe-out height="{{height}}" data-index="{{index}}" operate-width="150"
-        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="{{index}}">
         <view slot="content">
           <ui-row height="80r" class="j_row_list" data-item="{{item}}" bindtap="item">
             <ui-col class="text" vertical-align="middle">

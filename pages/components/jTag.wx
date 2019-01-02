@@ -4,7 +4,7 @@
     <view style="height:50px"></view>
 
     <view style="padding-left:15px;">
-      <view class="j_tag_item" wx:for="{{list}}" wx:key="*this" wx:if="{{item._checked}}" data-id="{{item.tagId}}" bindtap="del">{{item.name}}</view>
+      <view class="j_tag_item" wx:for="{{list}}" wx:key="{{index}}" wx:if="{{item._checked}}" data-id="{{item.tagId}}" bindtap="del">{{item.name}}</view>
     </view>
 
     <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT + 50 }}" height="{{popupHeight}}" mask-style="{{ { top: popup_NAV_HEIGHT +50+'px' } }}" bindhide="popHide" bindshow="popShow">

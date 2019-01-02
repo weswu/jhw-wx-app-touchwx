@@ -2,7 +2,7 @@
   <view>
     <cc-header title="Tag标签管理"></cc-header>
     <ui-swipe-out height="65" data-index="{{index}}" operate-width="150"
-      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="{{index}}">
       <view slot="content">
         <ui-row height="65" class="j_row_list" border-bottom>
           <ui-col vertical-align="middle" align="left" space-left="15">
@@ -36,7 +36,7 @@
           <input type="text" value="{{detail.name}}" bindinput="nameInput" placeholder="请输入标签名称"/>
         </view>
         <view class="input" style="padding-left: 10px;">
-          <cc-category id="category" type="{{'tag'}}" categoryList="{{tagList}}" categoryId="detail.categoryId" wx:key="*this" bindchange="cateChange">
+          <cc-category id="category" type="{{'tag'}}" categoryList="{{tagList}}" categoryId="detail.categoryId" wx:key="{{index}}" bindchange="cateChange">
             <view style="display:inline-block">上级分类：</view>
           </cc-category>
         </view>

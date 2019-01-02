@@ -22,7 +22,7 @@
     <view style="height:100rpx"></view>
 
     <ui-row-list border-left-indent>
-      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle">
           <view class="text">{{ item.name }}</view>
           <view class="desc">{{ item.addTime }}</view>

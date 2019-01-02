@@ -11,7 +11,7 @@
     </view>
 
     <ui-row-list border-left-indent>
-      <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="102r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col class="text" vertical-align="middle">
           {{item.name}}
         </ui-col>

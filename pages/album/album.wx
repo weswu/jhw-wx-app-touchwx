@@ -9,15 +9,15 @@
     </cc-header>
     <cc-search type="album"
       value="{{params.filename}}"
-      id="{{albumId}}"
+      albumId="{{albumId}}"
       bindinput="search"
       bindchange="get">
         <i slot="add" class="iconfont icon-folder-add" bindtap="add"></i>
         <i slot="sort" class="iconfont icon-paixu {{show ? 'active' : ''}}" bindtap="openPopup"></i>
-      </cc-search>
-
+    </cc-search>
+    
     <ui-row-list class="list-content">
-      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="*this" wx:if="{{item.parentId === albumId && item.search}}">
+      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom wx:for="{{filelist}}" wx:key="{{index}}" wx:if="{{item.parentId === albumId && item.search}}">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <i class="iconfont icon-file"></i>
         </ui-col>
@@ -30,11 +30,11 @@
           <i class="iconfont icon-gou"></i>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked" wx:if="{{!item.hideTime}}">
-          <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="10" wx:if="{{item._checked}}"></icon>
+          <icon type="circle" size="{{selected ? '16' : '10'}}" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="{{selected ? '16' : '10'}}" wx:if="{{item._checked}}"></icon>
         </ui-col>
       </ui-row>
-      <ui-row data-item="{{item}}" data-index="{{index}}" bindtap="item" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row data-item="{{item}}" data-index="{{index}}" bindtap="item" height="114r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <image mode="aspectFit" src="http://img.jihui88.com/{{item.serverPath}}"/>
         </ui-col>
@@ -42,15 +42,15 @@
           <view>
             <view class="title" wx:if="{{!item.editing}}">{{item.filename}}</view>
             <view class="desc" wx:if="{{!item.editing}}">{{item.uploadTime}}</view>
-          <input bindinput="input" value="{{item.filename}}" wx:if="{{item.editing}}"/>
+            <input bindinput="input" value="{{item.filename}}" wx:if="{{item.editing}}"/>
           </view>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="center" wx:if="{{item.editing}}" data-item="{{item}}" catchtap="imgNameChange">
           <i class="iconfont icon-gou"></i>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked">
-          <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="10" wx:if="{{item._checked}}"></icon>
+          <icon type="circle" size="{{selected ? '16' : '10'}}" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="{{selected ? '16' : '10'}}" wx:if="{{item._checked}}"></icon>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -68,7 +68,7 @@
     <!-- 排序 -->
     <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
       <ui-row-list border-left-indent class="sort-list">
-        <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="*this" data-item="{{item}}" bindtap="sortChange">
+        <ui-row height="43" border-bottom wx:for="{{sortList}}" wx:key="{{index}}" data-item="{{item}}" bindtap="sortChange">
           <ui-col vertical-align="middle" class="{{params.sortField === item.value ? 'active' : ''}}">
             {{item.text}}
           </ui-col>
@@ -111,7 +111,7 @@
       <view class="content">
         <swiper bindchange="swiperChange" current="{{swiperCurrent}}"
         autoplay="{{false}}" circular interval="3000" duration="500">
-          <block wx:for="{{list}}" wx:key="*this">
+          <block wx:for="{{list}}" wx:key="{{index}}">
             <swiper-item>
               <view class="item" style="height:{{popupHeight-80}}px">
                 <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}" data-index="{{index}}" bindload="imageLoad"/>
@@ -146,7 +146,6 @@
       <view class="mask_btn">
         <view class="btn">
           <view bindtap="uploadPic">替换图片</view>
-          <view bindtap="editPic">编辑</view>
           <view bindtap="copyImg1">复制图片的代码</view>
           <view bindtap="copyImg2">复制链接的代码</view>
         </view>
@@ -159,7 +158,7 @@
         {{list[swiperCurrent].uploadTime}}
         <ui-row height="70">
           <ui-col span="7" vertical-align="top" align="left">
-            <view style="width:100%"><text wx:for="{{catelog}}" wx:key="*this">/{{item.name}}</text>/{{list[swiperCurrent].filename}}</view>
+            <view style="width:100%"><text wx:for="{{catelog}}" wx:key="{{index}}">/{{item.name}}</text>/{{list[swiperCurrent].filename}}</view>
           </ui-col>
           <ui-col span="5" vertical-align="top" align="right" class="view" bindtap="backcatelog">
             <view style="width:100%">查看所有目录<i class="iconfont icon-right"></i></view>
@@ -221,15 +220,17 @@ export default {
       searchType: '1',
       sortType: 'desc'
     },
-    more: {loading: true},
+    more: {},
     // 图片展示
     picMask: false,
     swiperCurrent: 0,
     showMask: false,
     picDetailMask: false,
     width: '220r',
+    picItem: {},
     // 选中
-    toggle: false,
+    selected: false, //选中状态
+    toggle: false, // 全选切换状态
     ids: '',
     fileids: '',
     // 选择项
@@ -259,7 +260,7 @@ export default {
   },
   // 图片
   get () {
-    this.data.more.tip = ''
+    this.data.more.tip = '加载中'
     this.data.more.loading = true
     this.setData({
       ids: '',
@@ -483,13 +484,16 @@ export default {
       this.selectedBack()
     } else if (item.attId) {
       /* 预览图片 */
-      this.setData({
-        picMask: true,
-        title: (index + 1) + '/' + this.data.list.length,
-        swiperCurrent: index,
-        catelogName: this.data.catelog[this.data.catelog.length-1].name,
-        width: '350r'
-      })
+      if (!item.editing) {
+        this.setData({
+          picMask: true,
+          title: (index + 1) + '/' + this.data.list.length,
+          swiperCurrent: index,
+          catelogName: this.data.catelog[this.data.catelog.length-1].name,
+          width: '350r',
+          picItem: item
+        })
+      }
     } else {
       this.data.filelist.forEach(item => {
         item._checked = false
@@ -515,14 +519,14 @@ export default {
     this.setData({
       swiperCurrent: index,
       title: (index + 1) + '/' + this.data.list.length,
-      item: this.data.list[index]
+      picItem: this.data.list[index]
     })
   },
   // 单张图片操作
   downloadPic () {
     // 下载图片
     wx.downloadFile({
-      url: 'https://img.jihui88.com/' + this.data.item.serverPath, //仅为示例，并非真实的资源
+      url: 'https://img.jihui88.com/' + this.data.picItem.serverPath, //仅为示例，并非真实的资源
       success: function(res) {
         // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
         if (res.statusCode === 200) {
@@ -603,9 +607,6 @@ export default {
         list: this.data.list
       })
     })
-  },
-  editPic () {
-
   },
   copyImg1 () {
     let img = this.data.list[this.data.swiperCurrent]

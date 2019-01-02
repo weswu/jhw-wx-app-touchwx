@@ -4,7 +4,7 @@
     <cc-lan website="{{true}}" bindlayout="get"></cc-lan>
 
     <ui-row-list>
-      <ui-row height="100r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row height="100r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col width="100" class="desc" vertical-align="middle" align="left" space-left="10">
           {{ item.keywords }}
         </ui-col>
@@ -31,7 +31,7 @@
           <input type="text" value="{{toReplace}}" bindinput="nameInput2" placeholder="内部链接地址"/>
         </view>
         <view class="input" wx:if="{{innerLink}}" style="padding-left: 10px;" bindtap="open">
-          <text wx:for="{{navList}}" wx:key="*this" wx:if="{{toReplace === item.page}}">{{item.name}}</text>
+          <text wx:for="{{navList}}" wx:key="{{index}}" wx:if="{{toReplace === item.page}}">{{item.name}}</text>
           <text wx:if="{{!toReplace}}">请选择</text>
         </view>
       </view>
@@ -43,7 +43,7 @@
       <view class="top_pop">
         <scroll-view scroll-y="scroll-y" style="height: {{ scroHeight-50 }}px;">
           <ui-row-list border-left-indent>
-            <ui-row height="43" border-bottom wx:for="{{navList}}" wx:key="*this" data-index="{{index}}" bindtap="change">
+            <ui-row height="43" border-bottom wx:for="{{navList}}" wx:key="{{index}}" data-index="{{index}}" bindtap="change">
               <ui-col vertical-align="middle" class="{{item.page === page ? 'active' : ''}}">
                 {{item.name}}
               </ui-col>

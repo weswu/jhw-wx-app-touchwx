@@ -2,7 +2,7 @@
   <view>
     <cc-header title="营销管理"></cc-header>
     <ui-swipe-out height="85" data-index="{{index}}" operate-width="150"
-      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="*this">
+      bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="{{index}}">
       <view slot="content">
         <ui-row height="85" class="j_row_list" border-bottom>
           <ui-col vertical-align="middle" align="left" space-left="15">

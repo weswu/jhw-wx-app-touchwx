@@ -22,7 +22,7 @@
         <checkbox-group bindchange="checkboxChange">
           <ui-row-list>
             <ui-row border-top border-bottom class="row-border">
-              <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list}}" wx:key="*this">
+              <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list}}" wx:key="{{index}}">
                 <label>
                   <checkbox value="{{item.text}}" checked="{{item.checked}}"></checkbox>
                   <view>{{item.text}}</view>
@@ -47,7 +47,7 @@
         <checkbox-group bindchange="checkboxChange2">
           <ui-row-list>
             <ui-row border-top border-bottom class="row-border">
-              <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list2}}" wx:key="*this">
+              <ui-col border-right align="center" span="3" vertical-align="middle" wx:for="{{list2}}" wx:key="{{index}}">
                 <label>
                   <checkbox value="{{item.text}}" checked="{{item.checked}}"></checkbox>
                   <view>{{item.text}}</view>

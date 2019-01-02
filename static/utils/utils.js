@@ -146,7 +146,7 @@ function picUrl(src, number) {
 */
 const loading = (that) => {
   that.setData({
-    'more.tip': '',
+    'more.tip': '加载中',
     'more.loading': true
   })
 }
@@ -211,19 +211,22 @@ const batchMove = (that, type, categoryId) => {
   } else {
     data.category = categoryId
   }
-  api.batchMove({
-    data: data,
-    type: type,
-    method: 'post'
-  }).then(res => {
-    if (res.success) {
-      Tips.success('转移成功')
-      that.setData({
-        selected: false
-      })
-    } else {
-      Tips.error(res.msg)
-    }
+  return new Promise(function(resolve, reject){
+    api.batchMove({
+      data: data,
+      type: type,
+      method: 'post'
+    }).then(res => {
+      if (res.success) {
+        Tips.success('转移成功')
+        that.setData({
+          selected: false
+        })
+        resolve ({success: true})
+      } else {
+        Tips.error(res.msg)
+      }
+    })
   })
 }
 

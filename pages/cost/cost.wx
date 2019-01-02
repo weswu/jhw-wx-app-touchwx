@@ -4,7 +4,7 @@
     <view style="height:50px"></view>
 
     <ui-row-list border-left-indent>
-      <ui-row url="costDetail?id={{item.orderId}}&type={{current1}}" hover-class="none" height="160r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row url="costDetail?id={{item.orderId}}&type={{current1}}" hover-class="none" height="160r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle">
             <view style="width: 100%;">
               <ui-row height="60r">

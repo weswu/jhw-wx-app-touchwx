@@ -3,7 +3,7 @@
     <cc-header title="我的网站" count="{{count}}"></cc-header>
     <ui-row-list border-left-indent>
       <ui-swipe-out operate-width="90" data-index="{{index}}" can-swipe="'{{ true }}'" value="{{item.switcher}}"
-        bindchange="changeHandler1" wx:for="{{list}}" wx:key="*this" height="90">
+        bindchange="changeHandler1" wx:for="{{list}}" wx:key="{{index}}" height="90">
         <view slot="content">
           <ui-row height="90" class="j_row_list" border-bottom>
             <ui-col class="text" vertical-align="middle">
@@ -65,7 +65,7 @@
       <view style="padding: 15px;">
         <radio-group class="website_add_select">
           <ui-row height="200">
-            <ui-col vertical-align="middle" align="center" wx:for="{{countryType}}" wx:key="*this"
+            <ui-col vertical-align="middle" align="center" wx:for="{{countryType}}" wx:key="{{index}}"
               data-value='{{item.value}}' bindtap="radioChange" >
               <label>
                 <radio value="{{item.value}}" checked="{{detail.country === item.value}}"></radio>

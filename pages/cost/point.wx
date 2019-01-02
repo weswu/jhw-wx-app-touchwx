@@ -37,7 +37,7 @@
     <!-- 内容 -->
     <view class="content_list">
       <ui-row-list wx:if="{{index === 0}}" border-left-indent>
-        <ui-row height="120r" border-bottom wx:for="{{ list }}" wx:key="*this">
+        <ui-row height="120r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
           <ui-col vertical-align="middle">
             <text class="title">{{item.desc}}</text>
             <text class="time">{{item.addTime}}</text>
@@ -66,7 +66,7 @@
                 获得数量
             </ui-col>
           </ui-row>
-          <ui-row border-bottom height="32" wx:for="{{rule}}" wx:key="*this">
+          <ui-row border-bottom height="32" wx:for="{{rule}}" wx:key="{{index}}">
             <ui-col border-right vertical-align="middle" align="center">
                 {{item.name}}
             </ui-col>

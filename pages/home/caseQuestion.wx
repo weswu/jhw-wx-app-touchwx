@@ -3,7 +3,7 @@
     <cc-header title="常见问题" count="{{count}}"></cc-header>
 
     <view class="hr"></view>
-    <ui-row-list wx:for="{{list}}" wx:key="*this">
+    <ui-row-list wx:for="{{list}}" wx:key="{{index}}">
       <view class="item">
         <image mode="widthFix" src="{{item.pic_path}}"></image>
        {{item.title}}

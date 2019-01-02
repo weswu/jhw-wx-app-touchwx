@@ -91,7 +91,10 @@ export default {
     let value = (this.data.value || new Date().getTime())
     let date = Utils.formatTime(value, this.data.format).split(' ')
     let date1 = date[0].split('-')
-    let date2 = date[1].split(':')
+    let date2 = "00:00:00"
+    if (date[1]) {
+      date2 = date[1].split(':')
+    }
     let val = Utils.formatTime(value, this.data.format) || '请选择'
     this.initDay(date1[0], date1[1])
     let year = 0

@@ -14,7 +14,7 @@
     </ui-fixed-view>
     <view style="height:43px"></view>
 
-    <ui-row-list wx:for="{{list}}" wx:key="*this">
+    <ui-row-list wx:for="{{list}}" wx:key="{{index}}">
       <ui-row height="150r">
         <ui-col  class="text" vertical-align="middle">
            <view>
@@ -46,7 +46,7 @@
 
     <ui-popup cropout show="{{ show }}" position="top" top="{{ popup_NAV_HEIGHT +43 }}" height="{{ popupHeight }}" mask-style="{{ { top: popup_NAV_HEIGHT +43+'px' } }}" bindhide="popHide" bindshow="popShow">
       <ui-row-list border-left-indent>
-        <ui-row height="43" border-bottom wx:for="{{selectList}}" wx:key="*this" data-item="{{item}}" bindtap="change">
+        <ui-row height="43" border-bottom wx:for="{{selectList}}" wx:key="{{index}}" data-item="{{item}}" bindtap="change">
           <ui-col vertical-align="middle" class="{{params.recvState === item.key ? 'active' : ''}}">
             {{item.value}}
           </ui-col>

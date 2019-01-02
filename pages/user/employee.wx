@@ -2,7 +2,7 @@
   <view>
     <cc-header title="员工账号管理" count="{{count}}"></cc-header>
 
-    <ui-row-list wx:for="{{list}}" wx:key="*this" border-left-indent data-index="{{index}}" bindtap="itemChange">
+    <ui-row-list wx:for="{{list}}" wx:key="{{index}}" border-left-indent data-index="{{index}}" bindtap="itemChange">
       <ui-row class="text" height="110r" border-bottom>
         <ui-col vertical-align="middle" align="left">
           {{index+1}}、{{item.username}}
@@ -47,7 +47,7 @@
         <view class="top_view">
           <i class="iconfont icon-quxiao icon_top" bindtap="closeSelectStatic"></i>
         </view>
-        <image style="width:210px;height:210px" mode="aspectFit" src="http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text={{posterUrl}}" bindtap="download"/>
+        <image style="width:210px;height:210px" mode="aspectFit" src="https://www.jihui88.com/rest/comm/qrbar/create?w=210&text={{posterUrl}}" bindtap="download"/>
         <view class="posterUrl" bindtap="copyPosterUrl">复制推广链接</view>
       </view>
     </ui-mask>
@@ -63,7 +63,7 @@
       <view class="j_picker">
         <picker-view indicator-style="line-height:70rpx;height: 70rpx;color:#303030;" style="width: 100%; height: 220px;" value="{{value}}" bindchange="layoutIdChange">
           <picker-view-column>
-            <view wx:for="{{staticList}}" wx:key="*this" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
+            <view wx:for="{{staticList}}" wx:key="{{index}}" style="line-height: 70rpx;text-align:center">网站编号: {{item.id}}</view>
           </picker-view-column>
         </picker-view>
       </view>
@@ -224,7 +224,7 @@ export default {
   download () {
     // 下载图片
     wx.downloadFile({
-      url: 'http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=' + this.data.posterUrl,
+      url: 'https://www.jihui88.com/rest/comm/qrbar/create?w=210&text=' + this.data.posterUrl,
       success: function(res) {
         if (res.statusCode === 200) {
           wx.saveImageToPhotosAlbum({

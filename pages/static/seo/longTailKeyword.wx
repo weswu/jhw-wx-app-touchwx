@@ -27,7 +27,7 @@
           <view class="td">盈利模式</view>
         </view>
         <view class="th" wx:for="{{list}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex">
-          <view class="td" wx:for="{{row.children}}" wx:key="*this">
+          <view class="td" wx:for="{{row.children}}" wx:key="{{index}}">
             <input class="desc" bindinput="input" data-row="{{rowIndex}}" data-index="{{index}}" value="{{item.value}}"/>
           </view>
         </view>
@@ -43,8 +43,8 @@
           <view class="td">产品/服务</view>
           <view class="td">盈利模式</view>
         </view>
-        <view class="th" wx:for="{{list2}}" wx:for-item="row" wx:key="*this">
-          <view class="td" wx:for="{{row.children}}" wx:key="*this">{{item.value}}</view>
+        <view class="th" wx:for="{{list2}}" wx:for-item="row" wx:for-index="idx" wx:key="{{idx}}">
+          <view class="td" wx:for="{{row.children}}" wx:key="{{index}}">{{item.value}}</view>
         </view>
       </view>
     </scroll-view>
@@ -53,7 +53,7 @@
       <view class="top_pop">
         <scroll-view scroll-y="scroll-y" style="height:{{scroHeight}}px">
           <ui-row-list border-left-indent>
-            <ui-row height="43" border-bottom wx:for="{{klist}}" wx:key="*this" data-index="{{index}}">
+            <ui-row height="43" border-bottom wx:for="{{klist}}" wx:key="{{index}}" data-index="{{index}}">
               <ui-col vertical-align="middle">
                 {{item}}
               </ui-col>

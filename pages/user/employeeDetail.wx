@@ -110,6 +110,7 @@
 import Input from '../../static/input/input'
 import api from '../../static/utils/api'
 import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
 export default {
   config: {
     usingComponents: {
@@ -118,8 +119,7 @@ export default {
   },
   data: {
     detail: {
-      sex: '00',
-      memberId: 'ccc'
+      sex: '00'
     },
     resetPassword: false
   },
@@ -194,8 +194,7 @@ export default {
     }).then(res => {
       Tips.loaded()
       if (res.success) {
-        Utils.prevAdd(detail.memberId, res.attributes.data)
-        Tips.success('保存成功')
+        Tips.success(detail.memberId ? '保存成功' :'添加成功')
       } else {
         Tips.error(res.msg)
       }

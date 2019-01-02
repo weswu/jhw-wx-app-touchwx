@@ -9,8 +9,8 @@
     </cc-header>
 
     <ui-row-list class="list-content">
-      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom 
-        wx:for="{{filelist}}" wx:key="*this">
+      <ui-row data-item="{{item}}" bindtap="item" height="114r" border-bottom
+        wx:for="{{filelist}}" wx:key="{{index}}">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <i class="iconfont icon-file"></i>
         </ui-col>
@@ -19,11 +19,11 @@
           <view class="desc">{{item.addTime}}</view>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked">
-          <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="10" wx:if="{{item._checked}}"></icon>
+          <icon type="circle" size="{{selected ? '16' : '10'}}" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="{{selected ? '16' : '10'}}" wx:if="{{item._checked}}"></icon>
         </ui-col>
       </ui-row>
-      <ui-row data-item="{{item}}" data-index="{{index}}" bindtap="item" height="114r" border-bottom wx:for="{{list}}" wx:key="*this">
+      <ui-row data-item="{{item}}" data-index="{{index}}" bindtap="item" height="114r" border-bottom wx:for="{{list}}" wx:key="{{index}}">
         <ui-col vertical-align="middle" width="123r" space-left="15">
           <image mode="aspectFit" src="http://img.jihui88.com/{{item.serverPath}}"/>
         </ui-col>
@@ -34,8 +34,8 @@
           </view>
         </ui-col>
         <ui-col width="40" vertical-align="middle" align="right" space-right="15" data-item="{{item}}" catchtap="checked">
-          <icon type="circle" size="10" wx:if="{{!item._checked}}"></icon>
-          <icon type="success" size="10" wx:if="{{item._checked}}"></icon>
+          <icon type="circle" size="{{selected ? '16' : '10'}}" wx:if="{{!item._checked}}"></icon>
+          <icon type="success" size="{{selected ? '16' : '10'}}" wx:if="{{item._checked}}"></icon>
         </ui-col>
       </ui-row>
     </ui-row-list>
@@ -43,7 +43,7 @@
       哎呦，回收站是空的~
     </view>
     <cc-loadmore more="{{more}}"></cc-loadmore>
-    
+
     <!-- 批量操作 -->
     <ui-fixed-view bottom="0;z-index:700" left="0" right="0" wx:if="{{selected}}">
       <ui-row height="60" border-top class="fixed_btn">
@@ -95,7 +95,8 @@ export default {
     },
     more: {loading: true},
     // 选中
-    toggle: false,
+    selected: false, //选中状态
+    toggle: false, // 全选切换状态
     ids: '',
     fileids: ''
   },
@@ -237,6 +238,15 @@ export default {
     let index = e.currentTarget.dataset.index
     if (this.data.selected) {
       this.selectedBack()
+    } else if (item.attId) {
+      /* 预览图片 */
+      let src = 'http://img.jihui88.com/' + item.serverPath
+      let urls = []
+      urls.push(src)
+      wx.previewImage({
+        current: src, // 当前显示图片的http链接
+        urls: urls // 需要预览的图片http链接列表
+      })
     } else {
       this.data.filelist.forEach(item => {
         item._checked = false
@@ -411,7 +421,7 @@ page{
 .add-content{
   text-align:left;margin:5px 15px;background:#f6f6f6;
   height: 64rpx;
-  line-height: 64rpx;    
+  line-height: 64rpx;
   position: relative;
   .icon-close-circle-fill{
     width: 64rpx;

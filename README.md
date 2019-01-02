@@ -30,6 +30,10 @@ tui transform --type wx2ui --src jhw-wx-app-touchwx --dest jhw-wx-app-touchui
 
 ```
 
+### 上传 项目备注
+测试账号ggggfj 密码123456
+
+
 <!--
 <ui-col border-right align="center" vertical-align="middle">
   <navigator target="miniProgram" open-type="navigate" app-id="wx860be22a8b03bbd9"
@@ -45,8 +49,10 @@ extAppid  wx031271ed9d1f909f
 
 机汇云  wx2aba9d238ba02a76
 
+  "appid": "wx2ad5856ee82bdfc3",
+  "domain": "admin.ykyh.com"
 
-// 导入ext.JSON(自定义)
+// 导入ext.JSON(自定义) wx2ad5856ee82bdfc3
 let extFile = fs.readFileSync('./ext.json', 'utf-8');
 let extConfigPath = util_1.config.getPath('dest', 'ext.json');
 util_1.log.msg(util_1.LogType.GENERATE, path.relative(util_1.config.cwd, extFile));

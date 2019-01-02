@@ -31,7 +31,7 @@
       </movable-area>
       <ui-row-list>
         <checkbox-group bindchange="checkboxChange">
-          <label wx:for="{{optionsListData}}" wx:key="*this">
+          <label wx:for="{{optionsListData}}" wx:key="{{index}}">
             <ui-row height="50" border-bottom class="{{item.selectClass}}">
               <ui-col width="45" vertical-align="middle" align="center">
                 <icon type="circle" size="16" wx:if="{{!item.checked}}"></icon>

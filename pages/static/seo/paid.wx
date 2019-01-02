@@ -17,7 +17,7 @@
             付费SEO推广的套餐
           </ui-col>
         </ui-row>
-        <ui-row border-bottom height="40"  wx:for="{{list}}" wx:key="*this">
+        <ui-row border-bottom height="40"  wx:for="{{list}}" wx:key="{{index}}">
           <ui-col border-right vertical-align="middle" space-left="5">
             {{item.text}}
           </ui-col>

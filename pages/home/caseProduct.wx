@@ -2,10 +2,10 @@
   <view>
     <cc-header title="{{agent.user.enterprise.name}}产品"></cc-header>
 
-    <ui-row-list wx:for="{{list}}" wx:for-item="row" wx:key="*this">
+    <ui-row-list wx:for="{{list}}" wx:for-item="row" wx:key="{{index}}">
       <view class="title">{{row.title}}</view>
       <view class="content">{{row.desc}}</view>
-      <ui-row wx:for="{{row.proList}}" wx:key="*this">
+      <ui-row wx:for="{{row.proList}}" wx:key="{{index}}">
         <ui-col vertical-align="top" align="center">
           <view class="item">
             <image src="http://dfwjjingtai.b0.upaiyun.com/{{item.pic}}" style="width:650rpx;height:255rpx;"></image>
