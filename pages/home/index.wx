@@ -232,6 +232,12 @@ export default {
     agent: {}
   },
   onLoad () {
+    if (!wx.getStorageSync('domain')){
+      wx.setTabBarItem({
+        index: 0,
+        text: '机汇网'
+      })
+    }
     let that = this
     getApp().getUserInfo(res => {
       that.setData({

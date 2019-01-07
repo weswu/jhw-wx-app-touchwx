@@ -3,28 +3,5 @@
   "extAppid": "wx2aba9d238ba02a76",
   "ext": {
     "appid": "wx2aba9d238ba02a76"
-  },
-  "tabBar": {
-    "list": [{
-      "iconPath": "images/tabBar/home.png",
-      "selectedIconPath": "images/tabBar/home_active.png",
-      "pagePath": "pages/home/index",
-      "text": "机汇网"
-    }, {
-      "iconPath": "images/tabBar/console.png",
-      "selectedIconPath": "images/tabBar/console_active.png",
-      "pagePath": "pages/home/console",
-      "text": "控制台"
-    }, {
-      "iconPath": "images/tabBar/message.png",
-      "selectedIconPath": "images/tabBar/message_active.png",
-      "pagePath": "pages/message/message",
-      "text": "消息"
-    }, {
-      "iconPath": "images/tabBar/home.png",
-      "selectedIconPath": "images/tabBar/home_active.png",
-      "pagePath": "pages/home/my",
-      "text": "我的"
-    }]
   }
 }
