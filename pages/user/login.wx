@@ -48,37 +48,31 @@ export default {
     agent: {},
     domain: ''
   },
-  onReady (e) {
+  onReady () {
     Object.assign(this, Input)
   },
   onLoad (e) {
     let that = this
     this.init() // 是否授权
     // 经销商
-    if (e.domain) {
-      this.setData({
-        domain: e.domain
-      })
-      this.getAgent()
-    } else {
-      wx.getExtConfig({
-        success: function (res) {
+    // e.domain = 'admin.ykyh.com'
+    wx.getExtConfig({
+      success: function (res) {
+        that.setData({
+          'detail.appid': res.extConfig.appid
+        })
+        if (res.extConfig.domain || e.domain) {
           that.setData({
-            'detail.appid': res.extConfig.appid
+            domain: res.extConfig.domain || e.domain
           })
-          if (res.extConfig.domain) {
-            that.setData({
-              domain: res.extConfig.domain
-            })
-            that.getAgent()
-          } else {
-            that.setData({
-              'agent.loginLogo3': 'http://www.jihui88.com/member/static/images/f-logo.png'
-            })
-          }
+          that.getAgent()
+        } else {
+          that.setData({
+            'agent.loginLogo3': 'http://www.jihui88.com/member/static/images/f-logo.png'
+          })
         }
-      })
-    }
+      }
+    })
     if (e.back === '1') {
       this.setData({
         back: true
