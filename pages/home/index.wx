@@ -47,7 +47,10 @@
 
     <ui-row border-top border-bottom class="grids1" height="105">
       <ui-col border-right align="center" vertical-align="middle" bindtap="jihui">
-        <view class="image"><image mode="widthFix" src="{{agent.wxappLogo}}"/></view>
+        <view class="image {{!agent.wxappLogo ? 'images' : ''}}">
+          <image mode="widthFix" src="{{agent.wxappLogo}}" wx:if="{{agent.wxappLogo}}"/>
+          <i class="iconfont icon-qiye1" wx:if="{{!agent.wxappLogo}}"></i>
+        </view>
         <view class="label">认识{{agent.user.enterprise.name}}</view>
       </ui-col>
       <ui-col align="center" vertical-align="middle" bindtap="jihuiProduct">
@@ -58,12 +61,12 @@
     <view class="hr"></view>
 
     <!-- 头条 -->
-    <ui-row height="35" style="margin-top:16rpx">
+    <ui-row height="35" style="margin-top:16rpx" wx:if="{{agent.vTen}}">
       <ui-col class="j_banner" span="11" vertical-align="middle">
         <view class="name">{{agent.user.enterprise.name || '机汇'}}头条</view>
       </ui-col>
     </ui-row>
-    <ui-row height="166r" style="margin-bottom:36rpx" bindtap="tenVideo">
+    <ui-row height="166r" style="margin-bottom:36rpx" bindtap="tenVideo" wx:if="{{agent.vTen}}">
       <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
         <view class="banner">
           <view class="title">10分钟入门</view>
@@ -73,7 +76,7 @@
         </view>
       </ui-col>
     </ui-row>
-    <view class="hr"></view>
+    <view class="hr" wx:if="{{agent.vTen}}"></view>
     <view class="sample_content" wx:if="{{gonggaoList.length>0}}">
      <ui-row height="40">
         <ui-col span="0"></ui-col>
@@ -152,7 +155,7 @@
         </ui-row>
       </ui-col>
     </ui-row>
-    <ui-row height="138r" url="caseTemplate" hover-class="none">
+    <ui-row height="138r" url="caseTemplate" hover-class="none" style="padding-bottom:10px;">
       <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
         <view class="banner">
           <view class="title" style="padding-top:28rpx;">海量自适应模板网站</view>
@@ -164,7 +167,7 @@
     </ui-row>
 
     <!-- 精选 -->
-    <view class="sample_content" wx:if="{{hotList.length>0}}">
+    <view class="sample_content" wx:if="{{hotList.length>0}}" style="padding-top:0">
       <ui-row height="30">
         <ui-col span="11">
           <ui-roller autoplay="5000" height=30>
@@ -334,8 +337,8 @@ export default {
   tenVideo () {
     if (this.data.agent.agentId) {
       let video = this.data.agent.vTen
-      let src = video.substring(24, video.length-5)
-      if (src) {
+      if (video) {
+        let src = video.substring(24, video.length-5)
         wx.navigateTo({
           url: '/pages/home/caseVideo?title=入门介绍&vid=' + src
         })
@@ -353,25 +356,28 @@ export default {
     })
   },
   getHot () {
-    api.newsCategoryChild({
-      data: {
-        page: 1,
-        per_page: 8,
-        content: 1,
-        category_id: parseInt(this.data.agent.questionCateId.substring(9))
-      },
-      id: this.data.agent.user.enterpriseId
-    }).then(res => {
-      this.setData({
-        hotList: res.list
+    let cateId = this.data.agent.qualityCateId
+    if (cateId) {
+      api.newsCategoryChild({
+        data: {
+          page: 1,
+          per_page: 8,
+          content: 1,
+          category_id: parseInt(cateId.substring(9))
+        },
+        id: this.data.agent.user.enterpriseId
+      }).then(res => {
+        this.setData({
+          hotList: res.list
+        })
       })
-    })
+    }
   },
   getGonggao () {
     api.gonggao({
       data: {
         page: 1,
-        pageSize: 9,
+        pageSize: 8,
         agentId: this.data.agent.agentId
       }
     }).then(res => {

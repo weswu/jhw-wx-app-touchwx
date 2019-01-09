@@ -50,9 +50,11 @@ export default {
     this.setData({
       agent: agent
     })
-    this.setData({
-      'params.category_id': parseInt(agent.questionCateId.substring(9))
-    })
+    if (agent.questionCateId) {
+      this.setData({
+        'params.category_id': parseInt(agent.questionCateId.substring(9))
+      })
+    }
     this.get()
   },
   get () {
