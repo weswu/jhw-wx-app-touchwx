@@ -26,7 +26,7 @@ let data = [
       { url: '/pages/user/cert', text: '荣誉证书', icon: 'icon-gongsi' },
       { url: '/pages/user/partner', text: '合作伙伴', icon: 'icon-Group' },
       { url: '/pages/user/team', text: '团队介绍', icon: 'icon-huiyuan' },
-      { url: '', text: 'text', icon: 'icon-jia' }
+      { url: '/pages/user/distribution', text: '网络分布', icon: 'icon-qiu' }
     ]
   },
   {

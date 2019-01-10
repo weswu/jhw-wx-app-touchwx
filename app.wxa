@@ -10,6 +10,8 @@ export default {
     usingComponents: {},
     pages: [
       'pages/user/login',
+      'pages/user/distribution',
+      'pages/user/distributionDetail',
       'pages/home/index',
       'pages/user/enterprise',
       'pages/home/console',
@@ -189,6 +191,7 @@ export default {
     tagList: [],
     memberRankList: [],
     memberAttrList: [],
+    areaList: [],
     // 其它
     layoutId: '',
     lanList: [

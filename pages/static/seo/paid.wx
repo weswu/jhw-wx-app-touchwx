@@ -3,9 +3,9 @@
     <cc-header title="付费SEO推广"></cc-header>
 
     <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:700" right="0">
-      <ui-tabs tab-style="{{ {width:width/2+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/2+'px !important'} }}" bindchange="handleChange">
+      <ui-tabs tab-style="{{ {width:width/(agent.agentId ? 1 : 2)+'px !important',background: '#fff'} }}" active-tab-style="{{ {width:width/(agent.agentId ? 1 : 2)+'px !important'} }}" bindchange="handleChange">
         <ui-tab>什么是付费SEO推广</ui-tab>
-        <ui-tab>付费SEO推广登录</ui-tab>
+        <ui-tab wx:if="{{!agent.agentId}}">付费SEO推广登录</ui-tab>
       </ui-tabs>
     </ui-fixed-view>
     <view style="height:50px"></view>
@@ -48,7 +48,7 @@
       </view>
 
       <view style="color: #a7a7a7;padding:15px;font-size:12px;">
-        温馨提醒：客户选择的关键词必须符合机汇网普及版服务包综合指数150以内，套餐有多种达标方案，只要满足其中任意一种达标方案即视为达标，客户享受机汇网提供的关键词达标365天的服务，域名，空间到期后客户自行交费，SEO未达标365天，机汇网继续提供服务。如果规定时间内未达标，客户也不愿意继续等待，客户可以申请退款，机汇网根据提供服务关键词的达标比例为客户退款。
+        温馨提醒：客户选择的关键词必须符合{{agent.user.enterprise.name}}普及版服务包综合指数150以内，套餐有多种达标方案，只要满足其中任意一种达标方案即视为达标，客户享受{{agent.user.enterprise.name}}提供的关键词达标365天的服务，域名，空间到期后客户自行交费，SEO未达标365天，{{agent.user.enterprise.name}}继续提供服务。如果规定时间内未达标，客户也不愿意继续等待，客户可以申请退款，{{agent.user.enterprise.name}}根据提供服务关键词的达标比例为客户退款。
       </view>
 
       <ui-row-list border-left-indent>
@@ -58,16 +58,12 @@
           </ui-col>
           <ui-col class="text" vertical-align="middle">
             <view style="width:100%;font-size:12px" wx:if="{{!agent.agentId}}">
-              电话：400-7111-011
+              <view>电话：400-7111-011</view>
               <view>俞小姐：136-2679-9628</view>
             </view>
             <view style="width:100%;font-size:12px" wx:if="{{agent.agentId}}">
-              电话：{{agent.user.phone || '400-7111-011'}}
-              <view>
-                <text wx:if="{{agent.user.name}}">
-                  {{agent.user.name}}：
-                </text>{{agent.user.cellphone}}
-              </view>
+              <view>电话：{{agent.user.phone || '400-7111-011'}}</view>
+              <view><text wx:if="{{agent.user.name}}">{{agent.user.name}}：</text>{{agent.user.cellphone}}</view>
             </view>
           </ui-col>
         </ui-row>

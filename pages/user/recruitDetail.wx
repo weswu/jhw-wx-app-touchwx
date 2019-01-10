@@ -28,6 +28,15 @@
       </ui-row>
       <ui-row height="100">
         <ui-col width="70" vertical-align="middle">
+          职责
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea placeholder="请填写"
+            bindinput="input" id="obligation" value="{{detail.obligation}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="100">
+        <ui-col width="70" vertical-align="middle">
           要求
         </ui-col>
         <ui-col vertical-align="middle" align="right" space-right="15">

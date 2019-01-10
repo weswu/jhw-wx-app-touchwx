@@ -17,7 +17,7 @@
           </ui-row>
           <ui-row height="60r" class="j_row_list" border-bottom data-item="{{item}}" bindtap="item">
             <ui-col class="desc" vertical-align="top">
-              职务：{{item.duty}}    人数:{{item.sum}}
+              职务：{{item.duty}}    人数:{{item.sum || '无'}}
             </ui-col>
           </ui-row>
         </view>
@@ -59,7 +59,7 @@ export default {
     },
     height: 140/750*wx.WIN_WIDTH,
     el: 'undefined'
-  }, 
+  },
   onLoad () {
     this.get()
   },

@@ -1,0 +1,129 @@
+<template>
+  <view>
+    <cc-header title="网络分布" count="{{count}}"></cc-header>
+    <cc-lan lan="{{true}}" bindchange="lanChange"></cc-lan>
+
+    <ui-row-list border-left-indent>
+      <ui-swipe-out height="60" data-index="{{index}}" operate-width="150"
+        bindchange="changeHandler" value="{{item.switcher}}" wx:for="{{list}}" wx:key="{{index}}">
+        <view slot="content">
+          <ui-row height="60" class="j_row_list" border-bottom>
+            <ui-col class="text" vertical-align="middle">
+              {{item.address}}
+            </ui-col>
+            <ui-col class="desc" width="150" vertical-align="middle" align="right" space-right="15">
+              {{ item.addTime }}
+            </ui-col>
+          </ui-row>
+        </view>
+        <view slot="operate">
+          <view class="j_operate">
+            <ui-row height="60">
+              <ui-col data-id="{{item.distributionId}}" bindtap="detail" vertical-align="middle" align="center">
+                修改
+              </ui-col>
+              <ui-col data-index="{{index}}" data-id="{{item.distributionId}}" bindtap="del" vertical-align="middle" align="center">
+                删除
+              </ui-col>
+            </ui-row>
+          </view>
+        </view>
+      </ui-swipe-out>
+    </ui-row-list>
+    <cc-loadmore more="{{more}}"></cc-loadmore>
+
+    <navigator url="distributionDetail" class="j_add"><i class="iconfont icon-jia"></i></navigator>
+  </view>
+</template>
+
+<script>
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+import Utils from '../../static/utils/utils'
+import regeneratorRuntime from 'regenerator-runtime'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-loadmore': '../../packages/cc-loadmore',
+      'cc-lan': '../../packages/cc-lan'
+    }
+  },
+  data: {
+    list: [],
+    params: {
+      page: 1,
+      pageSize: 100
+    },
+    count: 0,
+    more: {},
+    el: 'undefined'
+  },
+  onLoad () {
+    this.get()
+  },
+  get () {
+    api.distribution({
+      data: this.data.params,
+      url: 'distributionList'
+    }).then(res => {
+      if (res.success) {
+        res.attributes.data.forEach(item => {
+          item.addTime = Utils.formatTime(item.addTime)
+          item.switcher = 'off'
+        })
+        Utils.scrollList(this, res)
+      }
+    })
+  },
+  lanChange () {
+    var field = 'params.page'
+    this.setData({
+      [field]: 1,
+      list: []
+    })
+    this.get()
+  },
+  changeHandler (e) {
+    Utils.switcher(this, e)
+  },
+  detail (e) {
+    wx.navigateTo({
+      url: 'distributionDetail?id=' + e.currentTarget.dataset.id
+    })
+  },
+  async del (e) {
+    await Tips.confirm('确认删除吗？')
+    Tips.loading()
+    api.distribution({
+      data: {
+        distributionId: e.currentTarget.dataset.id
+      },
+      method: 'POST',
+      url: 'distributionDelete'
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        this.data.list.splice(e.currentTarget.dataset.index, 1);
+        this.setData({
+          list: this.data.list,
+          count: this.data.count - 1
+        })
+        Tips.success('删除成功')
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  // 加载更多
+  onReachBottom () {
+    Utils.loadMore(this)
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

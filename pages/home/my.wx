@@ -101,7 +101,7 @@
         </ui-col>
       </ui-row>
     </ui-row-list>
-    <view class="crpt">技术支持：{{agent.user.enterprise.name || '机汇网'}}</view>
+    <view class="crpt">技术支持：{{agent.user.enterprise.name}}</view>
   </view>
 </template>
 

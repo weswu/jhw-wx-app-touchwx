@@ -1,0 +1,302 @@
+<template>
+  <view class="j_detail">
+    <cc-header title="网络分布详情"></cc-header>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          省
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="pSearch" value="{{picker.index1}}" range-key="name" range="{{provinceList}}">
+            <view>{{provinceList[picker.index1].name || '请选择'}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          市
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="cSearch" value="{{picker.index2}}" range-key="name" range="{{cityList}}">
+            <view>{{cityList[picker.index2].name || '请选择'}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          区
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <picker bindchange="cSearch2" value="{{picker.index3}}" range-key="name" range="{{countryList}}">
+            <view>{{countryList[picker.index3].name || '请选择'}}</view>
+          </picker>
+        </ui-col>
+      </ui-row>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          详细地址
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="address" value="{{detail.address}}"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view class="j_tip">
+      <view>高德地图坐标查看<button type="primary" plain="true" size="mini" bindtap="copy" style="margin-left:15px">复制</button></view>
+    </view>
+    <ui-row-list border-left-indent>
+      <ui-row height="104r">
+        <ui-col width="70" vertical-align="middle">
+          地图坐标
+        </ui-col>
+        <ui-col class="form_content" vertical-align="middle" align="right" space-right="15">
+          <input placeholder="请填写" bindinput="input" id="point" value="{{detail.point}}"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="170">
+        <ui-col width="70" vertical-align="middle">
+          简要信息
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea placeholder="请填写" bindinput="input" id="summary" value="{{detail.summary}}" style="height:150px"/>
+        </ui-col>
+      </ui-row>
+      <ui-row height="170">
+        <ui-col width="70" vertical-align="middle">
+          详细信息
+        </ui-col>
+        <ui-col vertical-align="middle" align="right" space-right="15">
+          <textarea placeholder="请填写" bindinput="input" id="detail" value="{{detail.detail}}" style="height:150px"/>
+        </ui-col>
+      </ui-row>
+    </ui-row-list>
+    <view style="height:80px"></view>
+    <button type="primary" bindtap="submit" class="fixed">提交</button>
+  </view>
+</template>
+
+<script>
+import Input from '../../static/input/input'
+import api from '../../static/utils/api'
+import Tips from '../../static/utils/tips'
+export default {
+  config: {
+    usingComponents: {
+      'cc-header': '../../packages/cc-header',
+      'cc-image': '../../packages/cc-image'
+    }
+  },
+  data: {
+    detail: {
+      province: '402881882ba8753a012ba8bf474d001c',
+      city: '402881882ba8753a012ba8bfacfd001d',
+      country: '',
+      point: '',
+      detail: '',
+      summary: ''
+    },
+    areaList: [],
+    picker: {
+      index1: 0,
+      index2: 0,
+      index3: 0
+    },
+    provinceList: [],
+    cityList: [],
+    countryList: [],
+    customItem: '全部'
+  },
+  onReady () {
+    Object.assign(this, Input)
+  },
+  onLoad ({id}) {
+    if (id) {
+      this.setData({
+        'detail.distributionId': id
+      })
+    }
+    let list = getApp().globalData.areaList
+    if (list.length === 0) {
+      this.getArea()
+    } else {
+      this.setData({
+        areaList: list
+      })
+      this.get()
+    }
+  },
+  get () {
+    let id = this.data.detail.distributionId
+    if (id) {
+      api.distribution({
+        data: {
+          distributionId: id
+        },
+        url: 'distributionDetail'
+      }).then(res => {
+        if (res.success) {
+          this.setData({
+            detail: res.attributes.data
+          })
+          this.init()
+        } else {
+          Tips.error(res.msg)
+        }
+      })
+    } else {
+      this.init()
+    }
+  },
+  getArea () {
+    api.area().then(res => {
+      if (res.success) {
+        this.setData({
+          areaList: res.attributes.data
+        })
+        getApp().globalData.areaList = res.attributes.data
+        this.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  },
+  init () {
+    let data = this.data.areaList
+    let list1 = []
+    let list2 = []
+    let list3 = []
+    data.forEach(item => {
+      if (item.level === 0) {
+        list1.push(item)
+      }
+      if (item.level === 1 && item.belongId === this.data.detail.province) {
+        list2.push(item)
+      }
+      if (item.level === 2 && item.belongId === this.data.detail.city) {
+        list3.push(item)
+      }
+    })
+    list1.forEach((item, index) => {
+      if (item.areaId === this.data.detail.province) {
+        this.setData({
+          'picker.index1': index
+        })
+      }
+    })
+    list2.forEach((item, index) => {
+      if (item.areaId === this.data.detail.city) {
+        this.setData({
+          'picker.index2': index
+        })
+      }
+    })
+    list3.forEach((item, index) => {
+      if (item.areaId === this.data.detail.country) {
+        this.setData({
+          'picker.index3': index
+        })
+      }
+    })
+    this.setData({
+      provinceList: list1,
+      cityList: list2,
+      countryList: list3
+    })
+  },
+  pSearch (e) {
+    let index = e.detail.value
+    let id = this.data.provinceList[index].areaId
+    let list = []
+    this.data.areaList.forEach(item => {
+      if (item.level === 1 && item.belongId === id) {
+        list.push(item)
+      }
+    })
+    this.setData({
+      'picker.index1': index,
+      'detail.province': id,
+      cityList: list
+    })
+    this.cSearch()
+  },
+  cSearch (e) {
+    let index = 0
+    if (e) {
+      index = e.detail.value
+    }
+    let id = this.data.cityList[index].areaId
+    let list = []
+    this.data.areaList.forEach(item => {
+      if (item.level === 2 && item.belongId === id) {
+        list.push(item)
+      }
+    })
+    let country = ''
+    if (list.length > 0) {
+      country = list[0].areaId
+    }
+    this.setData({
+      'picker.index2': index,
+      'detail.city': id,
+      countryList: list,
+      'picker.index3': 0,
+      'detail.country': country
+    })
+  },
+  cSearch2 (e) {
+    this.setData({
+      'picker.index3': e.detail.value,
+      'detail.country': this.data.countryList[e.detail.value].areaId
+    })
+  },
+  copy () {
+    wx.setClipboardData({
+      data: 'https://lbs.amap.com/console/show/picker',
+      success: function(res) {
+        Tips.success('复制成功')
+      }
+    })
+  },
+  validate() {
+    const rules = [
+      {
+        value: this.data.detail.address,
+        method: 'required',
+        message: '详细地址不能为空'
+      }
+    ];
+    return this.check(rules);
+  },
+  submit () {
+    if (!this.validate()) {
+      return;
+    }
+    let detail = this.data.detail
+    Tips.loading()
+    api.distribution({
+      data: detail,
+      method: 'POST',
+      url: 'distributionSave'
+    }).then(res => {
+      Tips.loaded()
+      if (res.success) {
+        Tips.success('保存成功')
+        var pages = getCurrentPages()
+        var prevPage = pages[pages.length - 2];  //上个页面
+        prevPage.setData({
+          'params.page': 1
+        })
+        prevPage.get()
+      } else {
+        Tips.error(res.msg)
+      }
+    })
+  }
+}
+</script>
+
+<style lang="less">
+page{
+  background: #f1f1f1
+}
+</style>

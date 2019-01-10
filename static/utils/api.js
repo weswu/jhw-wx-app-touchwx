@@ -110,6 +110,7 @@ const cert = (params) => http(params, host + 'cert/list')
 const certDetail = (params) => http(params, host + 'cert/detail' + (params.id ? '/' + params.id : ''))
 const recruit = (params) => http(params, host + 'job/list')
 const recruitDetail = (params) => http(params, host + 'job/detail' + (params.id ? '/' + params.id : ''))
+const distribution = (params) => http(params, host + 'distribution/' + params.url)
 
 
 /***************** 新闻*产品 ************/
@@ -238,6 +239,7 @@ module.exports = {
   link, linkDetail,
   cert, certDetail,
   recruit, recruitDetail,
+  distribution,
   /***************** 新闻*产品 ************/
   news, newsDetail,
   product, productDetail, exportProductsToExcel, exportProductImg, downloadProductExcel,

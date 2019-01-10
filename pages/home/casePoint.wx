@@ -24,7 +24,6 @@ export default {
   },
   onShareAppMessage () {
     let name = wx.getStorageSync('nickName')
-    debugger
     return {
       title: name + '邀请你加入机汇网，用全网营销给企业助力',
       path: '/pages/user/login?poster=' + getApp().globalData.user.username,
