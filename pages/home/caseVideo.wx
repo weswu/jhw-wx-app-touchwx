@@ -25,7 +25,7 @@ export default {
   data: {
     title: '视频教程',
     list: [
-      { text: '机汇网-界面编辑视频教程', vid: 'b0766xub26n', src: '' },
+      { text: '机汇网-界面编辑视频教程', vid: 'a0826kslr5q', src: '' },
       { text: '视频教程-安全设置', vid: 'c0753vzonsm', src: '' },
       { text: '视频教程-产品列表', vid: 'w0753bnm9kh', src: '' },
       { text: '视频教程-产品分类', vid: 'e0753kcg4xb', src: '' },
@@ -62,6 +62,7 @@ export default {
     } else {
       if (agent.agentId) {
         let list = []
+        agent.vPc && list.push({ text: '视频教程-界面编辑视频教程', vid: agent.vPc.substring(24, agent.vPc.length-5), src: '' })
         agent.vAccount && list.push({ text: '视频教程-安全设置', vid: agent.vAccount.substring(24, agent.vAccount.length-5), src: '' })
         agent.vProduct && list.push({ text: '视频教程-产品列表', vid: agent.vProduct.substring(24, agent.vProduct.length-5), src: '' })
         agent.vProductCategory && list.push({ text: '视频教程-产品分类', vid: agent.vProductCategory.substring(24, agent.vProductCategory.length-5), src: '' })
