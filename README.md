@@ -72,3 +72,7 @@ fs.writeFileSync(extConfigPath, extFile, 'utf8');
 ### 业务域名
 
 `www.jihui88.com`
+
+### 案例
+[wallpaper](https://gitee.com/lemon_e/wallpaper)
+[Touch WX](http://www.wetouch.net/touchwx_doc/quickstart/)

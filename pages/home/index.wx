@@ -61,22 +61,35 @@
     <view class="hr"></view>
 
     <!-- 头条 -->
-    <ui-row height="35" style="margin-top:16rpx" wx:if="{{agent.vTen}}">
+    <ui-row height="35" style="margin-top:16rpx">
       <ui-col class="j_banner" span="11" vertical-align="middle">
-        <view class="name">{{agent.user.enterprise.name || '机汇'}}头条</view>
+        <view class="name">{{agent.user.enterprise.name}}头条</view>
       </ui-col>
     </ui-row>
-    <ui-row height="166r" style="margin-bottom:36rpx" bindtap="tenVideo" wx:if="{{agent.vTen}}">
+    <ui-row height="166r" style="margin-bottom:36rpx" bindtap="tenVideo">
       <ui-col class="j_banner" span="11" vertical-align="middle" align="center">
         <view class="banner">
-          <view class="title">10分钟入门</view>
+          <view class="title">{{agent.vTenText}}</view>
           <view class="content">
             快速了解{{agent.user.enterprise.name}}产品
           </view>
         </view>
       </ui-col>
     </ui-row>
-    <view class="hr" wx:if="{{agent.vTen}}"></view>
+    <view class="hr"></view>
+    <ui-popup show="{{ show5 }}" height="270" background="transparent">
+      <view class="popup5">
+        <ui-row height="40" border-bottom>
+            <ui-col vertical-align="middle" space-left="20">{{agent.vTenText}}</ui-col>
+            <ui-col width="40" vertical-align="middle" align="center" bindtap="handleShow5">
+                <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
+            </ui-col>
+        </ui-row>
+        <video src="{{showSrc5}}" controls="{{false}}"></video>
+      </view>
+    </ui-popup>
+
+    <!-- 公告 -->
     <view class="sample_content" wx:if="{{gonggaoList.length>0}}">
      <ui-row height="40">
         <ui-col span="0"></ui-col>
@@ -231,6 +244,9 @@ export default {
     // news
     gonggaoList: [],
     hotList: [],
+    // 十分钟
+    show5: false,
+    showSrc5: '',
     // 经销商
     agent: {}
   },
@@ -335,15 +351,66 @@ export default {
   },
   // 十分钟
   tenVideo () {
-    if (this.data.agent.agentId) {
-      let video = this.data.agent.vTen
-      if (video) {
+    let video = this.data.agent.vTen
+    if (video) {
+      this.setData({
+        show5: true
+      })
+      if (!this.data.showSrc5) {
         let src = video.substring(24, video.length-5)
-        wx.navigateTo({
-          url: '/pages/home/caseVideo?title=入门介绍&vid=' + src
-        })
+        this.getVideoInfo(src)
       }
     }
+  },
+  getVideoInfo: function (vid) {
+    var that = this;
+    var urlString = 'https://vv.video.qq.com/getinfo?otype=json&appver=3.2.19.333&platform=11&defnpayver=1&vid=' + vid;
+    wx.request({
+      url: urlString,
+      success: function (res) {
+        var dataJson = res.data.replace(/QZOutputJson=/, '') + "qwe";
+        var dataJson1 = dataJson.replace(/;qwe/, '');
+        var data = JSON.parse(dataJson1);
+        var fn_pre = data.vl.vi[0].lnk
+        var host = data['vl']['vi'][0]['ul']['ui'][0]['url']
+        var streams = data['fl']['fi']
+        var seg_cnt = data['vl']['vi'][0]['cl']['fc']
+        if (parseInt(seg_cnt) == 0) {
+          seg_cnt = 1
+        }
+        var best_quality = streams[streams.length - 1]['name']
+        var part_format_id = streams[streams.length - 1]['id']
+        for (var i = 1; i < (seg_cnt + 1); i++) {
+          var filename = fn_pre + '.p' + (part_format_id % 10000) + '.' + i + '.mp4';
+          console.log(filename);
+          that.requestVideoUrls(part_format_id, vid, filename, host);
+        }
+      }
+    })
+  },
+  requestVideoUrls: function (part_format_id, vid, fileName, host) {
+    var keyApi = "https://vv.video.qq.com/getkey?otype=json&platform=11&format=" + part_format_id + "&vid=" + vid + "&filename=" + fileName + "&appver=3.2.19.333"
+    var that = this;
+    wx.request({
+      url: keyApi,
+      success: function (res) {
+        var dataJson = res.data.replace(/QZOutputJson=/, '') + "qwe";
+        var dataJson1 = dataJson.replace(/;qwe/, '');
+        var data = JSON.parse(dataJson1);
+        if (data.key != undefined) {
+          var vkey = data['key']
+          var url = host + fileName + '?vkey=' + vkey;
+          that.setData({
+            showSrc5: String(url)
+          })
+        }
+      }
+    })
+  },
+  handleShow5 () {
+    this.setData({
+      show5: false
+    })
   },
   jihui () {
     wx.navigateTo({
@@ -538,5 +605,14 @@ swiper-item image{width:750rpx;}
   text-align:center;
   color:#c6c6cd;
   font-size:12px;background-color:#f1f1f1;
+}
+.popup5{
+  background-color:#fff;
+  margin:0 auto;
+  overflow:hidden;
+  text-align:center;
+  .ui-row{
+    text-align:left;
+  }
 }
 </style>

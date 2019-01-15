@@ -44,6 +44,11 @@ const http = async (params = {}, url) => {
       }
     }
   }
+  // 敏感词
+  if (res.data.msgType === 'badWord') {
+    let msg = res.data.msg.substring(1, res.data.msg.length - 1)
+    res.data.msg = '您输入的内容含有敏感词“' + msg + '”，请重新填写。'
+  }
   return res.data
 }
 

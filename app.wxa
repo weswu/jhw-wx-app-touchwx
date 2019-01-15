@@ -221,6 +221,8 @@ export default {
       dNews: 'http://xueyuan.jihui88.com/news.html',
       qualityCateId: 'Category_00000000000000000344139',
       questionCateId: 'Category_00000000000000000344330',
+      vTen: 'https://v.qq.com/x/page/a0826kslr5q.html',
+      vTenText: '3分钟入门',
       user: {
         qq: '1550676880',
         cellphone: '13967938189',

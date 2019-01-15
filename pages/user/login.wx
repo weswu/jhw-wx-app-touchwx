@@ -55,10 +55,17 @@ export default {
     let that = this
     this.init() // 是否授权
     // 经销商
-    // e.domain = 'http://admin.ykit.net'
-    let domain = wx.getStorageSync('domain')
-    if (domain) {
-      e.domain = domain
+    e.domain = 'http://admin.ykyh.com'
+    if (!e.domain) {
+      let domain = wx.getStorageSync('domain')
+      if (domain) {
+        e.domain = domain
+      }
+    } else {
+      if (e.domain === 'jihui88') {
+        wx.setStorageSync('domain', '')
+        e.domain = ''
+      }
     }
     wx.getExtConfig({
       success: function (res) {
