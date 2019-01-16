@@ -28,7 +28,7 @@
         autoplay circular interval="3000" duration="500">
         <block wx:for="{{images}}" wx:key="{{index}}">
           <swiper-item>
-            <image mode="widthFix" src="http://img.jihui88.com/{{item.src}}" bindload="imageLoad"/>
+            <image mode="widthFix" src="http://img.jihui88.com/{{item.serverPath}}" bindload="imageLoad"/>
           </swiper-item>
         </block>
       </swiper>
@@ -71,7 +71,7 @@
         <view class="banner">
           <view class="title">{{agent.vTenText}}</view>
           <view class="content">
-            快速了解{{agent.user.enterprise.name}}产品
+            {{agent.vTenContent}}
           </view>
         </view>
       </ui-col>
@@ -85,7 +85,7 @@
                 <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
             </ui-col>
         </ui-row>
-        <video src="{{showSrc5}}" controls="{{false}}"></video>
+        <video src="{{showSrc5}}"></video>
       </view>
     </ui-popup>
 
@@ -216,17 +216,7 @@ export default {
   data: {
     NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT+'px',
     // 轮播
-    images: [
-      {
-        src: 'upload/j/j2/jihui/picture/2018/12/26/9a36aaa8-7e6e-4ce9-834e-701931883bae.jpg'
-      },
-      {
-        src: 'upload/j/j2/jihui/picture/2018/12/26/106c1f15-35f3-4277-a967-4da488b314f8.jpg'
-      },
-      {
-        src: 'upload/j/j2/jihui/picture/2018/12/26/d43e7eab-8302-4c46-a9ad-9792bb3661cf.jpg'
-      }
-    ],
+    images: [],
     swiperHeight: 0,
     swiperCurrent: 0,
     market: [
@@ -273,11 +263,12 @@ export default {
     this.setData({
       agent: agent
     })
-    if (agent.agentId) {
-      this.getBanner()
-    }
-    this.getGonggao()
-    this.getHot()
+    this.getBanner()
+  },
+  onShow () {
+    if (this.data.gonggaoList.length === 0) this.getGonggao()
+    if (this.data.hotList.length === 0) this.getHot()
+    // if (this.data.images.length === 0) this.getBanner()
   },
   // 扫一扫
   saoyisao () {
@@ -299,14 +290,11 @@ export default {
         enterpriseId: this.data.agent.user.enterpriseId
       }
     }).then(res => {
-      var data = res.attributes.data
+      let data = res.attributes.data
       let images = []
-      if (data.length > 0) {
-        data.forEach(item => {
-          images.push({
-            src: Utils.picUrl(item.serverPath, 3)
-          })
-        })
+      for (var i = 0; i < data.length; i++) {
+        var item = data[data.length - 1 - i]
+        images.push(item)
       }
       that.setData({
         images: images

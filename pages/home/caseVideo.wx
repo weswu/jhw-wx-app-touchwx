@@ -4,7 +4,7 @@
     <view style="margin: 15px auto; color:#999; text-align:center;" wx:if="{{list.length===0}}">{{tip}}</view>
     <ui-row-list wx:for="{{list}}" wx:key="{{index}}">
       <view class="item" wx:if="{{item.src}}">
-        <video src="{{item.src}}" controls="{{false}}"></video>
+        <video src="{{item.src}}"></video>
         {{item.text}}
       </view>
       <view class="hr" wx:if="{{item.src}}"></view>

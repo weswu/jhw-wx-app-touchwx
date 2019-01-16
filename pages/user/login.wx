@@ -55,7 +55,7 @@ export default {
     let that = this
     this.init() // 是否授权
     // 经销商
-    e.domain = 'http://admin.ykyh.com'
+    // e.domain = 'admin.ykit.net'
     if (!e.domain) {
       let domain = wx.getStorageSync('domain')
       if (domain) {
@@ -150,6 +150,9 @@ export default {
             data.loginLogo3 = 'http://www.jihui88.com/member/static/images/f-logo.png'
           }
           if (data.wxappLogo) data.wxappLogo = 'http://img.jihui88.com/' + data.wxappLogo
+          // 十分钟
+          if (!data.vTenText) data.vTenText = '3分钟入门'
+          if (!data.vTenContent) data.vTenContent = '快速了解' + data.user.enterprise.name + '产品'
           getApp().globalData.agent = data
           that.setData({
             agent: data
