@@ -2,7 +2,7 @@
   <view>
     <cc-header title="小程序案例" count="{{count}}"></cc-header>
     <!-- 下拉 -->
-    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:9;background:#fff" right="0">
+    <ui-fixed-view top="{{ NAV_HEIGHT }}" left="0;z-index:9;background:#fff" right="0" wx:if="{{selectList.length > 2}}">
       <ui-row height="43" border-bottom bindtap="openPopup">
         <ui-col vertical-align="middle" space-left="15">
           {{name}}
@@ -12,7 +12,7 @@
         </ui-col>
       </ui-row>
     </ui-fixed-view>
-    <view style="height:43px"></view>
+    <view style="height:43px" wx:if="{{selectList.length > 2}}"></view>
 
     <ui-row-list>
       <ui-row class="row-border">
@@ -34,7 +34,7 @@
           <ui-col vertical-align="middle" class="{{params.recvState === item.key ? 'active' : ''}}">
             {{item.value}}
           </ui-col>
-          <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{params.recvState === item.key}}">
+          <ui-col vertical-align="middle" align="right" width="40" space-right="15" wx:if="{{params.category_id === item.key}}">
             <i class="iconfont icon-gou" style="color:#3AC3B0;font-size:12px;"/>
           </ui-col>
         </ui-row>
@@ -60,12 +60,7 @@ export default {
     popup_NAV_HEIGHT:wx.STATUS_BAR_HEIGHT+wx.DEFAULT_HEADER_HEIGHT,
     popupHeight: wx.WIN_HEIGHT - (wx.STATUS_BAR_HEIGHT + wx.DEFAULT_HEADER_HEIGHT),
     show: false,
-    selectList: [
-      { value: '全部案例', key: '380563,380564,380565' },
-      { value: '展示型小程序', key: '380563' },
-      { value: '电商型小程序', key: '380564' },
-      { value: '小程序高级功能版', key: '380565' }
-    ],
+    selectList: [],
     name: '全部案例',
     // other
     list: [],
@@ -74,12 +69,44 @@ export default {
       per_page: 8,
       imagelist: 1,
       lan_id: 1,
-      category_id: '380563,380564,380565'
+      category_id: ''
     },
     count: 0,
-    more: {}
+    more: {},
+    agent: []
   },
   onLoad () {
+    // 经销商
+    let agent = getApp().globalData.agent
+    this.setData({
+      agent: agent
+    })
+    let cateId = ''
+    if (agent.miniprogramcaseState === '01' || !agent.agentId) {
+      this.setData({
+        selectList: [
+          { value: '全部案例', key: '380563,380564,380565' },
+          { value: '展示型小程序', key: '380563' },
+          { value: '电商型小程序', key: '380564' },
+          { value: '小程序高级功能版', key: '380565' }
+        ]
+      })
+      cateId = '380563,380564,380565'
+    } else {
+      let list = agent.miniprogramcaseSelect
+      if (list) {
+        agent.miniprogramcaseSelect.forEach(item => {
+          cateId = cateId ? (cateId + ',' + item.key) : item.key
+        })
+        list.splice(0, 0, { value: '全部案例', key: cateId })
+        this.setData({
+          selectList: list
+        })
+      }
+    }
+    this.setData({
+      'params.category_id': cateId
+    })
     this.get()
   },
   get () {
@@ -91,15 +118,29 @@ export default {
     api.applet({
       data: this.data.params
     }).then(res => {
-      let list = this.data.list
-      res.list.forEach(item => {
-        this.data.list.push(item)
-      })
-      this.setData({
-        list: list,
-        count: res.total,
-        'more.loading': false
-      })
+      if (res.list) {
+        let list = this.data.list
+        res.list.forEach(item => {
+          this.data.list.push(item)
+        })
+        this.setData({
+          list: list,
+          count: res.total,
+          'more.loading': false
+        })
+      } else {
+        if (this.data.params.page === 1) {
+          this.setData({
+            'more.loading': false,
+            'more.tip': '暂无数据'
+          })
+        } else {
+          this.setData({
+            'more.loading': false,
+            'more.tip': '加载完毕'
+          })
+        }
+      }
     })
   },
   previewImageUrl (e) {

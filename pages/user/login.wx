@@ -55,7 +55,7 @@ export default {
     let that = this
     this.init() // 是否授权
     // 经销商
-    // e.domain = 'admin.ykit.net'
+    // e.domain = 'admin.ykyh.com'
     if (!e.domain) {
       let domain = wx.getStorageSync('domain')
       if (domain) {

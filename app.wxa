@@ -223,14 +223,14 @@ export default {
       questionCateId: 'Category_00000000000000000344330',
       vTen: 'https://v.qq.com/x/page/a0826kslr5q.html',
       vTenText: '3分钟入门',
-      vTenContent: '快速了解机汇网产品',
+      vTenContent: '快速了解建站流程',
       user: {
         qq: '1550676880',
         cellphone: '13967938189',
         enterprise: {
           name: '机汇网'
         },
-        enterpriseId: 'Enterp_0000000000000000000062857'
+        enterpriseId: 'Enterp_0000000000000000000064700'
       }
     }
   },
