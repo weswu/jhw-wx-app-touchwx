@@ -83,15 +83,25 @@ export default {
     })
     let cateId = ''
     if (agent.miniprogramcaseState === '01' || !agent.agentId) {
-      this.setData({
-        selectList: [
-          { value: '全部案例', key: '380563,380564,380565' },
-          { value: '展示型小程序', key: '380563' },
-          { value: '电商型小程序', key: '380564' },
-          { value: '小程序高级功能版', key: '380565' }
-        ]
+      cateId = ''
+      api.product_category({
+        id: 'Enterp_0000000000000000000064752'
+      }).then(res => {
+        let list = []
+        res.forEach(item => {
+          let id = parseInt(item.category_id.substring(9))
+          cateId = cateId ? (cateId + ',' + id) : id
+          list.push({ value: item.name, key: id })
+        })
+        list.splice(0, 0, { value: '全部案例', key: cateId })
+        this.setData({
+          selectList: list
+        })
+        this.setData({
+          'params.category_id': cateId
+        })
+        this.get()
       })
-      cateId = '380563,380564,380565'
     } else {
       let list = agent.miniprogramcaseSelect
       if (list) {
@@ -103,11 +113,11 @@ export default {
           selectList: list
         })
       }
+      this.setData({
+        'params.category_id': cateId
+      })
+      this.get()
     }
-    this.setData({
-      'params.category_id': cateId
-    })
-    this.get()
   },
   get () {
     this.data.more.tip = ''

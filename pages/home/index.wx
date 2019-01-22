@@ -426,6 +426,18 @@ export default {
           hotList: res.list
         })
       })
+    } else {
+      api.newsAll({
+        data: {
+          page: 1,
+          per_page: 8
+        },
+        id: 'Enterp_0000000000000000000062857'
+      }).then(res => {
+        this.setData({
+          hotList: res.list
+        })
+      })
     }
   },
   getGonggao () {
@@ -433,7 +445,7 @@ export default {
       data: {
         page: 1,
         pageSize: 8,
-        agentId: this.data.agent.agentId
+        agentId: this.data.agent.agentId || ''
       }
     }).then(res => {
       let data = res.attributes.data

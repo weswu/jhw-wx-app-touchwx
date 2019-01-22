@@ -63,9 +63,13 @@ export default {
     this.setData({
       more: this.data.more
     })
+    let enterpriseId = this.data.agent.user.enterpriseId
+    if (!this.data.agent.agentId) {
+      enterpriseId = 'Enterp_0000000000000000000062857'
+    }
     api.newsCategoryChild({
       data: this.data.params,
-      id: this.data.agent.user.enterpriseId
+      id: enterpriseId
     }).then(res => {
       if (res.error === '查询为空') {
         this.setData({

@@ -196,6 +196,8 @@ const deliverySnEdit = (params) => http(params, host + 'orderPayment/deliverySnE
 // 案例
 const applet = (params) => http(params, netHost + 'jihuiapi/products/multi_category')
 const website = (params) => http(params, pcHost + 'comm/layout/listDemoByTagsJsonp')
+const product_category = (params) => http(params, netHost + 'jihuiapi/other/product_category/' + params.id)
+const newsAll = (params) => http(params, netHost + 'jihuiapi/news/all/' + params.id)
 const newsCategoryChild = (params) => http(params, netHost + 'jihuiapi/news/category_child/' + params.id)
 const newsSingle = (params) => http(params, netHost + 'jihuiapi/news/single/' + params.id)
 const listLayoutByTagsJsonp = (params) => http(params, pcHost + 'layout/listLayoutByTagsJsonp')
@@ -212,7 +214,7 @@ module.exports = {
   area,
   password, feedback,
   /***************** 首页 ************/
-  applet, website, newsCategoryChild, newsSingle, listLayoutByTagsJsonp, listTagCategory, gonggao,
+  applet, website, product_category, newsAll, newsCategoryChild, newsSingle, listLayoutByTagsJsonp, listTagCategory, gonggao,
   agent, wxappbanner,
   // 推广
   spread, spreadRank, posters,
