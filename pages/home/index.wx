@@ -77,17 +77,6 @@
       </ui-col>
     </ui-row>
     <view class="hr"></view>
-    <ui-popup show="{{ show5 }}" height="270" background="transparent">
-      <view class="popup5">
-        <ui-row height="40" border-bottom>
-            <ui-col vertical-align="middle" space-left="20">{{agent.vTenText}}</ui-col>
-            <ui-col width="40" vertical-align="middle" align="center" bindtap="handleShow5">
-                <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
-            </ui-col>
-        </ui-row>
-        <video src="{{showSrc5}}"></video>
-      </view>
-    </ui-popup>
 
     <!-- 公告 -->
     <view class="sample_content" wx:if="{{gonggaoList.length>0}}">
@@ -199,6 +188,18 @@
       </ui-row>
     </view>
     <view class="crpt">技术支持：{{agent.user.enterprise.name}}</view>
+
+    <ui-popup show="{{ show5 }}" height="270" background="transparent">
+      <view class="popup5">
+        <ui-row height="40" border-bottom>
+            <ui-col vertical-align="middle" space-left="20">{{agent.vTenText}}</ui-col>
+            <ui-col width="40" vertical-align="middle" align="center" bindtap="handleShow5">
+              <ui-icon type="x" size="18" color="#FC8950"></ui-icon>
+            </ui-col>
+        </ui-row>
+        <video src="{{showSrc5}}" wx:if="{{ show5 }}"></video>
+      </view>
+    </ui-popup>
   </view>
 </template>
 
