@@ -59,6 +59,11 @@ tui transform --type wx2ui --src jhw-wx-app-touchwx --dest jhw-wx-app-touchui
 
 4、精选：xueyuan
 
+5.// 导入ext.JSON(自定义) wx2ad5856ee82bdfc3 let extFile = fs.readFileSync('./ext.json', 'utf-8'); let extConfigPath = util_1.config.getPath('dest', 'ext.json'); util_1.log.msg(util_1.LogType.GENERATE, path.relative(util_1.config.cwd, extFile)); fs.writeFileSync(extConfigPath, extFile, 'utf8');
+
+6.下载二维码 http://wcd.jihui88.com/rest/comm/qrbar/create?w=210&text=
+
+
 ## 文件结构
 ```shell
 .
