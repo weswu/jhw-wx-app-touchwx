@@ -5,7 +5,7 @@
 
 
 ## 运行截图
-<img src="https://pro.modao.cc/uploads3/images/2035/20353737/artboard_1526632447.png" style="width:280px"/>
+<img src="https://github.com/weswu/jhw-wx-app-touchwx/raw/master/images/demo.png" style="width:280px"/>
 
 ## 软件架构
 - [Touch WX 开发文档] (http://www.wetouch.net/touchwx_doc/quickstart/)
