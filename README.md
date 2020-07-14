@@ -5,7 +5,8 @@
 
 
 ## 运行截图
-<img src="https://github.com/weswu/jhw-wx-app-touchwx/raw/master/images/demo.png" style="width:280px"/>
+<div style="width:280px">
+<img src="https://github.com/weswu/jhw-wx-app-touchwx/raw/master/images/demo.png"/></div>
 
 ## 软件架构
 - [Touch WX 开发文档] (http://www.wetouch.net/touchwx_doc/quickstart/)
